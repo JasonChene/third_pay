@@ -1,11 +1,21 @@
-## **第三方项目建立**
+## 第三方项目建立
 > 版本建立：20180530   
 > 工作项目google云端：[连结](https://drive.google.com/drive/folders/1Our7MFWXDpN-AzDJJf-_K-1fyNoJ8SKe?usp=sharing "工作项目云端硬碟")  
-> 远程测试说明：[连结](https://drive.google.com/drive/folders/1Our7MFWXDpN-AzDJJf-_K-1fyNoJ8SKe?usp=sharing "工作项目云端硬碟")
+> 远程测试机说明：[连结](https://drive.google.com/file/d/1OfUeWfF0fOuWOwy6_HE3XQ5FVv9lZJvo/view?usp=sharing "远程测试机说明")
 
 ------
 
-### **测试帐密**
+## 目录
+* [测试帐密](#)
+* [工作流程表](#pdf)
+    * [开发表、时间表](#2)
+    * [命名规则](#4)
+    * [加密工具、检查表](#10)
+    * [日志](#13)
+* [已完成第三方](#已完成第三方)
+
+------
+### 测试帐密
 
     测试网站：http://7k111.com  
     帐：123jia 密：123123  
@@ -60,7 +70,7 @@
 #### **9、无法解决，透过 qq 群组在技术群询问，并具体指出错误代码。**
 #### **10、比对第三方检查表，检查程式有没有问题**
 >线上加解密工具：[连结](http://tool.chacuo.net/cryptrsapubkey "线上加解密工具")  
->第三方检查表[连结](https://docs.google.com/document/d/1ECe7qOE-a6-1CJwIrE7_DM3nYf1lMF4aL9Ydz3xMg5I/edit?usp=sharing "第三方检查表")  
+>第三方检查表：[连结](https://docs.google.com/document/d/1ECe7qOE-a6-1CJwIrE7_DM3nYf1lMF4aL9Ydz3xMg5I/edit?usp=sharing "第三方检查表")  
 
 #### **11、异步无法测试时，试着模拟异步通知**
 >* `使用第三方提供的异步报文`
@@ -97,4 +107,10 @@
 >6.京东WAP(维护)代码:9998 信息:用户费率为空！  
 
 #### **14、上缴资料，修改为检查。**
+
+-----
+
+### **已完成第三方**
+>*  [all_pay_2.0v](http://pay.bb5678.net/alex/third_pay/tree/master/all_pay_2.0v "all_pay_2.0v")   
+>*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex "20180524优米付-Alex") 
 
