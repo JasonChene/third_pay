@@ -112,5 +112,5 @@
 
 ### **Finish已完成第三方**
 >*  [all_pay_2.0v](http://pay.bb5678.net/alex/third_pay/tree/master/all_pay_2.0v "all_pay_2.0v")   
->*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex "20180524优米付-Alex") 
+>*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex "20180524优米付-Alex") 
 
