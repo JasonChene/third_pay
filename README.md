@@ -1,7 +1,7 @@
 ## 第三方项目建立
 > 版本建立：20180530   
 > 工作项目google云端：[连结](https://drive.google.com/drive/folders/1Our7MFWXDpN-AzDJJf-_K-1fyNoJ8SKe?usp=sharing "工作项目云端硬碟")  
-> 远程测试机说明：[连结](https://drive.google.com/file/d/1OfUeWfF0fOuWOwy6_HE3XQ5FVv9lZJvo/view?usp=sharing "远程测试机说明")
+> 远程测试机说明：[连结](https://drive.google.com/file/d/1OfUeWfF0fOuWOwy6_HE3XQ5FVv9lZJvo/view?usp=sharing "远程测试机说明")  
 > 最后修改时间：20180601 
 
 ------
