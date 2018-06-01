@@ -112,5 +112,12 @@
 
 ### **Finish已完成第三方**
 >*  [all_pay_2.0v](http://pay.bb5678.net/alex/third_pay/tree/master/all_pay_2.0v "all_pay_2.0v")   
->*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex "20180524优米付-Alex") 
+>*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex) 
+>*  [20180527香蕉支付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180527%E9%A6%99%E8%95%89%E6%94%AF%E4%BB%98-Alex) 
+>*  [20180528爱读付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180528%E7%88%B1%E8%AF%BB%E4%BB%98-Alex) 
+
+
+------
+
+[回到顶部](#readme)
 
