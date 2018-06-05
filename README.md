@@ -1,7 +1,8 @@
 ## 第三方项目建立
 > 版本建立：20180530   
 > 工作项目google云端：[连结](https://drive.google.com/drive/folders/1Our7MFWXDpN-AzDJJf-_K-1fyNoJ8SKe?usp=sharing "工作项目云端硬碟")  
-> 远程测试机说明：[连结](https://drive.google.com/file/d/1OfUeWfF0fOuWOwy6_HE3XQ5FVv9lZJvo/view?usp=sharing "远程测试机说明")
+> 远程测试机说明：[连结](https://drive.google.com/file/d/1OfUeWfF0fOuWOwy6_HE3XQ5FVv9lZJvo/view?usp=sharing "远程测试机说明")  
+> 最后修改时间：20180601 
 
 ------
 
@@ -12,7 +13,7 @@
     * [命名规则](#4)
     * [加密工具、检查表](#10)
     * [日志](#13)
-* [已完成第三方](#Finish)
+* [已完成第三方](#finish)
 
 ------
 ### 测试帐密
@@ -89,13 +90,13 @@
 >`商户密钥KEY：`支付秘钥  
 >`商户交易帐号：`支付key  
 >  
->`支持payment：`网银,银联快捷,银联钱包扫码,银联钱包手机,微信扫码,微信手机,支付宝扫码,支付宝手机,QQ扫码,QQ手机,京东扫码,京东手机  
+>`支持payment：`网银,银联快捷,银联钱包扫码,银联钱包手机,微信扫码,微信手机,支付宝扫码,支付宝手机,QQ扫码,QQ手机,京东扫码,京东手机    
 >  
->`现有渠道：`网银,银联钱包扫码（最低10元）,微信手机（京东包装）,支付宝手机（最低50元）,QQ扫码,QQ手机,京东扫码,京东手机
->`问题渠道：`银联快捷（支付方式不存在,维护）,银联钱包手机（维护）,支付宝扫码（子商户号未找到,维护）,微信扫码（京东包装,维护）
->`测试到账：`网银
+>`现有渠道：`网银,银联钱包扫码（最低10元）,微信手机（京东包装）,支付宝手机（最低50元）,QQ扫码,QQ手机,京东扫码,京东手机     
+>`问题渠道：`银联快捷（支付方式不存在,维护）,银联钱包手机（维护）,支付宝扫码（子商户号未找到,维护）,微信扫码（京东包装,维护）   
+>`测试到账：`网银   
 >  
->`备注：`支付宝手机（最低50元50 100 200  300 500   600   800  900  1000  1500  2000） 
+>`备注：`支付宝手机（最低50元50 100 200  300 500   600   800  900  1000  1500  2000）   
 >  
 >`详细问题叙述：`  
 >1.微信扫码支付(维护)代码:9997 信息:渠道错误!  
@@ -112,5 +113,12 @@
 
 ### **Finish已完成第三方**
 >*  [all_pay_2.0v](http://pay.bb5678.net/alex/third_pay/tree/master/all_pay_2.0v "all_pay_2.0v")   
->*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex "20180524优米付-Alex") 
+>*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex) 
+>*  [20180527香蕉支付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180527%E9%A6%99%E8%95%89%E6%94%AF%E4%BB%98-Alex) 
+>*  [20180528爱读付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180528%E7%88%B1%E8%AF%BB%E4%BB%98-Alex) 
+
+
+------
+
+[回到顶部](#)
 
