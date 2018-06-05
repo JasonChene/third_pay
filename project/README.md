@@ -2,7 +2,7 @@
 
 ----------
 
-|Project name|Developer|End time|status| 
+|Project name|Developer|Star time|status| 
 |---|---|---|---|
 |优米付|Alex|20180524|已完成|
 |香蕉付|Alex|20180527|已完成|
