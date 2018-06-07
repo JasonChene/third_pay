@@ -113,9 +113,12 @@
 
 ### **Finish已完成第三方**
 >*  [all_pay_2.0v](http://pay.bb5678.net/alex/third_pay/tree/master/all_pay_2.0v "all_pay_2.0v")   
->*  [20180524优米付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex) 
->*  [20180527香蕉支付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180527%E9%A6%99%E8%95%89%E6%94%AF%E4%BB%98-Alex) 
->*  [20180528爱读付-Alex](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180528%E7%88%B1%E8%AF%BB%E4%BB%98-Alex) 
+>*  [20180524优米付](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180524%E4%BC%98%E7%B1%B3%E4%BB%98-Alex) 
+>*  [20180527香蕉支付](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180527%E9%A6%99%E8%95%89%E6%94%AF%E4%BB%98-Alex) 
+>*  [20180528爱读付](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180528%E7%88%B1%E8%AF%BB%E4%BB%98-Alex) 
+>*  [20180604汇卡通](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180604%E6%B1%87%E5%8D%A1%E9%80%9A) 
+>*  [20180605收付宝](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180605%E6%94%B6%E4%BB%98%E5%AE%9D) 
+>*  [20180605飞付](http://pay.bb5678.net/alex/third_pay/tree/master/project/20180605%E9%A3%9E%E4%BB%98) 
 
 
 ------
