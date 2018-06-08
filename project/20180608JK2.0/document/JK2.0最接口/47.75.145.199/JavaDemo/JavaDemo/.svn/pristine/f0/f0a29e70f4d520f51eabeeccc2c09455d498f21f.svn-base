@@ -1,0 +1,34 @@
+package com.smartpay.util;
+
+public class Configuration {
+
+	/***平台分配的商家id*/
+	public static final String merchantid = "XXXXXXXX";
+	
+	
+	
+	/***从平台分配的商户私钥*/
+	public static final String key        = "XXXXXXXX";
+	
+	/**支付请求的url*/
+	public static final String payURL     = "http://pay.smartpay360.cn/smartpayment/pay/gateway";
+	
+	
+	/**支付查询的url*/
+	public static final String queryURL   = "http://pay.smartpay360.cn/smartpayment/pay/order/query";
+	
+	
+	
+	/**支付回调的url, 商家服务器接受回调的地址*/
+	public static final String notifyURL  = "http://XXXXXXXXX";
+	
+	
+	/**支付宝wap支付*/
+	public static final String ALIPAY_WAP_SERVICE   = "pay.alipay.wappay";
+	
+	
+	
+	/**微信wap支付**/
+	public static final String WEIXIN_WAP_SERVICE   = "pay.weixin.wappay";
+	
+}

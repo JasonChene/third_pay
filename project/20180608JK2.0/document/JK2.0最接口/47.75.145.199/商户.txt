@@ -1,0 +1,8 @@
+登入网址：http://1.smartpay.appchizi.com/background_01/login.html
+登入名：13717581736
+密码：pass.123
+
+商户名称：adminhs
+商户密钥(MD5)： nq3hwhrcn8ikzq7eul7i79hwxvnjtvdf
+商户密钥(RSA)：w9gsnecrwjqbhmo920fpn0obi0ww1ms7
+
