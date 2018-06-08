@@ -1,7 +1,6 @@
 <?php
 $req = json_decode(file_get_contents('php://input'),1);
 $req = json_decode($req['data'],1);
-
 function fix_payment($platform){
   $platformstr = '';
   foreach ($platform as $value) {
@@ -13,63 +12,20 @@ function fix_payment($platform){
 
 #str_cut
 function cutstr($reqstr){
-  $strarr=array();
-  $str=substr($reqstr,0,-3);
-  $strarr2 = explode(">_<", $str);
-  $length=count($strarr2);
-  for ($i=0; $i < $length ; $i++) {
-    $strarr3=explode("^_^", $strarr2[$i]);
-    $type = $strarr3[0];
-    if (strstr($type,'wxbs')) {
-      $strarr['wxbs']= $strarr3[1];;
-    }elseif(strstr($type,'wxh5')) {
-      $strarr['wxh5']= $strarr3[1];
-    }elseif(strstr($type,'wxfs')) {
-      $strarr['wxfs']= $strarr3[1];
-    }elseif(strstr($type,'jdbs')) {
-      $strarr['jdbs']= $strarr3[1];
-    }elseif(strstr($type,'jdh5')) {
-      $strarr['jdh5']= $strarr3[1];
-    }elseif(strstr($type,'jdfs')) {
-      $strarr['jdfs']= $strarr3[1];
-    }elseif(strstr($type,'bdbs')) {
-      $strarr['bdbs']= $strarr3[1];
-    }elseif(strstr($type,'bdh5')) {
-      $strarr['bdh5']= $strarr3[1];
-    }elseif(strstr($type,'bdfs')) {
-      $strarr['bdfs']= $strarr3[1];
-    }elseif(strstr($type,'qqbs')) {
-      $strarr['qqbs']= $strarr3[1];
-    }elseif(strstr($type,'qqh5')) {
-      $strarr['qqh5']= $strarr3[1];
-    }elseif(strstr($type,'qqfs')) {
-      $strarr['qqfs']= $strarr3[1];
-    }elseif(strstr($type,'wylk')) {
-      $strarr['wylk']= $strarr3[1];
-    }elseif(strstr($type,'wyh5')) {
-      $strarr['wyh5']= $strarr3[1];
-    }elseif(strstr($type,'ylbs')) {
-      $strarr['ylbs']= $strarr3[1];
-    }elseif(strstr($type,'ylh5')) {
-      $strarr['ylh5']= $strarr3[1];
-    }elseif(strstr($type,'ylkj')) {
-      $strarr['ylkj']= $strarr3[1];
-    }elseif(strstr($type,'ylkjh5')) {
-      $strarr['ylkjh5']= $strarr3[1];
-    }elseif(strstr($type,'zfbbs')) {
-      $strarr['ylkjh5']= $strarr3[1];
-    }elseif(strstr($type,'zfbh5')) {
-      $strarr['ylkjh5']= $strarr3[1];
-    }elseif(strstr($type,'zfbfs')) {
-      $strarr['ylkjh5']= $strarr3[1];
+    $strarr=array();
+    $str=substr($reqstr,0,-3);
+    $strarr2 = explode(">_<", $str);
+    $length=count($strarr2);
+    for ($i=0; $i < $length ; $i++) {
+        $strarr3=explode("^_^", $strarr2[$i]);
+        $type = $strarr3[0];
+        $strarr[$type] = $strarr3[1];
     }
-  }
   return $strarr;
 }
 
 function posttype($str){
   $restr = '';
-
   if (strstr($str,'wxbs')) {
     $restr = '($scan == "wx" && !_is_mobile()) ||';
   }elseif (strstr($str,'wxh5')) {
@@ -340,11 +296,8 @@ echo '}'."\n";
 }
 if (strstr($platform, "wx")){
   if( strstr($platform, "jd") || strstr($platform, "bd") ||  strstr($platform, "qq")){
-    echo 'else';
-  }else{
-    echo 'if';
+    echo 'else{'."\n";
   }
-echo '{'."\n";
 echo '  $scan = "wx";'."\n";
 echo '  $payType = $pay_type."->微信在线充值";'."\n";
 echo '  $bankname = $pay_type."_wx";'."\n";
@@ -356,7 +309,9 @@ echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['wxh5'].'";'
 echo '    $data["'.$typekey.'"] = "'.$paytypearr['wxh5'].'";'."\n";
 echo '  }'."\n";
   }
-echo '}'."\n";
+  if( strstr($platform, "jd") || strstr($platform, "bd") ||  strstr($platform, "qq")){
+      echo '}'."\n";
+  }
 }
 if(strstr($platform, "ylbs") || strstr($platform, "ylh5")){
 echo 'if (strstr($_REQUEST["pay_type"], "银联钱包")) {'."\n";
@@ -440,6 +395,54 @@ echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
   echo '}'."\n";
   echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
 
+
+
+
+#响应值层数切割
+function response_url($first_key,$second_key,$response_level){
+    $first_key = cutstr($first_key);
+    $second_key = cutstr($second_key);
+    $response_level = cutstr($response_level);
+    $response_url = array();
+    foreach ($response_level as $res_level_key => $res_level_val) {
+        $response_url[$res_level_key][0] = $res_level_val;
+        foreach ($first_key as $first_key_key => $first_key_val) {
+            if ($first_key_key == $res_level_key) {
+                $response_url[$res_level_key][1] = $first_key_val;
+            }
+        }
+        foreach ($second_key as $second_key_key => $second_key_val) {
+            if ($second_key_key == $res_level_key) {
+                $response_url[$res_level_key][2] = $second_key_val;
+            }
+        }
+    }
+    return $response_url;
+}
+#响应值层数切割 转换成echo
+function response_url_echo($res_echo_str,$response_url){
+    foreach ($response_url as $arr_key => $arr_val) {
+        $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
+        if ($arr_val[0] == '0') {
+            $res_echo_str .= '      $jumpurl = $row;'."\n";
+            $res_echo_str .= '  }'."\n";
+        }elseif ($arr_val[0] == '1') {
+            $res_echo_str .= '      $jumpurl = $row';
+            $res_echo_str .= '[\''.$arr_val[1].'\']';
+            $res_echo_str .= ';'."\n";
+            $res_echo_str .= '  }'."\n";
+        }else {
+            $res_echo_str .= '      $jumpurl = $row';
+            $res_echo_str .= '[\''.$arr_val[1].'\']';
+            $res_echo_str .= '[\''.$arr_val[2].'\']';
+            $res_echo_str .= ';'."\n";
+            $res_echo_str .= '  }'."\n";
+        }
+    }
+    return $res_echo_str;
+}
+
+
 #curl获取响应值
 $typepostarr = cutstr($req['postmethod']);
 $postcurl='';
@@ -457,75 +460,74 @@ foreach ($typepostarr as $key => $value) {
       $headerget .= posttype($key);
   }
 }
+
 $postcurl=substr($postcurl,0,-2);
 $getcurl=substr($getcurl,0,-2);
 $headerpost=substr($headerpost,0,-2);
 $headerget=substr($headerget,0,-2);
-echo '#curl获取响应值'."\n";
-
-if ((!empty($postcurl) || !empty($getcurl)) && (!empty($headerpost) || !empty($headerget))) {
-
-    echo 'if('.$postcurl.$getcurl.'){'."\n\n";
-      if ($req['req_structure'] == 'JSON') {
-          if (!empty($postcurl)){
-            echo '  if('.$postcurl.'){'."\n";
-            echo '    $res = curl_post($form_url,json_encode($data_str),"CURL-POST");'."\n";
-            echo '  }'."\n";
-          }
-          if (!empty($curlget)) {
-            echo '  if('.$curlget.'){'."\n";
-            echo '    $res = curl_post($form_url,json_encode($data_str),"CURL-GET");'."\n";
-            echo '  }'."\n";
-          }
-      }else {
-        if (!empty($postcurl)){
-          echo '  if('.$postcurl.'){'."\n";
-          echo '    $res = curl_post($form_url,$data_str,"CURL-POST");'."\n";
-          echo '  }'."\n";
-        }
-        if (!empty($curlget)) {
-          echo '  if('.$curlget.'){'."\n";
-          echo '    $res = curl_post($form_url,$data_str,"CURL-GET");'."\n";
-          echo '  }'."\n";
-        }
-      }
-      if($req['res_structure']=="JSON"){
-          echo '$row = json_decode($res,1);'."\n";
-      }elseif($req['res_structure']=="XML"){
-          echo '$xml=(array)simplexml_load_string($res) or die("Error: Cannot create object");'."\n";
-          echo '$row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
-      }elseif($req['res_structure']=="xmlCDATA"){
-          echo '$xml=(array)simplexml_load_string($res,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
-          echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
-      }
-
-
-    #跳转qrcode
-      echo '#跳转qrcode'."\n";
-      $response_key = ' $url = $row';
-      for ($i=0; $i < intval($req['response_key'][0]); $i++) {
-        $response_key .= '[\''.$req['response_key'][1+$i].'\']';
-      }
-      $response_key .= ';';
-      echo $response_key."\n";
-      echo '  if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-      echo '    if (_is_mobile()) {'."\n";
-      echo '      $jumpurl = $url;'."\n";
-      echo '    }else{'."\n";
-      echo '      $qrurl = QRcodeUrl($url);'."\n";
-      echo '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . $qrurl;'."\n";
-      echo '    }'."\n";
-      echo '  }else{'."\n";
-      echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
-      echo '    exit();'."\n";
-      echo '  }'."\n";
-      echo '}'."\n";
-      echo 'else{'."\n";
-      echo '  $form_data=$data;'."\n";
-      echo '  $jumpurl=$form_url;'."\n";
-      echo '}'."\n";
-
+#抓取响应值方式
+function res_structure($res_structure){
+    if($res_structure=="JSON"){
+        echo '  $row = json_decode($res,1);'."\n";
+    }elseif($res_structure=="XML"){
+        echo '  $xml=(array)simplexml_load_string($res) or die("Error: Cannot create object");'."\n";
+        echo '  $row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
+    }elseif($$res_structure=="xmlCDATA"){
+        echo '  $xml=(array)simplexml_load_string($res,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
+        echo '  $row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
+    }
 }
+
+echo '#curl获取响应值'."\n";
+if (!empty($postcurl) || !empty($getcurl)) {
+    if ($req['req_structure'] == 'JSON') {
+        if (!empty($postcurl)){
+            echo 'if('.$postcurl.'){'."\n";
+            echo '  $res = curl_post($form_url,json_encode($data),"CURL-POST");'."\n";
+            res_structure($req['res_structure']);
+        }
+        if (!empty($getcurl)) {
+            echo 'if('.$getcurl.'){'."\n";
+            echo '  $res = curl_post($form_url,json_encode($data),"CURL-GET");'."\n";
+            res_structure($req['res_structure']);
+        }
+    }else {
+        if (!empty($postcurl)){
+            echo 'if('.$postcurl.'){'."\n";
+            echo '  $res = curl_post($form_url,$data_str,"CURL-POST");'."\n";
+            res_structure($req['res_structure']);
+        }
+        if (!empty($getcurl)) {
+            echo 'if('.$getcurl.'){'."\n";
+            echo '  $res = curl_post($form_url,$data_str,"CURL-GET");'."\n";
+            res_structure($req['res_structure']);
+        }
+    }
+    #跳转qrcode
+    echo '#跳转qrcode'."\n";
+    echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+    $response_url = response_url($req['first_key'],$req['second_key'],$req['response_level']);
+    $res_echo_str = '';
+    $res_echo_str = response_url_echo($res_echo_str,$response_url);
+    echo $res_echo_str;
+    echo '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
+    echo '  }else{'."\n";
+    echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
+    echo '    exit();'."\n";
+    echo '  }'."\n";
+    echo '}'."\n";
+}
+if (!empty($headerpost) || !empty($headerget)) {
+    echo 'if('.$headerpost.$headerget.'){'."\n\n";
+    echo '  $form_data=$data;'."\n";
+    echo '  $jumpurl=$form_url;'."\n";
+    echo '}'."\n";
+}
+
+
+
+
+#html跳转
 echo '?>'."\n";
 echo '<html>'."\n";
 echo '  <head>'."\n";
@@ -533,13 +535,21 @@ echo '      <title>跳转......</title>'."\n";
 echo '      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />'."\n";
 echo '  </head>'."\n";
 echo '  <body>'."\n";
-echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+if (!empty($postcurl) || !empty($headerpost)) {
+    echo '<?php if('.$postcurl.$headerpost.'){ ?>'."\n\n";
+    echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+    echo '<?php } ?>'."\n";
+}elseif (!empty($getcurl) || !empty($headerget)) {
+    echo '<?php if('.$getcurl.$headerget.'){ ?>'."\n\n";
+    echo '      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+    echo '<?php } ?>'."\n";
+}
 echo '          <p>正在为您跳转中，请稍候......</p>'."\n";
 echo '          <?php'."\n";
 echo '          if(isset($form_data)){'."\n";
 echo '              foreach ($form_data as $arr_key => $arr_value) {'."\n";
 echo '          ?>'."\n";
-echo '              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />'."\n";
+echo '              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>">'."\n";
 echo '          <?php }} ?>'."\n";
 echo '      </form>'."\n";
 echo '      <script language="javascript">'."\n";
@@ -547,6 +557,7 @@ echo '          document.getElementById("frm1").submit();'."\n";
 echo '      </script>'."\n";
 echo '   </body>'."\n";
 echo '</html>'."\n";
+
 
 
 
