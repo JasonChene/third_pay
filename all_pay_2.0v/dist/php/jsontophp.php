@@ -465,6 +465,8 @@ $postcurl=substr($postcurl,0,-2);
 $getcurl=substr($getcurl,0,-2);
 $headerpost=substr($headerpost,0,-2);
 $headerget=substr($headerget,0,-2);
+
+
 #抓取响应值方式
 function res_structure($res_structure){
     if($res_structure=="JSON"){
