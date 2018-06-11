@@ -43,10 +43,20 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+
 $array = array(
-    '红木餐桌','圆桌','转盘','花梨木','刺猬','紫檀中式实木','雕花圆台','餐桌椅组合',
-    '王木匠','鸡翅','木餐桌椅一桌','四凳小户型圆形餐桌','实木红木家具简约圆桌'
+  '红木家具非洲酸枝木餐桌卷书餐桌椅实木长方形餐桌餐桌组合',
+  '红木餐桌圆桌转盘花梨木刺猬紫檀中式实木雕花圆台餐桌椅组合',
+  '红木家具印尼黑酸枝木圆桌餐桌阔叶黄檀餐桌椅组合实木古典圆台',
+  '红木圆餐桌非洲花梨木圆桌酸枝木餐台实木桌椅组合电动大圆台圆形',
+  '红木家具餐桌圆桌印尼黑酸枝圆形雕花圆台阔叶黄檀餐桌椅组合中式',
+  '刺猬紫檀红木家具圆桌花梨木圆形餐桌椅组合中式古典家具',
+  '非洲酸枝木餐桌红木金玉满堂长方形餐桌中式实木餐厅桌椅组合',
+  '阔叶黄檀餐桌中式红木印尼黑酸枝木方形餐桌餐厅桌椅组合家具',
+  '王木匠花梨木刺猬紫檀圆桌餐桌椅组合小户型中式红木餐厅家具',
+  '王木匠鸡翅木餐桌椅一桌四凳小户型圆形餐桌实木红木家具简约圆桌'
 );
+
 #第三方参数设置
 $data = array(
   //基本参数
@@ -66,8 +76,7 @@ $data = array(
   "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商家订单金额
   "bank_code" => '', //银行代码
   "redo_flag" => '1', //是否允许重复订单
-  // "product_name" => '诺基亚_7_Plus_Nokia_7_Plus', //商品名称
-  "product_name" => $array[rand(0,12)], //商品名称
+  "product_name" => $array[rand(0, 9)], //商品名称
   // "product_code" => '', //商品编号
   // "product_num" => '', //商品数量
   // "product_desc" => '', //商品描述
@@ -140,7 +149,7 @@ $row = json_decode(json_encode($xml), 1);//XML回传资料
       <p>正在为您跳转中，请稍候......</p>
         <?php foreach ($data as $arr_key => $arr_value) { ?>
           <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-        <?php
+        <?php 
       } ?>
     </form>
     <script language="javascript">
