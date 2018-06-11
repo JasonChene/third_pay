@@ -43,7 +43,10 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-
+$array = array(
+    '红木餐桌','圆桌','转盘','花梨木','刺猬','紫檀中式实木','雕花圆台','餐桌椅组合',
+    '王木匠','鸡翅','木餐桌椅一桌','四凳小户型圆形餐桌','实木红木家具简约圆桌'
+);
 #第三方参数设置
 $data = array(
   //基本参数
@@ -63,7 +66,8 @@ $data = array(
   "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商家订单金额
   "bank_code" => '', //银行代码
   "redo_flag" => '1', //是否允许重复订单
-  "product_name" => 'teddy', //商品名称
+  // "product_name" => '诺基亚_7_Plus_Nokia_7_Plus', //商品名称
+  "product_name" => $array[rand(0,12)], //商品名称
   // "product_code" => '', //商品编号
   // "product_num" => '', //商品数量
   // "product_desc" => '', //商品描述
@@ -136,7 +140,7 @@ $row = json_decode(json_encode($xml), 1);//XML回传资料
       <p>正在为您跳转中，请稍候......</p>
         <?php foreach ($data as $arr_key => $arr_value) { ?>
           <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-        <?php 
+        <?php
       } ?>
     </form>
     <script language="javascript">

@@ -43,7 +43,10 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-
+$array = array(
+    '红木餐桌','圆桌','转盘','花梨木','刺猬','紫檀中式实木','雕花圆台','餐桌椅组合',
+    '王木匠','鸡翅','木餐桌椅一桌','四凳小户型圆形餐桌','实木红木家具简约圆桌'
+);
 #第三方参数设置
 $data = array(
   //基本参数
@@ -59,7 +62,7 @@ $data = array(
   "order_no" => $order_no, //商户网站唯一订单号
   "order_time" => date("Y-m-d H:i:s"), //商户订单时间
   "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商户订单总金额
-  "product_name" => 'teddy', //商品名称
+  "product_name" => $array[rand(0,12)], //商品名称
   // "product_code" => '', //商品编号
   // "product_num" => '', //商品数量
   // "product_desc" => '', //商品描述
@@ -165,5 +168,5 @@ if ($row['response']['resp_code'] != 'SUCCESS') {
     </script>
   </body>
 </html>
-<?php 
+<?php
 } ?>
