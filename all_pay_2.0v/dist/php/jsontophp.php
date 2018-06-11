@@ -76,6 +76,7 @@ echo '<?php'."\n";
 echo '#第三方名稱 : '.$req['third_name']."\n";
 $platform = fix_payment($req['platform']);    #渠道字串
 echo '#支付渠道 :'.$platform."\n";
+#汇入档案及基础设定
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
 echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
@@ -86,7 +87,7 @@ echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
 
 
 
-#跳转qrcode.php网址调试
+#跳转qrcode.php网址调试 function
 echo '#跳转qrcode.php网址调试'."\n";
 echo 'function QRcodeUrl($code){'."\n";
 echo '  if(strstr($code,"&")){'."\n";
@@ -97,7 +98,7 @@ echo '  }'."\n";
 echo '  return $code2;'."\n";
 echo '}'."\n\n\n";
 
-#修正url
+#修正url function
 echo '#修正url'."\n";
 echo 'function fix_postdata_url($url, $data){'."\n";
 echo   '    $post_url=\'\';'."\n";
@@ -108,7 +109,7 @@ echo '       $post_url=$url."?".$data;'."\n";
 echo ' }'."\n";
 echo ' return $post_url ;'."\n";
 echo '}'."\n\n\n";
-#curl请求设定
+#curl请求设定 function
 echo '#curl请求设定'."\n";
 echo 'function curl_post($url, $data ,$str){'."\n";
 echo '  $ch = curl_init();'."\n";
@@ -117,23 +118,23 @@ echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);'."\n";
 echo '  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);'."\n";
 echo '  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);'."\n";
 echo '  #curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER[\'HTTP_USER_AGENT\']); // 模拟用户使用的浏览器'."\n";
-echo 'if (strstr($str ,"CURL-POST")) {'."\n";
-    echo '  curl_setopt($ch, CURLOPT_POST, true);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_URL, $url);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");'."\n";
-    echo '  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);'."\n";
+echo '  if (strstr($str ,"CURL-POST")) {'."\n";
+echo '      curl_setopt($ch, CURLOPT_POST, true);'."\n";
+echo '      curl_setopt($ch, CURLOPT_URL, $url);'."\n";
+echo '      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");'."\n";
+echo '      curl_setopt($ch, CURLOPT_AUTOREFERER, 1);'."\n";
+echo '      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);'."\n";
     if ($req['req_structure'] == 'JSON') {
-    echo '    curl_setopt($ch, CURLOPT_HTTPHEADER, array('."\n";
-    echo '        \'Content-Type: application/json\','."\n";
-    echo '        \'Content-Length: \' . strlen($data))'."\n";
-    echo ');'."\n";
+        echo '    curl_setopt($ch, CURLOPT_HTTPHEADER, array('."\n";
+        echo '        \'Content-Type: application/json\','."\n";
+        echo '        \'Content-Length: \' . strlen($data))'."\n";
+        echo ');'."\n";
     }
-echo '} elseif(strstr($str ,"CURL-GET")){'."\n";
-  echo '  curl_setopt($ch, CURLOPT_HTTPGET, true);'."\n";
-  echo '  $post_url=fix_postdata_url($url, $data);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_URL, $post_url);'."\n";
-echo '}'."\n";
+echo '  } elseif(strstr($str ,"CURL-GET")){'."\n";
+echo '  curl_setopt($ch, CURLOPT_HTTPGET, true);'."\n";
+echo '  $post_url=fix_postdata_url($url, $data);'."\n";
+echo '  curl_setopt($ch, CURLOPT_URL, $post_url);'."\n";
+echo '  }'."\n";
 echo '  $tmpInfo = curl_exec($ch);'."\n";
 echo '  if (curl_errno($ch)) {'."\n";
 echo '    echo(curl_errno($ch));'."\n";
@@ -163,7 +164,6 @@ echo '}'."\n\n\n";
 
 #固定参数设置
 echo '#固定参数设置'."\n";
-
 //echo '$form_url = \''.$req['form_url']."';\n";
 echo '$bank_code = $_REQUEST[\'bank_code\'];'."\n";
 echo '$order_no = getOrderNo();'."\n";
@@ -193,7 +193,7 @@ if($req['amount_unit'] == '2'){
 
 
 
-#第三方传值参数设置
+#第三方传值参数设置，将传值参数转成array
 function echo_arr($key_name,$array){
   $text =  '"'.$key_name.'" => array('."\n";
   foreach ($array as $arr_key => $arr_value) {
