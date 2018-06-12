@@ -76,6 +76,7 @@ echo '<?php'."\n";
 echo '#第三方名稱 : '.$req['third_name']."\n";
 $platform = fix_payment($req['platform']);    #渠道字串
 echo '#支付渠道 :'.$platform."\n";
+#汇入档案及基础设定
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
 echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
@@ -83,65 +84,6 @@ echo '$S_Name = $_REQUEST[\'S_Name\'];'."\n";
 echo '$top_uid = $_REQUEST[\'top_uid\'];'."\n";
 echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
 
-
-
-
-#跳转qrcode.php网址调试
-echo '#跳转qrcode.php网址调试'."\n";
-echo 'function QRcodeUrl($code){'."\n";
-echo '  if(strstr($code,"&")){'."\n";
-echo '    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc'."\n";
-echo '  }else{'."\n";
-echo '    $code2=$code;'."\n";
-echo '  }'."\n";
-echo '  return $code2;'."\n";
-echo '}'."\n\n\n";
-
-#修正url
-echo '#修正url'."\n";
-echo 'function fix_postdata_url($url, $data){'."\n";
-echo   '    $post_url=\'\';'."\n";
-echo   '    if(substr($url,-1) == \'?\' || substr($url,-1) == \'/\'){ '."\n";
-echo   '      $post_url=substr($url,0,-1)."?".$data;'."\n";
-echo ' }else{'."\n";
-echo '       $post_url=$url."?".$data;'."\n";
-echo ' }'."\n";
-echo ' return $post_url ;'."\n";
-echo '}'."\n\n\n";
-#curl请求设定
-echo '#curl请求设定'."\n";
-echo 'function curl_post($url, $data ,$str){'."\n";
-echo '  $ch = curl_init();'."\n";
-echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);'."\n";
-echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);'."\n";
-echo '  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);'."\n";
-echo '  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);'."\n";
-echo '  #curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER[\'HTTP_USER_AGENT\']); // 模拟用户使用的浏览器'."\n";
-echo 'if (strstr($str ,"CURL-POST")) {'."\n";
-    echo '  curl_setopt($ch, CURLOPT_POST, true);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_URL, $url);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");'."\n";
-    echo '  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);'."\n";
-    echo '  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);'."\n";
-    if ($req['req_structure'] == 'JSON') {
-    echo '    curl_setopt($ch, CURLOPT_HTTPHEADER, array('."\n";
-    echo '        \'Content-Type: application/json\','."\n";
-    echo '        \'Content-Length: \' . strlen($data))'."\n";
-    echo ');'."\n";
-    }
-echo '} elseif(strstr($str ,"CURL-GET")){'."\n";
-  echo '  curl_setopt($ch, CURLOPT_HTTPGET, true);'."\n";
-  echo '  $post_url=fix_postdata_url($url, $data);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_URL, $post_url);'."\n";
-echo '}'."\n";
-echo '  $tmpInfo = curl_exec($ch);'."\n";
-echo '  if (curl_errno($ch)) {'."\n";
-echo '    echo(curl_errno($ch));'."\n";
-echo '    exit;'."\n";
-echo '  }'."\n";
-echo '  curl_close($ch);'."\n";
-echo '  return $tmpInfo;'."\n";
-echo '}'."\n\n\n";
 
 
 #获取第三方资料(非必要不更动)
@@ -163,7 +105,6 @@ echo '}'."\n\n\n";
 
 #固定参数设置
 echo '#固定参数设置'."\n";
-
 //echo '$form_url = \''.$req['form_url']."';\n";
 echo '$bank_code = $_REQUEST[\'bank_code\'];'."\n";
 echo '$order_no = getOrderNo();'."\n";
@@ -193,7 +134,7 @@ if($req['amount_unit'] == '2'){
 
 
 
-#第三方传值参数设置
+#第三方传值参数设置，将传值参数转成array
 function echo_arr($key_name,$array){
   $text =  '"'.$key_name.'" => array('."\n";
   foreach ($array as $arr_key => $arr_value) {
@@ -385,62 +326,13 @@ echo '}'."\n\n\n";
 
 #签名排列，可自行组字串或使用http_build_query($array)
 echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
-  echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
-  echo '  if (is_array($arr_value)) {'."\n";
-  echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
-  echo '  }'."\n";
-  echo '}'."\n";
-  echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
-  echo '  $data_str = $arr_key.\'=\'.$arr_value.\'&\';'."\n";
-  echo '}'."\n";
-  echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
+echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
+echo '  if (is_array($arr_value)) {'."\n";
+echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
+echo '  }'."\n";
+echo '}'."\n";
 
 
-
-
-#响应值层数切割
-function response_url($first_key,$second_key,$response_level){
-    $first_key = cutstr($first_key);
-    $second_key = cutstr($second_key);
-    $response_level = cutstr($response_level);
-    $response_url = array();
-    foreach ($response_level as $res_level_key => $res_level_val) {
-        $response_url[$res_level_key][0] = $res_level_val;
-        foreach ($first_key as $first_key_key => $first_key_val) {
-            if ($first_key_key == $res_level_key) {
-                $response_url[$res_level_key][1] = $first_key_val;
-            }
-        }
-        foreach ($second_key as $second_key_key => $second_key_val) {
-            if ($second_key_key == $res_level_key) {
-                $response_url[$res_level_key][2] = $second_key_val;
-            }
-        }
-    }
-    return $response_url;
-}
-#响应值层数切割 转换成echo
-function response_url_echo($res_echo_str,$response_url){
-    foreach ($response_url as $arr_key => $arr_val) {
-        $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
-        if ($arr_val[0] == '0') {
-            $res_echo_str .= '      $jumpurl = $row;'."\n";
-            $res_echo_str .= '  }'."\n";
-        }elseif ($arr_val[0] == '1') {
-            $res_echo_str .= '      $jumpurl = $row';
-            $res_echo_str .= '[\''.$arr_val[1].'\']';
-            $res_echo_str .= ';'."\n";
-            $res_echo_str .= '  }'."\n";
-        }else {
-            $res_echo_str .= '      $jumpurl = $row';
-            $res_echo_str .= '[\''.$arr_val[1].'\']';
-            $res_echo_str .= '[\''.$arr_val[2].'\']';
-            $res_echo_str .= ';'."\n";
-            $res_echo_str .= '  }'."\n";
-        }
-    }
-    return $res_echo_str;
-}
 
 
 #curl获取响应值
@@ -474,12 +366,13 @@ function res_structure($res_structure){
     }elseif($res_structure=="XML"){
         echo '  $xml=(array)simplexml_load_string($res) or die("Error: Cannot create object");'."\n";
         echo '  $row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
-    }elseif($$res_structure=="xmlCDATA"){
+    }elseif($res_structure=="xmlCDATA"){
         echo '  $xml=(array)simplexml_load_string($res,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '  $row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
 }
 
+####################################################################################################
 echo '#curl获取响应值'."\n";
 if (!empty($postcurl) || !empty($getcurl)) {
     if ($req['req_structure'] == 'JSON') {
@@ -496,14 +389,82 @@ if (!empty($postcurl) || !empty($getcurl)) {
     }else {
         if (!empty($postcurl)){
             echo 'if('.$postcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,$data_str,"CURL-POST");'."\n";
+            echo '  $res = curl_post($form_url,http_build_query($data),"CURL-POST");'."\n";
             res_structure($req['res_structure']);
         }
         if (!empty($getcurl)) {
             echo 'if('.$getcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,$data_str,"CURL-GET");'."\n";
+            echo '  $res = curl_post($form_url,http_build_query($data),"CURL-GET");'."\n";
             res_structure($req['res_structure']);
         }
+    }
+
+
+
+    #响应值层数切割
+    function response_url($first_key,$second_key,$response_level){
+        $first_key = cutstr($first_key);
+        $second_key = cutstr($second_key);
+        $response_level = cutstr($response_level);
+        $response_url = array();
+        foreach ($response_level as $res_level_key => $res_level_val) {
+            $response_url[$res_level_key][0] = $res_level_val;
+            foreach ($first_key as $first_key_key => $first_key_val) {
+                if ($first_key_key == $res_level_key) {
+                    $response_url[$res_level_key][1] = $first_key_val;
+                }
+            }
+            foreach ($second_key as $second_key_key => $second_key_val) {
+                if ($second_key_key == $res_level_key) {
+                    $response_url[$res_level_key][2] = $second_key_val;
+                }
+            }
+        }
+        return $response_url;
+    }
+    #响应值层数切割 转换成echo
+    function response_url_echo($res_echo_str,$response_url){
+        foreach ($response_url as $arr_key => $arr_val) {
+            $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
+            if ($arr_val[0] == '0') {
+                $res_echo_str .= '      $jumpurl = $row;'."\n";
+                $res_echo_str .= '  }'."\n";
+            }elseif ($arr_val[0] == '1') {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= ';'."\n";
+                $res_echo_str .= '  }'."\n";
+            }else {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= '[\''.$arr_val[2].'\']';
+                $res_echo_str .= ';'."\n";
+                $res_echo_str .= '  }'."\n";
+            }
+        }
+    }
+    #响应值层数切割 转换成echo
+    function response_url_echo($res_echo_str,$response_url){
+        foreach ($response_url as $arr_key => $arr_val) {
+            $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
+            if ($arr_val[0] == '0') {
+                $res_echo_str .= '      $jumpurl = $row;'."\n";
+            }elseif ($arr_val[0] == '1') {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= ';'."\n";
+            }else {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= '[\''.$arr_val[2].'\']';
+                $res_echo_str .= ';'."\n";
+            }
+            if (strstr(substr(posttype($arr_key),0,-2),'_is_mobile()')) {
+                $res_echo_str .= '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
+            }
+            $res_echo_str .= '  }'."\n";
+        }
+        return $res_echo_str;
     }
     #跳转qrcode
     echo '#跳转qrcode'."\n";
@@ -512,13 +473,18 @@ if (!empty($postcurl) || !empty($getcurl)) {
     $res_echo_str = '';
     $res_echo_str = response_url_echo($res_echo_str,$response_url);
     echo $res_echo_str;
-    echo '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
     echo '  }else{'."\n";
     echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
+    echo '    echo "<pre>";'."\n";
+    echo '    var_dump("请求报文：");'."\n";
+    echo '    var_dump($data);'."\n";
+    echo '    var_dump("响应报文：");'."\n";
+    echo '    var_dump($res);'."\n";
     echo '    exit();'."\n";
     echo '  }'."\n";
     echo '}'."\n";
 }
+####################################################################################################
 if (!empty($headerpost) || !empty($headerget)) {
     echo 'if('.$headerpost.$headerget.'){'."\n\n";
     echo '  $form_data=$data;'."\n";
