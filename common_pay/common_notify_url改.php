@@ -77,12 +77,22 @@ if ($pay_mid == "" || $pay_mkey == "") {
 #验签方式
 $noarr = array('sign');//不加入签名的array key值
 ksort($data);
-$signtext="";
+$signtext = "";
 foreach ($data as $arr_key => $arr_val) {
 	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
+$signtext = substr($signtext, 0,-1);//验签字串
+//write_log("signtext=".$signtext);
+$mysign = md5($signtext);//签名
+//write_log("mysign=".$mysign);
+
+#验签方式2
+$signtext = "";
+$signtext .= 'order_no='.$data['order_no'].'&';
+$signtext .= 'pay_amoumt='.$data['pay_amoumt'].'&';
+$signtext .= 'is_success='.$data['is_success'].'&';
 $signtext = substr($signtext, 0,-1);//验签字串
 //write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
