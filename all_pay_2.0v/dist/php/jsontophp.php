@@ -366,7 +366,7 @@ function res_structure($res_structure){
     }elseif($res_structure=="XML"){
         echo '  $xml=(array)simplexml_load_string($res) or die("Error: Cannot create object");'."\n";
         echo '  $row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
-    }elseif($$res_structure=="xmlCDATA"){
+    }elseif($res_structure=="xmlCDATA"){
         echo '  $xml=(array)simplexml_load_string($res,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '  $row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
@@ -441,28 +441,28 @@ if (!empty($postcurl) || !empty($getcurl)) {
                 $res_echo_str .= ';'."\n";
                 $res_echo_str .= '  }'."\n";
             }
-            #响应值层数切割 转换成echo
-            function response_url_echo($res_echo_str,$response_url,$isqrcode){
-                foreach ($response_url as $arr_key => $arr_val) {
-                    $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
-                    if ($arr_val[0] == '0') {
-                        $res_echo_str .= '      $jumpurl = $row;'."\n";
-                    }elseif ($arr_val[0] == '1') {
-                        $res_echo_str .= '      $jumpurl = $row';
-                        $res_echo_str .= '[\''.$arr_val[1].'\']';
-                        $res_echo_str .= ';'."\n";
-                    }else {
-                        $res_echo_str .= '      $jumpurl = $row';
-                        $res_echo_str .= '[\''.$arr_val[1].'\']';
-                        $res_echo_str .= '[\''.$arr_val[2].'\']';
-                        $res_echo_str .= ';'."\n";
-                    }
-                    if ($isqrcode) {
-                        $res_echo_str .= '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
-                    }
-                    $res_echo_str .= '  }'."\n";
-                }
+        }
+    }
+    #响应值层数切割 转换成echo
+    function response_url_echo($res_echo_str,$response_url){
+        foreach ($response_url as $arr_key => $arr_val) {
+            $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
+            if ($arr_val[0] == '0') {
+                $res_echo_str .= '      $jumpurl = $row;'."\n";
+            }elseif ($arr_val[0] == '1') {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= ';'."\n";
+            }else {
+                $res_echo_str .= '      $jumpurl = $row';
+                $res_echo_str .= '[\''.$arr_val[1].'\']';
+                $res_echo_str .= '[\''.$arr_val[2].'\']';
+                $res_echo_str .= ';'."\n";
             }
+            if (strstr(substr(posttype($arr_key),0,-2),'_is_mobile()')) {
+                $res_echo_str .= '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
+            }
+            $res_echo_str .= '  }'."\n";
         }
         return $res_echo_str;
     }
