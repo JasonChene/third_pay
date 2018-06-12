@@ -6,20 +6,6 @@ include_once("../moneyfunc.php");
 
 
 #############################################
-#request方法
-write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	write_log($key . "=" . $value);
-}
-#post方法
-write_log('post方法');
-foreach ($_POST as $key => $value) {
-	write_log($key . "=" . $value);
-}
-#input方法
-write_log('input方法');
-$input_data = file_get_contents("php://input");
-write_log($input_data);
 // $res=json_decode($input_data,1);//json回传资料
 
 // $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
@@ -35,15 +21,16 @@ write_log($input_data);
 ###########################################
 
 #接收资料
-#request方法
-$data = array();
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key . "=" . $value);
+#input方法
+$input_data = file_get_contents("php://input");
+write_log($input_data);
+$data = json_decode($input_data, 1);//json回传资料
+foreach ($data as $key => $value) {
+	write_log($key . ' = ' . $value);
 }
 
 #设定固定参数
-$order_no = $data['out_transaction_id']; //订单号
+$order_no = $data['out_trade_no']; //订单号
 $mymoney = number_format($data['total_amount'], 2, '.', ''); //订单金额
 $success_msg = $data['pay_result'];//成功讯息
 $success_code = "0";//文档上的成功讯息
@@ -81,7 +68,7 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0, -1) . '&key' . $pay_mkey;//验签字串
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;//验签字串
 write_log("signtext=" . $signtext);
 $mysign = strtoupper(md5($signtext));//签名
 write_log("mysign=" . $mysign);

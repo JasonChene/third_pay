@@ -12,6 +12,7 @@ function curl_post($url, $data)
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('application/x-www-form-urlencoded'));
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -53,23 +54,23 @@ $data = array(
   "merchant_id" => $pay_mid, //商户号
   "out_trade_no" => $order_no, //商户订单号
   "goods_desc" => 'teddy', //商品描述
-  "attach" => '', //附加信息
+  "attach" => 'attach', //附加信息
   "total_amount" => $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', ''), //总金额
   "notify_url" => $merchant_url, //通知地址
-  "return_url" => '', //前台地址
-  "nonce_str" => time(), //随机字符串  // 1409196838
+  "return_url" => $return_url, //前台地址
+  "nonce_str" => time(), //随机字符串
   "sign" => '' //签名
 );
 
 #变更参数设置
-$form_url = 'http://47.75.145.199/smartpayment/pay/gateway';//提交地址
-$scan = 'wx';
+$form_url = 'http://106.15.159.189/smartpayment/pay/gateway';//提交地址
+$scan = 'zfb';
 $data['service'] = 'pay.alipay.codepay';
 if (_is_mobile()) {
   $data['service'] = 'pay.alipay.wappay';
 }
-$bankname = $pay_type . "->微信在线充值";
-$payType = $pay_type . "_wx";
+$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_zfb";
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -85,16 +86,18 @@ if ($result_insert == -1) {
 ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
-$data_str = '';
+// $data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
-  $data_str .= $arr_key . '=' . $arr_val . '&';
+  // $data_str .= $arr_key . '=' . $arr_val . '&';
 }
-$signtext = substr($signtext, 0, -1) . '&key' . $pay_mkey;
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-$data_str .= substr($data_str, 0, -1) . '&sign=' . $sign;
+$data['sign'] = $sign;
+$data_str = http_build_query($data);
+// $data_str .= substr($data_str, 0, -1) . '&sign=' . $sign;
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
@@ -103,23 +106,25 @@ $tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
 
 //打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
+// echo '<pre>';
+// echo ('<br> data = <br>');
+// var_dump($data);
+// echo ('<br> signtext = <br>');
+// echo ($signtext);
+// echo ('<br><br> row = <br>');
+// var_dump($row);
+// echo '</pre>';
+
+// exit;
 
 #跳转
 if ($row['status'] != '0') {
-  echo '错误代码:' . $row['status'] . "\n";//返回状态码
-  echo '错误讯息:' . $row['message'] . "\n";//返回信息
+  echo '返回状态码:' . $row['status'] . "\n";//返回状态码
+  echo '返回信息:' . $row['message'] . "\n";//返回信息
   exit;
 } elseif ($row['result_code'] != '0') {
-  echo '错误代码:' . $row['result_code'] . "\n";//业务结果
-  echo '错误讯息:' . $row['err_code'] . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
+  echo '业务结果:' . $row['result_code'] . "\n";//业务结果
+  echo '错误代码 . 描述:' . $row['err_code'] . ' + ' . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
   exit;
 } else {
   if (!_is_mobile()) {
@@ -130,7 +135,13 @@ if ($row['status'] != '0') {
     }
     $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
   } else {
-    $jumpurl = $row['pay_info'];
+    if (strstr($row['pay_info'], "&")) {
+      $code = str_replace("&", "aabbcc", $row['pay_info']);//有&换成aabbcc
+    } else {
+      $code = $row['pay_info'];
+    }
+    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    // $jumpurl = $row['pay_info'];
   }
 }
 
