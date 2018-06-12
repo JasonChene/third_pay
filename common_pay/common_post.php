@@ -2,6 +2,7 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+#预设时间在上海
 date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
@@ -56,7 +57,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "merchantNumber" => $pay_mid, //商户号
-  "transAmount" => $_REQUEST['MOAmount'],//订单金额：单位/元
+  "transAmount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
   "transNo" => $order_no,//商户流水号
   "payWay" => '',//支付方式
   "tradeName" => 'Buy',//商品名称

@@ -1,0 +1,494 @@
+1.易宝
+迅游付
+易到2
+kjbpay
+qhapi
+yeepay
+特征
+$p0_Cmd = "Buy";
+$p1_MerId = $pay_mid;
+$p2_Order = $orderid;
+$p3_Amt = $price;
+$p4_Cur = "CNY";
+$p5_Pid = "GOOD";
+$p6_Pcat = "11";//商品名称
+$p7_Pdesc = "22";//商品描述
+$p8_Url = $merchant_url;
+$p9_SAF = "0";//默认0
+$pa_MP = $orderid;//原样返回
+$pd_FrpId = $_REQUEST['bank_code'];//银行代码 不指定时 可以选择
+$pr_NeedResponse = "1";
+2.智联
+特征
+$parms = array(
+  "userid" => $userid,//商户号
+  "apikey" => $apikey,
+  "istype" => $istype,//支付类型
+  "price" => $price ,//金额
+  "orderid" => $orderid,//订单号
+  "orderuid" => $orderuid,
+  "goodsname" => $goodsname, //商品名称
+  "return_url" => $return_url,
+  "notify_url" => $notify_url
+);
+3.速龙
+康付通
+特征
+$parms = array(
+  "merchant_code" => $merchant_code,//商户号
+  "service_type" => $service_type,//支付类型
+  "interface_version" => $interface_version,
+  "client_ip" => $client_ip,
+  "sign_type" => $sign_type,
+  "order_amount" => $order_amount,//金额
+  "order_no" => $order_no,//订单号
+  "product_name" => $product_name,
+  "order_time" => $order_time,
+  "notify_url"=> $notify_url //异步地址 
+);
+4雷霆
+星捷付
+千信
+云尖
+特征
+$parms = array(
+  "version" => $version,//商户号
+  "customerid" => $customerid,
+  "total_fee" => $total_fee,
+  "sdorderno" => $sdorderno,
+  "paytype" => $paytype,
+  "notifyurl" => $notifyurl,
+  "returnurl" => $returnurl
+);
+5.名狐
+精準付
+亿胜付
+mbpay
+mobaopay
+xmbpay
+优米付
+特征
+$parms = array(
+  "apiName" => $apiName,
+  "apiVersion" => "1.0.0.0",
+  "platformID" => $pay_mid,
+  "merchNo" => $pay_mid,
+  "orderNo" => $orderNo,
+  "tradeDate" => date("Ymd"),
+  "amt" => $amt,
+  "merchUrl" => $merchant_url,
+  "merchParam" => "abcd",
+  "tradeSummary" => "iphone1"
+);
+6.银欣
+特征
+7.及时付
+环球付
+特征
+$data = array(
+  "partner" => $pay_account,//PID
+  "user_seller" => $pay_mid,
+  "out_order_no" => $order_no,
+  "subject" => "123",
+  "total_fee" => number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  "notify_url" => $merchant_url,
+  "return_url" => $return_url
+);
+
+8.35zhifu
+dingfeng
+ebaopay
+fdpay
+hmbpay
+huitengpay
+jhzpay
+juhuibao
+juyuanpay
+kacheng
+kuaizhifu
+likefu
+mobaoyun
+qifpay
+qifu
+renxin
+tongbao
+weifutong
+xinhui
+xunbao
+yunanfu
+yunsheng
+zaixianbao
+特征
+$orderno = date("YmdHis").substr(microtime(),2,5).rand(1,9);//流水号
+$paytype = 20; //20代表网银支付，22代表支付宝支付，30代表微信支付
+$paycode = "";
+$usercode = $pay_mid;//商户号
+$value = round($_REQUEST['MOAmount'],2);//订单金额
+$notifyurl = $merchant_url; //商户异步通知地址
+$returnUrl = $return_url;//服务器底层通知地址
+$dateis = date('is');
+$remark = $dateis.md5($pay_mid.$dateis);//订单附加消息
+$datetime = date("YmdHis",time());//交易时间
+$goodsname = "shopping";//产品名称
+
+9.948pay
+特征
+$parms = array(
+    'merchantNo'=>$merchantNo,
+    'netwayCode'=>$netwayCode,
+    'randomNum'=>$randomNum,
+    'orderNum'=>$orderNum,
+    'payAmount'=>$payAmount,
+    'goodsName'=>$goodsName,
+    'callBackUrl'=>$merchant_url,
+    'frontBackUrl'=>$return_url,
+    'requestIP'=>$requestIP
+  );
+10.alinepay
+ybpay
+yichigo
+高通
+特征
+$postUrl = $form_url. "?partner=".$partner;
+$postUrl.="&banktype=".$banktype;
+$postUrl.="&paymoney=".$paymoney;
+$postUrl.="&ordernumber=".$ordernumber;
+$postUrl.="&callbackurl=".$callbackurl;
+$postUrl.="&hrefbackurl=".$hrefbackurl;
+$postUrl.="&attach=".$attach;
+$postUrl.="&sign=".$sign;
+
+11.
+allscorepay(商银信)
+通联
+特征
+$parameter = array(
+        "service" => $service, //
+        "inputCharset" => $inputCharset, //
+        "merchantId" => $merchantId, //
+        "payMethod" => $payMethod, //
+        "outOrderId" => $outOrderId, //
+        "subject" => $subject, //
+        "body" => $body, //
+        "transAmt" => $transAmt, //
+        "notifyUrl" => $notifyUrl, //
+        "returnUrl" => $returnUrl, //
+        "signType" => $signType,
+        "defaultBank" => $defaultBank,
+        "channel" => $channel,
+        "cardAttr" => $cardAttr
+    );
+
+12.byeepay
+迅游通
+特征
+$parms = array(
+  "payKey" => $payKey,
+  "orderPrice" => $orderPrice,
+  "outTradeNo" => $outTradeNo,
+  "subPayKey" => $subPayKey,
+  "orderTime" => $orderTime,
+  "productName" => $productName,
+  "productType" =>$productType,
+  "orderIp" => $orderIp,
+  "remark" => $remark,
+  "returnUrl" => $returnUrl,
+  "notifyUrl" => $notifyUrl,
+  "bankCode" => $bankCode,
+  "bankAccountType" => $bankAccountType,
+);
+
+13.hcpay
+hxpay
+特征
+$orge = 'billno'.$Billno.'currencytype'.$Currency_Type.'amount'.$Amount.'date'.$Date.'orderencodetype'.$OrderEncodeType.$Mer_key ;
+
+14.kuaikuaibao
+特征
+$MemberID=$pay_mid;//商户号
+$TransID=date("YmdHis").substr(microtime(),2,5).rand(1,9);//流水号
+$PayID="";//支付方式
+$TradeDate=date("YmdHis",time());//交易时间
+$OrderMoney=$_REQUEST['MOAmount']*100;//订单金额
+$ProductName=$_REQUEST['S_Name'];//产品名称
+$Amount=1;//商品数量
+$Username=$_REQUEST['S_Name'];//支付用户名
+$dateis = date('is');
+$AdditionalInfo=$_REQUEST['S_Name']."|".$dateis."|".md5($_REQUEST['S_Name'].$pay_mid.$dateis);//订单附加消息
+$PageUrl=$merchant_url;//通知商户页面端地址
+$ReturnUrl=$return_url;//服务器底层通知地址
+$NoticeType=1;//通知类型	
+$Md5key=$pay_mkey;//md5密钥（KEY）
+$MARK = "|";
+
+15.miaofupay
+xbpay
+yompay
+特征
+$arr['input_charset'] = "UTF-8";
+$arr['notify_url'] = $merchant_url;
+$arr['return_url'] = $return_url;
+$arr['pay_type'] = 1;
+$arr['bank_code'] = $_REQUEST['bank_code'];
+$arr['merchant_code'] = $pay_mid;
+
+16.okpay
+特征
+$signText = "version=".$version."&partner=".$partner."&orderid=".$orderid."&payamount=".$payamount."&payip=".$payip."&notifyurl=".$notifyurl."&returnurl=".$returnurl."&paytype=".$paytype."&remark=".$remark."&key=".$tokenkey;
+17.ruyipay
+特征
+$data = array(
+	"P_UserId" => $P_UserId,
+	"P_OrderId" => $P_OrderId,
+	"P_CardId" => $P_CardId,
+	"P_CardPass" => $P_CardPass,
+	"P_FaceValue" => $P_FaceValue,
+	"P_ChannelId" => $P_ChannelId,
+	"P_Subject" => $P_Subject,
+	"P_Price" => $P_Price,
+	"P_Notic" => $P_Notic,
+	"P_Result_url" => $P_Result_URL,
+	"P_Notify_url" => $P_Notify_URL
+);
+
+18.sfpay
+特征
+$Signature=md5($MemberID.$MARK.$PayID.$MARK.$TradeDate.$MARK.$TransID.$MARK.$OrderMoney.$MARK.$PageUrl.$MARK.$ReturnUrl.$MARK.$NoticeType.$MARK.$Md5key);
+
+19.速通
+商易
+易通
+钱通宝
+掌财通
+银通
+特征
+$parms = array(
+  "parter" => $parter,
+  "type" => $type,
+  "value" => $value,
+  "orderid" => $order_no,
+  "callbackurl" => $merchant_url,
+);
+20.xfbpay
+特征
+$post_data = array(
+    'merchno' => $merchno,
+    'amount' => $amount,
+    'traceno' => $traceno,
+    'payType' => $payType,
+    'notifyUrl'=>$notifyUrl,
+    'goodsName'=>$goodsName,
+    'settleType'=>$settleType,
+    'remark'=>$remark
+);
+
+21.新码
+特征
+$post_data = array(
+        'messageid'         => $messageid,
+        'out_trade_no'      => $out_trade_no,
+        'back_notify_url'   => $back_notify_url,
+        'front_notify_url'  => $front_notify_url,
+        'branch_id'         => $branch_id,
+        'prod_name'         => $prod_name,
+        'prod_desc'         => $prod_desc,
+        'pay_type'          => $tpay_type,
+        'total_fee'         => $total_fee,
+        'nonce_str'         => $nonce_str
+);
+22.移动
+特征
+$parms = array(
+  "merId" => $merId,//商户号
+  "merNo" => $merNo,
+  "title" => $title,
+  "describe" => $describe,
+  "payType" => $post_payType,
+  "attach" => $attach,
+  "price" => $price,
+  "userIp" => $userIp,
+  "synUrl" => $synUrl,
+  "notifyUrl"=> $notifyUrl //异步地址 
+);
+
+23.51pay
+$parms = array(
+  "tranCode" => $tranCode,
+  "agtId" => $agtId,
+  "merId" => $merId,
+  "orderAmt" => $orderAmt,
+  "orderId" => $orderId,
+  "goodsName" => $goodsName,
+  "notifyUrl" => $notifyUrl,
+  "nonceStr" => $nonceStr,
+  "stlType" => $stlType,
+  "termIp" => $termIp,
+  "payChannel" => $payChannel
+);
+24.3vpay
+$parms = array(
+    'appId'=>$appId,
+    'money'=>$money,
+    'payType'=>$type,
+    'orderNumber'=>$orderNumber,
+    'notifyUrl'=>$notify_url,
+    'returnUrl'=>$return_url,
+  );
+
+25.
+宇信达
+inPay+
+汇银支付
+七彩云
+MultiPay
+时时支付
+易而闪
+顺易付
+顺手付
+亿付
+雀付
+蜘蛛付
+26.明捷付
+久通
+特征
+$parms = array(
+  "version" => "3.0.0.0",//版本
+  "merchNo" => $pay_mid,//商户号
+  "netwayCode" => $netwayCode,//通道
+  "randomNum" => createNoncestr(8),//8位随机
+  "orderNum" => $orderNo,//订单号
+  "amount" => $amount,//金额 单位分
+  "goodsName" => "iPhone",//商品名称
+  "callBackUrl" => $merchant_url,//支付结果通知地址
+  "callBackViewUrl" => $return_url,//回显地址
+  "charset" => "UTF-8"//客户的编码格式
+);
+
+
+27.
+合付通
+特征
+$data = array(
+  "account_no" => $pay_mid,//商户ID
+  "time" => time(),//时间戳
+  "mount" => $value,//订单金额
+  "order" => $order_no,//订单号
+  "notify_url" => $merchant_url//异步通知地址
+);
+
+28.
+盛盈付
+特征
+$data = array(
+  "merchNo" => $pay_mid,//商户号
+  "tradeAmount" => $amount,//交易金额
+  "tradeNo" => $order_no,//商户流水号,订单号不可重复
+  "pt" => "yinlian",//支付方式
+  "notifyUrl" => $merchant_url//通知地址
+);
+
+
+29
+新浦发
+特征
+$data = array(
+  "merno" => $pay_mid, //商户号
+  "fee" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/分
+  "orderno" => $order_no,//商户流水号
+  "paytype" => '02',//支付方式
+  "ip" => getClientIp(),//商品名称
+  "callBackUrl" => $return_url,//返回地址
+  "notifyurl" => $merchant_url,//通知地址
+  "app" => 'App',
+  "goodsname" => 'iPhone'
+);
+
+30.
+星付
+特征
+$data = array(
+		"service" => $service,
+		"version" => $version,
+		"merId" => $merId,
+		"typeId" => $typeId,
+		"tradeNo" => $tradeNo,
+		"tradeDate" => $tradeDate,
+		"amount" => $amount,
+		"notifyUrl" => $notifyUrl,
+		"extra" => $extra,
+		"summary" => $summary,
+		"expireTime" => $expireTime,
+		"clientIp" => $clientIp,
+		"bankId" => $bankId
+	);
+31.
+美派
+倒了
+
+32.
+小熊宝
+$data = array(
+  "type" => "form", //接口调用方式
+  "merchantId" => $pay_mid,//商户ID
+  "money" => $mymoney,//金额
+  "timestamp" => time()*1000,//时间戳.精确到毫秒
+  "notifyURL" => $merchant_url,//通知地址
+  "merchantOrderId" => $order_no,//订单号
+);
+33.
+$data = array(
+  "pay_version" => "vb1.0",
+  "pay_memberid" => $pay_mid, //商户号
+  "pay_orderid" => $order_no,//商户流水号
+  "pay_applydate" => date("YmdHis"),//时间
+  "pay_bankcode" => '1004',//通道
+  "pay_notifyurl" => $merchant_url,//通知地址
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 0, '.', '')//订单金额：单位/元
+);
+34.嘉联
+$data = array(
+  "pay_memberid" => $pay_mid, //商户号
+  "pay_orderid" => $order_no,//商户流水号
+  "pay_amount" => $mymoney,//订单金额：单位/元
+  "pay_applydate" => date("Y-m-d H:i:s"),
+  "pay_bankcode" => '902',//支付方式
+  "pay_notifyurl" => $merchant_url,//通知地址
+  "pay_callbackurl" => $return_url//商品名称
+);
+
+35.新干线
+$data =array(
+  'merchant_id' => $pay_mid,//商家号
+  'payment_way' => '',//支付方式
+  'order_amount' => $mymoney,//商家订单金额
+  'source_order_id' => $order_no,//商家订单号
+  'goods_name' => 'pay',//商品名称
+  'client_ip' => getClientIp(),//客户端IP
+  'bank_code' => '',//网银直连银行代码
+  'notify_url' => $merchant_url,//异步通知url
+  'return_url' => $return_url,//页面跳转同步通知地址
+  'sign' => '',//签名数据
+  'token' => $pay_mkey,
+);
+36.高付通
+$data = array(
+  "merchantNo" => $pay_mid, //商户号
+  "orderAmount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
+  "orderNo" => $order_no,//商户流水号
+  "notifyUrl" => $merchant_url,//通知地址
+  "callbackUrl" => $return_url,
+  "payType" => '8'//支付方式
+  "deviceType" => '01',
+  "mchAppId" => 'threepay',
+  "mchAppName" => 'threepay'
+);
+37.益云
+$data = array(
+  "version" => "3.0",
+  "method" => "yy.online.interface",
+  "partner" => $pay_mid, //商户号
+  "banktype" => "QQ",
+  "paymoney" => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额：单位/元
+  "ordernumber" => $order_no,//商户流水号
+  "callbackurl" => $merchant_url,//通知地址
+);
