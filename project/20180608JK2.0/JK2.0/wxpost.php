@@ -101,8 +101,7 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
+$tran = mb_convert_encoding("$res", "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
 //打印
@@ -124,35 +123,20 @@ if ($row['status'] != '0') {
   exit;
 } elseif ($row['result_code'] != '0') {
   echo '业务结果:' . $row['result_code'] . "\n";//业务结果
-  echo '错误代码 . 描述:' . $row['err_code'] . ' + ' . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
+  echo '错误代码 描述:' . $row['err_code'] . ' ' . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
   exit;
 } else {
   if (!_is_mobile()) {
-    if (strstr($row['pay_info'], "&")) {
-      $code = str_replace("&", "aabbcc", $row['pay_info']);//有&换成aabbcc
-    } else {
-      $code = $row['pay_info'];
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    $jumpurl = $row['pay_info'];
   } else {
     $jumpurl = $row['pay_info'];
   }
 }
 
 #跳轉方法
+
+echo '正在为您跳转中，请稍候......';
+header('Location:' . $jumpurl);
+exit;
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
 
