@@ -133,7 +133,7 @@ if ($row['respCode'] != '0000') {
   }else{
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['payUrl']);
   }
-
+}
 #跳轉方法
 
 ?>
@@ -151,4 +151,3 @@ if ($row['respCode'] != '0000') {
     </script>
   </body>
 </html>
-<?php } ?>
