@@ -2,7 +2,10 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-
+date_default_timezone_set('PRC');
+if (function_exists("date_default_timezone_set")) {
+  date_default_timezone_set("Asia/Shanghai");
+}
 #function
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
@@ -49,44 +52,30 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-
+$form_url = 'http://api.huiyin-pay.com/orderpay/pay';//提交地址
 #第三方参数设置
 $data = array(
-  "merchantNumber" => $pay_mid, //商户号
-  "transAmount" => $_REQUEST['MOAmount'],//订单金额：单位/元
-  "transNo" => $order_no,//商户流水号
-  "payWay" => '',//支付方式
-  "tradeName" => 'Buy',//商品名称
-  "callBackUrl" => $merchant_url,//通知地址
-  "remark" => 'yesOhyes',//备注
-  "settlement" => 'T1'//结算方式
+  "merchantcode" => $pay_mid, //商户号
+  "type" => '',//通道类型
+  "amount" => $mymoney,//订单金额：单位元（人民币），2位小数
+  "orderid" => $order_no,//商户订单号
+  "notifyurl" => $merchant_url,//下行异步通知地址
+  // "callbackurl" => $return_url,//下行同步通知地址 若提交值无该参数，用户将停留在汇银接口系统提示支付成功的页面
+  "clientip" => getClientIp(),//支付用户IP
+  "desc" => 'iphone6S',//备注消息
+  "sign" => ''//MD5签名
 );
 #变更参数设置
-
-$scan = 'wx';
-$data['payWay'] = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-if (_is_mobile()) {
-  $form_url = 'http://a.bzzdp.com/api/createWapOrder';//wap提交地址
+if (strstr($_REQUEST['pay_type'], "银联快捷")) {
+    $scan = 'ylkj';
+    $bankname = $pay_type."->银联钱包在线充值";
+    $payType = $pay_type."_ylkj";
+    $data['type'] = 'KUAIJIE'; //银联钱包
 }else {
-  $form_url = 'http://a.bzzdp.com/api/createOrder';//扫码提交地址
-}
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $data['payWay'] = 'jd';
-  $bankname = $pay_type."->京东钱包在线充值";
-  $payType = $pay_type."_jd";
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['payWay'] = 'qq';
-  $bankname = $pay_type."->QQ钱包在线充值";
-  $payType = $pay_type."_qq";
-}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
-  $scan = 'bd';
-  $data['payWay'] = 'baidu';
-  $bankname = $pay_type."->百度钱包在线充值";
-  $payType = $pay_type."_bd";
+    $scan = 'yl';
+    $bankname = $pay_type."->银联钱包在线充值";
+    $payType = $pay_type."_yl";
+    $data['type'] = 'YINLIAN'; //银联快捷
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -99,37 +88,23 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr =array('sign');
+$noarr =array('sign','desc','clientip');
 $signtext = '';
-$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
-  $data_str .= $arr_key.'='.$arr_val.'&';
 }
-$signtext = substr($signtext,0,-1).'&'.$pay_mkey;
-$sign = md5($signtext);
-$data_str .= substr($data_str,0,-1).'&sign='.$sign;
-
+$signtext = substr($signtext,0,-1).'&key='.$pay_mkey;
+$sign = mb_strtoupper(md5($signtext));
+$data['sign'] = $sign;
 #curl获取响应值
-$res = curl_post($form_url,$data_str);
-$tran = mb_convert_encoding($res,"gb2312","UTF-8");
-$row = json_decode($tran,1);
-#跳转
-if ($row['respCode'] != '0000') {
-  echo  '错误代码:' . $row['respCode']."\n";
-  echo  '错误讯息:' . $row['respInfo']."\n";
-  exit;
-}else {
 
-  if(_is_mobile()){
-    $jumpurl = $array['payUrl'];
-  }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['payUrl']);
-  }
+#跳转
 
 #跳轉方法
+$jumpurl = $form_url;
+$form_data = $data;
 
 ?>
 <html>
@@ -140,10 +115,13 @@ if ($row['respCode'] != '0000') {
   <body>
     <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
+      <?php if (isset($form_data)) {
+                foreach ($form_data as $arr_key => $arr_value) { ?>
+                    <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php }} ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
 </html>
-<?php } ?>
