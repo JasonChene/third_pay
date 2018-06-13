@@ -111,6 +111,8 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
+
+
 $signtext = substr($signtext,0,-1).'&'.$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign; 
