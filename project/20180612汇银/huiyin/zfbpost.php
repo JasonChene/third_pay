@@ -66,16 +66,12 @@ $data = array(
   "sign" => ''//MD5签名
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
-    $scan = 'ylkj';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_ylkj";
-    $data['type'] = 'KUAIJIE'; //银联钱包
-}else {
-    $scan = 'yl';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_yl";
-    $data['type'] = 'YINLIAN'; //银联快捷
+$scan = 'zfb';
+$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_zfb";
+$data['type'] = 'ALIPAY'; //支付宝
+if (_is_mobile()) {
+    $data['type'] = 'ALIPAYH5'; //支付宝H5
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

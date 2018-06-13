@@ -66,16 +66,30 @@ $data = array(
   "sign" => ''//MD5签名
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
-    $scan = 'ylkj';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_ylkj";
-    $data['type'] = 'KUAIJIE'; //银联钱包
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+    $scan = 'jd';
+    $bankname = $pay_type."->京东钱包在线充值";
+    $payType = $pay_type."_jd";
+    $data['type'] = 'JD'; //京东钱包
+    if (_is_mobile()) {
+        $data['type'] = 'JDH5'; //京东钱包H5
+    }
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+    $scan = 'bd';
+    $bankname = $pay_type."->百度钱包在线充值";
+    $payType = $pay_type."_bd";
+    $data['type'] = 'BAIDU'; //百度钱包
+    if (_is_mobile()) {
+        $data['type'] = 'BAIDUH5'; //百度钱包H5
+    }
 }else {
-    $scan = 'yl';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_yl";
-    $data['type'] = 'YINLIAN'; //银联快捷
+    $scan = 'wx';
+    $payType = $pay_type."_wx";
+    $bankname = $pay_type . "->微信在线充值";
+    $data['type'] = 'WEIXIN'; //微信支付
+    if (_is_mobile()) {
+        $data['type'] = 'WEIXINH5'; //微信支付H5
+    }
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

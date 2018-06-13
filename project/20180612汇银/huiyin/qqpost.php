@@ -66,16 +66,12 @@ $data = array(
   "sign" => ''//MD5签名
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
-    $scan = 'ylkj';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_ylkj";
-    $data['type'] = 'KUAIJIE'; //银联钱包
-}else {
-    $scan = 'yl';
-    $bankname = $pay_type."->银联钱包在线充值";
-    $payType = $pay_type."_yl";
-    $data['type'] = 'YINLIAN'; //银联快捷
+$scan = 'qq';
+$bankname = $pay_type."->QQ钱包在线充值";
+$payType = $pay_type."_qq";
+$data['type'] = 'QQ'; //QQ扫码
+if (_is_mobile()) {
+    $data['type'] = 'QQH5'; //QQ扫码H5
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -103,6 +99,9 @@ $data['sign'] = $sign;
 #跳转
 
 #跳轉方法
+echo "<pre>";
+var_dump($data);
+var_dump($signtext);
 $jumpurl = $form_url;
 $form_data = $data;
 
@@ -113,7 +112,7 @@ $form_data = $data;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_blank">
       <p>正在为您跳转中，请稍候......</p>
       <?php if (isset($form_data)) {
                 foreach ($form_data as $arr_key => $arr_value) { ?>
