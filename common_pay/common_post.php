@@ -110,14 +110,13 @@ foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
-  $data_str .= $arr_key.'='.$arr_val.'&';
 }
 $signtext = substr($signtext,0,-1).'&'.$pay_mkey;
 $sign = md5($signtext);
-$data_str .= substr($data_str,0,-1).'&sign='.$sign;
+$data['sign'] = $sign; 
 
 #curl获取响应值
-$res = curl_post($form_url,$data_str);
+$res = curl_post($form_url,http_build_query($data));
 $tran = mb_convert_encoding($res,"gb2312","UTF-8");
 $row = json_decode($tran,1);
 #跳转
