@@ -86,35 +86,20 @@ if ($result_insert == -1) {
 ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
-// $data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
-  // $data_str .= $arr_key . '=' . $arr_val . '&';
 }
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
-// $data_str .= substr($data_str, 0, -1) . '&sign=' . $sign;
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8", "auto");
+$tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
-
-//打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-
-// exit;
 
 #跳转
 if ($row['status'] != '0') {
@@ -126,15 +111,10 @@ if ($row['status'] != '0') {
   echo '错误代码 描述:' . $row['err_code'] . ' ' . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
   exit;
 } else {
-  if (!_is_mobile()) {
-    $jumpurl = $row['pay_info'];
-  } else {
-    $jumpurl = $row['pay_info'];
-  }
+  $jumpurl = $row['pay_info'];
 }
 
 #跳轉方法
-
 echo '正在为您跳转中，请稍候......';
 header('Location:' . $jumpurl);
 exit;

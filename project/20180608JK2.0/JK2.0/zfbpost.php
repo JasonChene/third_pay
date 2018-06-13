@@ -98,20 +98,8 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8", "auto");
+$tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
-
-//打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-
-// exit;
 
 #跳转
 if ($row['status'] != '0') {
@@ -123,18 +111,12 @@ if ($row['status'] != '0') {
   echo '错误代码 描述:' . $row['err_code'] . ' ' . $row['err_msg'] . "\n";//错误代码 . 错误代码描述
   exit;
 } else {
-  if (!_is_mobile()) {
-    $jumpurl = $row['pay_info'];
-  } else {
-    $jumpurl = $row['pay_info'];
-  }
+  $jumpurl = $row['pay_info'];
 }
 
 #跳轉方法
-
 echo '正在为您跳转中，请稍候......';
 header('Location:' . $jumpurl);
 exit;
 ?>
-
 
