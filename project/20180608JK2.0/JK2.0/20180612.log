@@ -1,0 +1,22 @@
+2018-06-12 23:15:20 {"transaction_id":"aqco7u01vnhclyd3uj31","charset":"UTF-8","nonce_str":"1528859720113","sign":"8011C24916732578231CE07858B1D13B","out_transaction_id":"2018061321001004900579185002","merchant_id":"5769294266","fee_type":"CNY","version":"1.0","pay_result":"0","real_amount":"1.00","out_trade_no":"44011820180612231450","total_amount":"1.00","trade_type":"pay.alipay.codepay","result_code":"0","attach":"attach","time_end":"20180613111520","sign_type":"MD5","status":"0"}
+2018-06-12 23:15:20 transaction_id = aqco7u01vnhclyd3uj31
+2018-06-12 23:15:20 charset = UTF-8
+2018-06-12 23:15:20 nonce_str = 1528859720113
+2018-06-12 23:15:20 sign = 8011C24916732578231CE07858B1D13B
+2018-06-12 23:15:20 out_transaction_id = 2018061321001004900579185002
+2018-06-12 23:15:20 merchant_id = 5769294266
+2018-06-12 23:15:20 fee_type = CNY
+2018-06-12 23:15:20 version = 1.0
+2018-06-12 23:15:20 pay_result = 0
+2018-06-12 23:15:20 real_amount = 1.00
+2018-06-12 23:15:20 out_trade_no = 44011820180612231450
+2018-06-12 23:15:20 total_amount = 1.00
+2018-06-12 23:15:20 trade_type = pay.alipay.codepay
+2018-06-12 23:15:20 result_code = 0
+2018-06-12 23:15:20 attach = attach
+2018-06-12 23:15:20 time_end = 20180613111520
+2018-06-12 23:15:20 sign_type = MD5
+2018-06-12 23:15:20 status = 0
+2018-06-12 23:15:20 signtext=attach=attach&charset=UTF-8&fee_type=CNY&merchant_id=5769294266&nonce_str=1528859720113&out_trade_no=44011820180612231450&out_transaction_id=2018061321001004900579185002&pay_result=0&real_amount=1.00&result_code=0&sign_type=MD5&status=0&time_end=20180613111520&total_amount=1.00&trade_type=pay.alipay.codepay&transaction_id=aqco7u01vnhclyd3uj31&version=1.0&key=oee8m6jwo1raidb2uu13jbitlo3gscha
+2018-06-12 23:15:20 mysign=8011C24916732578231CE07858B1D13B
+2018-06-12 23:15:20 successat 1
