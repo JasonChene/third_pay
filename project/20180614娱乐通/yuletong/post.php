@@ -58,7 +58,7 @@ $data =array(
   'amount' => $mymoney,//金额
   'channel' => "",//充值类型
   'notify_url' => $merchant_url,//后台异步通知地址
-  'result_url' => $return_url,//页面通知地址
+  // 'result_url' => $return_url,//页面通知地址  可为空
   'c_ip' => getClientIp(),//用户ip
   'sign' => ''//MD5大写签名
 );
@@ -72,13 +72,13 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $bankname = $pay_type."->银联钱包在线充值";
   $payType = $pay_type."_yl";
   if (_is_mobile()) {
-    $form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
-    $data['channel'] = "upacp_wap";//手机银联
+    $form_url ='http://uemprod.yuletong.com/ylt/api/v1/activePay';
+    $data['channel'] = "upacp_wap";//银联WAP
   }
 }else {
   $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
   $data['channel'] = "upacp_pc"; //网银 = 银联pc
-  $data['bank_code'] = $_REQUEST['bank_code']; //银行编码
+  $data['bank_code'] = $_REQUEST['bank_code']; //新增银行编码 
   $scan = 'wy';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
@@ -100,29 +100,12 @@ $signtext .= $data['order_no'].'|';
 $signtext .= $data['amount'].'|'; 
 $signtext .= $data['channel'].'|'; 
 $signtext .= $pay_mkey; 
-
-
 $data['sign'] = md5($signtext);
 
 #跳轉方法
-// if($scan == 'yl'){
-  $form_data = $data;
-  $jumpurl = $form_url;
-// }else{
-// #curl获取响应值
-//   $res = curl_post($form_url,$data);
-//   $row = json_decode($res,1);
+$form_data = $data;
+$jumpurl = $form_url;
 
-//   #跳轉方法
-//   if ($row['result_code'] != 'success') {
-//     echo  '错误代码:' . $row['error_code']."<br>";
-//     echo  '错误讯息:' . $row['result_desc']."<br>";
-//     exit;
-//   }else {
-    
-//   /////////////////////////////////
-//   }
-// }
 
 ?>
 <html>

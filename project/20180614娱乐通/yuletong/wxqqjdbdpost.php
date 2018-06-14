@@ -50,7 +50,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+
   
 #第三方参数设置
 $data =array(
@@ -59,7 +59,7 @@ $data =array(
   'amount' => $mymoney,//金额
   'channel' => "",//充值类型
   'notify_url' => $merchant_url,//后台异步通知地址
-  'result_url' => $return_url,//页面通知地址
+  // 'result_url' => $return_url,//页面通知地址 可为空
   'c_ip' => getClientIp(),//用户ip
   'sign' => ''//MD5大写签名
 );
@@ -67,37 +67,41 @@ $data =array(
 #变更参数设置
 
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+  $data['channel'] = "jd_qr";//京东扫码
   $scan = 'jd';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
-  $data['channel'] = "jd_qr";//京东扫码
   if (_is_mobile()) {
     $data['channel'] = "jd_wap";//手机京东
     $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
   }
 }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+  $data['channel'] = "baidu_qr";//百度掃碼
   $scan = 'bd';
   $payType = $pay_type."_bd";
   $bankname = $pay_type . "->百度钱包在线充值";
-  $data['channel'] = "baidu_qr";//百度掃碼
   if (_is_mobile()) {
     $data['channel'] = "baidu_wap";//手机百度
     $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
   }
 }elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+  $data['channel'] = "qq_qr";//qq掃碼
   $scan = 'qq';
   $payType = $pay_type."_qq";
   $bankname = $pay_type . "->QQ钱包在线充值";
-  $data['channel'] = "qq_qr";//qq掃碼
   if (_is_mobile()) {
     $data['channel'] = "qq_wap";//手机qq
     $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
   }
 }else {
+  $form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+  $data['channel'] = "wx_qr";//微信掃碼
   $scan = 'wx';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-  $data['channel'] = "wx_qr";//微信掃碼
   if (_is_mobile()) {
     $data['channel'] = "wx_wap";//手机微信
     $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
@@ -113,8 +117,12 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = $data['merchant_no'].'|'.$data['order_no'].'|'.$data['amount'].'|'.$data['channel'].'|'.$pay_mkey;
-
+$signtext = '';
+$signtext .= $data['merchant_no'].'|';
+$signtext .= $data['order_no'].'|'; 
+$signtext .= $data['amount'].'|'; 
+$signtext .= $data['channel'].'|'; 
+$signtext .= $pay_mkey; 
 $data['sign'] = md5($signtext);
 
 #跳轉方法

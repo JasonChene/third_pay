@@ -50,7 +50,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+
   
 #第三方参数设置
 $data =array(
@@ -59,19 +59,19 @@ $data =array(
   'amount' => $mymoney,//金额
   'channel' => "",//充值类型
   'notify_url' => $merchant_url,//后台异步通知地址
-  'result_url' => $return_url,//页面通知地址
+  // 'result_url' => $return_url,//页面通知地址 可为空
   'c_ip' => getClientIp(),//用户ip
   'sign' => ''//MD5大写签名
 );
 
 #变更参数设置
-
+$form_url ='http://uemprod.yuletong.com/ylt/api/v1/qrPay';
+$data['channel'] = "alipay_qr";//支付宝扫码
 $scan = 'zfb';
 $payType = $pay_type."_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
-$data['channel'] = "alipay_qr";//支付宝掃碼
 if (_is_mobile()) {
-  $data['channel'] = "alipay_wap";//手机支付宝
+  $data['channel'] = "alipay_wap";//支付宝wap
   $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
 }
 
@@ -85,8 +85,12 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = $data['merchant_no'].'|'.$data['order_no'].'|'.$data['amount'].'|'.$data['channel'].'|'.$pay_mkey;
-
+$signtext = '';
+$signtext .= $data['merchant_no'].'|';
+$signtext .= $data['order_no'].'|'; 
+$signtext .= $data['amount'].'|'; 
+$signtext .= $data['channel'].'|'; 
+$signtext .= $pay_mkey; 
 $data['sign'] = md5($signtext);
 
 #跳轉方法

@@ -171,7 +171,9 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-
+function paytype_echo(){
+  
+}
 
 
 #变更参数设定
