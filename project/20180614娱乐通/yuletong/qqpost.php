@@ -66,12 +66,12 @@ $data =array(
 
 #变更参数设置
 
-$scan = 'zfb';
-$payType = $pay_type."_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
-$data['channel'] = "alipay_qr";//支付宝掃碼
+$scan = 'qq';
+$payType = $pay_type."_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
+$data['channel'] = "qq_qr";//QQ掃碼
 if (_is_mobile()) {
-  $data['channel'] = "alipay_wap";//手机支付宝
+  $data['channel'] = "qq_wap";//手机QQ
   $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
 }
 

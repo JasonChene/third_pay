@@ -66,15 +66,43 @@ $data =array(
 
 #变更参数设置
 
-$scan = 'zfb';
-$payType = $pay_type."_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
-$data['channel'] = "alipay_qr";//支付宝掃碼
-if (_is_mobile()) {
-  $data['channel'] = "alipay_wap";//手机支付宝
-  $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $bankname = $pay_type."->京东钱包在线充值";
+  $payType = $pay_type."_jd";
+  $data['channel'] = "jd_qr";//京东扫码
+  if (_is_mobile()) {
+    $data['channel'] = "jd_wap";//手机京东
+    $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
+  }
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $payType = $pay_type."_bd";
+  $bankname = $pay_type . "->百度钱包在线充值";
+  $data['channel'] = "baidu_qr";//百度掃碼
+  if (_is_mobile()) {
+    $data['channel'] = "baidu_wap";//手机百度
+    $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
+  }
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $payType = $pay_type."_qq";
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $data['channel'] = "qq_qr";//qq掃碼
+  if (_is_mobile()) {
+    $data['channel'] = "qq_wap";//手机qq
+    $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
+  }
+}else {
+  $scan = 'wx';
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $data['channel'] = "wx_qr";//微信掃碼
+  if (_is_mobile()) {
+    $data['channel'] = "wx_wap";//手机微信
+    $form_url = 'http://uemprod.yuletong.com/ylt/api/v1/activePay';
+  }
 }
-
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
