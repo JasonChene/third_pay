@@ -111,17 +111,6 @@ if (!_is_mobile()) {
   $tran = mb_convert_encoding($res, "UTF-8");
   $row = json_decode($tran, 1);
   
-  //打印
-  echo '<pre>';
-  echo ('<br> data = <br>');
-  var_dump($data);
-  echo ('<br> signtext = <br>');
-  echo ($signtext);
-  echo ('<br><br> row = <br>');
-  var_dump($row);
-  echo '</pre>';
-  exit;
-  
   #跳转
   if ($row['respCode'] != '00' && $row['respCode'] != '99') {
     echo '应答码:' . $row['respCode'] . "<br>";
