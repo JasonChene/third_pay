@@ -55,17 +55,16 @@ $data = array(
   "subject" => 'teddy', //订单名称
   "body" => 'itssofluffy', //订单描述
   "transAmt" => number_format($_REQUEST['MOAmount'], 0, '.', ''), //交易金额
-  "scanType" => '20000002', //扫码类型
+  "scanType" => '', //扫码类型
 );
 
 #变更参数设置
-if (strstr($pay_type, "银联钱包")) {
-  $scan = 'yl';
-  $data['scanType'] = '80000008';
-  $form_url = 'https://payment.51bftpay.com/sfpay/scanCodePayServlet';//扫码提交地址
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $payType = $pay_type . "_yl";
-}
+$scan = 'yl';
+$data['scanType'] = '80000008';
+$form_url = 'https://payment.51bftpay.com/sfpay/scanCodePayServlet';//扫码提交地址
+$bankname = $pay_type . "->银联钱包在线充值";
+$payType = $pay_type . "_yl";
+
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -88,7 +87,7 @@ foreach ($data as $arr_key => $arr_val) {
 }
 $signtext = substr($signtext, 0, -1);
 
-function rsaSendSign($data, $merid, $key)
+function rsaSendSign($data, $key)
 {
   $key = openssl_get_privatekey($key);
   if (!$key) {
@@ -101,46 +100,33 @@ function rsaSendSign($data, $merid, $key)
   return $sign;
 }
 
-$data['sign'] = rsaSendSign($signtext, $merid, $pay_mkey);
+$data['sign'] = rsaSendSign($signtext, $pay_mkey);
 
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url, http_build_query($data));
-  $tran = mb_convert_encoding($res, "UTF-8");
-  $row = json_decode($tran, 1);
+
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data));
+$tran = mb_convert_encoding($res, "UTF-8");
+$row = json_decode($tran, 1);
   
-  //打印
-  echo '<pre>';
-  echo ('<br> data = <br>');
-  var_dump($data);
-  echo ('<br> signtext = <br>');
-  echo ($signtext);
-  echo ('<br><br> row = <br>');
-  var_dump($row);
-  echo '</pre>';
-    // exit;
-  
-  #跳转
-  if ($row['respCode'] != '00' && $row['respCode'] != '99') {
-    echo '应答码:' . $row['respCode'] . "<br>";
-    echo '应答描述:' . $row['respMsg'] . "<br>";
-    exit;
-  } else {
-    if (!_is_mobile()) {
-      if (strstr($row['payCode'], "&")) {
-        $code = str_replace("&", "aabbcc", $row['payCode']);//有&换成aabbcc
-      } else {
-        $code = $row['payCode'];
-      }
-      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-    } else {
-      $jumpurl = $row['payCode'];
-    }
-  }
+#跳转
+if ($row['respCode'] != '00' && $row['respCode'] != '99') {
+  echo '应答码:' . $row['respCode'] . "<br>";
+  echo '应答描述:' . $row['respMsg'] . "<br>";
+  exit;
 } else {
-  $jumpurl = $form_url;
+  if (!_is_mobile()) {
+    if (strstr($row['payCode'], "&")) {
+      $code = str_replace("&", "aabbcc", $row['payCode']);//有&换成aabbcc
+    } else {
+      $code = $row['payCode'];
+    }
+    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  } else {
+    $jumpurl = $row['payCode'];
+  }
 }
-  #跳轉方法
+
+#跳轉方法
 ?>
   <html>
     <head>
@@ -150,13 +136,6 @@ if (!_is_mobile()) {
     <body>
       <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
         <p>正在为您跳转中，请稍候......</p>
-        <?php if (_is_mobile()) { ?>
-          <?php foreach ($data as $arr_key => $arr_value) { ?>      
-            <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php 
-        } ?>
-        <?php 
-      } ?>
       </form>
       <script language="javascript">
         document.getElementById("frm1").submit();

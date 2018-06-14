@@ -55,7 +55,7 @@ $data = array(
   "subject" => 'teddy', //订单名称
   "body" => 'itssofluffy', //订单描述
   "transAmt" => number_format($_REQUEST['MOAmount'], 0, '.', ''), //交易金额
-  "scanType" => '20000002', //扫码类型
+  "scanType" => '', //扫码类型
 );
 
 #变更参数设置
@@ -90,7 +90,7 @@ foreach ($data as $arr_key => $arr_val) {
 }
 $signtext = substr($signtext, 0, -1);
 
-function rsaSendSign($data, $merid, $key)
+function rsaSendSign($data, $key)
 {
   $key = openssl_get_privatekey($key);
   if (!$key) {
@@ -103,24 +103,13 @@ function rsaSendSign($data, $merid, $key)
   return $sign;
 }
 
-$data['sign'] = rsaSendSign($signtext, $merid, $pay_mkey);
+$data['sign'] = rsaSendSign($signtext, $pay_mkey);
 
 if (!_is_mobile()) {
 #curl获取响应值
   $res = curl_post($form_url, http_build_query($data));
   $tran = mb_convert_encoding($res, "UTF-8");
   $row = json_decode($tran, 1);
-
-//打印
-  echo '<pre>';
-  echo ('<br> data = <br>');
-  var_dump($data);
-  echo ('<br> signtext = <br>');
-  echo ($signtext);
-  echo ('<br><br> row = <br>');
-  var_dump($row);
-  echo '</pre>';
-  // exit;
 
 #跳转
   if ($row['respCode'] != '00' && $row['respCode'] != '99') {
