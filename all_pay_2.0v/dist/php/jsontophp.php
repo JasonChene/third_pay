@@ -31,31 +31,31 @@ function posttype($str){
   }elseif (strstr($str,'wxh5')) {
     $restr = '($scan == "wx" && _is_mobile()) ||';
   }elseif (strstr($str,'wxfs')) {
-    $restr = '($scan == "wxf" ||';
+    $restr = '($scan == "wxfs" ||';
   }elseif (strstr($str,'jdbs')) {
     $restr = '($scan == "jd" && !_is_mobile()) ||';
   }elseif (strstr($str,'jdh5')) {
     $restr = '($scan == "jd" && _is_mobile()) ||';
   }elseif (strstr($str,'jdfs')) {
-    $restr = '($scan == "jdf" ||';
+    $restr = '($scan == "jdfs" ||';
   }elseif (strstr($str,'bdbs')) {
     $restr = '($scan == "bd" && !_is_mobile()) ||';
   }elseif (strstr($str,'bdh5')) {
     $restr = '($scan == "bd" && _is_mobile()) ||';
   }elseif (strstr($str,'bdfs')) {
-    $restr = '$scan == "bdf" ';
+    $restr = '$scan == "bdfs" ';
   }elseif (strstr($str,'qqbs')) {
     $restr = '($scan == "qq" && !_is_mobile()) ||';
   }elseif (strstr($str,'qqh5')) {
     $restr = '($scan == "qq" && _is_mobile()) ||';
   }elseif (strstr($str,'qqfs')) {
-    $restr = '$scan == "qqf" ';
+    $restr = '$scan == "qqfs" ';
   }elseif (strstr($str,'zfbbs')) {
     $restr = '($scan == "zfb" && !_is_mobile()) ||';
   }elseif (strstr($str,'zfbh5')) {
     $restr = '($scan == "zfb" && _is_mobile()) ||';
   }elseif (strstr($str,'zfbfs')) {
-    $restr = '$scan == "zfbf" ';
+    $restr = '$scan == "zfbfs" ';
   }elseif (strstr($str,'wylk')) {
     $restr = '($scan == "wy" && !_is_mobile()) ||';
   }elseif (strstr($str,'wyh5')) {
@@ -171,7 +171,9 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-
+function paytype_echo(){
+  
+}
 
 
 #变更参数设定

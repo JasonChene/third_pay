@@ -7,19 +7,19 @@ include_once("../moneyfunc.php");
 
 
 #接收资料
-#request方法
-//write_log('request方法');
+#post方法
+//write_log('post方法');
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	//write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
+$order_no = $data['order_no']; //订单号
 $mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
-$success_code = "0";//文档上的成功讯息
+$success_msg = $data['result_code'];//成功讯息
+$success_code = "success";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "success";//回调讯息
 
@@ -45,18 +45,17 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
+
 #验签方式
-$noarr = array('sign','completetime','platformorderid');//不加入签名的array key值
-ksort($data);
-$signtext="";
-foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_key . '=' . $arr_val;
-	}
-}
-$signtext = $signtext . 'key=' .$pay_mkey;//验签字串
+$signtext = '';
+$signtext .= $data['merchant_no'].'|'; 
+$signtext .= $data['order_no'].'|'; 
+$signtext .= $data['ylt_order_no'].'|'; 
+$signtext .= $data['amount'].'|'; 
+$signtext .= $data['channel'].'|'; 
+$signtext .= $pay_mkey; 
 //write_log("signtext=".$signtext);
-$mysign = mb_strtoupper(md5($signtext));//签名
+$mysign = strtolower(md5($signtext));//签名 
 //write_log("mysign=".$mysign);
 
 #到账判断

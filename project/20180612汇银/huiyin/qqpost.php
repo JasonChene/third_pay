@@ -60,9 +60,9 @@ $data = array(
   "amount" => $mymoney,//订单金额：单位元（人民币），2位小数
   "orderid" => $order_no,//商户订单号
   "notifyurl" => $merchant_url,//下行异步通知地址
-  // "callbackurl" => $return_url,//下行同步通知地址 若提交值无该参数，用户将停留在汇银接口系统提示支付成功的页面
+  // "callbackurl" => $return_url,//下行同步通知地址 若提交值无该参数，用户将停留在汇银接口系统提示支付成功的页面 可不传
   "clientip" => getClientIp(),//支付用户IP
-  "desc" => 'iphone6S',//备注消息
+  // "desc" => 'iphone6S',//备注消息 可不传
   "sign" => ''//MD5签名
 );
 #变更参数设置
@@ -99,9 +99,6 @@ $data['sign'] = $sign;
 #跳转
 
 #跳轉方法
-echo "<pre>";
-var_dump($data);
-var_dump($signtext);
 $jumpurl = $form_url;
 $form_data = $data;
 
@@ -112,7 +109,7 @@ $form_data = $data;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_blank">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php if (isset($form_data)) {
                 foreach ($form_data as $arr_key => $arr_value) { ?>
