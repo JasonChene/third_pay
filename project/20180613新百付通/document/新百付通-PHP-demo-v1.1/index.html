@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新百付通</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h2 class="text-center">新百付通</h2>
+            <div class="col-md-6">
+                <h3 class="text-center">扫码支付</h3>
+                <form action="qrcode.php" class="form-horizontal" method="post" target="_blank">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">接口编号</label>
+                        <div class="col-sm-6">
+                            <select name="scanType" class="form-control">
+                                <option value="10000001">支付宝</option>
+                            	<option value="20000002">微信</option>
+                            	<option value="30000003">QQ钱包</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">金额</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="transAmt" value="0.11">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-md-2">提交</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h3 class="text-center">H5支付</h3>
+                <form action="h5code.php" class="form-horizontal" method="post" target="_blank">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">接口编号</label>
+                        <div class="col-sm-6">
+                            <select name="scanType" class="form-control">
+                                <option value="20000003">微信</option>
+                                <option value="30000004">QQ钱包</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">金额</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="transAmt" value="0.11">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-md-2">提交</button>
+                </form>
+            </div>
+            <div class="col-md-12 clear-fix"></div>
+            <div class="col-md-6">
+                <h3 class="text-center">订单查询</h3>
+                <form action="order.php" class="form-horizontal" method="post" target="_blank">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">商户订单号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="outOrderId" value="">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-md-2">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
