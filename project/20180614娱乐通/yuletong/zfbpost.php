@@ -3,9 +3,6 @@ header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 date_default_timezone_set('PRC');
-if (function_exists("date_default_timezone_set")) {
-  date_default_timezone_set("Asia/Shanghai");
-}
 #function
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
@@ -16,7 +13,7 @@ function curl_post($url,$data){ #POST访问
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -32,6 +29,7 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -40,8 +38,8 @@ $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
-$pay_mkey = $row['mer_key'];//商戶私钥
-$pay_account = $row['mer_account'];
+$pay_mkey = $row['mer_key'];//商戶密钥
+$pay_account = $row['mer_account'];//商户支付Key
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -52,27 +50,25 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://api.huiyin-pay.com/orderpay/pay';//提交地址
+$form_url ='http://zny.39n6.cn/pay/action';
 #第三方参数设置
-$data = array(
-  "merchantcode" => $pay_mid, //商户号
-  "type" => '',//通道类型
-  "amount" => $mymoney,//订单金额：单位元（人民币），2位小数
-  "orderid" => $order_no,//商户订单号
-  "notifyurl" => $merchant_url,//下行异步通知地址
-  // "callbackurl" => $return_url,//下行同步通知地址 若提交值无该参数，用户将停留在汇银接口系统提示支付成功的页面
-  "clientip" => getClientIp(),//支付用户IP
-  "desc" => 'iphone6S',//备注消息
-  "sign" => ''//MD5签名
+$data =array(
+  'uid' => $pay_mid,//商户号
+  'key' => "",//签名
+  'orderid' => $order_no,//商户订单号
+  'istype' => "10001",//支付宝
+  'price' => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额，单位元，小数位最末位不能是0
+  'goodsname' => "pay",//订单名称
+  'orderuid' => "buy",//商品详情
+  'notify_url' => $merchant_url,//异步通知地址
+  'return_url' => $return_url,//支付结果跳转地址
+  'format' => "web"//跳转到我们支付页return_url 不在起作用
 );
 #变更参数设置
-$scan = 'qq';
-$bankname = $pay_type."->QQ钱包在线充值";
-$payType = $pay_type."_qq";
-$data['type'] = 'QQ'; //QQ扫码
-if (_is_mobile()) {
-    $data['type'] = 'QQH5'; //QQ扫码H5
-}
+$scan = 'zfb';
+$payType = $pay_type."_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
+
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -83,44 +79,41 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
+
 ksort($data);
-$noarr =array('sign','desc','clientip');
+$noarr =array('key','uid','format');
 $signtext = '';
+$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
+		$signtext .= $arr_val;
 	}
 }
-$signtext = substr($signtext,0,-1).'&key='.$pay_mkey;
-$sign = mb_strtoupper(md5($signtext));
-$data['sign'] = $sign;
-#curl获取响应值
+$signtext .= $pay_mkey.$pay_mid;
+$data['key'] = md5($signtext);
 
-#跳转
-
-#跳轉方法
-echo "<pre>";
-var_dump($data);
-var_dump($signtext);
-$jumpurl = $form_url;
+#直接表單post
 $form_data = $data;
+$jumpurl = $form_url;
 
 ?>
 <html>
   <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+      <title>跳转......</title>
+      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php if (isset($form_data)) {
-                foreach ($form_data as $arr_key => $arr_value) { ?>
-                    <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+          <p>正在为您跳转中，请稍候......</p>
+          <?php
+          if(isset($form_data)){
+              foreach ($form_data as $arr_key => $arr_value) {
+          ?>
+              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+          <?php }} ?>
+      </form>
+      <script language="javascript">
+          document.getElementById("frm1").submit();
+      </script>
+   </body>
 </html>
