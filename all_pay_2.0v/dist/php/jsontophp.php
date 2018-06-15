@@ -171,69 +171,93 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-function paytype_echo($value,$paytype_echo_scan=''){
+function paytype_echo($value){
+  $paytype_echo_scan= '';
   $array =array();
   if (strstr($value,'wx')) {
-    $paytype_echo =  '  $scan = "wx";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->微信在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_wx";'."\n";
+    $paytype_echo .=  '  $scan = "wx";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->微信在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_wx";'."\n";
     $array['paytype_echo'] = $paytype_echo;
     $array['paytype_echo_scan'] = '';
   }elseif (strstr($value,'qq')) {
-    $paytype_echo =  '  $scan = "qq";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->QQ钱包在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_qq";'."\n";
+    $paytype_echo .=  '  $scan = "qq";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->QQ钱包在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_qq";'."\n";
     $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
+    $array['paytype_echo_scan'] = 'QQ钱包';
   }elseif (strstr($value,'zfb')) {
-    $paytype_echo =  '  $scan = "zfb";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->支付宝在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_zfb";'."\n";
+    $paytype_echo .=  '  $scan = "zfb";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->支付宝在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_zfb";'."\n";
     $array['paytype_echo'] = $paytype_echo;
     $array['paytype_echo_scan'] = '';
   }elseif(strstr($value,'jd')){
-    $paytype_echo =  '  $scan = "jd";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->京东钱包在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_jd";'."\n";
+    $paytype_echo .=  '  $scan = "jd";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->京东钱包在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_jd";'."\n";
     $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
+    $array['paytype_echo_scan'] = '京东钱包';
   }elseif(strstr($value,'bd')){
-    $paytype_echo =  '  $scan = "bd";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->百度钱包在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_bd";'."\n";
+    $paytype_echo .=  '  $scan = "bd";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->百度钱包在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_bd";'."\n";
     $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
+    $array['paytype_echo_scan'] = '百度钱包';
   }elseif (strstr($value,'yl')) {
-    $paytype_echo =  '  $scan = "yl";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->银联钱包在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_yl";'."\n";
+    $paytype_echo .=  '  $scan = "yl";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->银联钱包在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_yl";'."\n";
     $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
+    $array['paytype_echo_scan'] = '银联钱包';
   }elseif (strstr($value,'ylkj')) {
-    $paytype_echo =  '  $scan = "ylkj";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->银联快捷在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_ylkj";'."\n";
+    $paytype_echo .=  '  $scan = "ylkj";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->银联快捷在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_ylkj";'."\n";
     $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
+    $array['paytype_echo_scan'] = '银联快捷';
   }elseif (strstr($value,'wy')) {
-    $paytype_echo =  '  $scan = "wy";'."\n";
-    $paytype_echo =  '  $payType = $pay_type."->网银在线充值";'."\n";
-    $paytype_echo =  '  $bankname = $pay_type."_wy";'."\n";
+    $paytype_echo .=  '  $scan = "wy";'."\n";
+    $paytype_echo .=  '  $payType = $pay_type."->网银在线充值";'."\n";
+    $paytype_echo .=  '  $bankname = $pay_type."_wy";'."\n";
     $array['paytype_echo'] = $paytype_echo;
     $array['paytype_echo_scan'] = '';
   }
   return $array;
 }
 
+#
+function diff_echo($platform,$typekey,$paytypearr,$paytype_echo){
+
+
+}
+
 #paytype_echo($req['platform']);
 function change_data($platform,$typekey,$paytypearr){
-  foreach ($platform as $value) {
-    $paytype_echo = paytype_echo($value);
-    echo $paytype_echo['paytype_echo'];
-    echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
-    echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-    echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-    echo (strstr($value, "h5")) ? '}'."\n" : '';
+  $diff = array(
+    'wx' => array('wxbs','wxh5','wxfs'),
+    'qq' => array('qqbs','qqh5','qqfs'),
+    'zfb' => array('zfbbs','zfbh5','zfbfs'),
+    'jd' => array('jdbs','jdh5','jdfs'),
+    'bd' => array('bdbs','bdh5','bdfs'),
+    'wy' => array('wylk','wyh5'),
+    'yl' => array('ylbs','ylh5'),
+    'ylkj' => array('ylkj','ylkjh5'),
+  );
+  if (count(array_udiff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集
+      foreach (array_udiff($platform,$diff['wx']) as $value) {#除了wxbs,wxh5,wxfs都echo变更的参数
+        $paytype_echo = paytype_echo($value);
+        echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
+        echo $paytype_echo['paytype_echo'];
+        echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
+        echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+        echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+        echo (strstr($value, "h5")) ? '}'."\n" : '';
+        echo '}'."\n";
+      } 
+
+  }elseif (condition) {
+    # code...
   }
 }
 
