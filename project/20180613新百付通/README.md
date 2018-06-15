@@ -1,4 +1,4 @@
-第三方名称：新百付通(newbaifutongpay)  
+第三方名称：新百付通
 档案位置：php@60.245.31.1\newbaifutongpay  
   
 商户号:商户提供的商户号  
