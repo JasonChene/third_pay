@@ -172,17 +172,6 @@ curl_close($ch);
 $xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
 $array = json_decode(json_encode($xml), 1);
 
-echo '<pre>';
-echo ('<br> postdata = <br>');
-var_dump($postdata);
-echo ('<br> signStr = <br>');
-echo ($signStr);
-echo ('<br><br> array = <br>');
-var_dump($array);
-echo '</pre>';
-
-// exit;
-
 if ($array['resp_code'] == 'SUCCESS') {
 	if (_is_mobile()) {
 		header("location:" . $array['response']['payURL']);
