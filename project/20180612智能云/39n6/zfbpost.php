@@ -50,7 +50,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://zny.39n6.cn/pay/action';
+$form_url ='http://www.aw5880.cn/pay/action';
 #第三方参数设置
 $data =array(
   'uid' => $pay_mid,//商户号

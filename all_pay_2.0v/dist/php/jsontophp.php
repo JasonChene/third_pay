@@ -171,8 +171,70 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-function paytype_echo(){
-  
+function paytype_echo($value,$paytype_echo_scan=''){
+  $array =array();
+  if (strstr($value,'wx')) {
+    $paytype_echo =  '  $scan = "wx";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->微信在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_wx";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif (strstr($value,'qq')) {
+    $paytype_echo =  '  $scan = "qq";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->QQ钱包在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_qq";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif (strstr($value,'zfb')) {
+    $paytype_echo =  '  $scan = "zfb";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->支付宝在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_zfb";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif(strstr($value,'jd')){
+    $paytype_echo =  '  $scan = "jd";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->京东钱包在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_jd";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif(strstr($value,'bd')){
+    $paytype_echo =  '  $scan = "bd";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->百度钱包在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_bd";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif (strstr($value,'yl')) {
+    $paytype_echo =  '  $scan = "yl";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->银联钱包在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_yl";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif (strstr($value,'ylkj')) {
+    $paytype_echo =  '  $scan = "ylkj";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->银联快捷在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_ylkj";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }elseif (strstr($value,'wy')) {
+    $paytype_echo =  '  $scan = "wy";'."\n";
+    $paytype_echo =  '  $payType = $pay_type."->网银在线充值";'."\n";
+    $paytype_echo =  '  $bankname = $pay_type."_wy";'."\n";
+    $array['paytype_echo'] = $paytype_echo;
+    $array['paytype_echo_scan'] = '';
+  }
+  return $array;
+}
+
+#paytype_echo($req['platform']);
+function change_data($platform,$typekey,$paytypearr){
+  foreach ($platform as $value) {
+    $paytype_echo = paytype_echo($value);
+    echo $paytype_echo['paytype_echo'];
+    echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
+    echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+    echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+    echo (strstr($value, "h5")) ? '}'."\n" : '';
+  }
 }
 
 
