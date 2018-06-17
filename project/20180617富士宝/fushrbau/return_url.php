@@ -2,19 +2,21 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+write_log('return');
+
 
 #接收资料
-#REQUEST方法
+#post方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['ordernumber']; //订单号
-$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
+$order_no = $data['order_no']; //订单号
+$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
+$success_msg = $data['is_success'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "";//回调讯息
@@ -41,12 +43,17 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-#验签方式
 
-$signtext="partner=".$data['partner']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&ordernumber=".$data['ordernumber']."&paymoney=".$data['paymoney']."&paytype=".$data['paytype']."&".$pay_mkey;//验签字串
+#验签方式2
+$signtext = "";
+$signtext .= $data['orderid'];
+$signtext .= $data['platform_trade_no '];
+$signtext .= $data['price'];
+$signtext .= $data['realprice'];
+$signtext .= $pay_mkey;
+write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
-write_log("return:signtext=".$signtext);
-write_log("return:mysign=".$mysign);
+write_log("mysign=".$mysign);
 
 
 #到账判断
