@@ -228,7 +228,7 @@ function paytype_echo($value){
 
 #
 function diff_echo($platform,$typekey,$paytypearr,$paytype_echo){
-
+  
 
 }
 
@@ -244,17 +244,18 @@ function change_data($platform,$typekey,$paytypearr){
     'yl' => array('ylbs','ylh5'),
     'ylkj' => array('ylkj','ylkjh5'),
   );
-  if (count(array_udiff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集
-      foreach (array_udiff($platform,$diff['wx']) as $value) {#除了wxbs,wxh5,wxfs都echo变更的参数
-        $paytype_echo = paytype_echo($value);
-        echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
-        echo $paytype_echo['paytype_echo'];
-        echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
-        echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-        echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-        echo (strstr($value, "h5")) ? '}'."\n" : '';
-        echo '}'."\n";
-      } 
+  if (count(array_diff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集
+    $diff_wx_platform = array_diff($platform,$diff['wx']);
+    foreach ($diff_wx_platform as $value) {#除了wxbs,wxh5,wxfs都echo变更的参数
+      $paytype_echo = paytype_echo($value);
+      echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
+      echo $paytype_echo['paytype_echo'];
+      echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
+      echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+      echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+      echo (strstr($value, "h5")) ? '}'."\n" : '';
+      echo '}'."\n";
+    }
 
   }elseif (condition) {
     # code...
