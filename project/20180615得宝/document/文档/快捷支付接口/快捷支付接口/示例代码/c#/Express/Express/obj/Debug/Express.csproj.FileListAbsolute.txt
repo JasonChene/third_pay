@@ -1,0 +1,28 @@
+C:\Users\wd-t083\Desktop\桌面\快捷支付\dcardpay\Express\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\dcardpay\Express\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\快捷支付\dcardpay\Express\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\快捷支付\dcardpay\Express\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\dcardpay\Express\obj\Debug\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\obj\Debug\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\bin\log4net.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\桌面\快捷支付\Express\Express\bin\Novell.Directory.Ldap.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\bin\CSharp.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\bin\CSharp.pdb
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\bin\log4net.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\bin\ItrusDotNetCertAPI 1.3.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\bin\Novell.Directory.Ldap.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\obj\Debug\CSharp.dll
+E:\ttt\中鼎融快捷支付\中鼎融快捷支付\中鼎融快捷支付\c#\Express\Express\obj\Debug\CSharp.pdb
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\bin\CSharp.dll
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\bin\CSharp.pdb
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\bin\log4net.dll
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\bin\Novell.Directory.Ldap.dll
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\obj\Debug\Express.csprojResolveAssemblyReference.cache
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\obj\Debug\CSharp.dll
+C:\Users\czf-t267\Desktop\多得宝快捷支付\多得宝快捷支付\c#\Express\Express\obj\Debug\CSharp.pdb

@@ -1,0 +1,16 @@
+2018-06-16 05:41:10 notify
+2018-06-16 05:41:10 merchant_code=200007009001
+2018-06-16 05:41:10 interface_version=V3.0
+2018-06-16 05:41:10 sign_type=RSA-S
+2018-06-16 05:41:10 dinpaySign=‚$ıícÆìN?O°á:Á}D		"1îÂ"$éŞú0a(Nğ ‘úıík£Ş·<1F9Àª­1ô	~Ÿã_\/“b_Îıı€ØÛ©8ÖÀÂ Ù´ŸS%·ÒÈ½ÍLÚ[‹‹#w'æGœ¸"¦kçÀäMùÖp—îÃÕÊq	A°¨
+2018-06-16 05:41:10 notify_type=offline_notify
+2018-06-16 05:41:10 notify_id=faca79cf72d149ea94dd990afc312798
+2018-06-16 05:41:10 order_no=20180616174006
+2018-06-16 05:41:10 order_time=2018-06-16 17:40:06
+2018-06-16 05:41:10 order_amount=10
+2018-06-16 05:41:10 trade_status=SUCCESS
+2018-06-16 05:41:10 trade_time=2018-06-16 17:40:06
+2018-06-16 05:41:10 trade_no=1002036984
+2018-06-16 05:41:10 bank_seq_no=
+2018-06-16 05:41:10 extra_return_param=
+2018-06-16 05:41:10 signStr = interface_version=V3.0&merchant_code=200007009001&notify_id=faca79cf72d149ea94dd990afc312798&notify_type=offline_notify&order_amount=10&order_no=20180616174006&order_time=2018-06-16 17:40:06&trade_no=1002036984&trade_status=SUCCESS&trade_time=2018-06-16 17:40:06
