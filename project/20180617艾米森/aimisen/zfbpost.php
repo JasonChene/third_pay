@@ -73,10 +73,7 @@ $response = curl_exec($ch);
 $PayDate=json_decode($response);
 $respcd = $PayDate -> respcd;
 $pay_params	= $PayDate ->data->pay_params;			
-echo'<pre>';
-$post_data['sign'] = $sign;
-var_dump($post_data);
-var_dump($response);		
+
 if($respcd == '0000'){
     $bankname = $pay_type."-支付宝在线充值";
     $payType = $pay_type."_zfb";

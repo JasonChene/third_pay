@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <?php
-include_once("../config.php");
+//include_once("../config.php");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
@@ -68,19 +68,19 @@ if($d==$c){
 
 	$result_insert = update_online_money($_POST['out_trade_no'],($order_amount/100));
 	if ($result_insert==-1) {
-		//echo("会员信息不存在，无法入账");
+		echo("会员信息不存在，无法入账");
 		exit;
 	} else if ($result_insert==0) {
 		echo "SUCCESS";
 		exit;
 	} else if ($result_insert==-2) {
-		//echo("数据库操作失败");
+		echo("数据库操作失败");
 		exit;
 	} else if ($result_insert==1) {
 		echo "SUCCESS";
 		exit;
 	} else {
-		//echo("支付失败");
+		echo("支付失败");
 		exit;
 	}
 }else{
