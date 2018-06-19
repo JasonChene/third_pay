@@ -171,13 +171,6 @@ curl_close($ch);
 $xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
 $array = json_decode(json_encode($xml), 1);
 
-// echo '<pre>';
-// echo ('<br><br> array = <br>');
-// var_dump($array);
-// echo '</pre>';
-
-// exit;
-
 if ($array["response"]['resp_code'] != 'SUCCESS') {
 	echo '处理码:' . $array["response"]['resp_code'] . "<br>";
 	echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
