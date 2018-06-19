@@ -109,12 +109,7 @@ if ($row['resultCode'] != '0000') {
   exit;
 } else {
   if (!_is_mobile()) {
-    if (strstr($row['payMessage'], "&")) {
-      $code = str_replace("&", "aabbcc", $row['payMessage']);//有&换成aabbcc
-    } else {
-      $code = $row['payMessage'];
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
   } else {
     $jumpurl = $row['payMessage'];
   }
