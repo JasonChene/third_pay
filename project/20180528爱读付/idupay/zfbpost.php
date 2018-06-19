@@ -122,7 +122,7 @@ if ($row['rsp_code'] != '0000') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+    <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
     </form>
     <script language="javascript">
