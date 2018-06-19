@@ -4,12 +4,13 @@ include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 #function
-function curl_post($url,$data){ #POST访问
+function curl_post($url, $data)
+{ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
@@ -21,11 +22,12 @@ function curl_post($url,$data){ #POST访问
   }
   return $tmpInfo;
 }
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
+function QRcodeUrl($code)
+{
+  if (strstr($code, "&")) {
+    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  } else {
+    $code2 = $code;
   }
   return $code2;
 }
@@ -50,9 +52,9 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='https://gateway.gaogby.com/scanPay/initPay';
+$form_url = 'https://gateway.gaogby.com/scanPay/initPay';
 #第三方参数设置
-$data =array(
+$data = array(
   'payKey' => $pay_account,//商户支付Key
   'orderPrice' => $mymoney,//订单金额，单位：元,保留小数点后两位
   'outTradeNo' => $order_no,//商户支付订单号
@@ -66,7 +68,7 @@ $data =array(
 );
 #变更参数设置
 $scan = 'qq';
-$payType = $pay_type."_qq";
+$payType = $pay_type . "_qq";
 $bankname = $pay_type . "->QQ钱包在线充值";
 $data['productType'] = "70000103";//qq掃碼
 if (_is_mobile()) {
@@ -85,33 +87,40 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 
 ksort($data);
-$noarr =array('sign');
+$noarr = array('sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
+  }
 }
 
-$signtext = substr($signtext,0,-1).'&paySecret='.$pay_mkey;
+$signtext = substr($signtext, 0, -1) . '&paySecret=' . $pay_mkey;
 $data['sign'] = strtoupper(md5($signtext));
 
 #curl获取响应值
-$res = curl_post($form_url,$data);
-$row = json_decode($res,1);
+$res = curl_post($form_url, $data);
+$row = json_decode($res, 1);
+
+#跳转
+if ($row['resultCode'] != '0000') {
+  echo '错误代码:' . $row['resultCode'] . "<br>";
+  echo '错误讯息:' . $row['errMsg'] . "<br>";
+  exit;
+} else {
+  if (!_is_mobile()) {
+    if (strstr($row['payMessage'], "&")) {
+      $code = str_replace("&", "aabbcc", $row['payMessage']);//有&换成aabbcc
+    } else {
+      $code = $row['payMessage'];
+    }
+    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  } else {
+    $jumpurl = $row['payMessage'];
+  }
+}
 
 #跳轉方法
-if ($row['resultCode'] != '0000') {
-  echo  '错误代码:' . $row['resultCode']."<br>";
-  echo  '错误讯息:' . $row['errMsg']."<br>";
-	exit;
-}else {
-  if (_is_mobile()) {
-    $jumpurl = $row['payMessage'];
-  }else {
-    echo $row['payMessage'];//html內容
-    exit();
-  }
 ?>
 <html>
   <head>
@@ -119,7 +128,7 @@ if ($row['resultCode'] != '0000') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
     </form>
     <script language="javascript">
@@ -127,4 +136,3 @@ if ($row['resultCode'] != '0000') {
     </script>
   </body>
 </html>
-<?php } ?>
