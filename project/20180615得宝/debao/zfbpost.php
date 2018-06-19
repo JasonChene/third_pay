@@ -171,6 +171,13 @@ curl_close($ch);
 $xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
 $array = json_decode(json_encode($xml), 1);
 
+// echo '<pre>';
+// echo ('<br><br> array = <br>');
+// var_dump($array);
+// echo '</pre>';
+
+// exit;
+
 if ($array["response"]['resp_code'] != 'SUCCESS') {
 	echo '处理码:' . $array["response"]['resp_code'] . "<br>";
 	echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
@@ -182,7 +189,8 @@ if ($array["response"]['resp_code'] != 'SUCCESS') {
 	exit;
 } else {
 	if (_is_mobile()) {
-		header("location:" . $array['response']['qrcode']);
+		$array['response']['payURL'] = urldecode($array['response']['payURL']);
+		header("location:" . $array['response']['payURL']);
 	} else {
 		header("location:" . '../qrcode/qrcode.php?type=' . 'zfb' . '&code=' . $array['response']['qrcode']);
 	}
