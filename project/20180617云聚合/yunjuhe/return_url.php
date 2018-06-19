@@ -3,21 +3,22 @@
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
+
 #接收资料
-#REQUEST方法
+#post方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	//write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['ordernumber']; //订单号
-$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
+$order_no = $data['outTradeNo']; //订单号
+$mymoney = number_format($data['payMoney']/100, 2, '.', ''); //订单金额
+$success_msg = $data['payStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -42,12 +43,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-
-$signtext="partner=".$data['partner']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&ordernumber=".$data['ordernumber']."&paymoney=".$data['paymoney']."&paytype=".$data['paytype']."&".$pay_mkey;//验签字串
-$mysign = md5($signtext);//签名
-write_log("return:signtext=".$signtext);
-write_log("return:mysign=".$mysign);
-
+$noarr = array('sign');//不加入签名的array key值
+ksort($data);
+$signtext="";
+foreach ($data as $arr_key => $arr_val) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
+	}
+}
+$signtext = substr($signtext, 0,-1).$pay_mkey;//验签字串
+//write_log("signtext=".$signtext);
+$mysign = mb_strtoupper(md5($signtext));//签名
+//write_log("mysign=".$mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -71,7 +78,6 @@ if ($success_msg == $success_code) {
 	$message = ("交易失败");
 }
 ?>
-
 <!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
 <!DOCTYPE html>
 
@@ -108,13 +114,7 @@ if ($success_msg == $success_code) {
 				<label id="lbmessage"><?php echo $message; ?></label>
 			</td>
 		</tr>
-		<tr>
-			<td style="width: 120px; text-align: right;">备注</td>
-			<td style="padding-left: 10px;">
-				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
-			</td>
-		</tr>
-		
+
 	</table>
 </body>
 </html>
