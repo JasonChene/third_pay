@@ -19,4 +19,4 @@
 测试到账：QQ扫码
 備註:
 禁止海外IP支付
-20180619-修改qqpost,wxqqjdpost跳转方式
+20180619-修改qqpost,wxqqjdpost,zfbpost跳转方式
