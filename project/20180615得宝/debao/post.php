@@ -38,15 +38,16 @@ $bankname = $pay_type . "->网银在线充值";
 $payT = $pay_type . "_wy";
 $service_type = "direct_pay";
 $scan = 'wy';
+$interface_version = "V3.0";
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
 	$bankname = $pay_type . "->银联钱包在线充值";
 	$payT = $pay_type . "_yl";
 	$service_type = "ylpay_scan";
 	$scan = 'yl';
+	$interface_version = "V3.1";
 }
 
 $notify_url = $merchant_url;
-$interface_version = "V3.0";
 $client_ip = getClientIp();
 $sign_type = "RSA-S";
 $order_no = date('YmdHis');
@@ -197,10 +198,22 @@ $postdata = array(
 
 	$xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
 	$array = json_decode(json_encode($xml), 1);
-	if ($array['resp_code'] == 'SUCCESS') {
-		header("location:" . '../qrcode/qrcode.php?type=' . $scan . '&code=' . $array['response']['qrcode']);
+
+	if ($array["response"]['resp_code'] != 'SUCCESS') {
+		echo '处理码:' . $array["response"]['resp_code'] . "<br>";
+		echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
+		exit;
+	} else if ($array["response"]['result_code'] != '0') {
+		echo '业务结果:' . $array["response"]['result_code'] . "<br>";
+		echo '错误码定义:' . $array["response"]['error_code'] . "<br>";
+		echo '交易说明:' . $array["response"]['result_desc'] . "<br>";
+		exit;
 	} else {
-		echo $array['response']['resp_code'] . $array['response']['resp_desc'] . $array['response']['error_code'];
+		if (_is_mobile()) {
+			header("location:" . $array['response']['qrcode']);
+		} else {
+			header("location:" . '../qrcode/qrcode.php?type=' . $scan . '&code=' . $array['response']['qrcode']);
+		}
 	}
 } ?>
 <?php if ($scan == 'wy') { ?>

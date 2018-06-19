@@ -1,7 +1,7 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-
+write_log("retuemn----------------");
 
 $merchant_code = $_POST["merchant_code"];
 

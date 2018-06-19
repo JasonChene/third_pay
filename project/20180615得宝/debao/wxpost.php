@@ -161,7 +161,6 @@ $postdata = array(
 	'product_name' => $product_name
 );
 
-
 $ch = curl_init();
 if (_is_mobile() && $scan != 'jd') {
 	curl_setopt($ch, CURLOPT_URL, "https://api.yuanruic.com/gateway/api/h5apipay");
@@ -179,14 +178,20 @@ curl_close($ch);
 $xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
 $array = json_decode(json_encode($xml), 1);
 
-if ($array['resp_code'] == 'SUCCESS') {
-	if (_is_mobile() && $scan != 'jd') {
-		header("location:" . $array['response']['payURL']);
+if ($array["response"]['resp_code'] != 'SUCCESS') {
+	echo '处理码:' . $array["response"]['resp_code'] . "<br>";
+	echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
+	exit;
+} else if ($array["response"]['result_code'] != '0') {
+	echo '业务结果:' . $array["response"]['result_code'] . "<br>";
+	echo '错误码定义:' . $array["response"]['error_code'] . "<br>";
+	echo '交易说明:' . $array["response"]['result_desc'] . "<br>";
+	exit;
+} else {
+	if (_is_mobile()) {
+		header("location:" . $array['response']['qrcode']);
 	} else {
 		header("location:" . '../qrcode/qrcode.php?type=' . $scan . '&code=' . $array['response']['qrcode']);
 	}
-} else {
-	echo $array['response']['resp_code'] . $array['response']['resp_desc'] . $array['response']['error_code'];
 }
-
 ?>
