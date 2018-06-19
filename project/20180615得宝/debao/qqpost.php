@@ -182,9 +182,10 @@ if ($array["response"]['resp_code'] != 'SUCCESS') {
 	exit;
 } else {
 	if (_is_mobile()) {
+		$array['response']['payURL'] = urldecode($array['response']['payURL']);
 		header("location:" . $array['response']['payURL']);
 	} else {
-		header("location:" . '../qrcode/qrcode.php?type=' . 'zfb' . '&code=' . $array['response']['qrcode']);
+		header("location:" . '../qrcode/qrcode.php?type=' . 'qq' . '&code=' . $array['response']['qrcode']);
 	}
 }
 ?>
