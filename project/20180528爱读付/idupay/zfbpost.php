@@ -101,6 +101,11 @@ $data['sign'] = strtoupper(md5($signtext));
 $res = curl_post($form_url,http_build_query($data));
 // $res = iconv("UTF-8", "GB2312//IGNORE", $res);
 $row = json_decode($res,1);
+// echo "<pre>";
+// var_dump($data);
+// var_dump($row);
+// echo $row['data'];
+// header("Location:".$row['data']);
 #跳转
 if ($row['rsp_code'] != '0000') {
   echo  '错误代码:' . $row['rsp_code']."\n";
@@ -109,24 +114,28 @@ if ($row['rsp_code'] != '0000') {
 }else {
   if (_is_mobile()) {
       $jumpurl = $row['data'];
+      header("Location:".$jumpurl);
+      exit;
   }else {
       $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code='.QRcodeUrl($row['data']);
+      header("Location:".$jumpurl);
+      exit;
   }
 }
 #跳轉方法
-
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
     <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+
       <p>正在为您跳转中，请稍候......</p>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->

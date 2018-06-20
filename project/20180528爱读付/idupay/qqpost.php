@@ -108,14 +108,18 @@ if ($row['rsp_code'] != '0000') {
 }else {
   if (_is_mobile()) {
       $jumpurl = $row['data'];
+      header("Location:".$jumpurl);
+      exit;
   }else {
       $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code='.QRcodeUrl($row['data']);
+      header("Location:".$jumpurl);
+      exit;
   }
 }
 #跳轉方法
 
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -128,4 +132,4 @@ if ($row['rsp_code'] != '0000') {
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->
