@@ -39,7 +39,7 @@ $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶密钥
-$pay_account = $row['mer_account'];
+$pay_account = $row['mer_account'];//商户支付Key
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -50,36 +50,35 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$form_url ='https://gateway.gaogby.com/scanPay/initPay';
 #第三方参数设置
 $data =array(
-    'versionId' => '1.0',//服务版本号
-    'orderAmount' => number_format($_REQUEST['MOAmount']*100,0, '.', ''),//訂單金额 以分为单位
-    'orderDate' => date("YmdHis"),//订单日期
-    'currency' => 'RMB',//货币类型
-    'transType' => '0008',//交易类别
-    'asynNotifyUrl' => $merchant_url,//异步通知地址
-    'synNotifyUrl' => $return_url,//同步通知地址
-    'signType' => 'MD5',//加密方式
-    'merId' => $pay_mid,//商户编号
-    'prdOrdNo' => $order_no,//商户订单号
-    'payMode' => "",//支付方式
-    'receivableType' => 'D00',//到账类型
-    'prdAmt' => number_format($_REQUEST['MOAmount']*100,0, '.', ''),//商品价格 以分为单位 扫码必填
-    'prdName' => 'iphone',//商品名称
-    'signData' => ''//加密数据
+  'payKey' => $pay_account,//商户支付Key
+  'orderPrice' => $mymoney,//订单金额，单位：元,保留小数点后两位
+  'outTradeNo' => $order_no,//商户支付订单号
+  'productType' => "",//支付方式编码
+  'orderTime' => date('YmsHis'),//下单时间，格式(yyyyMMddHHmmss)
+  'productName' => "pay",//支付产品名称
+  'orderIp' => getClientIp(),//下单IP
+  'returnUrl' => $return_url,//页面通知地址
+  'notifyUrl' => $merchant_url,//后台异步通知地址
+  'sign' => ''//MD5大写签名
 );
 #变更参数设置
-$form_url ='http://106.14.211.216:8070/payment/ScanPayApply.do';//扫码网关
-$scan = 'zfb';
-$payType = $pay_type."_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
-$data['payMode'] = '00021';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
-if (_is_mobile()) {
-    $form_url ='http://106.14.211.216:8070/payment/PayApply.do';//h5网关
-    unset($data['prdAmt']);
-    $data['payMode'] = '10029';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
-    $data['pnum'] = '1';//商品数量
-    $data['prdDesc'] = 'iphone';//商品描述
+
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $bankname = $pay_type."->京东钱包在线充值";
+  $payType = $pay_type."_jd";
+  $data['productType'] = "80000103";//京东扫码支付(T0) 80000103 京东扫码支付(T1) 80000101
+}else {
+  $scan = 'wx';
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $data['productType'] = "10000103";//微信扫码支付(T0) 10000103 微信扫码支付(T1) 10000101
+  if (_is_mobile()) {
+    $data['productType'] = "10000203";//微信WAP,H5(T0) 10000203 微信WAP,H5(T1) 10000201
+  }
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -91,46 +90,37 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
+
 ksort($data);
+$noarr =array('sign');
 $signtext = '';
-$noarr = array('signData');
 foreach ($data as $arr_key => $arr_val) {
-    if ( !in_array($arr_key, $noarr) && !empty($arr_val) )  {
-        $signtext .= $arr_key.'='.$arr_val.'&';
+  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
+		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;//demo档有加上key= 文档没有
-$sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
-$data['signData'] = $sign;
 
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url,$data);
-  $tran = mb_convert_encoding($res, "UTF-8");
-  $row = json_decode($tran, 1);
-  
-  #跳轉方法
-  if ($row['retCode'] != '1') {
-    echo '返回状态码:' . $row['status'] . "\n";//返回状态码
-    echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
-    echo '<pre>';
-    echo '请求报文：<br>';
-    var_dump($data);
-    echo '响应报文：<br>';
-    var_dump($res);
-    echo '响应报文阵列：<br>';
-    var_dump($row);
-    exit;
-  } else {
-    #不是手机
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
-  }
+$signtext = substr($signtext,0,-1).'&paySecret='.$pay_mkey;
+$data['sign'] = strtoupper(md5($signtext));
+
+#curl获取响应值
+$res = curl_post($form_url,$data);
+$row = json_decode($res,1);
+
+#跳轉方法
+if ($row['resultCode'] != '0000') {
+  echo  '错误代码:' . $row['resultCode']."<br>";
+  echo  '错误讯息:' . $row['errMsg']."<br>";
+	exit;
 }else {
-  #是手机的话
-  $jumpurl = $form_url;
-  $form_data =$data;
-}
-
+  if (_is_mobile() && $scan =='wx') {
+    $jumpurl = $row['payMessage'];
+  }elseif($scan == 'jd') {
+    echo $row['payMessage'];//html內容
+    exit();
+  }else {
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payMessage']);
+  }
 ?>
 <html>
   <head>
@@ -138,15 +128,12 @@ if (!_is_mobile()) {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl; ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
-
-      <?php if (isset($form_data)) { foreach ($form_data as $arr_key => $arr_value) {?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
 </html>
+<?php } ?>

@@ -67,14 +67,29 @@ $data = array(
   'sign' => ''//MD5大写签名
 );
 #变更参数设置
-$scan = 'zfb';
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
-$data['productType'] = "20000303";//支付宝掃碼
-if (_is_mobile()) {
-  $data['productType'] = "20000203";//手机支付宝
-}
 
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $bankname = $pay_type . "->京东钱包在线充值";
+  $payType = $pay_type . "_jd";
+  $data['productType'] = "80000103";//京东扫码支付(T0) 80000103 京东扫码支付(T1) 80000101
+} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $payType = $pay_type . "_qq";
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $data['productType'] = "70000103";//QQ钱包扫码(T1) 70000101 QQ钱包扫码(T0) 70000103
+  if (_is_mobile()) {
+    $data['productType'] = "70000203";//QQ钱包WAP，H5(T0) 70000203
+  }
+} else {
+  $scan = 'wx';
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $data['productType'] = "10000103";//微信扫码支付(T0) 10000103 微信扫码支付(T1) 10000101
+  if (_is_mobile()) {
+    $data['productType'] = "10000203";//微信WAP,H5(T0) 10000203 微信WAP,H5(T1) 10000201
+  }
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -102,21 +117,21 @@ $data['sign'] = strtoupper(md5($signtext));
 $res = curl_post($form_url, $data);
 $row = json_decode($res, 1);
 
-#跳转
+#跳轉方法
 if ($row['resultCode'] != '0000') {
   echo '错误代码:' . $row['resultCode'] . "<br>";
   echo '错误讯息:' . $row['errMsg'] . "<br>";
   exit;
 } else {
-  if (!_is_mobile()) {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
-  } else {
+  if (_is_mobile() && $scan != 'jd') {
     $jumpurl = $row['payMessage'];
+  } elseif ($scan == 'jd') {
+    echo $row['payMessage'];//html內容
+    exit();
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
   }
-}
-
-#跳轉方法
-?>
+  ?>
 <html>
   <head>
     <title>跳转......</title>
@@ -131,3 +146,5 @@ if ($row['resultCode'] != '0000') {
     </script>
   </body>
 </html>
+<?php 
+} ?>
