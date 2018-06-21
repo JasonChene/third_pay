@@ -116,6 +116,16 @@ $row = json_decode($ipslashes, 1);
 #跳转
 if ($scan == 'yl') {
   if ($row['status'] != 'success') {
+
+    echo '<pre>';
+    echo ('<br> 请求报文 = <br>');
+    var_dump($data);
+    echo ('<br> 签名字串 = <br>');
+    echo ($signtext);
+    echo ('<br><br> 响应值阵列 = <br>');
+    var_dump($row);
+    echo '</pre>';
+
     echo '返回状态码 : ' . $row['status'] . "\n";//返回状态码
     echo '返回信息 : ' . $row['msg'] . "\n";//返回信息
     exit;
