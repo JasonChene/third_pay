@@ -65,13 +65,12 @@ if (strstr($pay_type, "银联钱包")) {
   $data['zftd'] = 'yishi';
   $bankname = $pay_type . "->银联钱包在线充值";
   $payType = $pay_type . "_yl";
-  $data['bankId'] = $_REQUEST['bank_code'];
 } elseif (strstr($pay_type, "银联快捷")) {
   $scan = 'ylkj';
   $data['zftd'] = 'shkj';
   $bankname = $pay_type . "->银联快捷在线充值";
   $payType = $pay_type . "_ylkj";
-  $data['bankId'] = '';
+  $data['bankId'] = $_REQUEST['bank_code'];
 } else {
   $scan = 'wy';
   $data['zftd'] = 'shwg';
