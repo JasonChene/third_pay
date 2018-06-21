@@ -71,13 +71,10 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $payType = $pay_type."_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
-  $data['productType'] = "60000101";//银联扫码(T0) 60000103 银联扫码(T1) 60000101
+  $data['productType'] = "60000103";//银联扫码(T0) 60000103 银联扫码(T1) 60000101
   unset($data['bankCode']);
   unset($data['bankAccountType']);
   $form_url ='https://gateway.gaogby.com/scanPay/initPay';
-  if (_is_mobile()) {
-    $data['productType'] = "60000201";//银联WAP,H5支付(T0) 60000203 银联WAP,H5支付(T1) 60000201
-  }
 }else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
@@ -120,6 +117,13 @@ if ($scan == 'yl') {
   if ($row['resultCode'] != '0000') {
     echo  '错误代码:' . $row['resultCode']."<br>";
     echo  '错误讯息:' . $row['errMsg']."<br>";
+    echo '<pre>';
+    echo '请求报文：<br>';
+    var_dump($data);
+    echo '响应报文：<br>';
+    var_dump($res);
+    echo '响应报文阵列：<br>';
+    var_dump($row);
   	exit;
   }else {
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payMessage']);
