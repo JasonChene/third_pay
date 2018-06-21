@@ -67,12 +67,12 @@ $data = array(
   'sign' => ''//MD5大写签名
 );
 #变更参数设置
-$scan = 'qq';
-$payType = $pay_type . "_qq";
-$bankname = $pay_type . "->QQ钱包在线充值";
-$data['productType'] = "70000103";//qq掃碼
+$scan = 'zfb';
+$payType = $pay_type . "_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
+$data['productType'] = "20000303";//支付宝扫码(T1) 20000301 支付宝扫码(T0) 20000303
 if (_is_mobile()) {
-  $data['productType'] = "70000203";//手机qq
+  $data['productType'] = "20000203";//支付宝WAP,H5(T1) 20000201 支付宝WAP,H5(T0) 20000203
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -106,6 +106,13 @@ $row = json_decode($res, 1);
 if ($row['resultCode'] != '0000') {
   echo '错误代码:' . $row['resultCode'] . "<br>";
   echo '错误讯息:' . $row['errMsg'] . "<br>";
+  echo '<pre>';
+  echo '请求报文：<br>';
+  var_dump($data);
+  echo '响应报文：<br>';
+  var_dump($res);
+  echo '响应报文阵列：<br>';
+  var_dump($row);
   exit;
 } else {
   if (!_is_mobile()) {
