@@ -55,9 +55,7 @@ $data = array(
   "ddbz" => 'itssofluffy', //订单备注
   "ybtz" => $merchant_url, //异步通知URL
   "tbtz" => $return_url, //同步跳转URL
-
-  "sign" => '',//md5签名串
-  "bankId" => $_REQUEST['bank_code'] //银行id
+  "sign" => ''//md5签名串
 );
 
 #变更参数设置
@@ -67,17 +65,19 @@ if (strstr($pay_type, "银联钱包")) {
   $data['zftd'] = 'yishi';
   $bankname = $pay_type . "->银联钱包在线充值";
   $payType = $pay_type . "_yl";
-  $data['bankId'] = '';
+  $data['bankId'] = $_REQUEST['bank_code'];
 } elseif (strstr($pay_type, "银联快捷")) {
   $scan = 'ylkj';
   $data['zftd'] = 'shkj';
   $bankname = $pay_type . "->银联快捷在线充值";
   $payType = $pay_type . "_ylkj";
+  $data['bankId'] = '';
 } else {
   $scan = 'wy';
   $data['zftd'] = 'shwg';
   $bankname = $pay_type . "->网银在线充值";
   $payType = $pay_type . "_wy";
+  $data['bankId'] = $_REQUEST['bank_code'];
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -91,11 +91,7 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-if ($scan == yishi) {
-  $noarr = array('bankId', 'sign');//不加入签名的array key值
-} else {
-  $noarr = array('sign');//不加入签名的array key值
-}
+$noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
