@@ -111,6 +111,13 @@ $row = json_decode($res,1);
 if ($row['resultCode'] != '0000') {
   echo  '错误代码:' . $row['resultCode']."<br>";
   echo  '错误讯息:' . $row['errMsg']."<br>";
+  echo '<pre>';
+  echo '请求报文：<br>';
+  var_dump($data);
+  echo '响应报文：<br>';
+  var_dump($res);
+  echo '响应报文阵列：<br>';
+  var_dump($row);
 	exit;
 }else {
   if (_is_mobile() && $scan =='wx') {

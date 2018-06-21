@@ -72,7 +72,7 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $bankname = $pay_type . "->京东钱包在线充值";
   $payType = $pay_type . "_jd";
-  $data['productType'] = "80000101";//京东扫码支付(T0) 80000103 京东扫码支付(T1) 80000101
+  $data['productType'] = "80000103";//京东扫码支付(T0) 80000103 京东扫码支付(T1) 80000101
 } elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
   $payType = $pay_type . "_qq";
@@ -121,6 +121,13 @@ $row = json_decode($res, 1);
 if ($row['resultCode'] != '0000') {
   echo '错误代码:' . $row['resultCode'] . "<br>";
   echo '错误讯息:' . $row['errMsg'] . "<br>";
+  echo '<pre>';
+  echo '请求报文：<br>';
+  var_dump($data);
+  echo '响应报文：<br>';
+  var_dump($res);
+  echo '响应报文阵列：<br>';
+  var_dump($row);
   exit;
 } else {
   if (_is_mobile() && $scan != 'jd') {
