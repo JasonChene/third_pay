@@ -149,11 +149,14 @@ if ($scan == 'yl') {
   </head>
   <body>
   <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
+  <p>正在为您跳转中，请稍候......</p>
+      <?php if ($scan != 'yl') { ?>
         <?php foreach ($data as $arr_key => $arr_value) { ?>
           <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
         <?php 
       } ?>
+      <?php 
+    } ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
