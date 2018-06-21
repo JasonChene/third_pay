@@ -115,9 +115,35 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;//demo档有加上key= 文档没有
 $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
-#curl获取响应值
 
-#跳轉方法
+if (!_is_mobile()) {
+  #curl获取响应值
+  $res = curl_post($form_url,$data);
+  $tran = mb_convert_encoding($res, "UTF-8");
+  $row = json_decode($tran, 1);
+  
+  #跳轉方法
+  if ($row['retCode'] != '1') {
+    echo '返回状态码:' . $row['status'] . "\n";//返回状态码
+    echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
+    echo '<pre>';
+    echo '请求报文：<br>';
+    var_dump($data);
+    echo '响应报文：<br>';
+    var_dump($res);
+    echo '响应报文阵列：<br>';
+    var_dump($row);
+    exit;
+  } else {
+    #不是手机
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
+  }
+}else {
+  #是手机的话
+  $jumpurl = $form_url;
+  $form_data =$data;
+}
+
 ?>
 <html>
   <head>
@@ -125,11 +151,12 @@ $data['signData'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="get" id="frm1" action="<?php echo $form_url; ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl; ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
-      <?php foreach ($data as $arr_key => $arr_value) {?>
+
+      <?php if (isset($form_data)) { foreach ($form_data as $arr_key => $arr_value) {?>
       <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php } ?>
+      <?php }} ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
