@@ -1,0 +1,3 @@
+测试商户号 ： 10000001 
+测试key  ： z89mu331vh9jxhxeojy4o0w1okpe168c9w0q91t4
+测试金额： 0.1元
