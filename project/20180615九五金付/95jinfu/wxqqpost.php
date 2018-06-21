@@ -116,7 +116,7 @@ $signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;//demo档有加上key
 $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
 
-if (!_is_mobile()) {
+if (!_is_mobile() && $scan != 'qq') {
   #curl获取响应值
   $res = curl_post($form_url,$data);
   $tran = mb_convert_encoding($res, "UTF-8");
@@ -136,7 +136,7 @@ if (!_is_mobile()) {
     exit;
   } else {
     #不是手机
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
   }
 }else {
   #是手机的话

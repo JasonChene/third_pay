@@ -77,7 +77,7 @@ $data['payMode'] = '00021';//00021-支付宝扫码 00022-微信扫码00024-QQ扫
 if (_is_mobile()) {
     $form_url ='http://106.14.211.216:8070/payment/PayApply.do';//h5网关
     unset($data['prdAmt']);
-    $data['payMode'] = '10029';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
+    $data['payMode'] = '00028';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
     $data['pnum'] = '1';//商品数量
     $data['prdDesc'] = 'iphone';//商品描述
 }
@@ -123,7 +123,7 @@ if (!_is_mobile()) {
     exit;
   } else {
     #不是手机
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
   }
 }else {
   #是手机的话

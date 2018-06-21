@@ -123,7 +123,7 @@ if (!_is_mobile()) {
     exit;
   } else {
     #不是手机
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
   }
 }else {
   #是手机的话
