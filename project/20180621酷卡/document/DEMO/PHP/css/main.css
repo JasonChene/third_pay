@@ -1,0 +1,71 @@
+html, body, div, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, input, img {
+	margin: 0px;
+	padding: 0px;
+}
+body {
+	color: #333;
+	font-family: "宋体", "Arial Unicode MS", sans-serif;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	/*min-width: 945px;*/
+	background:#ebeeed;
+}
+h1, h2, h3, h4, h5, h6, pre, code, address, caption, cite, code, th, p, a, li, td, div {
+	font-size: 12px;
+	color: #333;
+	line-height: 1.5em;
+}
+ul, ol {
+	list-style: none;
+}
+fieldset, img {
+	border: none;
+}
+a {
+	text-decoration: none;
+	color: #646464;
+	cursor: pointer;
+}
+.w945{width:945px;margin:0 auto;}
+.w965{width:965px;margin:0 auto;}
+.ofh{overflow:hidden;}
+.fl{float:left;}
+.fr{float:right;}
+.mt40{margin-top:40px;}
+.mt15{margin-top:15px;}
+.ml60{margin-left:60px!important;}
+/**head**/
+.head{background:#f5f7f6;width:100%;height:68px;border-bottom:1px solid #fff;}
+.logo{background: url("../img/tiyanlogo-cp.svg")/*tpa=http://tiyan.baofoo.com/resources/img/tiyanlogo-cp.svg*/ no-repeat;width: 360px; height:87px;margin-top:10px;background-size:363px;}
+/**content**/
+.productlist{margin-bottom:40px;}
+.productlist li{width:300px;height:200px;margin:50px 10px 0;background:#fff; float:left;text-align:center;overflow:hidden;position:relative;}
+.productlist .producticon{width:300px;height:160px;}
+.productlist .productname{text-align:center;font-size:20px;line-height:40px;}
+.productlist li img{ }
+.pc{background:#ff8a83;}
+.wapvip{background:#ff6974;}
+.sdkvip{background:#e1505b;}
+.pay{background:#c3e357;}
+.wap{background:#a5cf4c;}
+.sdk{background:#4ebd60;}
+.webpay{background:#49aef9;}
+.phone{background:#339ad1;}
+.unionpay{background:#337cbc;}
+.tg{background:#40b653;}
+.app{background:#fed046;}
+.wallet{background:#ffa533;}
+.weChat{background:#46d347;}
+.aggregation{background:#8b5cb9;}
+.aggregationZs{background:#3ca9ca;}
+.pcQuickPay{background:#2fc73b;}
+.sdkQuickPay{background:#ff7033;}
+.quickPayWap{background:#f34646;}
+.toll{position: relative;}
+.toll_img {height: 200px;width: 300px;}
+.toll_info {display: table-cell;height: 200px;left: -300px; position: absolute;top: 0;vertical-align: middle;width:300px;}
+.graybg{background:#4f5f6e;text-align:left;overflow:hidden;}
+.graybg .mt15 span{display:block;margin-left:80px;color:#fff; font-size:18px;line-height:46px; }
+.greentitle{background:#16a086;color:#fff;}
+.vpic{margin:15px 0 0 85px;}
