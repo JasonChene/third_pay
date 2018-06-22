@@ -88,19 +88,19 @@ if ($success_msg == $success_code) {
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">订单号：</td>
+			<td style="width: 120px; text-align: right;">订单号</td>
 			<td style="padding-left: 10px;">
 				<label id="lborderno"><?php echo $order_no; ?></label>
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">充值金额：</td>
+			<td style="width: 120px; text-align: right;">充值金额</td>
 			<td style="padding-left: 10px;">
 				<label id="lbpayamount"><?php echo $mymoney; ?></label>
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">处理结果：</td>
+			<td style="width: 120px; text-align: right;">处理结果</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage"><?php echo $message; ?></label>
 			</td>

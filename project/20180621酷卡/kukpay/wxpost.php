@@ -68,7 +68,6 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-// ksort($data);
 $noarr = array('hrefbackurl', 'payerIp', 'attach', 'sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
@@ -77,9 +76,8 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 $signtext = substr($signtext, 0, -1) . $pay_mkey;
-$sign = (md5($signtext));
+$sign = md5($signtext);
 $data['sign'] = $sign;
-$data_str = http_build_query($data);
 
 #跳轉方法
 ?>
