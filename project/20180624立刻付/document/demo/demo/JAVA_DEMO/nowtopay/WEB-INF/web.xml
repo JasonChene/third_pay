@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" 
+	xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  
+  <!--listener>
+     <listener-class>com.mongo.Valid</listener-class>
+  </listener -->
+ 
+  <servlet>
+	<servlet-name>jsp</servlet-name>
+	<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+	<init-param>
+		<param-name>fork</param-name>
+		<param-value>false</param-value>
+	</init-param>
+	<init-param>
+		<param-name>trimSpaces </param-name>
+		<param-value>true</param-value>
+	</init-param>
+	<init-param>
+		<param-name>xpoweredBy</param-name>
+		<param-value>false</param-value>
+	</init-param>
+	
+	<init-param>
+	    <param-name>cors.supportedHeaders</param-name>
+	    <param-value>Accept, Origin, X-Requested-With, Content-Type, Last-Modified</param-value>
+	</init-param>
+	<load-on-startup>3</load-on-startup>
+  </servlet>
+  <!-- 
+    <listener> 
+	  <listener-class>com.task.SysTask</listener-class>
+   </listener> 
+   -->
+</web-app>
