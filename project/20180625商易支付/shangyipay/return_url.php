@@ -2,7 +2,6 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-write_log("return");
 $orderid = trim($_REQUEST['orderid']);
 $opstate = trim($_REQUEST['opstate']);
 $ovalue = trim($_REQUEST['ovalue']);
@@ -40,12 +39,6 @@ $signText = "orderid=" . $orderid . "&opstate=" . $opstate . "&ovalue=" . $ovalu
 // $strRet = substr($strRet, 0, -1) . $pay_mkey;
 
 $mysign = strtolower(md5($signText));
-
-write_log('signText ============= ' . $signText);
-write_log('mysign ============== ' . $mysign);
-
-
-
 
 if ($opstate == "0") {
 	if ($sign == $mysign) {

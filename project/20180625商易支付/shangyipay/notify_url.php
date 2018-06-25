@@ -2,7 +2,7 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-write_log("notify");
+//write_log("notify");
 $orderid = trim($_REQUEST['orderid']);
 $opstate = trim($_REQUEST['opstate']);
 $ovalue = trim($_REQUEST['ovalue']);
@@ -41,8 +41,8 @@ $signText = "orderid=" . $orderid . "&opstate=" . $opstate . "&ovalue=" . $ovalu
 
 
 $mysign = strtolower(md5($signText));
-write_log('signText = ' . $signText);
-write_log('mysign = ' . $mysign);
+//write_log('signText = ' . $signText);
+//write_log('mysign = ' . $mysign);
 
 
 
@@ -52,32 +52,32 @@ if ($opstate == "0") {
 		if ($result_insert == -1) {
 
 			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
+			//write_log("会员信息不存在，无法入账");
 
 		} else if ($result_insert == 0) {
 
 			echo ("0");
-			write_log("0");
+			//write_log("0");
 		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			write_log("数据库操作失败");
+			//write_log("数据库操作失败");
 		} else if ($result_insert == 1) {
 			echo ("1");
-			write_log("1");
+			//write_log("1");
 		} else {
 			echo ("支付失败");
-			write_log("支付失败,请重新支付！");
+			//write_log("支付失败,请重新支付！");
 		}
 	} else {
 		//簽名不對
 		echo '签名不正确！';
-		write_log("签名不正确！");
+		//write_log("签名不正确！");
 		exit;
 	}
 } else {
 //交易不成功
 	echo '交易失败！';
-	write_log("交易失败！");
+	//write_log("交易失败！");
 	exit;
 }
 
