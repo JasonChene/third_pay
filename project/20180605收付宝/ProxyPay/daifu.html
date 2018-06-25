@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<head>
+    <meta charset="utf-8">
+    <title>付款測試</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style media="screen">
+        label {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+        }
+
+        .col-xl-6 {
+            width: 800px;
+            margin: 100px auto;
+            border: 1px solid #b3a9a9;
+        }
+
+        div {
+            width: 600px;
+            margin: 10px auto;
+            border: 5px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            background-color: #90de79;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        button {
+            margin: 2px auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .box {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .div-nowrap {
+            width: 190px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="col-xl-6">
+        <form class="needs-validation" novalidate>
+            <h1>下发代付</h1>
+            <div class="form-group">
+                <label>商户支付Key</label>
+                <input type="text" class="form-control" name="payKey" placeholder="商户支付Key" maxlength="32">
+            </div>
+            <div class="form-group">
+                <label>订单金额，单位：元,保留小数点后两位</label>
+                <input type="text" class="form-control" name="orderPrice" placeholder="订单金额" maxlength="12">
+            </div>
+            <div class="form-group">
+                <label>商户支付订单号（长度30以内）</label>
+                <input type="text" class="form-control" name="outTradeNo" placeholder="商户支付订单号" maxlength="30">
+            </div>
+            <div class="form-group">
+                <label>代付产品编码</label>
+                <select class="form-control" name="productType">
+                    <option value="WEIXIN">微信</option>
+                    <option value="ALIPAY">支付宝</option>
+                    <option value="B2CPAY">网银</option>
+                    <option value="QQ">QQ</option>
+                    <option value="UNIONPAY">银联扫码</option>
+                    <option value="QUICKPAY">快捷支付</option>
+                    <option value="JD">京东扫码</option>
+                    <option value="MEITUAN">美团扫码 </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>交易类型</label>
+                <select class="form-control" name="proxyType">
+                    <option value="T0">T0</option>
+                    <option value="T1">T1</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>银行卡类型</label>
+                <select class="form-control" name="bankAccountType">
+                    <option value="PRIVATE_DEBIT_ACCOUNT">对私借记卡</option>
+                    <option value="PRIVATE_CREDIT_ACCOUNT">对私贷记卡</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>收款人手机号</label>
+                <input type="text" class="form-control" name="phoneNo" placeholder="收款人手机号" maxlength="15">
+            </div>
+            <div class="form-group">
+                <label>收款人姓名</label>
+                <input type="text" class="form-control" name="receiverName" placeholder="收款人姓名" maxlength="50">
+            </div>
+            <div class="form-group">
+                <!-- <label>收款人证件类型</label> -->
+                <input type="hidden" class="form-control" name="certType" placeholder="身份证" maxlength="300" value="IDENTITY">
+            </div>
+            <div class="form-group">
+                <label>收款人身份证号</label>
+                <input type="text" class="form-control" name="certNo" placeholder="收款人身份证号" maxlength="20" required>
+                <div class="invalid-feedback">
+                    请勿留空
+                </div>
+            </div>
+            <div class="form-group">
+                <label>收款人银行卡号</label>
+                <input type="text" class="form-control" name="receiverAccountNo" maxlength="32" required>
+                <div class="invalid-feedback">
+                    请勿留空
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit form</button>
+        </form>
+    </div>
+</body>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

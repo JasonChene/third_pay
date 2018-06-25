@@ -1,0 +1,12 @@
+#### 文件结构
+- cert 证书 
+    - .pfx 私钥
+    - .cer 公钥
+- script JS文件
+- temp 异步通知日志
+- clearfiledownload.php 对账单下载接口
+- common.php 配置文件
+- notifyurl.php 异步通知验签
+- orderpay.php 统一下单接口
+- query.php 订单查询接口
+- refund.php 退货接口
