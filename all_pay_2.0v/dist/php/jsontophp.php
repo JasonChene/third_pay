@@ -240,12 +240,23 @@ function change_data($platform,$typekey,$paytypearr){
     'zfb' => array('zfbbs','zfbh5','zfbfs'),
     'jd' => array('jdbs','jdh5','jdfs'),
     'bd' => array('bdbs','bdh5','bdfs'),
-    'wy' => array('wylk','wyh5'),
+    'wy' => array('wylk','wyh5'), 
     'yl' => array('ylbs','ylh5'),
     'ylkj' => array('ylkj','ylkjh5'),
   );
-  if (count(array_diff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集
+  if (count(array_diff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集 有微信及其他
     $diff_wx_platform = array_diff($platform,$diff['wx']);
+    if (array_intersect($platform,$diff['wx'])) {#先打印wx
+      // $inter
+      // $paytype_echo = paytype_echo($value);
+      // echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
+      // echo $paytype_echo['paytype_echo'];
+      // echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
+      // echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+      // echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
+      // echo (strstr($value, "h5")) ? '}'."\n" : '';
+      // echo '}'."\n";
+    }
     foreach ($diff_wx_platform as $value) {#除了wxbs,wxh5,wxfs都echo变更的参数
       $paytype_echo = paytype_echo($value);
       echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
@@ -256,8 +267,11 @@ function change_data($platform,$typekey,$paytypearr){
       echo (strstr($value, "h5")) ? '}'."\n" : '';
       echo '}'."\n";
     }
-
-  }elseif (condition) {
+  }elseif (count(array_diff($platform,$diff['wx'])) == 0) {#只有微信
+    # code...
+  }elseif (count(array_diff($platform,$diff['qq'])) == 0) {#只有QQ
+    # code...
+  }elseif (count(array_diff($platform,$diff['zfb'])) == 0) {#只有ZFB
     # code...
   }
 }
