@@ -131,7 +131,7 @@ $post_datas=array_merge($post_data,array('sign'=>$sign));
 </head>
 
 <body onLoad="document.ddbill.submit();">
-	<form name="ddbill" method="get" action="https://pay.antopay.com/AntoPay.html">
+	<form name="ddbill" method="get" action="https://pay.antopay.com/antoPay.html">
     <input type="hidden" name="banktype" value="<?php echo $post_datas['banktype']; ?>" />
     <input type="hidden" name="partner" value="<?php echo $post_datas['partner']; ?>" />
     <input type="hidden" name="paymoney" value="<?php echo $post_datas['paymoney']; ?>" />
