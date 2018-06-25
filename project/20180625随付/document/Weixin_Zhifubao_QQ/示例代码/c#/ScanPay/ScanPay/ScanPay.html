@@ -1,0 +1,33 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style rel="stylesheet" type="text/css">
+span{color:red;}
+</style>
+</head>
+<body>
+<form method="post" action="ScanPay.aspx" target="_blank">
+	（Interface Version）：<input type="text" name="interface_version" value="V3.1"/><span>*</span><br/>
+	（Service Type）：<select name="service_type">
+                           <option value="weixin_scan">weixin_scan</option>
+                           <option value="alipay_scan">alipay_scan</option>
+                           <option value="tenpay_scan">tenpay_scan</option>
+                           </select><span>*</span><br/>
+    （Sign Type）：<input type="text" name="sign_type" value="RSA-S"/><span>*</span><br/>
+	（Merchant ID）：<input type="text" name="merchant_code" value="100100101102"/><span>*</span><br/>
+	（Order No.）：<input type="text" name="order_no" value="1234567cc"/><span>*</span><br/>
+	（Order Time）：<input type="text" name="order_time" value="2016-01-19 14:51:51"/><span>*</span><br/>
+	（Order Amount）：<input type="text" name="order_amount" value="1"/><span>*</span><br/>
+	（Product Name）：<input type="text" name="product_name" value="book"/><span>*</span><br/>
+    （Notify URL）：<input type="text" name="notify_url" value="http://www.suifupay.com/Notify_Url.jsp"/><span>*</span><br/>
+    （Client IP）：<input type="text" name="client_ip" value="120.237.123.242"/><span>*</span><br/>
+	（Product Code）：<input type="text" name="product_code" value="A1"/><br/>
+    （Product Num）：<input type="text" name="product_num" value="12"/><br/>
+    （Product Desc）：<input type="text" name="product_desc" value="test"/><br/>
+    （Extra Return Param）：<input type="text" name="extra_return_param" value="pay"/><br/>
+    （Extend Param）：<input type="text" name="extend_param" value=""/><br/>
+    
+	<br/><input type="submit" name="submit" value="ZhiHPay"/>
+</form>
+</body>
+</html>
