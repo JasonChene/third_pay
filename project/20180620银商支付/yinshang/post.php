@@ -120,8 +120,6 @@ if ($scan == 'yl') {
     echo '<pre>';
     echo ('<br> 请求报文 = <br>');
     var_dump($data);
-    echo ('<br> 签名字串 = <br>');
-    echo ($signtext);
     echo ('<br><br> 响应值阵列 = <br>');
     var_dump($row);
     echo '</pre>';
