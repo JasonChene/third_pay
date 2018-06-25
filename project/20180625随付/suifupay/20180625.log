@@ -1,0 +1,15 @@
+2018-06-25 03:28:26 sign=aAVclcJl+POjhxKKE1w+q4/wHNO5MDwsLhWpQuwYu6CkpLIj5nlEugRnMyn2YfKoJb4WUAXuU6oNDLIzYwzbQaodtCSetWDwzqmJttDXdZ59kNMwlklTZpYmA+T0OrsaRfBbH7gWZBOTSBmFiTwA9UcwwvsojkLBat0e1CxHcSw=
+2018-06-25 03:28:26 order_amount=1
+2018-06-25 03:28:26 trade_no=AM218F1000211589
+2018-06-25 03:28:26 interface_version=V3.0
+2018-06-25 03:28:26 order_time=2018-06-25 15:28:00
+2018-06-25 03:28:26 sign_type=RSA-S
+2018-06-25 03:28:26 notify_type=offline_notify
+2018-06-25 03:28:26 notify_id=e88e5be37e6c421fab3019a591f269ac
+2018-06-25 03:28:26 trade_time=2018-06-25 15:28:00
+2018-06-25 03:28:26 merchant_code=100100356051
+2018-06-25 03:28:26 order_no=70716020180625152800
+2018-06-25 03:28:26 trade_status=SUCCESS
+2018-06-25 03:28:26 signtext=interface_version=V3.0&merchant_code=100100356051&notify_id=e88e5be37e6c421fab3019a591f269ac&notify_type=offline_notify&order_amount=1&order_no=70716020180625152800&order_time=2018-06-25 15:28:00&trade_no=AM218F1000211589&trade_status=SUCCESS&trade_time=2018-06-25 15:28:00
+2018-06-25 03:28:26 flag=1
+2018-06-25 03:28:26 SUCCESSat 1
