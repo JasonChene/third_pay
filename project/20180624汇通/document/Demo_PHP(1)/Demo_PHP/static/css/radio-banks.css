@@ -1,0 +1,129 @@
+.radio-img-bank
+{
+    float: left;
+    height: 28px;
+}
+.radio-img-abc
+{
+    background-image: url('../imgs/combo-banks.png');
+    width: 126px;
+    height:36px;
+    float:left;
+}
+
+.radio-img-icbc
+{
+    background: url('../imgs/combo-banks.png') 0px -36px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-ccb
+{
+    background: url('../imgs/combo-banks.png') 0px -72px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-psbc
+{
+    background: url('../imgs/combo-banks.png') 0px -108px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-boc
+{
+    background: url('../imgs/combo-banks.png') 0px -144px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-cmbc
+{
+    background: url('../imgs/combo-banks.png') 0px -180px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-bocom
+{
+    background: url('../imgs/combo-banks.png') 0px -216px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-spdb
+{
+    background: url('../imgs/combo-banks.png') 0px -252px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-cebbank
+{
+    background: url('../imgs/combo-banks.png') 0px -288px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-ecitic
+{
+    background: url('../imgs/combo-banks.png') 0px -324px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-pingan
+{
+    background: url('../imgs/combo-banks.png') 0px -360px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-cmbcs
+{
+    background: url('../imgs/combo-banks.png') 0px -396px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-hxb
+{
+    background: url('../imgs/combo-banks.png') 0px -432px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
+
+.radio-img-cgb
+{
+    background: url('../imgs/combo-banks.png') 0px -468px;
+    width: 126px;
+    height: 36px;
+    float:left;
+    display: inline;
+}
