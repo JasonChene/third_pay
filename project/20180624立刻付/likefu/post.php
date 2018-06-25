@@ -14,12 +14,18 @@ if (function_exists("date_default_timezone_set")) {
 //获取第三方的资料
 
 $ylscan = false;
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
 	$ylscan = true;
+}
+
+$ylkj = false;
+if (strstr($_REQUEST['pay_type'], "银联快捷")) {
+	$ylkj = true;
 }
 
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
+
 $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
@@ -55,6 +61,9 @@ $payUrl = "https://gateway.nowtopay.com/NowtoPay.html";
 if ($ylscan) {
 	$bankname = $pay_type . "->银联钱包在线充值";
 	$payType = $pay_type . "_yl";
+} elseif ($ylkj) {
+	$bankname = $pay_type . "->银联快捷在线充值";
+	$payType = $pay_type . "ylkj";
 } else {
 	$bankname = $pay_type . "->网银在线充值";
 	$payType = $pay_type . "_wy";
@@ -75,8 +84,14 @@ $partner = $pay_mid;
 $key = $pay_mkey;
 $ordernumber = $orderno;
 if ($ylscan) {
-	$banktype = "MSUNIONPAYWAP";
+	$banktype = "MSUNIONPAY";
+	if (_is_mobile()) {
+		$banktype = "MSUNIONPAYWAP";
+	}
+} elseif ($ylkj) {
+	$banktype = "BANKH5";
 } else {
+	// $banktype = 'PAYMODE';
 	$banktype = $_REQUEST['bank_code'];
 }
 $attach = "GOODS";
