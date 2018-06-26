@@ -73,11 +73,6 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-//算出订单金额
-$money = number_format($_REQUEST['MOAmount'], 0, '.', '');
-$str_money = '000000000000';
-$str_money = substr($str_money,0,-strlen($money));
-$str_money = $str_money.$money;
 #第三方参数设置
 $data = array(
   "head" => array(
@@ -91,7 +86,7 @@ $data = array(
   ),
   'body' => array(
     'orderCode' => $order_no,//商户订单号
-    'totalAmount' => $str_money,//订单金额 12 位，例 000000000101 代表1.01 元
+    'totalAmount' =>  substr((string)$mymoney * 100 + pow(10, 12), 1),//订单金额 12 位，例 000000000101 代表1.01 元
     'subject' => '话费充值',//订单标题 
     'body' => 'iPhone',//订单描述
     'payMode' => '',//支付模式
@@ -122,12 +117,19 @@ $bankname = $pay_type . "->网银在线充值";
 // }else {
 //   $form_url = 'http://a.bzzdp.com/api/createOrder';//扫码提交地址
 // }
-// if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-//   $scan = 'jd';
-//   $data['payWay'] = 'jd';
-//   $bankname = $pay_type."->京东钱包在线充值";
-//   $payType = $pay_type."_jd";
-// }elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+if (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $form_url = 'https://cashier.sandpay.com.cn/';//提交地址
+  $data['head']['method'] = 'sandPay.fastPay.quickPay.index';//银联快捷 一键快捷 接口名称
+  $data['head']['productId'] = '00000016';//一键快捷 00000016
+  $data['body']['userId'] = rand(0,99999999);//用户 ID（持卡用户在商户侧的唯一标识，最多 10 位数）
+  $data['body']['orderTime'] = date('YmdHis', time());//商户上送的订单时间
+  $data['body']['currencyCode'] = '156';//币种
+  $data['body']['clearCycle'] = '0';//清算模式：  0：T1（默认）  1：T0  2：D0  
+  $scan = 'ylkj';
+  $bankname = $pay_type."->银联快捷在线充值";
+  $payType = $pay_type."_ylkj";
+}
+// elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
 //   $scan = 'qq';
 //   $data['payWay'] = 'qq';
 //   $bankname = $pay_type."->QQ钱包在线充值";
@@ -161,50 +163,55 @@ $post = array(
 
 $res = curl_post($form_url,http_build_query($post));
 $row = parse_result($res);
+$res_data_arr = json_decode($row['data'],1);
 #跳转
 
-echo '<pre>';
-echo ('<br> 请求报文 : <br>');
-var_dump($data);
-echo ('<br> 签名字串 : <br>');
-echo ($sign);
-echo ('<br><br> 响应值 : <br>');
-var_dump($res);
-echo ('<br><br> 响应值阵列 : <br>');
-var_dump($row);
-echo '</pre>';
 
-if ($row['head']['respCode'] != '000000') {
+if ($res_data_arr['head']['respCode'] != '000000' && $scan == 'wy') {
   echo  '错误代码:' . $row['head']['respCode']."\n";
   echo  '错误讯息:' . $row['head']['respMsg']."\n";
-  echo '<pre>';
-  echo ('<br> 请求报文 : <br>');
-  var_dump($data);
-  echo ('<br> 签名字串 : <br>');
-  echo ($signtext);
-  echo ('<br><br> 响应值 : <br>');
-  var_dump($res);
-  echo ('<br><br> 响应值阵列 : <br>');
-  var_dump($row);
-  echo '</pre>';
+  print_r($row['data']);
   exit;
-}else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['body']['realSumbitUrl']);
+}elseif($res_data_arr['head']['respCode'] == '000000' && $scan == 'wy') {
+  $credential = $res_data_arr['body']['credential'];
+  ?>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+  <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="renderer" content="webkit"/>
+      <title>Insert title here</title>
+      <script type="text/javascript" src="scripts/paymentjs.js"></script>
+      <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
+    </head>
+    <body>
+  <script>
+      function wap_pay() {
+          var responseText = $("#credential").text();
+          console.log(responseText);
+          paymentjs.createPayment(responseText, function (result, err) {
+              console.log(result);
+              console.log(err.msg);
+              console.log(err.extra);
+          });
+      }
+      </script>
+
+  <div style="display: none">
+      <p id="credential"><?php echo $credential; ?></p>
+  </div>
+    </body>
+
+  <script>
+      window.onload = function () {
+          wap_pay();
+      };
+  </script>
+  </html>
+  <?php 
+}elseif ($scan == 'ylkj') {
+  # code...
 }
 #跳轉方法
 
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
