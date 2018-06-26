@@ -95,7 +95,7 @@ $data = array(
     'subject' => '话费充值',//订单标题 
     'body' => 'iPhone',//订单描述
     'payMode' => '',//支付模式
-    'payExtra' => json_encode(array('payType' =>'3', 'bankCode' => $_REQUEST['bank_code'])),
+    'payExtra' => json_encode(array('payType' =>'1', 'bankCode' => $_REQUEST['bank_code'])),
     'clientIp' => getClientIp(),//客户端 IP
     'notifyUrl' => $merchant_url,//异步通知地址
     'frontUrl' => $return_url,//前台通知地址  
@@ -167,7 +167,7 @@ echo '<pre>';
 echo ('<br> 请求报文 : <br>');
 var_dump($data);
 echo ('<br> 签名字串 : <br>');
-echo ($signtext);
+echo ($sign);
 echo ('<br><br> 响应值 : <br>');
 var_dump($res);
 echo ('<br><br> 响应值阵列 : <br>');
