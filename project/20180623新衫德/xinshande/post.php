@@ -174,27 +174,27 @@ echo ('<br><br> 响应值阵列 : <br>');
 var_dump($row);
 echo '</pre>';
 
-// if ($row['body']['oriRespCode'] != '000000') {
-//   echo  '错误代码:' . $row['body']['oriRespCode']."\n";
-//   echo  '错误讯息:' . $row['body']['oriRespMsg']."\n";
-//   echo '<pre>';
-//   echo ('<br> 请求报文 : <br>');
-//   var_dump($data);
-//   echo ('<br> 签名字串 : <br>');
-//   echo ($signtext);
-//   echo ('<br><br> 响应值 : <br>');
-//   var_dump($res);
-//   echo ('<br><br> 响应值阵列 : <br>');
-//   var_dump($row);
-//   echo '</pre>';
-//   exit;
-// }else {
-//     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['body']['qrCode']);
-// }
+if ($row['head']['respCode'] != '000000') {
+  echo  '错误代码:' . $row['head']['respCode']."\n";
+  echo  '错误讯息:' . $row['head']['respMsg']."\n";
+  echo '<pre>';
+  echo ('<br> 请求报文 : <br>');
+  var_dump($data);
+  echo ('<br> 签名字串 : <br>');
+  echo ($signtext);
+  echo ('<br><br> 响应值 : <br>');
+  var_dump($res);
+  echo ('<br><br> 响应值阵列 : <br>');
+  var_dump($row);
+  echo '</pre>';
+  exit;
+}else {
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['body']['realSumbitUrl']);
+}
 #跳轉方法
 
 ?>
-<!-- <html>
+<html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -207,4 +207,4 @@ echo '</pre>';
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html> -->
+</html>
