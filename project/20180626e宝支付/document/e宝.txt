@@ -1,0 +1,3 @@
+用户名：lijixiang    商户ID：34584 【 认证用户 】
+API：http://sapi.eboopay.com/Pay_Index.html
+APIKEY：yLfP6keJp3XSYm8hDYLeQHWSzJcplt
