@@ -1,0 +1,10 @@
+C:\Documents and Settings\Administrator\桌面\API_PAY_BANK\API_PAY_BANK\C#-vs2008\API.utils\api.utils\bin\Debug\API.utils.dll
+C:\Documents and Settings\Administrator\桌面\API_PAY_BANK\API_PAY_BANK\C#-vs2008\API.utils\api.utils\bin\Debug\API.utils.pdb
+C:\Documents and Settings\Administrator\桌面\API_PAY_BANK\API_PAY_BANK\C#-vs2008\API.utils\api.utils\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\API_PAY_BANK\API_PAY_BANK\C#-vs2008\API.utils\api.utils\obj\Debug\API.utils.dll
+C:\Documents and Settings\Administrator\桌面\API_PAY_BANK\API_PAY_BANK\C#-vs2008\API.utils\api.utils\obj\Debug\API.utils.pdb
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.utils\API.utils\bin\Debug\API.utils.dll
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.utils\API.utils\bin\Debug\API.utils.pdb
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.utils\API.utils\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.utils\API.utils\obj\Debug\API.utils.dll
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.utils\API.utils\obj\Debug\API.utils.pdb

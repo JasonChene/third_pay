@@ -1,0 +1,7 @@
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\bin\Debug\API.cmbn.dll
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\bin\Debug\API.cmbn.pdb
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\bin\Debug\API.utils.dll
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\bin\Debug\API.utils.pdb
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\obj\Debug\API.cmbn.dll
+C:\Documents and Settings\Administrator\桌面\100FreeNet_APIDemo\API.cmbn\obj\Debug\API.cmbn.pdb

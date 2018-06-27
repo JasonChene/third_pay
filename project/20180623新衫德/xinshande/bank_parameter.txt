@@ -1,0 +1,10 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','北京银行','04031000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','工商银行','01020000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','光大银行','03030000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','广发银行','03060000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','建设银行','01050000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','民生银行','03050000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','农业银行','01030000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','上海银行','04012900');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','邮政储蓄银行','01000000');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新衫德','中国银行','01040000');
