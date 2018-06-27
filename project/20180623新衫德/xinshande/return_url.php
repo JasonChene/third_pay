@@ -8,7 +8,7 @@ function verify($plainText, $sign, $path){
     openssl_free_key($resource);
     return $result;
 }
-write_log("return");
+write_log("return--------------------------------");
 
 #############################################
 #request方法
@@ -56,6 +56,7 @@ $mymoney = number_format($data['totalAmount'], 2, '.', ''); //订单金额
 $success_msg = $data['orderStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
+$notify_data = stripslashes($_POST['data']); //支付数据
 $echo_msg = "respCode=000000";//回调讯息
 
 #根据订单号读取资料库
