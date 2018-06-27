@@ -87,20 +87,37 @@ $data = array(
   'body' => array(
     'payTool' => '',//支付工具 0401：支付宝扫码  0402：微信扫码 0403：银联扫码 0405：QQ 钱包 0406：京东钱包
     'orderCode' => $order_no,//商户订单号
+    'limitPay' => '1',//限定支付方式 
     'totalAmount' => substr((string)$mymoney * 100 + pow(10, 12), 1),//订单金额 12 位，例 000000000101 代表1.01 元
     'subject' => '话费充值',//订单标题 
     'body' => 'iPhone',//订单描述
     'notifyUrl' => $merchant_url,//异步通知地址
     )
-);  
+  );
   #变更参数设置
   
-$form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
-$scan = 'zfb';
-$data['head']['productId'] = '00000006';//支付宝扫码  00000006
-$data['body']['payTool'] = '0401';//0401：支付宝扫码
-$payType = $pay_type."_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
+  $scan = 'jd';
+  $data['head']['productId'] = '00000027';//京东钱包扫码 00000027
+  $data['body']['payTool'] = '0406';//0406：京东钱包
+  $bankname = $pay_type."->京东钱包在线充值";
+  $payType = $pay_type."_jd";
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
+  $scan = 'qq';
+  $data['head']['productId'] = '00000026';//QQ钱包扫码 00000026
+  $data['body']['payTool'] = '0405';//产品id 00000026 "payTool":"0405"
+  $payType = $pay_type."_qq";
+  $bankname = $pay_type . "->QQ钱包在线充值";
+} else {
+  $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
+  $scan = 'wx';
+  $data['head']['productId'] = '00000005';//微信扫码  00000005
+  $data['body']['payTool'] = '0402';//0402：微信扫码
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -153,4 +170,3 @@ if ($res_data_arr['head']['respCode'] != '000000') {
     </script>
   </body>
 </html>
-

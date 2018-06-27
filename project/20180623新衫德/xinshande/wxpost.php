@@ -73,11 +73,6 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-//算出订单金额
-$money = number_format($_REQUEST['MOAmount'], 0, '.', '');
-$str_money = '000000000000';
-$str_money = substr($str_money,0,-strlen($money));
-$str_money = $str_money.$money;
 #第三方参数设置
 $data = array(
   "head" => array(
@@ -90,32 +85,17 @@ $data = array(
     "reqTime" => date('YmdHis', time()),
   ),
   'body' => array(
-    'payTool' => '0401',//支付工具 0401：支付宝扫码  0402：微信扫码 0403：银联扫码 0405：QQ 钱包 0406：京东钱包
+    'payTool' => '',//支付工具 0401：支付宝扫码  0402：微信扫码 0403：银联扫码 0405：QQ 钱包 0406：京东钱包
     'orderCode' => $order_no,//商户订单号
     'limitPay' => '1',//限定支付方式 
-    // 'authCode' => '',//支付授权码 用户付款的条形码
-    'totalAmount' => $str_money,//订单金额 12 位，例 000000000101 代表1.01 元
+    'totalAmount' => substr((string)$mymoney * 100 + pow(10, 12), 1),//订单金额 12 位，例 000000000101 代表1.01 元
     'subject' => '话费充值',//订单标题 
     'body' => 'iPhone',//订单描述
-    // 'txnTimeOut' => '20171230000000',//订单超时时间 
     'notifyUrl' => $merchant_url,//异步通知地址
     )
   );
   #变更参数设置
   
-  // if (_is_mobile()) {
-    //   $form_url ='https://cashier.sandpay.com.cn/gateway/api/order/pay';//h5提供交地址
-      //   $data['head']['method'] = 'sandpay.trade.pay';//统一下单 sandpay.trade.pay
-      //   $data['head']['productId'] = '00000006';//支付宝服务窗支付 00000006
-      //   unset($data['body']['payTool']);
-      //   unset($data['body']['limitPay']);
-      //   $data['body']['payMode'] = '00000006';//支付模式
-      // }
-      // if (_is_mobile()) {
-        //   $form_url = 'http://a.bzzdp.com/api/createWapOrder';//wap提交地址
-          // }else {
-            //   $form_url = 'http://a.bzzdp.com/api/createOrder';//扫码提交地址
-              // }
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
   $scan = 'jd';
@@ -130,17 +110,19 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['body']['payTool'] = '0402';//0402：微信扫码
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-}//elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-//   $scan = 'qq';
-//   $data['payWay'] = 'qq';
-//   $bankname = $pay_type."->QQ钱包在线充值";
-//   $payType = $pay_type."_qq";
-// }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
-//   $scan = 'bd';
-//   $data['payWay'] = 'baidu';
-//   $bankname = $pay_type."->百度钱包在线充值";
-//   $payType = $pay_type."_bd";
-// }
+  if (_is_mobile()) {
+    $form_url = 'https://cashier.sandpay.com.cn/gateway/api/order/pay';//提交地址
+    unset($data['body']['payTool']);
+    unset($data['body']['limitPay']);
+    $data['head']['method'] = 'sandpay.trade.pay';
+    $data['head']['productId'] = '00000025';//微信h5支付 00000025
+    $data['body']['payMode'] = 'sand_wxh5';//支付模式
+    $data['body']['payExtra'] = json_encode(array('ip' => getClientIp(), 'sceneInfo' => 'iPhone'));//支付扩展域 
+    $data['body']['clientIp'] = getClientIp();//客户端 IP
+    $data['body']['frontUrl'] = $return_url;//前台通知地址
+  }
+}
+
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -162,38 +144,66 @@ $post = array(
   'sign' => $sign
 );
 
+
+if ($scan == 'wx' && _is_mobile()) {
+  $res = curl_post($form_url,http_build_query($post));
+  $row = parse_result($res);
+  $res_data_arr = json_decode($row['data'],1);
+  #跳转   
+  if ($res_data_arr['head']['respCode'] != '000000') {
+    echo  '错误代码:' . $res_data_arr['head']['respCode']."\n";
+    echo  '错误讯息:' . $res_data_arr['head']['respMsg']."\n";
+    exit;
+  }elseif($res_data_arr['head']['respCode'] == '000000') {
+    $credential = $res_data_arr['body']['credential'];
+    ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="renderer" content="webkit"/>
+        <title>Insert title here</title>
+        <script type="text/javascript" src="scripts/paymentjs.js"></script>
+        <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
+      </head>
+      <body>
+      <script>
+        function wap_pay() {
+          var responseText = $("#credential").text();
+          console.log(responseText);
+          paymentjs.createPayment(responseText, function (result, err) {
+              console.log(result);
+              console.log(err.msg);
+              console.log(err.extra);
+          });
+        }
+      </script>
+      <div style="display: none">
+          <p id="credential"><?php echo $credential; ?></p>
+      </div>
+      </body>
+      <script>
+          window.onload = function () {
+              wap_pay();
+          };
+      </script>
+    </html>
+    <?php 
+  }
+}else {
 $res = curl_post($form_url,http_build_query($post));
 $row = parse_result($res);
+$res_data_arr = json_decode($row['data'],1);
 #跳转
 
-echo '<pre>';
-echo ('<br> 请求报文 : <br>');
-var_dump($data);
-echo ('<br> 签名字串 : <br>');
-echo ($signtext);
-echo ('<br><br> 响应值 : <br>');
-var_dump($res);
-echo ('<br><br> 响应值阵列 : <br>');
-var_dump($row);
-echo '</pre>';
-
-if ($row['body']['oriRespCode'] != '000000') {
-  echo  '错误代码:' . $row['body']['oriRespCode']."\n";
-  echo  '错误讯息:' . $row['body']['oriRespMsg']."\n";
-  // echo '<pre>';
-  // echo ('<br> 请求报文 : <br>');
-  // var_dump($data);
-  // echo ('<br> 签名字串 : <br>');
-  // echo ($signtext);
-  // echo ('<br><br> 响应值 : <br>');
-  // var_dump($res);
-  // echo ('<br><br> 响应值阵列 : <br>');
-  // var_dump($row);
-  // echo '</pre>';
+if ($res_data_arr['head']['respCode'] != '000000') {
+  echo  '错误代码:' . $res_data_arr['head']['respCode']."\n";
+  echo  '错误讯息:' . $res_data_arr['head']['respMsg']."\n";
   exit;
 }else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['body']['qrCode']);
+  $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code='.$res_data_arr['body']['qrCode'];
 }
+
 #跳轉方法
 
 ?>
@@ -211,3 +221,4 @@ if ($row['body']['oriRespCode'] != '000000') {
     </script>
   </body>
 </html>
+<?php } ?>

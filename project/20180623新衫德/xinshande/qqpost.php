@@ -73,11 +73,6 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-//算出订单金额
-$money = number_format($_REQUEST['MOAmount'], 0, '.', '');
-$str_money = '000000000000';
-$str_money = substr($str_money,0,-strlen($money));
-$str_money = $str_money.$money;
 #第三方参数设置
 $data = array(
   "head" => array(
@@ -92,12 +87,9 @@ $data = array(
   'body' => array(
     'payTool' => '',//支付工具 0401：支付宝扫码  0402：微信扫码 0403：银联扫码 0405：QQ 钱包 0406：京东钱包
     'orderCode' => $order_no,//商户订单号
-    'limitPay' => '1',//限定支付方式 
-    // 'authCode' => '',//支付授权码 用户付款的条形码
-    'totalAmount' => $str_money,//订单金额 12 位，例 000000000101 代表1.01 元
+    'totalAmount' => substr((string)$mymoney * 100 + pow(10, 12), 1),//订单金额 12 位，例 000000000101 代表1.01 元
     'subject' => '话费充值',//订单标题 
     'body' => 'iPhone',//订单描述
-    // 'txnTimeOut' => '20171230000000',//订单超时时间 
     'notifyUrl' => $merchant_url,//异步通知地址
     )
   );
@@ -109,35 +101,7 @@ $data['head']['productId'] = '00000026';//QQ钱包扫码 00000026
 $data['body']['payTool'] = '0405';//产品id 00000026 "payTool":"0405"
 $payType = $pay_type."_qq";
 $bankname = $pay_type . "->QQ钱包在线充值";
-// if (_is_mobile()) {
-//   $form_url ='https://cashier.sandpay.com.cn/gateway/api/order/pay';//h5提供交地址
-//   $data['head']['method'] = 'sandpay.trade.pay';//统一下单 sandpay.trade.pay
-//   $data['head']['productId'] = '00000006';//支付宝服务窗支付 00000006
-//   unset($data['body']['payTool']);
-//   unset($data['body']['limitPay']);
-//   $data['body']['payMode'] = '00000006';//支付模式
-// }
-// if (_is_mobile()) {
-//   $form_url = 'http://a.bzzdp.com/api/createWapOrder';//wap提交地址
-// }else {
-//   $form_url = 'http://a.bzzdp.com/api/createOrder';//扫码提交地址
-// }
-// if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-//   $scan = 'jd';
-//   $data['payWay'] = 'jd';
-//   $bankname = $pay_type."->京东钱包在线充值";
-//   $payType = $pay_type."_jd";
-// }elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-//   $scan = 'qq';
-//   $data['payWay'] = 'qq';
-//   $bankname = $pay_type."->QQ钱包在线充值";
-//   $payType = $pay_type."_qq";
-// }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
-//   $scan = 'bd';
-//   $data['payWay'] = 'baidu';
-//   $bankname = $pay_type."->百度钱包在线充值";
-//   $payType = $pay_type."_bd";
-// }
+
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -161,36 +125,17 @@ $post = array(
 
 $res = curl_post($form_url,http_build_query($post));
 $row = parse_result($res);
+$res_data_arr = json_decode($row['data'],1);
 #跳转
 
-echo '<pre>';
-echo ('<br> 请求报文 : <br>');
-var_dump($data);
-echo ('<br> 签名字串 : <br>');
-echo ($signtext);
-echo ('<br><br> 响应值 : <br>');
-var_dump($res);
-echo ('<br><br> 响应值阵列 : <br>');
-var_dump($row);
-echo '</pre>';
-
-if ($row['body']['oriRespCode'] != '000000') {
-  echo  '错误代码:' . $row['body']['oriRespCode']."\n";
-  echo  '错误讯息:' . $row['body']['oriRespMsg']."\n";
-  // echo '<pre>';
-  // echo ('<br> 请求报文 : <br>');
-  // var_dump($data);
-  // echo ('<br> 签名字串 : <br>');
-  // echo ($signtext);
-  // echo ('<br><br> 响应值 : <br>');
-  // var_dump($res);
-  // echo ('<br><br> 响应值阵列 : <br>');
-  // var_dump($row);
-  // echo '</pre>';
+if ($res_data_arr['head']['respCode'] != '000000') {
+  echo  '错误代码:' . $res_data_arr['head']['respCode']."\n";
+  echo  '错误讯息:' . $res_data_arr['head']['respMsg']."\n";
   exit;
 }else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['body']['qrCode']);
+  $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code='.$res_data_arr['body']['qrCode'];
 }
+
 #跳轉方法
 
 ?>

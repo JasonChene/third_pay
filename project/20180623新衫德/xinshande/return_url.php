@@ -8,38 +8,7 @@ function verify($plainText, $sign, $path){
     openssl_free_key($resource);
     return $result;
 }
-write_log("return");
-
-#############################################
-#request方法
-write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-#post方法
-write_log('post方法');
-foreach ($_POST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-#input方法
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-
-$res=json_decode($input_data,1);//json回传资料
-
-// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XML回传资料
-
-// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
-
-foreach ($res as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-###########################################
+// write_log("return--------------------------------");
 
 
 #接收资料
@@ -47,13 +16,15 @@ foreach ($res as $key => $value) {
 $data = array();
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
+$notify_data = stripslashes($_POST['data']); //支付数据
+$notify_data_arr = json_decode($notify_data,1);
 
 #设定固定参数
-$order_no = $data['orderCode']; //订单号
-$mymoney = number_format($data['totalAmount'], 2, '.', ''); //订单金额
-$success_msg = $data['orderStatus'];//成功讯息
+$order_no = $notify_data_arr['body']['orderCode']; //订单号
+$mymoney = number_format($notify_data_arr['body']['totalAmount']/100, 2, '.', ''); //订单金额
+$success_msg = $notify_data_arr['body']['orderStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "respCode=000000";//回调讯息
@@ -82,15 +53,9 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 
-$signtext="partner=".$data['partner']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&ordernumber=".$data['ordernumber']."&paymoney=".$data['paymoney']."&paytype=".$data['paytype']."&".$pay_mkey;//验签字串
-$mysign = md5($signtext);//签名
-write_log("return:signtext=".$signtext);
-write_log("return:mysign=".$mysign);
-
-
 #到账判断
 if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
+  if (verify($notify_data, $sign, $pay_account)) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			$message = ("会员信息不存在，无法入账");
