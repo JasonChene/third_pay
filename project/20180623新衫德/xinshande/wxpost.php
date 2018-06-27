@@ -110,6 +110,17 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['body']['payTool'] = '0402';//0402：微信扫码
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
+  if (_is_mobile()) {
+    $form_url = 'https://cashier.sandpay.com.cn/gateway/api/order/pay';//提交地址
+    unset($data['body']['payTool']);
+    unset($data['body']['limitPay']);
+    $data['head']['method'] = 'sandpay.trade.pay';
+    $data['head']['productId'] = '00000025';//微信h5支付 00000025
+    $data['body']['payMode'] = 'sand_wxh5';//支付模式
+    $data['body']['payExtra'] = json_encode(array('ip' => getClientIp(), 'sceneInfo' => 'iPhone'));//支付扩展域 
+    $data['body']['clientIp'] = getClientIp();//客户端 IP
+    $data['body']['frontUrl'] = $return_url;//前台通知地址
+  }
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -133,6 +144,53 @@ $post = array(
   'sign' => $sign
 );
 
+
+if ($scan == 'wx' && _is_mobile()) {
+  $res = curl_post($form_url,http_build_query($post));
+  $row = parse_result($res);
+  $res_data_arr = json_decode($row['data'],1);
+  #跳转   
+  if ($res_data_arr['head']['respCode'] != '000000') {
+    echo  '错误代码:' . $res_data_arr['head']['respCode']."\n";
+    echo  '错误讯息:' . $res_data_arr['head']['respMsg']."\n";
+    exit;
+  }elseif($res_data_arr['head']['respCode'] == '000000') {
+    $credential = $res_data_arr['body']['credential'];
+    ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="renderer" content="webkit"/>
+        <title>Insert title here</title>
+        <script type="text/javascript" src="scripts/paymentjs.js"></script>
+        <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
+      </head>
+      <body>
+      <script>
+        function wap_pay() {
+          var responseText = $("#credential").text();
+          console.log(responseText);
+          paymentjs.createPayment(responseText, function (result, err) {
+              console.log(result);
+              console.log(err.msg);
+              console.log(err.extra);
+          });
+        }
+      </script>
+      <div style="display: none">
+          <p id="credential"><?php echo $credential; ?></p>
+      </div>
+      </body>
+      <script>
+          window.onload = function () {
+              wap_pay();
+          };
+      </script>
+    </html>
+    <?php 
+  }
+}else {
 $res = curl_post($form_url,http_build_query($post));
 $row = parse_result($res);
 $res_data_arr = json_decode($row['data'],1);
@@ -163,3 +221,4 @@ if ($res_data_arr['head']['respCode'] != '000000') {
     </script>
   </body>
 </html>
+<?php } ?>

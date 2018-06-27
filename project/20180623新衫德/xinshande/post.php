@@ -108,6 +108,45 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
   $bankname = $pay_type."->银联快捷在线充值";
   $payType = $pay_type."_ylkj";
+}elseif (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
+  if (!$_REQUEST['authCode']) {
+    ?>
+    <html>
+      <head>
+        <title>跳转......</title>
+        <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+        <form name="dinpayForm" method="post" id="frm1" action="./fscard.php" target="_self">
+          <p>正在为您跳转中，请稍候......</p>
+          <input type="hidden" name="file" value="yl" />
+          <?php foreach ($_REQUEST as $arr_key => $arr_value) { ?>
+            <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+          <?php } ?>
+        </form>
+        <script language="javascript">
+          document.getElementById("frm1").submit();
+        </script>
+      </body>
+    </html>
+    <?php
+    exit;
+  }else {
+    $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/pay';//提交地址
+    $data['head']['method'] = 'sandpay.trade.barpay';//银联扫码 统一下单并支付 sandpay.trade.barpay
+    $data['head']['productId'] = '00000013';//银联反扫 00000013
+    $data['body']['payTool'] = '0403';//0403：银联扫码
+    $data['body']['scene'] = '1';//固定填 1（条码支付）
+    $data['body']['authCode'] = $_REQUEST['authCode'];//用户付款的条形码
+    unset($data['body']['payMode']);
+    unset($data['body']['payExtra']);
+    unset($data['body']['clientIp']);
+    unset($data['body']['frontUrl']);
+    $scan = 'ylfs';
+    $bankname = $pay_type."->银联钱包在线充值";
+    $payType = $pay_type."_yl";
+  }
+
 }elseif (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
   $data['head']['method'] = 'sandpay.trade.precreate';//银联扫码 接口名称
@@ -123,7 +162,7 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'yl';
   $bankname = $pay_type."->银联钱包在线充值";
   $payType = $pay_type."_yl";
-}else {
+} else {
   $form_url = 'https://cashier.sandpay.com.cn/gateway/api/order/pay';//提交地址
   $scan = 'wy';
   $data['head']['productId'] = '00000007';//网银B2C 00000007
@@ -212,6 +251,33 @@ if ($scan == 'wy') {
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code='.$res_data_arr['body']['qrCode'];
   }
   
+  ?>
+  <html>
+    <head>
+      <title>跳转......</title>
+      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body>
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+        <p>正在为您跳转中，请稍候......</p>
+      </form>
+      <script language="javascript">
+        document.getElementById("frm1").submit();
+      </script>
+    </body>
+  </html>
+  <?php
+} elseif ($scan == 'ylfs') {
+  $res = curl_post($form_url,http_build_query($post));
+  $row = parse_result($res);
+  $res_data_arr = json_decode($row['data'],1);
+  if ($res_data_arr['head']['respCode'] != '000000') {
+    echo  '错误代码:' . $res_data_arr['head']['respCode']."\n";
+    echo  '错误讯息:' . $res_data_arr['head']['respMsg']."\n";
+    exit;
+  }else {
+    $jumpurl = $res_data_arr['body']['qrCode'];
+  }
   ?>
   <html>
     <head>

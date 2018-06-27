@@ -106,6 +106,7 @@ $stmt->execute($params);
       <label>post</label>
       <button id="post_wy" type="submit" class="btn btn-outline-primary">网银</button>
       <button id="post_yl" type="submit" class="btn btn-outline-primary">银联钱包</button>
+      <button id="post_ylfs" type="submit" class="btn btn-outline-primary">银联钱包反扫</button>
       <button id="post_ylkj" type="submit" class="btn btn-outline-primary">银联快捷</button>
       <br>
       <label>wxpost</label>
@@ -159,6 +160,12 @@ $(document).ready(function() {
   $('#post_yl').on('click',function(){
       str = 'file_name=post.php&';
       str = str + 'pay_type=银联钱包&';
+      console.log(str);
+      jump_url(str);
+  });
+  $('#post_ylfs').on('click',function(){
+      str = 'file_name=post.php&';
+      str = str + 'pay_type=银联钱包反扫&';
       console.log(str);
       jump_url(str);
   });
