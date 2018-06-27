@@ -85,7 +85,7 @@ $arr['value'] = round($_REQUEST['MOAmount'], 2);
 $dateis = date('is');
 
 //公用业务回传参数（选填）
-$arr['attach'] = $_REQUEST['S_Name'] . "|" . $dateis . "|" . md5($_REQUEST['S_Name'] . $pay_mid . $dateis);;
+$arr['attach'] = $_REQUEST['S_Name'] . "|" . $dateis . "|" . md5($_REQUEST['S_Name'] . $pay_mid . $dateis);
 
 
 $buff = "parter=" . $arr['parter'] . "&type=" . $arr['type'] . "&value=" . $arr['value'] . "&orderid=" . $arr['orderid'] . "&callbackurl=" . $arr['callbackurl'] . $pay_mkey;//."&hrefbackurl=".$arr['hrefbackurl']

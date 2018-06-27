@@ -61,9 +61,6 @@ $signText = substr($signText, 0, -1);
 $sign = mb_strtolower(md5($signText . $pay_public_key)); #生成签名
 $data .= 'sign=' . $sign;
 
-echo $signText . $pay_public_key . "<br><br>";
-echo $data . "<br><br>";
-
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $bankname = $pay_type . "->QQ钱包在线充值";
 $payT = $pay_type . "_qq";

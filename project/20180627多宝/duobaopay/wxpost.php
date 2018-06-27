@@ -70,7 +70,7 @@ $arr['value'] = round($_REQUEST['MOAmount'], 2);
 $dateis = date('is');
 
 //公用业务回传参数（选填）
-$arr['attach'] = $_REQUEST['S_Name'] . "|" . $dateis . "|" . md5($_REQUEST['S_Name'] . $pay_mid . $dateis);;
+$arr['attach'] = $_REQUEST['S_Name'] . "|" . $dateis . "|" . md5($_REQUEST['S_Name'] . $pay_mid . $dateis);
 
 
 $buff = "parter=" . $arr['parter'] . "&type=" . $arr['type'] . "&value=" . $arr['value'] . "&orderid=" . $arr['orderid'] . "&callbackurl=" . $arr['callbackurl'] . $pay_mkey;//."&hrefbackurl=".$arr['hrefbackurl']
@@ -92,15 +92,6 @@ if ($result_insert == -1) {
 	echo "订单号已存在，请返回支付页面重新支付";
 	exit;
 }
-
-//打印
-echo '<pre>';
-echo ('<br> arr = <br>');
-var_dump($arr);
-echo '</pre>';
-
-// exit;
-
 
 ?>
 <html>

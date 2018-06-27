@@ -83,7 +83,7 @@ $arr['sign'] = $sign;
 
 $gateway = "https://gwbb69.169.cc/interface/AutoBank/index.aspx";
 
-$bankname = $pay_type . "->微信在线充值";
+$bankname = $pay_type . "->支付宝在线充值";
 $payType = $pay_type . "_zfb";
 $result_insert = insert_online_order($_REQUEST['S_Name'], $arr['orderid'], $arr['value'], $bankname, $payType, $top_uid);
 
