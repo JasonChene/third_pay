@@ -2,6 +2,11 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+#预设时间在上海
+date_default_timezone_set('PRC');
+if (function_exists("date_default_timezone_set")) {
+  date_default_timezone_set("Asia/Shanghai");
+}
 
 #function
 function curl_post($url, $data)
@@ -61,8 +66,10 @@ $data = array(
 );
 
 #变更参数设置
-
-$form_url = 'https://api.huitongvip.com/pay.html';//支付接口请求地址
+$form_url = 'https://api.huitongvip.com/pay.html';//form接口请求地址
+if (_is_mobile()) {
+  $form_url = 'https://api.huitongvip.com/order.html';//curl接口请求地址
+}
 
 $scan = 'qq';
 $data['pay_type'] = '5';
@@ -84,7 +91,7 @@ ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+  if (!in_array($arr_key, $noarr) && (isset($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
@@ -94,40 +101,22 @@ $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
 #curl获取响应值
-$res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
-$row = json_decode($tran, 1);
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> res = <br>');
-var_dump($res);
-echo '</pre>';
-
-// exit;
+if (_is_mobile()) {
+  $res = curl_post($form_url, $data_str);
+  $tran = mb_convert_encoding("$res", "UTF-8");
+  $row = json_decode($tran, 1);
 
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "\n";
-  echo '错误讯息:' . $row['respInfo'] . "\n";
-  exit;
-} else {
-  $qrcodeUrl = $row['qrcodeUrl'];
-  if (!_is_mobile()) {
-    if (strstr($qrcodeUrl, "&")) {
-      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-    } else {
-      $code = $qrcodeUrl;
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  if ($row['flag'] != '00') {
+    echo '错误代码:' . $row['flag'] . "\n";
+    echo '错误讯息:' . $row['msg'] . "\n";
+    exit;
   } else {
+    $qrcodeUrl = $row['qrCodeUrl'];
     $jumpurl = $qrcodeUrl;
   }
+} else {
+  $jumpurl = $form_url;
 }
 
 #跳轉方法
@@ -138,9 +127,16 @@ if ($row['respCode'] != '0000') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+     <p>正在为您跳转中，请稍候......</p>
+     <?php if (!_is_mobile()) { ?>
+       <?php foreach ($data as $arr_key => $arr_value) { ?>
+         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+       <?php 
+    } ?>
+     <?php 
+  } ?>
+   </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>

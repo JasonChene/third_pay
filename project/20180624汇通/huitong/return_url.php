@@ -16,7 +16,7 @@ $mymoney = number_format($data['order_amount'], 2, '.', ''); //订单金额
 $success_msg = $data['trade_status'];//成功讯息
 $success_code = "success";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "success";//回调讯息
+$echo_msg = "200";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -49,9 +49,8 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0, -1);//验签字串
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;//验签字串
 $mysign = md5($signtext);//签名
-
 
 #到账判断
 if ($success_msg == $success_code) {
