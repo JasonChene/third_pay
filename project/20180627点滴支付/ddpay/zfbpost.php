@@ -77,7 +77,7 @@ $data =array(
 $scan = 'zfb';
 $bankname = $pay_type."->支付宝在线充值";
 $payType = $pay_type."_zfb";
-$data['bizType'] = '42';//京东扫码
+$data['bizType'] = '42';
 if (_is_mobile()) {
   $form_url = 'http://api.easy76.cn/guanjun/pay/h5';
   $data['bizType'] = '3';

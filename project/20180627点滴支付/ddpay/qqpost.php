@@ -73,7 +73,7 @@ $data =array(
 $scan = 'qq';
 $bankname = $pay_type."->QQ钱包在线充值";
 $payType = $pay_type."_qq";
-$data['bizType'] = '43';//京东扫码
+$data['bizType'] = '43';
 if (_is_mobile()) {
   $form_url = 'http://api.easy76.cn/guanjun/pay/h5';
   $data['bizType'] = '2';
