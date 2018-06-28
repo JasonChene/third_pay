@@ -104,7 +104,7 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $data['body']['userId'] = rand(0,99999999);//用户 ID（持卡用户在商户侧的唯一标识，最多 10 位数）
   $data['body']['orderTime'] = date('YmdHis', time());//商户上送的订单时间
   $data['body']['currencyCode'] = '156';//币种
-  $data['body']['clearCycle'] = '0';//清算模式：  0：T1（默认）  1：T0  2：D0  
+  $data['body']['clearCycle'] = '2';//清算模式：  0：T1（默认）  1：T0  2：D0  
   $scan = 'ylkj';
   $bankname = $pay_type."->银联快捷在线充值";
   $payType = $pay_type."_ylkj";
@@ -154,7 +154,7 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $data['body']['payTool'] = '0403';//0403：银联扫码
   // $data['body']['limitPay'] = '1';//限定支付方式
   $data['body']['currencyCode'] = '156';//币种
-  $data['body']['clearCycle'] = '0';//清算模式：  0：T1（默认）  1：T0  2：D0
+  $data['body']['clearCycle'] = '2';//清算模式：  0：T1（默认）  1：T0  2：D0
   unset($data['body']['payMode']);
   unset($data['body']['payExtra']);
   unset($data['body']['clientIp']);
