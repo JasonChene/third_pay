@@ -83,32 +83,32 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   unset($data['cardType']);
   unset($data['userType']);
 }
-// elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-//   $scan = 'ylkj';
-//   $payType = $pay_type."_ylkj";
-//   $bankname = $pay_type . "->银联快捷在线充值";
-//   $form_url = 'http://api.easy76.cn/guanjun/pay/quickpay';
-//   $data =array(
-//     'merId' => $pay_mid,
-//     'idCardNo' => "1212161651",
-//     'merOrderId' => $order_no,
-//     'subject' => "pay",//业务类型
-//     'txnAmt' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-//     'currency' => "CNY",
-//     'notifyUrl' => $merchant_url,
-//     'sendIp' => getClientIp(),
-//     'txnTime' => date("YmdHis"),
-//     'activeTime' => "120",
-//     'signature' => "",
-//     'signMethod' => "MD5"
-//   );
-//}
+elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $payType = $pay_type."_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $form_url = 'http://api.easy76.cn/guanjun/pay/quickpay';
+  $data =array(
+    'merId' => $pay_mid,
+    'idCardNo' => $pay_account,
+    'merOrderId' => $order_no,
+    'subject' => "pay",//业务类型
+    'txnAmt' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+    'currency' => "CNY",
+    'notifyUrl' => $merchant_url,
+    'sendIp' => getClientIp(),
+    'txnTime' => date("YmdHis"),
+    'activeTime' => "120",
+    'signature' => "",
+    'signMethod' => "MD5"
+  );
+}
 else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
   $form_url ='http://api.easy76.cn/guanjun/pay/gateway';
-  $data['bizType'] = '61';//微信掃碼
+  $data['bizType'] = '61';
   if (_is_mobile()) {
     $data['bizType'] = '62';
   }
