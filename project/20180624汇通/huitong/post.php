@@ -49,7 +49,7 @@ $data = array(
   "notify_url" => $merchant_url, //服务器异步通知地址
   "return_url" => $return_url, //页面同步跳转通知地址
   "pay_type" => '', //支付方式 1-网银支付, 2-微信支付, 3-支付宝支付, 5-QQ钱包
-  "bank_code" => $_REQUEST['bank_code'], //银行编码
+  "bank_code" => '', //银行编码
   "merchant_code" => $pay_mid, //商户号
   "order_no" => $order_no, //商户订单号
   "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商户订单总金额
@@ -61,13 +61,28 @@ $data = array(
 );
 
 #变更参数设置
+$form_url = 'https://api.huitongvip.com/pay.html';//form接口请求地址
+if (_is_mobile()) {
+  $form_url = 'https://api.huitongvip.com/order.html';//curl接口请求地址
+}
 
-$form_url = 'https://api.huitongvip.com/pay.html';//支付接口请求地址
-
-$scan = 'wy';
-$data['pay_type'] = '1';
-$bankname = $pay_type . "->网银在线充值";
-$payType = $pay_type . "_wy";
+if (strstr($pay_type, "银联钱包")) {
+  $scan = 'yl';
+  $data['pay_type'] = '7';
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $payType = $pay_type . "_yl";
+} elseif (strstr($pay_type, "银联快捷")) {
+  $scan = 'ylkj';
+  $data['pay_type'] = '8';
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $payType = $pay_type . "_ylkj";
+} else {
+  $scan = 'wy';
+  $data['pay_type'] = '1';
+  $bankname = $pay_type . "->网银在线充值";
+  $payType = $pay_type . "_wy";
+  $data['bank_code'] = $_REQUEST['bank_code']; //银行编码
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -84,7 +99,7 @@ ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+  if (!in_array($arr_key, $noarr) && (isset($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
@@ -93,41 +108,46 @@ $sign = md5($signtext);
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
-#curl获取响应值
-$res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
-$row = json_decode($tran, 1);
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> res = <br>');
-var_dump($res);
-echo '</pre>';
+//判断使用系统
+$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+$phone_type = 'other';
+if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+  $phone_type = 'ios';
+} elseif (strpos($agent, 'android')) {
+  $phone_type = 'android';
+}
 
 // exit;
 
+#curl获取响应值
+if (_is_mobile() && $scan != 'wy') {
+  $res = curl_post($form_url, $data_str);
+  $tran = mb_convert_encoding("$res", "UTF-8");
+  $row = json_decode($tran, 1);
+
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "\n";
-  echo '错误讯息:' . $row['respInfo'] . "\n";
-  exit;
-} else {
-  $qrcodeUrl = $row['qrcodeUrl'];
-  if (!_is_mobile()) {
-    if (strstr($qrcodeUrl, "&")) {
-      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-    } else {
-      $code = $qrcodeUrl;
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  if ($row['flag'] != '00') {
+    echo '错误代码:' . $row['flag'] . "\n";
+    echo '错误讯息:' . $row['msg'] . "\n";
+    exit;
   } else {
-    $jumpurl = $qrcodeUrl;
+    $qrcodeUrl = $row['qrCodeUrl'];
+    if (!_is_mobile()) {
+      if (strstr($qrcodeUrl, "&")) {
+        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+      } else {
+        $code = $qrcodeUrl;
+      }
+      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    } else {
+      $jumpurl = $qrcodeUrl;
+      if ($phone_type == 'ios') {
+        $jumpurl = str_replace("https", "http", $qrcodeUrl);
+      }
+    }
   }
+} else {
+  $jumpurl = $form_url;
 }
 
 #跳轉方法
@@ -138,9 +158,16 @@ if ($row['respCode'] != '0000') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+     <p>正在为您跳转中，请稍候......</p>
+     <?php if (!_is_mobile() || $scan == 'wy') { ?>
+       <?php foreach ($data as $arr_key => $arr_value) { ?>
+         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+       <?php 
+    } ?>
+     <?php 
+  } ?>
+   </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>

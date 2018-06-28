@@ -61,13 +61,22 @@ $data = array(
 );
 
 #变更参数设置
+$form_url = 'https://api.huitongvip.com/pay.html';//form接口请求地址
+if (_is_mobile()) {
+  $form_url = 'https://api.huitongvip.com/order.html';//curl接口请求地址
+}
 
-$form_url = 'https://api.huitongvip.com/pay.html';//支付接口请求地址
-
-$scan = 'wx';
-$data['pay_type'] = '2';
-$bankname = $pay_type . "->微信在线充值";
-$payType = $pay_type . "_wx";
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['pay_type'] = '6';
+  $bankname = $pay_type . "->京东钱包在线充值";
+  $payType = $pay_type . "_jd";
+} else {
+  $scan = 'wx';
+  $data['pay_type'] = '2';
+  $bankname = $pay_type . "->微信在线充值";
+  $payType = $pay_type . "_wx";
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -84,7 +93,7 @@ ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+  if (!in_array($arr_key, $noarr) && (isset($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
@@ -93,41 +102,44 @@ $sign = md5($signtext);
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
+//判断使用系统
+$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+$phone_type = 'other';
+if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+  $phone_type = 'ios';
+} elseif (strpos($agent, 'android')) {
+  $phone_type = 'android';
+}
+
 #curl获取响应值
-$res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
-$row = json_decode($tran, 1);
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> res = <br>');
-var_dump($res);
-echo '</pre>';
-
-// exit;
+if (_is_mobile()) {
+  $res = curl_post($form_url, $data_str);
+  $tran = mb_convert_encoding("$res", "UTF-8");
+  $row = json_decode($tran, 1);
 
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "\n";
-  echo '错误讯息:' . $row['respInfo'] . "\n";
-  exit;
-} else {
-  $qrcodeUrl = $row['qrcodeUrl'];
-  if (!_is_mobile()) {
-    if (strstr($qrcodeUrl, "&")) {
-      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-    } else {
-      $code = $qrcodeUrl;
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  if ($row['flag'] != '00') {
+    echo '错误代码:' . $row['flag'] . "\n";
+    echo '错误讯息:' . $row['msg'] . "\n";
+    exit;
   } else {
-    $jumpurl = $qrcodeUrl;
+    $qrcodeUrl = $row['qrCodeUrl'];
+    if (!_is_mobile()) {
+      if (strstr($qrcodeUrl, "&")) {
+        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+      } else {
+        $code = $qrcodeUrl;
+      }
+      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    } else {
+      $jumpurl = $qrcodeUrl;
+      if ($phone_type == 'ios') {
+        $jumpurl = str_replace("https", "http", $qrcodeUrl);
+      }
+    }
   }
+} else {
+  $jumpurl = $form_url;
 }
 
 #跳轉方法
@@ -138,9 +150,16 @@ if ($row['respCode'] != '0000') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+     <p>正在为您跳转中，请稍候......</p>
+     <?php if (!_is_mobile()) { ?>
+       <?php foreach ($data as $arr_key => $arr_value) { ?>
+         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+       <?php 
+    } ?>
+     <?php 
+  } ?>
+   </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
