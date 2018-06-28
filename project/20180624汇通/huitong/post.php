@@ -82,6 +82,7 @@ if (strstr($pay_type, "银联钱包")) {
   $bankname = $pay_type . "->网银在线充值";
   $payType = $pay_type . "_wy";
   $data['bank_code'] = $_REQUEST['bank_code']; //银行编码
+  $form_url = 'https://api.huitongvip.com/pay.html';//form接口请求地址
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
