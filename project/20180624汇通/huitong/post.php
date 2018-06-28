@@ -2,6 +2,11 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+#预设时间在上海
+date_default_timezone_set('PRC');
+if (function_exists("date_default_timezone_set")) {
+  date_default_timezone_set("Asia/Shanghai");
+}
 
 #function
 function curl_post($url, $data)
