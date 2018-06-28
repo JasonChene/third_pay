@@ -111,16 +111,7 @@ if (_is_mobile()) {
     exit;
   } else {
     $qrcodeUrl = $row['qrCodeUrl'];
-    if (!_is_mobile()) {
-      if (strstr($qrcodeUrl, "&")) {
-        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-      } else {
-        $code = $qrcodeUrl;
-      }
-      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-    } else {
-      $jumpurl = $qrcodeUrl;
-    }
+    $jumpurl = $qrcodeUrl;
   }
 } else {
   $jumpurl = $form_url;

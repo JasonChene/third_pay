@@ -102,20 +102,20 @@ $sign = md5($signtext);
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
-//判断使用系统
-$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-$phone_type = 'other';
-if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
-  $phone_type = 'ios';
-} elseif (strpos($agent, 'android')) {
-  $phone_type = 'android';
-}
-
 #curl获取响应值
 if (_is_mobile()) {
   $res = curl_post($form_url, $data_str);
   $tran = mb_convert_encoding("$res", "UTF-8");
   $row = json_decode($tran, 1);
+
+//判断使用系统
+  $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  $phone_type = 'other';
+  if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+    $phone_type = 'ios';
+  } elseif (strpos($agent, 'android')) {
+    $phone_type = 'android';
+  }
 
 #跳转
   if ($row['flag'] != '00') {
@@ -124,18 +124,9 @@ if (_is_mobile()) {
     exit;
   } else {
     $qrcodeUrl = $row['qrCodeUrl'];
-    if (!_is_mobile()) {
-      if (strstr($qrcodeUrl, "&")) {
-        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-      } else {
-        $code = $qrcodeUrl;
-      }
-      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-    } else {
-      $jumpurl = $qrcodeUrl;
-      if ($phone_type == 'ios') {
-        $jumpurl = str_replace("https", "http", $qrcodeUrl);
-      }
+    $jumpurl = $qrcodeUrl;
+    if ($phone_type == 'ios') {
+      $jumpurl = str_replace("https", "http", $qrcodeUrl);
     }
   }
 } else {
