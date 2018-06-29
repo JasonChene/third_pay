@@ -1,0 +1,7 @@
+等入ID：15673780933
+密码：a123456
+网址：d.3650.net.cn
+
+$scan = 'zfb';
+$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_zfb";
