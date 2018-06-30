@@ -1,0 +1,11 @@
+E:\WebSite\精睿互联网络支付系统\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\bin\JRAPI_NET_DEMO.dll
+E:\WebSite\精睿互联网络支付系统\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\bin\JRAPI_NET_DEMO.pdb
+E:\WebSite\精睿互联网络支付系统\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.dll
+E:\WebSite\精睿互联网络支付系统\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.pdb
+E:\WebSite\精睿互联网络支付系统\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.csprojResolveAssemblyReference.cache
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\bin\JRAPI_NET_DEMO.dll
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\bin\JRAPI_NET_DEMO.pdb
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.csprojResolveAssemblyReference.cache
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.dll
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\obj\Debug\JRAPI_NET_DEMO.pdb
+E:\WebSite\精睿互联网络支付系统\文档及DEMO\接入DEMO\JRAPI_NET_DEMO\JRAPI_NET_DEMO\bin\JRAPI_NET_DEMO.dll.config
