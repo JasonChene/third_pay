@@ -1,0 +1,6 @@
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\obj\Debug\NET_DEMO.csprojResolveAssemblyReference.cache
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\bin\NET_DEMO.dll.config
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\bin\NET_DEMO.dll
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\bin\NET_DEMO.pdb
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\obj\Debug\NET_DEMO.dll
+D:\项目\project\乾隆通\前台\程序\web\JuYingPay.Web\Demo\demo\NET_DEMO\YUNXUN_NET_DEMO\obj\Debug\NET_DEMO.pdb
