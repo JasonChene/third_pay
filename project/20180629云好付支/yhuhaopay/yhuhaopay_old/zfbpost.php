@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");//原新数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -12,7 +12,7 @@ if (function_exists("date_default_timezone_set")) {
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);//原新数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -35,7 +35,7 @@ $data = array(
   "pay_orderid" => $order_no, //订单号
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "pay_applydate" => date("Y-m-d H:i:s"), //订单提交时间
-  "pay_bankcode" => 'KJZF', //银行编号
+  "pay_bankcode" => 'ALIPAY', //银行编号
   "pay_notifyurl" => $merchant_url, //服务端返回地址
   "pay_callbackurl" => $return_url, // 页面返回地址
   "tongdao" => '', //调用通道编码
@@ -51,17 +51,13 @@ $data = array(
 
 $form_url = 'http://yunhaopay.com/Pay_Index.html';//提交地址
 
-if (strstr($pay_type, "银联快捷")) {
-  $scan = 'ylkj';
-  $data['tongdao'] = 'YNZFKJ';
-  $bankname = $pay_type . "->银联快捷在线充值";
-  $payType = $pay_type . "_ylkj";
-} else {
-  $scan = 'wy';
-  $data['tongdao'] = 'YNZFWY';
-  $bankname = $pay_type . "->网银在线充值";
-  $payType = $pay_type . "_wy";
+$scan = 'zfb';
+$data['tongdao'] = 'BDZFB';
+if (_is_mobile()) {
+  $data['tongdao'] = 'BDZFBH';
 }
+$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_zfb";
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
