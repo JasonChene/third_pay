@@ -1,0 +1,35 @@
+名称：郑州龙芝贸易有限公司
+账号：da822228 密码:aa123456
+请登录后及时修改密码
+登陆地址：http://www.magopay.net/member/base/login.html
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+1，安全设置绑定身份验证器，【查看绑定流程】设置支付密码   修改登入密码。
+
+2，密钥【公钥/私钥/口令】等信息后台查看.
+
+3，充值在途资金为TO到账，可以使用商户在途提现！提现金额为：90%
+
+4，【非工作日余额提现关闭。1.在途提现关闭时间22点30-次日0点30； 2.余额提现关闭时间22点45-次日0点30。
+
+5，商城域名并没有要求，你可以随意绑定一个解析即可！
+6.优先使用在途下发！
+7，别使用在第一层会员！
+8，.充值最大单笔金额10万,下发结算单笔最大金额5万。
+9.微信WAP交易金额范围单笔不超过3000 
+10.微信WAP结算金额是单笔1000～49998
+
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/6fFrss/a7ZWFd7t367dXiL8d
+bGsuLoHzUDYnlT0KZg5N6SFoGZmPSd+cgjCoGzfAqlShzbi0hJtFnOYz7rJfgCcS
+9NE1+vJuayWL2toKoibY0LYQQ1Gasv5LTFjgYNdsKTncLT1u45/iPAq+jPq3HLfb
+EdIpkQgw7QktmBIdVwIDAQAB
+-----END PUBLIC KEY-----
+
+
+
+78a0662c3b077a3c87b7d347d5f3e207
+
+
+
+

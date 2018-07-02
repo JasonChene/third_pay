@@ -1,0 +1,4 @@
+环境要求：
+
+1. 需要自行下载安装的类库有：libcurl, openssl, rapidjson
+2. 测试时，请自行修改 main.cpp 的环境参数
