@@ -86,18 +86,16 @@ $form_url = "https://pay.suifupay.com/gateway?input_charset=UTF-8";//网银支�
 
 if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
-  $data_paytype = 'b2cwap';
+  $data['pay_type'] = 'b2cwap';
   $data['bank_code'] = 'WAP_UNION';
   $bankname = $pay_type . "->银联钱包在线充值";
-  $payType = $pay_type . "ylpay_scan";
+  $payType = $pay_type . "_yl";
 } else {
   $scan = 'wy';
-  $data_paytype = 'b2c';
+  $data['pay_type'] = 'b2c';
   $bankname = $pay_type . "->网银在线充值";
   $payType = $pay_type . "_wy";
 }
-
-$data['pay_type'] = $data_paytype;
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
