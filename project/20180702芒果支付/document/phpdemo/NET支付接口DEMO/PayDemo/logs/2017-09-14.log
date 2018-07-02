@@ -1,0 +1,10 @@
+2017-09-14 00:38:47: amount=0.1&down_sn=20170914003845874&notify_url=http://www.163.com&subject=测试&type_code=wxbs&key=c95757a321cf54ea45f6680b283fcf64
+2017-09-14 00:38:47: f453b190001530a633ccd1477dbcd7d6
+2017-09-14 00:38:47: {"amount":"0.1","down_sn":"20170914003845874","notify_url":"http://www.163.com","subject":"测试","type_code":"wxbs","sign":"f453b190001530a633ccd1477dbcd7d6"}
+2017-09-14 00:38:47: AG8H1aqWAsbmqNTxWd2VEoUNum6O1LalDLjVBUbDaqb4p+vYspT8Z6WhRzrUZMDQQPc+HAAF8fxCVMBOwqrDA6Y9YQSMduupjh9TskrSugPQ6CXtyYO5TAPr48OP9LwqSv48yqcmNnrauoePMKUZptBoWo1HcwPURuCOVwekwXo4UBlQ+PI2gXz7XJlEYeisFjZ6R/M5YiE5QdMH4FvzqenvN8TZYg2BAKvKZMl25qw2GTyuXPNdbcGW9WiYZfPqmJNKzSi4/SgLv+4sgpKEaVJXTRfhL5P8ryeb38VroJ5fs5JCMe21jkEwww+3uav/o8YD40hLXebft9vKG0nWEw==
+2017-09-14 00:38:49: {"code":"0000","msg":"成功.","order_sn":"20170914003845353","down_sn":"20170914003845874","code_url":"weixin:\/\/wxpay\/bizpayurl?pr=FeVXnin","sign":"bc50a1d7a7e6c5824af22a7cb4ba221f"}
+2017-09-14 00:44:12: amount=0.1&down_sn=20170914004410376&notify_url=http://www.163.com&subject=测试&type_code=wxbs&key=c95757a321cf54ea45f6680b283fcf64
+2017-09-14 00:44:12: f9c9af96d409ab18875c48e45804ccdf
+2017-09-14 00:44:12: {"amount":"0.1","down_sn":"20170914004410376","notify_url":"http://www.163.com","subject":"测试","type_code":"wxbs","sign":"f9c9af96d409ab18875c48e45804ccdf"}
+2017-09-14 00:44:12: haRpj6AOhWUao8vPhszKYJo1VtlZQ/DYEdYswMxSs0XjCInb0+YSNW2mzLB7JLzNdrXmes1Kg099kl3P0JR/gvZNY+o5lTPGLFKAYnrIHk32dHjJS58wXe7EbJcUqNTUsxAu0QVIiEhLplSvdTybbV5HLBI/BSg999NpaVEW6biBWCjq6/YVvVsw0CDWjqcKDV/Lqd/2uH9JaTM78T+uXR1B2lR12QcLJUDpvEhZSwdUoBdcZFyauAErM2BWoC5/McY9v4Dbn8U/L3lfteKmB8ClS9csqAMwv5ffp33xFrj9Qpz2YWdZ/TH8qX8jil3UXGQnMxrQ7vQXuJBh91s7PQ==
+2017-09-14 00:44:13: {"code":"0000","msg":"成功.","order_sn":"20170914004410354","down_sn":"20170914004410376","code_url":"weixin:\/\/wxpay\/bizpayurl?pr=jRzkVn5","sign":"a86fc5b2c88a2b4b9bbfdc9a43657824"}

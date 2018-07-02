@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSA12", "RSA12\RSA12.csproj", "{FE34E059-05C5-4821-8307-CCAB9A8EF2F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSA_TEST", "RSA_TEST\RSA_TEST.csproj", "{912A6367-A3E4-441A-A212-22E4AC107FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayDemo", "PayDemo\PayDemo.csproj", "{72C2A7AB-1228-45C7-A650-78523A9377BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE34E059-05C5-4821-8307-CCAB9A8EF2F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE34E059-05C5-4821-8307-CCAB9A8EF2F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE34E059-05C5-4821-8307-CCAB9A8EF2F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE34E059-05C5-4821-8307-CCAB9A8EF2F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{912A6367-A3E4-441A-A212-22E4AC107FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{912A6367-A3E4-441A-A212-22E4AC107FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{912A6367-A3E4-441A-A212-22E4AC107FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{912A6367-A3E4-441A-A212-22E4AC107FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C2A7AB-1228-45C7-A650-78523A9377BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C2A7AB-1228-45C7-A650-78523A9377BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C2A7AB-1228-45C7-A650-78523A9377BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C2A7AB-1228-45C7-A650-78523A9377BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
