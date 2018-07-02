@@ -1,0 +1,6 @@
+API对接参数：
+商户号：10169
+网关地址：http://pay.zhongfupay.top/Pay_Index.html
+APIKEY: 0v5v9qiiz9rmdkv3379167uxskufnio6
+
+账户：jinsha666

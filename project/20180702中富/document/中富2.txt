@@ -1,0 +1,12 @@
+http://pay.zhongfupay.top/index.php?s=/User_Login_index.html
+账户：jinsha666
+
+密码：js607607
+
+$scan = 'zfb';
+$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_zfb";
+$data['paytype'] = 'alipay';
+if (_is_mobile()) {
+  $data['paytype'] = 'alipaywap';
+}
