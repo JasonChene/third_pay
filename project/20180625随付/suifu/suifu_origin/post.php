@@ -1,5 +1,5 @@
 <?php
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
