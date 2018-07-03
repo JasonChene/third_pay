@@ -18,10 +18,13 @@ $remark = trim($_REQUEST['remark']);
 $parms = array();
 foreach ($_REQUEST as $key => $value) {
 	if ($key == "sign" || $key == "code" || $key == "msg") {
+		//write_log($key."=".$value);
 		continue;
 	} else if ($value === "") {
+		//write_log($key."=".$value);
 		continue;
 	} else {
+		//write_log($key."=".$value);
 		$parms[$key] = $value;
 	}
 }
@@ -50,6 +53,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 ksort($parms);
+
 $strRet = "";
 foreach ($parms as $key => $value) {
 	if ($value === "") {
@@ -62,7 +66,8 @@ foreach ($parms as $key => $value) {
 $strRet .= 'key='.$pay_mkey;
 
 $mysign = strtolower(md5($strRet));
-// write_log($strRet);
+//write_log($strRet);
+//write_log($mysign);
 
 ################if(訂單狀態成功)####################
 if ($code == "0000") {
@@ -86,14 +91,15 @@ if ($code == "0000") {
 			// write_log("支付失败");
 		}
 	} else {
-		echo '交易失败！';
-		// write_log("交易失败！");
+		echo '签名不正确！';
+		// write_log("签名不正确！");
 		exit;
 	}
 } else {
-	echo '签名不正确！';
-	// write_log("签名不正确！");
+	echo '交易失败！';
+	// write_log("交易失败！");
 	exit;
+	
 }
 
 ?>
