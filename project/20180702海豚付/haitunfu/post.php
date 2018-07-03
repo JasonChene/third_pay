@@ -25,14 +25,6 @@ function curl_post($url,$data){ #POST访问
   }
   return $tmpInfo;
 }
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
-  }
-  return $code2;
-}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -99,11 +91,12 @@ $data['sign'] = $sign;
 $res = curl_post($form_url,http_build_query($data));
 $row = json_decode($res,1);
 #跳转
-if (empty($row['pay_extends']['pay_url'])) {
-  echo  '错误讯息:无响应连结'."\n";
+if ($row['code'] != 0) {
+  echo  '错误代码:'.$row['code']."\n";
+  echo  '错误讯息:'.$row['msg']."\n";
   exit;
 }else {
-  $jumpurl = $row['pay_extends']['pay_url'];
+  $jumpurl = $row['data']['pay_extends']['pay_url'];
 }
 #跳轉方法
 

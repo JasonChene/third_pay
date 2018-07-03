@@ -102,14 +102,15 @@ $data['sign'] = $sign;
 $res = curl_post($form_url,http_build_query($data));
 $row = json_decode($res,1);
 #跳转
-if (empty($row['pay_extends']['pay_url'])) {
-  echo  '错误讯息:无响应连结'."\n";
+if ($row['code'] != 0) {
+  echo  '错误代码:'.$row['code']."\n";
+  echo  '错误讯息:'.$row['msg']."\n";
   exit;
 }else {
   if(_is_mobile()){
-    $jumpurl = $row['pay_extends']['pay_url'];
+    $jumpurl = $row['data']['pay_extends']['pay_url'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['pay_extends']['pay_url']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['pay_extends']['pay_url']);
   }
 }
 #跳轉方法
