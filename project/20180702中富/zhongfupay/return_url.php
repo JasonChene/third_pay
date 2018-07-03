@@ -3,7 +3,7 @@
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
-write_log("return");
+//write_log("return");
 $data = array();
 #接收资料
 foreach ($_POST as $key => $value) {
