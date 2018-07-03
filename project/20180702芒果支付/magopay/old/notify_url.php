@@ -1,6 +1,6 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 $code = trim($_REQUEST['code']);
@@ -18,10 +18,13 @@ $remark = trim($_REQUEST['remark']);
 $parms = array();
 foreach ($_REQUEST as $key => $value) {
 	if ($key == "sign" || $key == "code" || $key == "msg") {
+		//write_log($key."=".$value);
 		continue;
 	} else if ($value === "") {
+		//write_log($key."=".$value);
 		continue;
 	} else {
+		//write_log($key."=".$value);
 		$parms[$key] = $value;
 	}
 }
@@ -29,7 +32,7 @@ foreach ($_REQUEST as $key => $value) {
 #########$params = array(':m_order' => 訂單號);###########
 $params = array(':m_order' => $down_sn);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -37,7 +40,7 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -50,6 +53,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 ksort($parms);
+
 $strRet = "";
 foreach ($parms as $key => $value) {
 	if ($value === "") {
@@ -62,7 +66,8 @@ foreach ($parms as $key => $value) {
 $strRet .= 'key='.$pay_mkey;
 
 $mysign = strtolower(md5($strRet));
-// write_log($strRet);
+//write_log($strRet);
+//write_log($mysign);
 
 ################if(訂單狀態成功)####################
 if ($code == "0000") {
@@ -86,14 +91,15 @@ if ($code == "0000") {
 			// write_log("支付失败");
 		}
 	} else {
-		echo '交易失败！';
-		// write_log("交易失败！");
+		echo '签名不正确！';
+		// write_log("签名不正确！");
 		exit;
 	}
 } else {
-	echo '签名不正确！';
-	// write_log("签名不正确！");
+	echo '交易失败！';
+	// write_log("交易失败！");
 	exit;
+	
 }
 
 ?>

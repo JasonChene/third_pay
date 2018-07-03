@@ -131,7 +131,7 @@ $data =[
 
 //確認訂單有無重複， function在 moneyfunc.php 裡
 //insert_online_order($_REQUEST['S_Name'],訂單編號,支付金額,$bankname, $payT, $top_uid)
-$result_insert = insert_online_order($_REQUEST['S_Name'], $down_sn, $amount, $bankname, $payT, $top_uid);
+$result_insert = insert_online_order($_REQUEST['S_Name'], $down_sn, $amount, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
   echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
   exit;
