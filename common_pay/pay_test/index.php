@@ -74,12 +74,12 @@ $stmt->execute($params);
 <body>
   <div class="col-xl-6">
     <div>
-      <h1>付款測試</h1>
+      <h1>新系统付款測試</h1>
       <div class="box">
         <div class="form-group div-nowrap">
           <label>請填网域位置</label>
           <br>
-          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay7.5566205.com">
+          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay7.5566205.com" disabled>
         </div>
         <div class="form-group div-nowrap">
           <label>第三方名称</label>
