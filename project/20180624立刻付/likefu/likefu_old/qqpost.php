@@ -1,7 +1,6 @@
 ﻿<?php session_start(); ?>
 <?php
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 $top_uid = $_REQUEST['top_uid'];
 
@@ -12,8 +11,7 @@ if (function_exists("date_default_timezone_set")) {
 //获取第三方的资料
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -46,8 +44,8 @@ $Signature = md5("usercode=" . $usercode . "&orderno=" . $orderno . "&datetime="
 
 $payUrl = "https://gateway.nowtopay.com/NowtoPay.html";
 
-$bankname = $row['pay_type'] . "->微信在线充值";
-$payType = $row['pay_type'] . "_wx";
+$bankname = $row['pay_type'] . "->qq钱包在线充值";
+$payType = $row['pay_type'] . "_qq";
 
 $result_insert = insert_online_order($_REQUEST['S_Name'], $orderno, $value, $bankname, $payType, $top_uid);
 
@@ -63,18 +61,7 @@ $apiurl = $payUrl;/*接口提交地址*/
 $partner = $pay_mid;
 $key = $pay_mkey;
 $ordernumber = $orderno;
-$banktype = $qqscan ? "MSTENPAY" : "MSWEIXIN";
-if (strstr($_REQUEST['pay_type'], "微信反扫")) {
-	$banktype = "MSWXREVERSE";
-} elseif (strstr($_REQUEST['pay_type'], "京东钱包")) {
-	$bankname = $row['pay_type'] . "->京东钱包在线充值";
-	$payType = $row['pay_type'] . "_jd";
-	$banktype = "MSJD";
-} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-	$bankname = $row['pay_type'] . "->QQ钱包在线充值";
-	$payType = $row['pay_type'] . "_qq";
-	$banktype = "MSTENPAY";
-}
+$banktype = "MSTENPAY";
 $attach = "GOODS";
 $paymoney = $value;
 $callbackurl = $notifyurl;
@@ -98,7 +85,7 @@ $postUrl .= "&sign=" . $sign;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>跳转......</title>
+    <title>微信网页版</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/index.css" media="all">
 </head>
