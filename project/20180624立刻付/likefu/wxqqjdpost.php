@@ -1,40 +1,27 @@
 ﻿<?php session_start(); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>充值接口-提交信息处理</title>
 <?php
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 $top_uid = $_REQUEST['top_uid'];
+
 if (function_exists("date_default_timezone_set")) {
 	date_default_timezone_set("Asia/Shanghai");
 }
+
 //获取第三方的资料
-
-$ylscan = false;
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-	$ylscan = true;
-}
-
-$ylkj = false;
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
-	$ylkj = true;
-}
-
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
-$pay_terid = $row['mer_terid'];
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];
+
 $pay_type = $row['pay_type'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
@@ -50,7 +37,7 @@ $returnUrl = $return_url;//服务器底层通知地址
 $dateis = date('is');
 $remark = $dateis . md5($pay_mid . $dateis);//订单附加消息
 $datetime = date("YmdHis", time());//交易时间
-$goodsname = "GOODS NAME";//产品名称
+$goodsname = "网购商品";//产品名称
 
 $Md5key = $pay_mkey;//md5密钥（KEY）
 
@@ -58,16 +45,10 @@ $Md5key = $pay_mkey;//md5密钥（KEY）
 $Signature = md5("usercode=" . $usercode . "&orderno=" . $orderno . "&datetime=" . $datetime . "&paytype=" . $paytype . "&value=" . $value . "&notifyurl=" . $notifyurl . "&returnurl=" . $returnUrl . "&key=" . $Md5key);
 
 $payUrl = "https://gateway.nowtopay.com/NowtoPay.html";
-if ($ylscan) {
-	$bankname = $pay_type . "->银联钱包在线充值";
-	$payType = $pay_type . "_yl";
-} elseif ($ylkj) {
-	$bankname = $pay_type . "->银联快捷在线充值";
-	$payType = $pay_type . "ylkj";
-} else {
-	$bankname = $pay_type . "->网银在线充值";
-	$payType = $pay_type . "_wy";
-}
+
+$bankname = $row['pay_type'] . "->微信在线充值";
+$payType = $row['pay_type'] . "_wx";
+
 $result_insert = insert_online_order($_REQUEST['S_Name'], $orderno, $value, $bankname, $payType, $top_uid);
 
 if ($result_insert == -1) {
@@ -78,23 +59,26 @@ if ($result_insert == -1) {
 	exit;
 }
 $apiurl = $payUrl;/*接口提交地址*/
-//echo "===".$apiurl;
-//exit;
+
 $partner = $pay_mid;
 $key = $pay_mkey;
 $ordernumber = $orderno;
-if ($ylscan) {
-	$banktype = "MSUNIONPAY";
-} elseif ($ylkj) {
-	$banktype = "MSUNIONPAYWAP";
-} else {
-	// $banktype = 'PAYMODE';
-	$banktype = $_REQUEST['bank_code'];
+$banktype = $qqscan ? "MSTENPAY" : "MSWEIXIN";
+if (strstr($_REQUEST['pay_type'], "微信反扫")) {
+	$banktype = "MSWXREVERSE";
+} elseif (strstr($_REQUEST['pay_type'], "京东钱包")) {
+	$bankname = $row['pay_type'] . "->京东钱包在线充值";
+	$payType = $row['pay_type'] . "_jd";
+	$banktype = "MSJD";
+} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+	$bankname = $row['pay_type'] . "->QQ钱包在线充值";
+	$payType = $row['pay_type'] . "_qq";
+	$banktype = "MSTENPAY";
 }
 $attach = "GOODS";
 $paymoney = $value;
 $callbackurl = $notifyurl;
-$hrefbackurl = $pay_account;
+$hrefbackurl = "";
 $signSource = sprintf("partner=%s&banktype=%s&paymoney=%s&ordernumber=%s&callbackurl=%s%s", $partner, $banktype, $paymoney, $ordernumber, $callbackurl, $key);
 $sign = md5($signSource);
 $postUrl = $apiurl . "?banktype=" . $banktype;
@@ -109,7 +93,16 @@ $postUrl .= "&sign=" . $sign;
 //exit;
 
 ?>
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>跳转......</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="all">
 </head>
+<body>
 <body onLoad="document.ddbill.submit();">
 	<form name="ddbill" id="ddbill" method="get" action="<?php echo $apiurl ?>">
 			<input type="hidden" name="banktype"		  value="<?php echo $banktype ?>" />

@@ -85,11 +85,8 @@ $key = $pay_mkey;
 $ordernumber = $orderno;
 if ($ylscan) {
 	$banktype = "MSUNIONPAY";
-	if (_is_mobile()) {
-		$banktype = "MSUNIONPAYWAP";
-	}
 } elseif ($ylkj) {
-	$banktype = "BANKH5";
+	$banktype = "MSUNIONPAYWAP";
 } else {
 	// $banktype = 'PAYMODE';
 	$banktype = $_REQUEST['bank_code'];
