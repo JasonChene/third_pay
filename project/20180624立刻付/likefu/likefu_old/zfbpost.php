@@ -1,6 +1,6 @@
 ﻿<?php session_start(); ?>
 <?php
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 $top_uid = $_REQUEST['top_uid'];
 
@@ -11,7 +11,7 @@ if(function_exists("date_default_timezone_set"))
 //获取第三方的资料
 $params = array(':pay_type'=>$_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -47,7 +47,7 @@ $payUrl="https://gateway.nowtopay.com/NowtoPay.html";
 $bankname = $pay_type."-支付宝在线充值";
 $payType = $pay_type."_zfb";
 $result_insert = insert_online_order($_REQUEST['S_Name'] , $orderno , $value,$bankname,$payType,$top_uid);
-
+			
 if ($result_insert == -1)
 {
 	echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
@@ -64,9 +64,6 @@ $partner = $pay_mid;
 $key = $pay_mkey;
 $ordernumber = $orderno;
 $banktype = "MSAli";
-if (strstr($_REQUEST['pay_type'], "支付宝反扫")){
-	$banktype= "MSALIREVERSE";
-}
 $attach = "GOODS";
 $paymoney = $value;
 $callbackurl = $notifyurl;
