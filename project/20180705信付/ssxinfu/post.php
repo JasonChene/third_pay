@@ -67,12 +67,12 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $payType = $pay_type."_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
-  $data['pay_bankcode'] = '2000';
+  $data['type'] = '2000';
 }else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
-  $data['pay_bankcode'] = $_REQUEST['bank_code'];
+  $data['type'] = $_REQUEST['bank_code'];
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
