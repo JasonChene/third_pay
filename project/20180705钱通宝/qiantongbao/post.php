@@ -61,7 +61,7 @@ if (strstr($_REQUEST['pay_type'], "银联快捷") && _is_mobile() )
     $ylkjscan = true;
 }
 
-$form_url = 'http://61.160.215.66:8093/bank/index.aspx';  //提交地址
+$form_url = 'http://pay.miliqp.com/bank/index.aspx';  //提交地址
 $parter = $pay_mid;  //商戶號
 $src_code=$pay_account;//商户标识
 $value1 = number_format($_REQUEST['MOAmount'], 2, '.', ''); //订单金额
