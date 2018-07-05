@@ -1,0 +1,10 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','北京银行','BCCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','光大银行','CEB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','上海银行','SHB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','邮政储蓄银行','PSBS');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','中国银行','BOC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易融通','中信银行','CTTIC');
