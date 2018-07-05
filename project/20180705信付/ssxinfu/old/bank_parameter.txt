@@ -1,0 +1,8 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','北京银行','989');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','工商银行','967');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','建设银行','965');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','民生银行','980');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','农业银行','964');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','上海银行','975');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('信付','中国银行','963');
+
