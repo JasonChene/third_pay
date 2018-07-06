@@ -152,7 +152,7 @@ if ($row['status'] != 'T') {
   exit;
 } else {
   $qrcodeUrl = $row['payUrl'];
-  if (!_is_mobile()) {
+  if (!_is_mobile() || $scan == 'jd') {
     if (strstr($qrcodeUrl, "&")) {
       $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
     } else {

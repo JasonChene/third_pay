@@ -4,37 +4,6 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #//write_log("notify");
 
-
-#############################################
-#request方法
-//write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	//write_log($key . "=" . $value);
-}
-#post方法
-//write_log('post方法');
-foreach ($_POST as $key => $value) {
-	//write_log($key . "=" . $value);
-}
-#input方法
-//write_log('input方法');
-$input_data = file_get_contents("php://input");
-//write_log($input_data);
-// $res=json_decode($input_data,1);//json回传资料
-
-// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XML回传资料
-
-// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
-
-// foreach ($res as $key => $value) {
-// 	$data[$key] = $value;
-// 	//write_log($key."=".$value);
-// }
-###########################################
-
-
 #接收资料
 #request方法
 $data = array();
