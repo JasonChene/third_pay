@@ -1,0 +1,4 @@
+商户后台：https://www.macloudpay.com/ 商户ID：1027账号：2024795200@qq.com   密码：123456 网关地址：http://gateway.macloudpay.com/online/gateway
+
+macloudpay
+
