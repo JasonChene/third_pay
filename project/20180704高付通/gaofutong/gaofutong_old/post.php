@@ -118,7 +118,6 @@ if (strstr($pay_type, "银联钱包")) {
   $payType = $pay_type . "_ylkj";
 } else {
   $scan = 'wy';
-  $data['payType'] = '11';//网银B2C
   $bankname = $pay_type . "->网银在线充值";
   $payType = $pay_type . "_wy";
   $form_url = 'https://pay.166985.com/wappay/payapi/netpay';
