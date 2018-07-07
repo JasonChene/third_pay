@@ -1,0 +1,26 @@
+1.金流名称：AI支付
+2.测试商户号 ：155805000019
+3.接口密钥  ad4a2a15-4e7c-11e8-a9d3-8914da33eff7
+4.金流商后台网址：https://merchant1.all-inpay.com/merchant/index.jsp 
+5.金流商后台帐号：155805000019
+
+6.金流商后台密码：  123456
+8.跳版网址(不一定需要)：不需要
+9.接口类型(银连请确认是扫码还是快捷)网银   支付宝扫码   Q扫码  QWAP  微信扫码   银联扫码   微信wap   Qwap
+10. API代付支付秘钥：A08C093B2CD121765B927E03D05CB627496372447970
+ad4a2a15-4e7c-11e8-a9d3-8914da33eff7
+c58dade4-8022-11e8-ab97-a916296f8518
+
+接口密钥：	c58dade4-8022-11e8-ab97-a916296f8518
+支付秘钥：	843FB17F2D5D71F0CFCFA013F32D1F8E30326654624D
+
+接口秘钥	qaeaeeq2-5t6u-88aa-was1-8806hak8768
+支付秘钥	A08C093B2CD121765B927E03D05CB627496372447970
+
+
+
+
+signtext = 
+version=v1&merchant_no=155805000019&order_no=27553220180706162208&goods_name=Z29vZHNuYW1l&order_amount=100.00&backend_url=http://pay7.5566205.com/pay/aifu/notify_url.php&frontend_url=http://pay7.5566205.com/pay/aifu/return_url.php&reserve=reserve&pay_mode=09&bank_code=QQSCAN&card_type=0&key=c58dade4-8022-11e8-ab97-a916296f8518
+
+

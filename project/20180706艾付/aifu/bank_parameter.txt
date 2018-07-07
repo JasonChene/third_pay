@@ -1,0 +1,15 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','北京银行','BCCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','光大银行','CEB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','广发银行','GDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','华夏银行','HXB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','交通银行','BOCOM');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','浦发银行','SPDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','兴业银行','CIB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','邮政储蓄银行','PSBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','招商银行','CMB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','中国银行','BOC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('艾付','中信银行','CNCB');
