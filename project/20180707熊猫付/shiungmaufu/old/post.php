@@ -62,22 +62,30 @@ $data = array(
   "merCode" => $pay_mid, //商户号
   "tranNo" => $order_no,//商户订单号
   "tranType" => '',//交易类型
-  "tranAmt" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''),//订单金额：单位/分
+  "tranAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/分
   "collectWay" => '',//结算方式
   "tranTime" => date('YmdHis'),//交易日期
-  "payBankCode" => '',//银行编码  网银支付时必填
+  "bankCode" => '',//银行编码  网银支付时必填
   "noticeUrl" => $merchant_url,//异步地址
   "orderDesc" => 'iPhone',//订单描述
   "sign" => '',//签名
 );
 #变更参数设置
-
+if (strstr($pay_type,"银联钱包")) {
+  $scan = 'yl';
+  $data['tranType'] = '00' ;
+  $data['collectWay'] = 'UPZF' ;
+  unset($data['bankCode']);
+  $payType = $pay_type."_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+}else {
   $scan = 'wy';
   $data['tranType'] = '01' ;
   $data['collectWay'] = 'WEB' ;
-  $data['payBankCode'] = $_REQUEST['bank_code'] ;
+  $data['bankCode'] = $_REQUEST['bank_code'] ;
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -89,9 +97,9 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr =array('pay_md5sign');
+$noarr =array('sign');
+ksort($data);
 $signtext = '';
-$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';

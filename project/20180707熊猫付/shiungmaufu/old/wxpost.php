@@ -62,14 +62,14 @@ $data = array(
   "merCode" => $pay_mid, //商户号
   "tranNo" => $order_no,//商户订单号
   "tranType" => '',//交易类型
-  "tranAmt" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''),//订单金额：单位/分
+  "tranAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/分
   "collectWay" => '',//结算方式
   "tranTime" => date('YmdHis'),//交易日期
-  "payBankCode" => '',//银行编码  网银支付时必填
   "noticeUrl" => $merchant_url,//异步地址
   "orderDesc" => 'iPhone',//订单描述
   "sign" => '',//签名
 );
+
 #变更参数设置
 
   $scan = 'wx';
@@ -89,8 +89,8 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 $noarr =array('sign');
+ksort($data);
 $signtext = '';
-$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
