@@ -65,12 +65,6 @@ $data = array(
   "sign" => '', //签名数据
 );
 
-$wy_data = array(
-  "merchant_no" => $pay_mid, //商户号
-  "mode" => 'WEBPAY', //模式
-  "sign" => '', //签名数据
-);
-
 #变更参数设置
 $form_url = 'https://pay.all-inpay.com/gateway/pay.jsp';//支付提交地址
 if (strstr($pay_type, "银联钱包")) {
@@ -92,8 +86,6 @@ if (strstr($pay_type, "银联钱包")) {
   $data['pay_mode'] = '01';
   $bankname = $pay_type . "->网银在线充值";
   $payType = $pay_type . "_wy";
-  // $form_url = 'https://pay.all-inpay.com/gateway/queryBankList';//银行列表地址
-  // $data = $wy_data;
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
