@@ -5,6 +5,8 @@ $params = array(':is' => 1);
 $sql = "select * from pay_set where is_wy=:is OR is_wx=:is OR is_zfb=:is OR is_qq=:is";
 $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,7 +99,7 @@ $stmt->execute($params);
       </div>
       <div class="form-group">
         <label>订单金额(單位元)</label>
-        <input id="MOAmount" type="text" class="form-control" name="MOAmount" placeholder="MOAmount">
+        <input id="MOAmount" type="text" class="form-control" name="MOAmount" placeholder="MOAmount" value="100">
       </div>
       <div class="form-group">
         <label>bank_code</label>
@@ -143,6 +145,58 @@ $stmt->execute($params);
       <button id="wxqqjdbdpost_qqfs" type="submit" class="btn btn-outline-info">QQ反扫</button>
       <button id="wxqqjdbdpost_jd" type="submit" class="btn btn-outline-info">京东</button>
       <button id="wxqqjdbdpost_bd" type="submit" class="btn btn-outline-info">百度</button>
+    </div>
+    <div>
+    <h1>开始查询订单</h1>
+    <form  class="form-group div-nowrap" action="index.php" method="get">
+        <select class="form-control" style="width:96%;height:35px;margin-left:2%;" name="pay_name">
+            <?php
+            $stmt = $mydata1_db->prepare($sql);
+            $stmt->execute($params);
+            while ($row = $stmt->fetch()) {
+                ?>
+              <option id="pay_name" type="text" class="form-control form-controlCum" name="pay_name" placeholder="第三方名称" value=<?php echo $row['pay_name'] ?>><?php echo $row['pay_name'] ?></option>
+              <?
+            }
+            ?>
+        </select>
+        <input class="form-control" name="first_time" type="date" id="first_time">
+        <input class="form-control" type="submit" id="find" value="查找">
+    </form>
+    <?php 
+        echo ($_GET["first_time"]);
+        echo ($_GET["pay_name"]);
+        if (isset($_GET["first_time"])) {
+            $nowtime = date("Y-m-d H:i:s");
+            $params2 = array(':first_time' => $_GET["first_time"].' '.date("H:i:s"),':second_time' => $nowtime,':pay_name' => '%'.$_GET["pay_name"].'%');
+            $sql2 = "select m_order,status,about,m_make_time,update_time,operator,top_uid,m_value from k_money where m_make_time >= :first_time and m_make_time <= :second_time and operator Like :pay_name";
+            $stmt2 = $mydata1_db->prepare($sql2);
+            $stmt2->execute($params2);
+                while ($row2 = $stmt2->fetch()) {
+                    ?>
+                        <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#<?php echo '订单号：'.$row2['m_order']?>" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <?php echo '订单号：'.$row2['m_order']?>
+                        </a>
+                        </p>
+                        <div class="collapse" id="<?php echo '订单号：'.$row2['m_order']?>">
+                            <div class="card card-body">
+                                <ul>
+                                    <li><?php echo 'status:'.$row2['status']?></li>
+                                    <li><?php echo 'about:'.$row2['about']?></li>
+                                    <li><?php echo 'm_make_time:'.$row2['m_make_time']?></li>
+                                    <li><?php echo 'update_time:'.$row2['update_time']?></li>
+                                    <li><?php echo 'operator:'.$row2['operator']?></li>
+                                    <li><?php echo 'top_uid:'.$row2['top_uid']?></li>
+                                    <li><?php echo 'm_value:'.$row2['m_value']?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    <?
+                }
+        }
+            ?>
+
     </div>
   </div>
 </body>
