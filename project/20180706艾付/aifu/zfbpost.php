@@ -73,7 +73,7 @@ if (strstr($pay_type, "支付宝反扫")) {
   $data['pay_mode'] = '12';
   $bankname = $pay_type . "->支付宝在线充值";
   $payType = $pay_type . "_zfb";
-} elseif (strstr($pay_type, "支付宝")) {
+} else {
   $scan = 'zfb';
   $data['bank_code'] = 'ALIPAY';
   $data['pay_mode'] = '09';
