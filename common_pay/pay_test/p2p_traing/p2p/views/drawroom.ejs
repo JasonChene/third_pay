@@ -1,0 +1,68 @@
+<%- include nav.ejs %>
+
+    <style>
+        .group {
+            border: 1px solid cornflowerblue;
+            margin: 20px;
+            padding: 10px;
+        }
+
+        .room {
+            border: 1px solid rgb(100, 237, 191);
+            margin: 10px;
+        }
+    </style>
+
+
+    <div class="row justify-content-md-center">
+        <div class="group col-md-10">
+            <h1 class="col-md-4 offset-md-4  display-5">
+                欢迎
+                <span id="name">
+                    <%=name %>
+                </span>
+            </h1>
+            <canvas class="room" width="1000" height="700" id="canvas">
+
+            </canvas>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var color = ["red", "blue", "green", "black", "skyblue", "deeppink", "white"];
+        var mycolor = color[parseInt(Math.random() * color.length)];
+
+
+        canvas.onmousedown = function () {
+            canvas.addEventListener("mousemove", handler, true);
+        }
+        canvas.onmouseup = function () {
+            canvas.removeEventListener("mousemove", handler, true);
+        }
+
+        function handler(e) {
+            ctx.beginPath();
+            ctx.arc(e.layerX, e.layerY, 10, 0, Math.PI * 2, true);
+            ctx.fillStyle = mycolor;
+            ctx.fill();
+
+            //触发事件
+            socket.emit("draw", {
+                "x": e.layerX,
+                "y": e.layerY,
+                "color": mycolor
+            });
+        }
+
+        var socket = io();
+
+        socket.on("draw", function (msg) {
+            ctx.beginPath();
+            ctx.arc(msg.x, msg.y, 10, 0, Math.PI * 2, true);
+            ctx.fillStyle = msg.color;
+            ctx.fill();
+        });
+    </script>

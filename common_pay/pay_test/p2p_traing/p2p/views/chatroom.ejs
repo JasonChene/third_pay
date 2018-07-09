@@ -1,0 +1,96 @@
+<%- include nav.ejs %>
+
+    <style>
+        .group {
+            border: 1px solid cornflowerblue;
+            margin: 50px;
+            padding: 10px;
+        }
+
+        .room {
+            border: 1px solid rgb(100, 237, 191);
+            height: 600px;
+            margin: 10px;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .canvas {
+            border: 1px solid rgb(100, 237, 191);
+            margin: 10px;
+        }
+    </style>
+
+
+    <div class="row">
+        <div class="group col-md-2">
+            <h5 class=" display-5">
+                欢迎
+                <span id="name">
+                    <%=name %>
+                </span>
+            </h5>
+            <div class="room justify-content-md-center">
+                <ul class="list-group" id="chatroom">
+                </ul>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="someting" placeholder="说点什么..." aria-label="Recipient's username" aria-describedby="basic-addon2">
+            </div>
+        </div>
+        <canvas class="canvas" width="1200" height="700" id="canvas">
+        </canvas>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script>
+        var socket = io();
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var color = ["red", "blue", "green", "black", "skyblue", "deeppink", "white"];
+        var mycolor = color[parseInt(Math.random() * color.length)];
+
+
+        canvas.onmousedown = function () {
+            canvas.addEventListener("mousemove", handler, true);
+        }
+        canvas.onmouseup = function () {
+            canvas.removeEventListener("mousemove", handler, true);
+        }
+
+        function handler(e) {
+            ctx.beginPath();
+            ctx.arc(e.layerX, e.layerY, 10, 0, Math.PI * 2, true);
+            ctx.fillStyle = mycolor;
+            ctx.fill();
+
+            //触发事件
+            socket.emit("draw", {
+                "x": e.layerX,
+                "y": e.layerY,
+                "color": mycolor
+            });
+        }
+
+        $("#someting").keydown(function (e) {
+            if (e.keyCode == 13) {
+                socket.emit("hihi", {
+                    "chat_msg": $("#someting").val(),
+                    "name": $("#name").html()
+                });
+                $(this).val('');
+            }
+        });
+
+        socket.on("hihi", function (msg) {
+            $("#chatroom").prepend('<li class="list-group-item">' + msg.name + '：' + msg.chat_msg + '</li>');
+        });
+
+        socket.on("draw", function (msg) {
+            ctx.beginPath();
+            ctx.arc(msg.x, msg.y, 10, 0, Math.PI * 2, true);
+            ctx.fillStyle = msg.color;
+            ctx.fill();
+        });
+
+    </script>

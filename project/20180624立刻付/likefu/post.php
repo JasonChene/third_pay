@@ -63,7 +63,7 @@ if ($ylscan) {
 	$payType = $pay_type . "_yl";
 } elseif ($ylkj) {
 	$bankname = $pay_type . "->银联快捷在线充值";
-	$payType = $pay_type . "ylkj";
+	$payType = $pay_type . "_ylkj";
 } else {
 	$bankname = $pay_type . "->网银在线充值";
 	$payType = $pay_type . "_wy";
