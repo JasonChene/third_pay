@@ -1,0 +1,2 @@
+说明：
+1. demo.php demo2.php 为用户使用网关进行充值范例, 流程为先打开demo.php , 提交到demo2.php

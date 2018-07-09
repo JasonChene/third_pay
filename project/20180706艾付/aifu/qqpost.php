@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");//原新数据库的连接方式
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -28,23 +28,11 @@ function curl_post($url, $data)
   return $tmpInfo;
 }
 
-function device_type()
-{
-  $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-  $phone_type = 'other';
-  if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
-    $phone_type = '02';
-  } elseif (strpos($agent, 'android')) {
-    $phone_type = '01';
-  }
-  return $phone_type;
-}
-
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);//原新数据库的连接方式
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -62,67 +50,32 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
-$other_data = array(
-  "merchantNo" => $pay_mid, //商户编号
-  "orderAmount" => $_REQUEST['MOAmount'] * 100, //商户订单金额
-  "orderNo" => $order_no, //商户订单号
-  "notifyUrl" => $merchant_url, //异步通知
-  "callbackUrl" => $return_url, //页面回调
-  "payType" => '', //支付方式
-  "productName" => '', //商品名称
-  "productDesc" => '', //商品描述
-  "remark" => '', //备注
-  "ip" => '', //用户的ip地址
-  "accountName" => '', //持卡人姓名
-  "accountNo" => '', //银行卡号
-  "idCardNo" => '', //身份证号
-  "phone" => '', //手机号
-  "openid" => '', //微信公众号支付时必传
-  "settleType" => '', //结算
-  "payTypeConfig" => '', //到账时间
-  "deviceType" => '', //手机系统
-  "mchAppId" => 'mchAppId', //应用唯一标识
-  "mchAppName" => 'mchAppName', //应用名称
-  "sign" => '', //签名
-);
-
-$wy_data = array(
-  "orderNo" => $order_no, //商户订单号
-  "merchantNo" => $pay_mid, //商户编号
-  "orderAmount" => $_REQUEST['MOAmount'] * 100, //交易金额分为单位
-  "notifyUrl" => $merchant_url, //服务器端处理通知接口
-  "callbackUrl" => $return_url, //页面回调
-  "bankName" => $_REQUEST['bank_code'], //银行简码
-  "currencyType" => 'CNY', //货币类型
-  "productName" => 'productName', //商品名称
-  "productDesc" => 'productDesc', //商品描述
-  "cardType" => '1', //1借记卡 02贷记卡
-  "businessType" => '01', //业务类型默认01
-  "remark" => '', //备注
-  "sign" => '', //签名
+$data = array(
+  "version" => 'v1', //接口版本
+  "merchant_no" => $pay_mid, //商户号
+  "order_no" => $order_no, //商户订单号
+  "goods_name" => base64_encode("goodsname"), //商品名称
+  "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额
+  "backend_url" => $merchant_url, //接受AI后台异步订单状态通知的地址
+  "frontend_url" => $return_url, //商户的支付结果显示页面地址
+  "reserve" => 'reserve', //商户保留信息
+  "pay_mode" => '', //支付模式 09:扫码支付 12：H5支付模式
+  "bank_code" => '', //银行编号
+  "card_type" => '0', //允许支付的卡类型
+  "sign" => '', //签名数据
 );
 
 #变更参数设置
-$form_url = 'https://pay.166985.com/wappay/payapi/order';
-$data = $other_data;
-
-if (strstr($pay_type, "银联钱包")) {
-  $scan = 'yl';
-  $data['payType'] = '9';//银联扫码
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $payType = $pay_type . "_yl";
-} elseif (strstr($pay_type, "银联快捷")) {
-  $scan = 'ylkj';
-  $data['payType'] = '5';//WAP快捷
-  $bankname = $pay_type . "->银联快捷在线充值";
-  $payType = $pay_type . "_ylkj";
-} else {
-  $scan = 'wy';
-  $bankname = $pay_type . "->网银在线充值";
-  $payType = $pay_type . "_wy";
-  $form_url = 'https://pay.166985.com/wappay/payapi/netpay';
-  $data = $wy_data;
+$form_url = 'https://pay.all-inpay.com/gateway/pay.jsp';//支付提交地址
+$scan = 'qq';
+$data['bank_code'] = 'QQSCAN';
+$data['pay_mode'] = '09';
+if (_is_mobile()) {
+  $data['bank_code'] = 'QQWAP';
+  $data['pay_mode'] = '12';
 }
+$bankname = $pay_type . "->QQ钱包在线充值";
+$payType = $pay_type . "_qq";
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -135,15 +88,14 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
 $noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+  if (!in_array($arr_key, $noarr)) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
-$signtext = substr($signtext, 0, -1) . $pay_mkey;
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
@@ -151,16 +103,17 @@ $data_str = http_build_query($data);
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
+// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
 #跳转
-if ($row['status'] != 'T') {
-  echo '错误代码:' . $row['errCode'] . "\n";
-  echo '错误讯息:' . $row['errMsg'] . "\n";
+if ($row['result_code'] != '00') {
+  echo '错误代码:' . $row['result_code'] . "\n";
+  echo '错误讯息:' . $row['result_msg'] . "\n";
   exit;
 } else {
-  $qrcodeUrl = $row['payUrl'];
-  if (!_is_mobile() && $scan != 'wy') {
+  $qrcodeUrl = $row['code_url'];
+  if (!_is_mobile()) {
     if (strstr($qrcodeUrl, "&")) {
       $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
     } else {

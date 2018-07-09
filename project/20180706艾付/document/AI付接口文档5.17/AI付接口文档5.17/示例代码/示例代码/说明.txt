@@ -1,0 +1,33 @@
+说明：
+一、示例代码内所使用的商户号和商户接口秘钥均为测试用，不可用于真实支付测试
+二、java代码示例中所使用的md5和base64方法的实现如下：
+1、base64编码
+public static String base64Encoder(final String ss, String charset) {
+	BASE64Encoder en = new BASE64Encoder(); // base64编码
+	String encStr = "";
+	if (charset == null || "".equals(charset)) {
+		encStr = en.encode(ss.getBytes());
+		return encStr;
+	}
+	try {
+		encStr = en.encode(ss.getBytes(charset));
+	} catch (UnsupportedEncodingException e) {
+		e.printStackTrace();
+	}
+    
+	return encStr;
+}
+2、md5编码
+public static String encodeUtf8(String origin) {
+	String resultString = null;
+
+	try {
+		resultString = new String(origin);
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		resultString = byteArrayToHexString(md.digest(resultString.getBytes("UTF-8")));
+	} catch (Exception ex) {
+		log.logPrint("计算MD5出错", ex);
+	}
+	
+	return resultString;
+}
