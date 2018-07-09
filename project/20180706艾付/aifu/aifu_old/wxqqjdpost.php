@@ -125,7 +125,6 @@ $data_str = http_build_query($data);
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
 #跳转

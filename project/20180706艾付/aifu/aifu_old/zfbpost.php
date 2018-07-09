@@ -67,7 +67,13 @@ $data = array(
 
 #变更参数设置
 $form_url = 'https://pay.all-inpay.com/gateway/pay.jsp';//支付提交地址
-if (strstr($pay_type, "支付宝")) {
+if (strstr($pay_type, "支付宝反扫")) {
+  $scan = 'zfbfs';
+  $data['bank_code'] = 'ALIPAYCODE';
+  $data['pay_mode'] = '12';
+  $bankname = $pay_type . "->支付宝在线充值";
+  $payType = $pay_type . "_zfb";
+} elseif (strstr($pay_type, "支付宝")) {
   $scan = 'zfb';
   $data['bank_code'] = 'ALIPAY';
   $data['pay_mode'] = '09';
@@ -75,12 +81,6 @@ if (strstr($pay_type, "支付宝")) {
     $data['bank_code'] = 'ALIPAYWAP';
     $data['pay_mode'] = '12';
   }
-  $bankname = $pay_type . "->支付宝在线充值";
-  $payType = $pay_type . "_zfb";
-} elseif (strstr($pay_type, "支付宝反扫")) {
-  $scan = 'zfbfs';
-  $data['bank_code'] = 'ALIPAYCODE';
-  $data['pay_mode'] = '12';
   $bankname = $pay_type . "->支付宝在线充值";
   $payType = $pay_type . "_zfb";
 }
@@ -111,7 +111,6 @@ $data_str = http_build_query($data);
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
 #跳转

@@ -71,10 +71,6 @@ if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['bank_code'] = 'JDSCAN';
   $data['pay_mode'] = '09';
-  if (_is_mobile()) {
-    $data['bank_code'] = 'jdwapOOOOO';
-    $data['pay_mode'] = '12';
-  }
   $bankname = $pay_type . "->京东钱包在线充值";
   $payType = $pay_type . "_jd";
 } elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
@@ -125,7 +121,6 @@ $data_str = http_build_query($data);
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
-// $tran = mb_convert_encoding("$res", "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
 #跳转
@@ -135,7 +130,7 @@ if ($row['result_code'] != '00') {
   exit;
 } else {
   $qrcodeUrl = $row['code_url'];
-  if (!_is_mobile()) {
+  if (!_is_mobile() || $scan == 'jd') {
     if (strstr($qrcodeUrl, "&")) {
       $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
     } else {
