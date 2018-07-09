@@ -44,7 +44,6 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = "merchant_no=" . $data['merchant_no'] . "&order_no=" . $data['order_no'] . "&order_amount=" . $data['order_amount'] . "&original_amount=" . $data['original_amount'] . "&upstream_settle=" . $data['upstream_settle'] . "&result=" . $data['result'] . "&pay_time=" . $data['pay_time'] . "&trace_id=" . $data['trace_id'] . "&reserve=" . $data['reserve'] . "&key=" . $pay_mkey;//验签字串
-$mysign = md5($signtext);//签名
 //write_log("signtext=" . $signtext);
 $mysign = md5($signtext);//签名
 //write_log("mysign=" . $mysign);

@@ -11,12 +11,12 @@ foreach ($_REQUEST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['ordernumber']; //订单号
-$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$order_no = $data['order_no']; //订单号
+$mymoney = number_format($data['order_amount'], 2, '.', ''); //订单金额
+$success_msg = $data['result'];//成功讯息
+$success_code = "S";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "200";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -42,7 +42,6 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = "merchant_no=" . $data['merchant_no'] . "&order_no=" . $data['order_no'] . "&order_amount=" . $data['order_amount'] . "&original_amount=" . $data['original_amount'] . "&upstream_settle=" . $data['upstream_settle'] . "&result=" . $data['result'] . "&pay_time=" . $data['pay_time'] . "&trace_id=" . $data['trace_id'] . "&reserve=" . $data['reserve'] . "&key=" . $pay_mkey;//验签字串
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $mysign = md5($signtext);//签名
 
 #到账判断
