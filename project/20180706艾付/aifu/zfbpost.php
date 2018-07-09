@@ -120,7 +120,7 @@ if ($row['result_code'] != '00') {
   exit;
 } else {
   $qrcodeUrl = $row['code_url'];
-  if (!_is_mobile()) {
+  if (!_is_mobile() && $scan != 'zfbfs') {
     if (strstr($qrcodeUrl, "&")) {
       $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
     } else {
