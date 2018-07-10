@@ -83,7 +83,7 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
     $data['banktype'] = 'QQWAP';
   }
 }elseif (strstr($_REQUEST['pay_type'], "微信反扫")) {
-  $scan = 'wx';
+  $scan = 'wxf';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
   $data['banktype'] = 'WEIXINCODE';//微信条形码
