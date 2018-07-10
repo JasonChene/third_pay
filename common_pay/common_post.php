@@ -7,6 +7,39 @@ date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
+
+function payType_bankname($scan){
+  global $payType, $bankname;
+  if(strstr($scan,"wy")){
+    $payType = $pay_type . "_wy";
+    $bankname = $pay_type . "->网银在线充值";
+  }elseif(strstr($scan,"yl")){
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
+  }elseif(strstr($scan,"qq")){
+    $payType = $pay_type . "_qq";
+    $bankname = $pay_type . "->QQ钱包在线充值";
+  }elseif(strstr($scan,"wx")){
+    $payType = $pay_type . "_wx";
+    $bankname = $pay_type . "->微信在线充值";
+  }elseif(strstr($scan,"zfb")){
+    $payType = $pay_type . "_zfb";
+    $bankname = $pay_type . "->支付宝在线充值";
+  }elseif(strstr($scan,"jd")){
+    $payType = $pay_type . "_jd";
+    $bankname = $pay_type . "->京东钱包在线充值";
+  }elseif(strstr($scan,"ylkj")){
+    $payType = $pay_type . "_ylkj";
+    $bankname = $pay_type . "->银联快捷在线充值";
+  }elseif(strstr($scan,"bd")){
+    $payType = $pay_type . "_bd";
+    $bankname = $pay_type . "->百度钱包在线充值";
+  }
+}
+payType_bankname('wx');
+echo $payType;
+echo $bankname;
+
 #function
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
@@ -69,8 +102,6 @@ $data = array(
 
 $scan = 'wx';
 $data['payWay'] = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
 if (_is_mobile()) {
   $form_url = 'http://a.bzzdp.com/api/createWapOrder';//wap提交地址
 }else {
