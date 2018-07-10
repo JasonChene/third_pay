@@ -4,35 +4,67 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-$data = array();
-#接收资料
+write_log("notify");
+
+#############################################
+#request方法
+write_log('request方法');
+foreach ($_REQUEST as $key => $value) {
+	$data[$key] = $value;
+	write_log($key."=".$value);
+}
+#post方法
+write_log('post方法');
+foreach ($_POST as $key => $value) {
+	$data[$key] = $value;
+	write_log($key."=".$value);
+}
+#input方法
+write_log('input方法');
 $input_data=file_get_contents("php://input");
+
 $res=json_decode($input_data,1);//json回传资料
+
+// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XML回传资料
+
+// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
+
 foreach ($res as $key => $value) {
 	$data[$key] = $value;
-	//write_log($key."=".$value);
+	write_log($key."=".$value);
+}
+###########################################
+// $data = array();
+#接收资料
+#post方法
+write_log('post方法');
+foreach ($_POST as $key => $value) {
+	// $data[$key] = $value;
+	write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['BusinessOrders']; //订单号
-$mymoney = number_format($data['Amount']/100, 2, '.', ''); //订单金额
-$success_msg = $data['OrderStatus'];//成功讯息
-$success_code = "SUCCESS";//文档上的成功讯息(根本沒有)
-$sign = base64_decode($data['Sign']);//签名
-$echo_msg = "SUCCESS";//回调讯息
+// $order_no = $data['BusinessOrders']; //订单号
+// $mymoney = number_format($data['Amount']/100, 2, '.', ''); //订单金额
+// $success_msg = $data['OrderStatus'];//成功讯息
+// $success_code = "SUCCESS";//文档上的成功讯息(根本沒有)
+// $sign = base64_decode($data['Sign']);//签名
+// $echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
-$params = array(':m_order' => $order_no);
-$sql = "select operator from k_money where m_order=:m_order";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
-$stmt->execute($params);
-$row = $stmt->fetch();
+// $params = array(':m_order' => $order_no);
+// $sql = "select operator from k_money where m_order=:m_order";
+// // $stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt->execute($params);
+// $row = $stmt->fetch();
 
 #获取该订单的支付名称
-$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-$params = array(':pay_type' => $pay_type);
-$sql = "select * from pay_set where pay_type=:pay_type";
+// $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
+$params = array(':pay_name' => '易路通');
+$sql = "select * from pay_set where pay_name=:pay_name";
 // $stmt = $mydata1_db->prepare($sql);
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
@@ -44,6 +76,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
+
+#解析密文
+$method = $_POST['Method'];
+$data   = $_POST['Data'];
+$sign   = $_POST['Sign'];
+$appid  = $_POST['Appid'];
+$mySign = strtolower(md5($data . $pay_mkey));
+if ($mySign != $sign) {    exit(json_encode(['message' => '验证签名失败', 'response' => '01']));}
+$aes_data =base64_decode( str_replace('-','+',str_replace('_', '/',  $data)));
+$input = openssl_decrypt(MCRYPT_RIJNDAEL_128, $key, $aes_data, MCRYPT_MODE_CBC, $key);
+$result   = json_decode(rtrim($input, "\0"),TRUE);
+
 
 #验签方式
 $public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥

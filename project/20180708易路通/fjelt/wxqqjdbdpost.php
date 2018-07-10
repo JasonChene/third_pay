@@ -114,5 +114,5 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-  echo "<script>window.location =/".$json->data.";</script>";
+header("Location:".$json->data);  
 ?>
