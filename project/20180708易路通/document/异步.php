@@ -16,7 +16,7 @@ if ($method == 'paymentreport') {
 $ordernumber  = $result['ordernumber']; //商户订单号    
 $amount       = $result['amount']; //交易金额    
 $payorderid   = $result['payorderid']; //交易流水号    
-$busin= $resuesstime lt['businesstime']; //交易时间yyyy-MM-dd hh:mm:ss    
+$busin= $result['businesstime']; //交易时间yyyy-MM-dd hh:mm:ss    
 $respcode     = $result['respcode']; //交易状态 1-待支付 2-支付完成 3-已关闭 4-交易撤销    
 $extraparams  = $result['extraparams']; //扩展内容 原样返回    
 $respmsg      = $result['respmsg']; //状态说明    

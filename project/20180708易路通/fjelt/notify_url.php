@@ -85,42 +85,28 @@ $appid  = $_POST['Appid'];
 $mySign = strtolower(md5($data . $pay_mkey));
 if ($mySign != $sign) {    exit(json_encode(['message' => '验证签名失败', 'response' => '01']));}
 $aes_data =base64_decode( str_replace('-','+',str_replace('_', '/',  $data)));
-$input = openssl_decrypt(MCRYPT_RIJNDAEL_128, $key, $aes_data, MCRYPT_MODE_CBC, $key);
+$input = openssl_decrypt($aes_data,'AES-128-CBC',$pay_mkey,OPENSSL_RAW_DATA, $pay_mkey);
 $result   = json_decode(rtrim($input, "\0"),TRUE);
 
-
-#验签方式
-$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-$private_pem = chunk_split($pay_mkey,64,"\r\n");//转换为pem格式的私钥
-$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
-//write_log("public_pem=".$public_pem);
-ksort($data);
-$noarr =array('Sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
-}
-$signtext = substr($signtext,0,-1);
-//write_log("signtext=".$signtext);
-$PublicKey = openssl_get_publickey($public_pem);
-if ($PublicKey == false) {
-	echo "打开公钥出错";
-	//write_log("打开公钥出错=".$PublicKey);
-	exit;
-}
-$va = openssl_verify($signtext, $sign, $PublicKey, OPENSSL_ALGO_MD5);
-if($va != 1) {
-  echo "数据校验不通过";
-  //write_log("数据校验不通过=".$va);
-  exit;
-}
+if ($method == 'paymentreport') {    
+	$ordernumber  = $result['ordernumber']; //商户订单号    
+	$amount       = $result['amount']; //交易金额    
+	$payorderid   = $result['payorderid']; //交易流水号    
+	$busin= $result['businesstime']; //交易时间yyyy-MM-dd hh:mm:ss    
+	$respcode     = $result['respcode']; //交易状态 1-待支付 2-支付完成 3-已关闭 4-交易撤销    
+	$extraparams  = $result['extraparams']; //扩展内容 原样返回    
+	$respmsg      = $result['respmsg']; //状态说明    
+	//这边写你支付完成的业务逻辑    
+	//处理成功返回    
+	$mymoney = number_format($amount/100, 2, '.', ''); //订单金额
+	$echo_msg = json_encode(['message' => 'success', 'response' => '00']);
+}else {
+	$echo_msg = json_encode(['message' => '未识别的Method', 'response' => '01']);
+} 
 
 #到账判断
 if ($success_msg == $success_code) {
-		$result_insert = update_online_money($order_no, $mymoney);
+		$result_insert = update_online_money($ordernumber, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
 			//write_log("会员信息不存在，无法入账");

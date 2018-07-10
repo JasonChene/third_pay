@@ -57,7 +57,7 @@ $form_url ='http://bank.fjelt.com/pay/Rest';
 
 #第三方参数设置
 $parms = array(
-  'amount' => (int)$mymoney,
+  'amount' => (int)$mymoney*100,
   'payordernumber' => $order_no,
   'backurl' => $merchant_url,
   'body' => "pay",
@@ -104,8 +104,7 @@ $options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:a
 	)  );
 $context = stream_context_create($options);
 $result = file_get_contents($form_url, false, $context);
-$json=json_decode($result,1);
-var_dump($json);
+$json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          

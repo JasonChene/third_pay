@@ -57,7 +57,7 @@ $form_url ='http://bank.fjelt.com/pay/Rest';
 
 #第三方参数设置
 $parms = array(
-  'amount' => (int)$mymoney,
+  'amount' => (int)$mymoney*100,
   'payordernumber' => $order_no,
   'backurl' => $merchant_url,
   'body' => "pay",
