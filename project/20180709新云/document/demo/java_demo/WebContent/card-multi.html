@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312">
+<title>卡类接口演示</title>
+<script type="text/javascript">
+function showCardNum(num){
+	var n = parseInt(num); 
+	var strS = '';
+	for(var i=1; i<= n; i++){  
+		 var str = '卡号'+i+'：<input name="cardno" id="cardno" type="text"/> 密码：<input name="cardpwd" id="cardpwd" type="text"/> 面值：<input name="value" id="value" type="text"/><br />';
+		 strS += str;
+	} 
+	document.getElementById("showCard").innerHTML = strS;
+}
+
+</script>
+</head>
+<body onload="showCardNum(1)">
+		<div>新云支付支付卡类接口演示(多卡)</div>
+		<form method="post" action="card-multi.jsp">
+			<div>卡类型:
+				 <select name="type">
+					<option value="1">QQ卡</option>
+					<option value="2">盛大卡</option>
+					<option value="3">骏网卡</option>
+					<option value="4">新云支付通</option>
+					<option value="5">完美一卡通</option>
+					<option value="6">搜狐一卡通</option>
+					<option value="7">征途游戏卡</option>
+					<option value="8">久游一卡通</option>
+					<option value="9">网易一卡通</option>
+					<option value="10">魔兽卡</option>
+					<option value="11">联华卡</option>
+					<option value="12">电信充值卡</option>
+					<option value="13">神州行充值卡</option>
+					<option value="14">联通充值卡</option>
+					<option value="15">金山一卡通</option>
+					<option value="16">光宇一卡通</option>
+					<option value="17">神州行浙江卡</option>
+					<option value="18">神州行江苏卡</option>
+					<option value="19">神州行辽宁卡</option>
+					<option value="20">神州行福建卡</option>			
+				</select>
+			</div>
+			<div>待提交卡数量:
+			<select name="num" id="num" onchange="showCardNum(this.value);">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+			</select>
+			<div id="showCard">
+				<!-- 
+					根据待提交卡数量并调用javascript函数showCardNum动态显示卡号密码面值输入框，
+					默认显示1个输入框
+				 -->
+			</div>
+			<div>总金额:	  <input type="text" name="totalvalue" id="totalvalue" value="" /></div>
+			<div>商户订单号:<input type="text" name="orderid" id="orderid" value="20101230144431" /></div>
+			<div>支付结果返回地址:<input type="text" name="callbackurl" id="callbackurl" value="http://www.example.com:8080/obaopay/card-multi-back.jsp"/></div>
+			<div>商家备注信息:<input type="text" name="attach" id="attach" value="pay" /></div>
+			<div><input type="submit" value="提交" /></div>
+		</form>
+		
+</body>
+</html>

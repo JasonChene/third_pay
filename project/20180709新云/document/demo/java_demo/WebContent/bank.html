@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312">
+<title>银行接口演示</title>
+</head>
+<body>
+		<div>新云支付支付银行接口演示</div>
+		<form method="post" action="bank.jsp">
+			<div>银行类型:
+				 <select name="type">
+				 	<option value="962">中信银行</option>
+				 	<option value="963">中国银行</option>
+					<option value="964">中国农业银行</option>
+					<option value="965">中国建设银行</option>
+					<option value="966">中国工商银行（仅限工行手机签约客户）</option>
+					<option value="967">中国工商银行（全国范围）</option>
+					<option value="968">浙商银行</option>
+					<option value="969">浙江稠州商业银行</option>
+					<option value="970">招商银行</option>
+					<option value="971">邮政储蓄</option>
+					<option value="972">兴业银行</option>
+					<option value="973">顺德农村信用合作社</option>
+					<option value="974">深圳发展银行</option>
+					<option value="975">上海银行</option>
+					<option value="976">上海农村商业银行</option>
+					<option value="977">浦东发展银行</option>
+					<option value="978">平安银行</option>
+					<option value="979">南京银行</option>
+					<option value="980">民生银行</option>
+					<option value="981">交通银行</option>
+					<option value="982">华夏银行</option>
+					<option value="983">杭州银行</option>
+					<option value="984">广州市农村信用社|广州市商业银行</option>
+					<option value="985">广东发展银行</option>
+					<option value="986">光大银行</option>
+					<option value="987">东亚银行</option>
+					<option value="988">渤海银行</option>
+					<option value="989">北京银行</option>
+					<option value="990">北京农村商业银行</option>
+					<option value="992">支付宝</option>
+					<option value="993">财付通</option>
+					<option value="994">快钱</option>
+				</select>
+			</div>
+			<div>商户订单号:<input type="text" name="orderid" id="orderid" value="20101230144431" /></div>
+			<div>金额:<input type="text" name="value" id="value" value="10" /></div>
+			<div>下行异步通知地址:<input type="text" name="callbackurl" id="callbackurl" value="http://localhost:8080/obaopay/bank-callbackurl.jsp"/></div>
+			<div>下行同步通知地址:<input type="text" name="hrefbackurl" id="hrefbackurl" value="http://localhost:8080/obaopay/bank-hrefbackurl.jsp"/></div>
+			<div>商家备注信息:<input type="text" name="attach" id="attach" value="" /></div>
+			<div><input type="submit" value="提交" /></div>
+		</form>
+</body>
+</html>
