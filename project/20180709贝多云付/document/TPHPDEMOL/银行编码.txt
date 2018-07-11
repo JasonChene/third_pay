@@ -1,0 +1,17 @@
+ICBC	工商银行
+CMBCHINA	招商银行
+ABC	中国农业银行
+CCB	建设银行
+BOCO	交通银行
+CIB	兴业银行
+CMBC	中国民生银行
+CEB	光大银行
+BOC	中国银行
+ECITIC	中信银行(需要证书才能连接到银行)
+SDB	深圳发展银行
+GDB	广发银行
+SPDB	上海浦东发展银行
+POST	中国邮政
+PINGANBANK	平安银行
+HXB	华夏银行
+HKBEA	东亚银行

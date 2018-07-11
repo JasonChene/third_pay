@@ -1,0 +1,7 @@
+﻿out_trade_no=15201801191401141874&out_channel_no=15201801191401141874&respCode=00000&respMsg=%E6%94%AF%E4%BB%98%E6%88%90%E5%8A%9F&sign=d47f9298321519acde5dcf0d473d340e
+
+注意签名 只签 out_trade_no  out_channel_no 这两个字段
+
+回调成功 返回{"status":true}即可  回调代码里面有
+
+respCode为00000 表示通知成功 其它状态则为失败
