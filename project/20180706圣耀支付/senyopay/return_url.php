@@ -76,7 +76,6 @@ if($va != 1) {
 
 #到账判断
 if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			$message = ("会员信息不存在，无法入账");
@@ -89,9 +88,6 @@ if ($success_msg == $success_code) {
 		} else {
 			$message = ("支付失败");
 		}
-	}else{
-		$message = ('签名不正确！');
-	}
 }else{
 	$message = ("交易失败");
 }

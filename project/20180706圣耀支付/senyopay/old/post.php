@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 #function
@@ -31,8 +31,7 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
-
-if (strstr($_REQUEST['pay_type'], "银联反扫")) {
+if (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
   if (!$_POST['authCode']) {
     $data = array();
     foreach ($_REQUEST as $key => $value) {
@@ -64,7 +63,7 @@ $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 $stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -92,7 +91,7 @@ $data =array(
   'Description' => "pay",
   'BusinessOrders' => $order_no,
   'Amount' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  'SubmitIP' => $_SERVER["SERVER_ADDR"],
+  'SubmitIP' => getClientIp(),
   'ReturnUrl' => $return_url,
   'NotifyUrl' => $merchant_url,
   'TypeService' => "",
@@ -102,7 +101,14 @@ $data =array(
 );
 #变更参数设置
 
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+if (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
+  $scan = 'ylf';
+  $payType = $pay_type."_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $data['TypeService'] = 'UnionPay';
+  $data['PostService'] = 'Card';
+  $data['CardCode'] = $_POST['authCode'];
+}elseif (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $payType = $pay_type."_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
@@ -110,14 +116,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $data['PostService'] = 'Scan';
   if (_is_mobile()) {
     $data['PostService'] = 'H5';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "银联反扫")) {
-  $scan = 'ylf';
-  $payType = $pay_type."_yl";
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $data['TypeService'] = 'UnionPay';
-  $data['PostService'] = 'Card';
-  $data['CardCode'] = $_POST['authCode'];
+  }  
 }else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
@@ -136,6 +135,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
+
 $noarr =array('Sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
@@ -152,11 +152,9 @@ if ($Private_Key == false) {
 openssl_sign($signtext, $Sign, $Private_Key, OPENSSL_ALGO_MD5);
 $data['Sign'] = base64_encode($Sign);
 $data_json = json_encode($data);
-
 #curl提交
 $res = curl_post($form_url,$data_json);
 $row = json_decode($res,1);
-
 $signtext2 = '';
 ksort($row);
 #跳转  
@@ -185,7 +183,10 @@ if ($row['Status'] != 'OK') {
     if ($scan == 'ylf') {
       echo $row['Data'];
       exit;
-    }elseif(( _is_mobile() &&  $scan == 'yl' ) || $scan =='wy' ){
+    }elseif( $scan =='wy' ){
+      echo $row['Data'];
+      exit;
+    }elseif( _is_mobile() &&  $scan == 'yl' ){
       $jumpurl = $row['Data'];
     }elseif(!_is_mobile() && $scan == 'yl'){
       $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['Data']);
@@ -195,6 +196,7 @@ if ($row['Status'] != 'OK') {
 #跳轉方法
 
 ?>
+
 <html>
   <head>
     <title>跳转......</title>

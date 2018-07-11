@@ -31,25 +31,6 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
-function HTTP_CURL_DATA($url, $data, $second = 30) {
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_TIMEOUT, $second);
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);//严格校验
-//设置header
-curl_setopt($ch, CURLOPT_HEADER, FALSE);
-//要求结果为字符串且输出到屏幕上
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  $str = curl_exec($ch);
-  if(!$str) {
-      $str = curl_error($ch);
-  }
-  curl_close($ch);
-  return $str;
-}
 if (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
   if (!$_POST['authCode']) {
     $data = array();
@@ -110,7 +91,7 @@ $data =array(
   'Description' => "pay",
   'BusinessOrders' => $order_no,
   'Amount' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  'SubmitIP' => $_SERVER["SERVER_ADDR"],
+  'SubmitIP' => getClientIp(),
   'ReturnUrl' => $return_url,
   'NotifyUrl' => $merchant_url,
   'TypeService' => "",
@@ -120,7 +101,14 @@ $data =array(
 );
 #变更参数设置
 
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+if (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
+  $scan = 'ylf';
+  $payType = $pay_type."_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $data['TypeService'] = 'UnionPay';
+  $data['PostService'] = 'Card';
+  $data['CardCode'] = $_POST['authCode'];
+}elseif (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $payType = $pay_type."_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
@@ -128,14 +116,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $data['PostService'] = 'Scan';
   if (_is_mobile()) {
     $data['PostService'] = 'H5';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "银联钱包反扫")) {
-  $scan = 'ylf';
-  $payType = $pay_type."_yl";
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $data['TypeService'] = 'UnionPay';
-  $data['PostService'] = 'Card';
-  $data['CardCode'] = $_POST['authCode'];
+  }  
 }else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
@@ -216,3 +197,23 @@ if ($row['Status'] != 'OK') {
 
 ?>
 
+<html>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if(isset($form_data)){
+        foreach ($form_data as $arr_key => $arr_value) {
+      ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php }} ?>
+    </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
+</html>
