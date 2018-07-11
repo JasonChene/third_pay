@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -37,7 +38,8 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mydata1_db->prepare($sql); 
+// $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -57,10 +59,10 @@ $form_url = 'https://pay.xpay123.com/load';//wap提交地址
 
 #第三方参数设置
 $data = array(
-  "pay_memberidpay" => $pay_mid, //商户号
+  "pay_memberid" => $pay_mid, //商户号
   "pay_orderid" => $order_no,//商户订单号
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
-  "pay_applydat" => date('YMDHis'),//交易日期
+  "pay_applydate" => date('YmdHis'),//交易日期
   "pay_channelCode" => '',//交易渠道
   "pay_bankcode" => '',//银行编码
   "pay_notifyurl" => $merchant_url,//异步地址
@@ -68,11 +70,11 @@ $data = array(
 );
 #变更参数设置
 
-  $scan = 'wy';
-  $data['pay_channelCode'] = (_is_mobile()) ? 'BANK' : 'BANK_WAP' ;
-  $data['pay_channelCode'] = $_REQUEST['bank_code'];
-  $payType = $pay_type."_wy";
-  $bankname = $pay_type . "->网银在线充值";
+$scan = 'wy';
+$data['pay_channelCode'] = (!_is_mobile()) ? 'BANK' : 'BANK_WAP' ;
+$data['pay_bankcode'] = $_REQUEST['bank_code'];
+$payType = $pay_type."_wy";
+$bankname = $pay_type . "->网银在线充值";
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -95,26 +97,9 @@ foreach ($data as $arr_key => $arr_val) {
 
 
 $signtext = substr($signtext,0,-1).'&key='.$pay_mkey;
-$sign = md5($signtext);
+$sign = strtoupper(md5($signtext));
 $data['pay_md5sign'] = $sign; 
 
-#curl获取响应值
-// $res = curl_post($form_url,http_build_query($data));
-// $tran = mb_convert_encoding($res,"gb2312","UTF-8");
-// $row = json_decode($tran,1);
-#跳转
-// if ($row['respCode'] != '0000') {
-//   echo  '错误代码:' . $row['respCode']."\n";
-//   echo  '错误讯息:' . $row['respInfo']."\n";
-//   exit;
-// }else {
-
-//   if(_is_mobile()){
-//     $jumpurl = $array['payUrl'];
-//   }else{
-//     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['payUrl']);
-//   }
-// }
 
 #跳轉方法
 $form_data = $data;
