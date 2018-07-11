@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -8,7 +9,7 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 
-function payType_bankname($scan){
+function payType_bankname($scan,$pay_type){
   global $payType, $bankname;
   if(strstr($scan,"wy")){
     $payType = $pay_type . "_wy";
@@ -36,9 +37,7 @@ function payType_bankname($scan){
     $bankname = $pay_type . "->百度钱包在线充值";
   }
 }
-payType_bankname('wx');
-echo $payType;
-echo $bankname;
+
 
 #function
 function curl_post($url,$data){ #POST访问
@@ -70,7 +69,8 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -100,8 +100,7 @@ $data = array(
 );
 #变更参数设置
 
-$scan = 'wx';
-$data['payWay'] = 'wx';
+
 if (_is_mobile()) {
   $form_url = 'http://a.bzzdp.com/api/createWapOrder';//wap提交地址
 }else {
@@ -110,19 +109,17 @@ if (_is_mobile()) {
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $data['payWay'] = 'jd';
-  $bankname = $pay_type."->京东钱包在线充值";
-  $payType = $pay_type."_jd";
 }elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
   $data['payWay'] = 'qq';
-  $bankname = $pay_type."->QQ钱包在线充值";
-  $payType = $pay_type."_qq";
 }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
   $scan = 'bd';
   $data['payWay'] = 'baidu';
-  $bankname = $pay_type."->百度钱包在线充值";
-  $payType = $pay_type."_bd";
+}else {
+  $scan = 'wx';
+  $data['payWay'] = 'wx';
 }
+payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -176,9 +173,16 @@ if ($row['respCode'] != '0000') {
   <body>
     <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if(isset($form_data)){
+        foreach ($form_data as $arr_key => $arr_value) {
+      ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php }} ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
 </html>
+
