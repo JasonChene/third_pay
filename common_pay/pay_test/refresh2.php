@@ -81,7 +81,7 @@ $data = array(
     'bank_code' => $_GET['bank_code'],
     'SubTran' => '马上充值'
 );
-
+echo http_build_query($data);
 $updata_true = update_paytype($_GET['pay_name'],$_GET['pay_type']);
 // header('Location:' .$form_url.'?'.$data_str);
  ?>

@@ -1,0 +1,8 @@
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\obj\Release\ZFPayWeb.csprojResolveAssemblyReference.cache
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\bin\ZFPayWeb.dll.config
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\bin\ZFPayWeb.dll
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\bin\ZFPayWeb.pdb
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\obj\Release\ZFPayWeb.dll
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\obj\Release\ZFPayWeb.pdb
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\bin\Newtonsoft.Json.dll
+E:\Program\gtpay\program\gtpay\trunks\Demo\YBDemo\ZFNew\ZFPayDemo\ZFPayWeb\bin\Newtonsoft.Json.xml

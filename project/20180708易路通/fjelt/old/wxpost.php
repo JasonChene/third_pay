@@ -8,13 +8,14 @@ include_once("../moneyfunc.php");
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, FALSE);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -31,6 +32,33 @@ function QRcodeUrl($code){
   return $code2;
 }
 
+if (strstr($_REQUEST['pay_type'], "微信反扫")) {
+  if (!$_POST['authCode']) {
+    $data = array();
+    foreach ($_REQUEST as $key => $value) {
+      $data[$key] = $value;
+    }
+    ?>
+    <html>
+      <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
+              <p>正在为您跳转中，请稍候......</p>
+              <input type="hidden" name="file" value="wx" />
+              <?php foreach ($data as $arr_key => $arr_value) { ?>
+                <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+              <?php } ?>
+          </form>
+          <script language="javascript">
+              document.getElementById("frm2").submit();
+          </script>
+       </body>
+    </html>
+<?php }}
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -40,8 +68,8 @@ $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
-$pay_mkey = $row['mer_key'];//商戶密钥
-$pay_account = $row['mer_account'];
+$pay_mkey = $row['mer_key'];//商戶私钥
+$pay_account = $row['mer_account'];//商戶公钥
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -49,20 +77,28 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
+$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
+$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
+$private_pem = chunk_split($pay_mkey,64,"\r\n");//转换为pem格式的私钥
+$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
+
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://soso.xinghjk.com/online/gateway';
+$form_url ='https://www.senyopay.com/Api/Pay';
 #第三方参数设置
 $data =array(
-  'version' => "3.0",
-  'method' => "XingHang.online.interface",
-  'partner' => $pay_mid,
-  'banktype' => "",
-  'paymoney' => $mymoney,
-  'ordernumber' => $order_no,
-  'callbackurl' => $merchant_url,
-  'sign' => "",
+  'Merchants' => $pay_mid,
+  'Description' => "pay",
+  'BusinessOrders' => $order_no,
+  'Amount' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  'SubmitIP' => $_SERVER["SERVER_ADDR"],
+  'ReturnUrl' => $return_url,
+  'NotifyUrl' => $merchant_url,
+  'TypeService' => "",
+  'PostService' => "",
+  'OrderTime' => time(),
+  'Sign' => "",
 );
 #变更参数设置
 
@@ -70,30 +106,35 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
-  $data['banktype'] = 'JD';//京东扫码
+  $data['TypeService'] = 'JD';
+  $data['PostService'] = 'Scan';
   if (_is_mobile()) {
-    $data['banktype'] = 'JDWAP';
+    $data['PostService'] = 'H5';
   }
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $payType = $pay_type."_qq";
-  $bankname = $pay_type . "->QQ钱包在线充值";
-  $data['banktype'] = 'QQ';//qq掃碼
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $payType = $pay_type."_bd";
+  $bankname = $pay_type . "->百度钱包在线充值";
+  $data['TypeService'] = 'Baidu';
+  $data['PostService'] = 'Scan';
   if (_is_mobile()) {
-    $data['banktype'] = 'QQWAP';
+    $data['PostService'] = 'H5';
   }
 }elseif (strstr($_REQUEST['pay_type'], "微信反扫")) {
   $scan = 'wxf';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-  $data['banktype'] = 'WEIXINCODE';//微信条形码
+  $data['TypeService'] = 'Wechat';
+  $data['PostService'] = 'Card';
+  $data['CardCode'] = $_POST['authCode'];
 }else {
   $scan = 'wx';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-  $data['banktype'] = 'WEIXIN';//微信掃碼
+  $data['TypeService'] = 'Wechat';
+  $data['PostService'] = 'Scan';
   if (_is_mobile()) {
-    $data['banktype'] = 'WEIXINWAP';
+    $data['PostService'] = 'H5';
   }
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -106,29 +147,61 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr =array('sign');
+ksort($data);
+$noarr =array('Sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext,0,-1).$pay_mkey;
-$data['sign'] = md5($signtext);
+$signtext = substr($signtext,0,-1);
+$Private_Key = openssl_get_privatekey($private_pem);
+if ($Private_Key == false) {
+	echo "打开密钥出错";
+	exit;
+}
+openssl_sign($signtext, $Sign, $Private_Key, OPENSSL_ALGO_MD5);
+$data['Sign'] = base64_encode($Sign);
+$data_json = json_encode($data);
 
-if (_is_mobile() || $scan == 'wxf') {
-  $form_data = $data;
-  $jumpurl = $form_url;
-}else{
 #curl提交
-  $res = curl_post($form_url,$data);
-  $row = json_decode($res,1);
-  if ($row['status'] != '1') {
-    echo  '错误代码:' . $row['status']."\n";
-    echo  '错误讯息:' . $row['message']."\n";
+$res = curl_post($form_url,$data_json);
+$row = json_decode($res,1);
+
+$signtext2 = '';
+ksort($row);
+#跳转  
+if ($row['Status'] != 'OK') {
+  echo  '错误代码:' . $row['Code']."\n";
+  echo  '错误讯息:' . $row['Msg']."\n";
+  exit;
+}else {
+  $noarr =array('Sign');
+  foreach ($row as $arr_key => $arr_val) {
+    if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
+      $signtext2 .= $arr_key.'='.$arr_val.'&';
+    }
+  }
+  $signtext2 = substr($signtext2,0,-1);
+  $PublicKey = openssl_get_publickey($public_pem);
+  if ($PublicKey == false) {
+    echo "打开公钥出错";
+    exit;
+  }
+  $va = openssl_verify($signtext2, base64_decode($row['Sign']), $PublicKey, OPENSSL_ALGO_MD5);
+  if($va != 1) {
+    echo "数据校验不通过";
     exit;
   }else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrurl']);
+    if ($scan == 'wxf') {
+      echo $row['Data'];
+      exit;
+    }elseif(_is_mobile() && $scan != 'wxf'){
+      $jumpurl = $row['Data'];
+    }elseif(!_is_mobile() && $scan != 'wxf'){
+      $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['Data']);
+    }
   }
 }
 #跳轉方法

@@ -8,13 +8,14 @@ include_once("../moneyfunc.php");
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, FALSE);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -39,9 +40,9 @@ $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_doma
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//商户号
-$pay_mkey = $row['mer_key'];//商戶密钥
-$pay_account = $row['mer_account'];
+$pay_mid = $row['mer_id'];//appid
+$pay_mkey = $row['mer_key'];//key
+$pay_account = $row['mer_account'];//session
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -52,49 +53,40 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://soso.xinghjk.com/online/gateway';
+$form_url ='http://bank.fjelt.com/pay/Rest';
+
 #第三方参数设置
+$parms = array(
+  'amount' => (int)$mymoney*100,
+  'payordernumber' => $order_no,
+  'backurl' => $merchant_url,
+  'body' => "pay",
+  'PayType' => "",
+  'SubpayType' => "",
+);
 $data =array(
-  'version' => "3.0",
-  'method' => "XingHang.online.interface",
-  'partner' => $pay_mid,
-  'banktype' => "",
-  'paymoney' => $mymoney,
-  'ordernumber' => $order_no,
-  'callbackurl' => $merchant_url,
+  'appid' => $pay_mid,
+  'method' => "masget.pay.compay.router.font.pay",
+  'format' => "json",
+  'data' => "",
+  'v' => "2.0",
+  'timestamp' => date("Y-m-d H:m:s",time()),
+  'session' => $pay_account,
   'sign' => "",
 );
 #变更参数设置
-
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $bankname = $pay_type."->京东钱包在线充值";
-  $payType = $pay_type."_jd";
-  $data['banktype'] = 'JD';//京东扫码
-  if (_is_mobile()) {
-    $data['banktype'] = 'JDWAP';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+if (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
   $payType = $pay_type."_qq";
   $bankname = $pay_type . "->QQ钱包在线充值";
-  $data['banktype'] = 'QQ';//qq掃碼
-  if (_is_mobile()) {
-    $data['banktype'] = 'QQWAP';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "微信反扫")) {
-  $scan = 'wxf';
-  $payType = $pay_type."_wx";
-  $bankname = $pay_type . "->微信在线充值";
-  $data['banktype'] = 'WEIXINCODE';//微信条形码
-}else {
+  $parms['PayType'] = '5';
+  $parms['SubpayType'] = '10';
+}else{
   $scan = 'wx';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-  $data['banktype'] = 'WEIXIN';//微信掃碼
-  if (_is_mobile()) {
-    $data['banktype'] = 'WEIXINWAP';
-  }
+  $parms['PayType'] = '1';
+  $parms['SubpayType'] = '10';
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -106,51 +98,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr =array('sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
-}
-$signtext = substr($signtext,0,-1).$pay_mkey;
-$data['sign'] = md5($signtext);
+$parms_str = json_encode($parms);
+$aes_parms_str = openssl_encrypt($parms_str,"AES-128-CBC",$pay_mkey,OPENSSL_RAW_DATA,$pay_mkey);
+$aes_parms_str2 = base64_encode($aes_parms_str);
+$data['data'] = str_replace(array('+','/'),array('-','_'),$aes_parms_str2);
 
-if (_is_mobile() || $scan == 'wxf') {
-  $form_data = $data;
-  $jumpurl = $form_url;
-}else{
-#curl提交
-  $res = curl_post($form_url,$data);
-  $row = json_decode($res,1);
-  if ($row['status'] != '1') {
-    echo  '错误代码:' . $row['status']."\n";
-    echo  '错误讯息:' . $row['message']."\n";
-    exit;
-  }else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrurl']);
-  }
-}
-#跳轉方法
+$data['sign'] = strtolower(md5($pay_mkey.$data['appid'].$data['data'].$data['format'].$data['method'].$data['session'].$data['timestamp'].$data['v'].$pay_mkey));
 
+$postdata = http_build_query($data);
+$options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:application/x-www-form-urlencoded','content' => $postdata,'timeout' =>  60 // 超时时间（单位:s）    
+	)  );
+$context = stream_context_create($options);
+$result = file_get_contents($form_url, false, $context);
+$json=json_decode($result);
+if($json->ret!='0')          
+  echo $json->message;
+else          
+header("Location:".$json->data);  
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
