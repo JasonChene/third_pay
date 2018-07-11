@@ -92,8 +92,7 @@ $mysign = md5($signtext);//签名
 $signtext = "";
 $signtext .= 'order_no='.$data['order_no'].'&';
 $signtext .= 'pay_amoumt='.$data['pay_amoumt'].'&';
-$signtext .= 'is_success='.$data['is_success'].'&';
-$signtext = substr($signtext, 0,-1);//验签字串
+$signtext .= 'is_success='.$data['is_success'];
 //write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
 //write_log("mysign=".$mysign);
