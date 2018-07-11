@@ -1,0 +1,50 @@
+function zhongjianBcak(){
+		$backdata  = file_get_contents("php://input");
+		$backcl    = explode('&',$backdata); 
+		$respCode  = $backcl[2];//获取状态	 
+		$respCodes = explode('=',$respCode);
+		//file_put_contents("C:/data.txt",$backdata);
+		
+		$orderno  = $backcl[0];
+		$ordernos = explode('=',$orderno);
+		
+		$payno = $backcl[1];
+		$paynos = explode('=',$payno);
+		
+		$signs =  $backcl[4];
+		$signss = explode('=',$signs);//签名
+		
+		if($respCodes[1] == '00000') {
+			$param = array(
+				'out_trade_no'=> $ordernos[1],//订单号
+				'out_channel_no'=> $paynos[1],//流水号
+			);
+			ksort($param);
+			$requestString = '';
+			foreach($param as $k => $v) {
+				$requestString .= $k . '='.($v);
+				$requestString .= '&';
+			}
+			$requestString = substr($requestString,0,strlen($requestString)-1);
+			$newSign = md5($requestString."&key=97A907DBDD40FE11A907E7ECE1CCF9A6");
+			if($signss[1] == $newSign){
+				//处理业务逻辑
+					
+
+
+
+
+
+
+
+                       echo '{"status":true}';
+					}else{
+					   echo '{"status":false}';
+					}
+			} else {
+		    	echo '{"status":false}';
+			}		
+		} else {
+			echo '{"status":false}';
+		}
+	}
