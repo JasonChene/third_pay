@@ -31,14 +31,14 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "amount" => $_REQUEST['MOAmount'] * 100, //金额分为单位,这个表示10元
+  "amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //金额分为单位,这个表示10元
   "mch_id" => $pay_mid, //商户号 换成我司分配的商户号
   "notify_url" => $merchant_url, //填回调异步通知地址
   "out_trade_no" => $order_no, //订单号必须唯一
   "mch_create_ip" => getClientIp(), //IP地址
   "time_start" => date("YmdHms"), //IP日期
   "body" => '00', //默认00 如果是网银支付 则需要我司提供对应银行编码 
-  "attach" => $_REQUEST['MOAmount'], //商品附加描述信息
+  "attach" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商品附加描述信息
   "nonce_str" => '123456', //随机字符串信息
   "trade_type" => '', //Z15表示微信,F16表示快捷 W16表示网银
   "paytype" => '', //与trade_type对应,快捷传kj,(支付宝wap或者微信h5)传入wap,网银传wy
