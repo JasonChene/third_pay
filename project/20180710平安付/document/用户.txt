@@ -1,0 +1,12 @@
+web.pinganfu1.com
+
+ID:17296
+商户号：1106123999@qq.com   商户密码：123456
+
+
+支付宝banktype：HXALISM
+微信banktype:HXWX
+
+技术QQ:810296846
+
+只有微信支付宝扫码，支付宝h5
