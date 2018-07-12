@@ -1,0 +1,25 @@
+*{margin: 0px; padding: 0}
+html{ height: 100%; }
+body{ height: 100%; font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;}
+body{background: url(../images/webbg2e4e03.jpg) no-repeat scroll center center / cover ;line-height: 1.6;position: relative;}
+.weixinBox { position: absolute; top: 50%; left: 50%; margin-left: -150px; margin-top: -250px; border-radius: 4px; background-color: rgb(255, 255, 255); width: 300px; height: 500px; box-shadow: 0px 2px 10px rgb(153, 153, 153); }
+.weixinBox .qrcode { text-align: center; }
+.weixinBox .qrcode .img { display: block; width: 280px; height: 280px; margin: 15px auto 5px; }
+.weixinBox .qrcode .sub_title { text-align: center; font-size: 14px; color: rgb(53, 53, 53);}
+.weixinBox .qrcode .extension { margin-top: 10px; display: inline-block; text-align: left; }
+.weixinBox .qrcode .extension .cont { padding: 0 10px}
+.weixinBox .qrcode .extension .title { font-weight: 800; font-size: 16px; color: rgb(53, 53, 53); }
+.weixinBox .qrcode .extension .desc { font-size: 12px; color: rgb(53, 53, 53);line-height: 22px;}
+.sub_title img{width: 36.5px; height: 40px;display: inline-block;vertical-align: top;}
+.sub_title p{ line-height: 20px; display: inline-block;}
+@media(min-width: 767px){
+	.weixinBox {margin-left: -150px; margin-top: -265px;width: 360px; height: 530px;}
+	.weixinBox .qrcode .img { display: block; width: 280px; height: 280px; margin: 30px auto 5px; }
+	.weixinBox .qrcode .sub_title { text-align: center; font-size: 17px; color: rgb(53, 53, 53); }
+	.weixinBox .qrcode .extension { margin-top: 20px; display: inline-block; text-align: left; }
+	.weixinBox .qrcode .extension .cont { padding: 0 20px}
+	.weixinBox .qrcode .extension .title { font-weight: 800; font-size: 14px; color: rgb(53, 53, 53); }
+	.weixinBox .qrcode .extension .desc { font-size: 12px; color: rgb(53, 53, 53);line-height: 22px;}
+	.sub_title img{width: 40.5px; height: 45px;display: inline-block;vertical-align: top;}
+	.sub_title p{ line-height: 22.5px; display: inline-block;}
+}

@@ -107,15 +107,11 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 $parms_str = json_encode($parms);
 $aes_parms_str = openssl_encrypt($parms_str,"AES-128-CBC",$pay_mkey,OPENSSL_RAW_DATA,$pay_mkey);
-echo $aes_parms_str."<br>";
 $aes_parms_str2 = base64_encode($aes_parms_str);
-echo $aes_parms_str2."<br>";
 $data['data'] = str_replace(array('+','/'),array('-','_'),$aes_parms_str2);
 
 $data['sign'] = strtolower(md5($pay_mkey.$data['appid'].$data['data'].$data['format'].$data['method'].$data['session'].$data['timestamp'].$data['v'].$pay_mkey));
-// echo "<pre>";
-// var_dump($parms);
-// var_dump($data);
+
 $postdata = http_build_query($data);
 $options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:application/x-www-form-urlencoded','content' => $postdata,'timeout' =>  60 // 超时时间（单位:s）    
 	)  );

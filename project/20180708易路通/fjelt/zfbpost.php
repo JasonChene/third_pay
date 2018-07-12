@@ -79,7 +79,7 @@ $scan = 'zfb';
 $bankname = $pay_type."->支付宝在线充值";
 $payType = $pay_type."_zfb";
 $parms['PayType'] = '2';
-$parms['SubpayType'] = '10';
+$parms['SubpayType'] = '15';//他們說有用户15不行就用10 若是15可以就用15
 if (_is_mobile()) {
   $parms['SubpayType'] = '15';
 }
@@ -111,4 +111,5 @@ if($json->ret!='0')
   echo $json->message;
 else          
   header("Location:".$json->data);
+  exit;
 ?>

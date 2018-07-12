@@ -108,7 +108,6 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-  header("Location:".'../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($json->data));
-  // header("Location:".$json->data);
+  header("Location:".'./qrcode.php?type='.$scan.'&code=' .base64_encode(QRcodeUrl($json->data)));
   exit;  
 ?>
