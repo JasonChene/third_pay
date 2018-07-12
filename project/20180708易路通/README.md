@@ -1,5 +1,5 @@
 第三方名称：易路通  
-档案位置：php@60.245.31.1\xinghpay
+档案位置：php@60.245.31.1/fjelt
  
 商户号:appid
 商户密钥KEY：key  
