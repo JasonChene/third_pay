@@ -32,32 +32,6 @@ function QRcodeUrl($code){
   return $code2;
 }
 
-if (strstr($_REQUEST['pay_type'], "银联反扫")) {
-  if (!$_POST['authCode']) {
-    $data = array();
-    foreach ($_REQUEST as $key => $value) {
-      $data[$key] = $value;
-    }
-    ?>
-    <html>
-      <head>
-          <title>跳转......</title>
-          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-      </head>
-      <body>
-          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
-              <p>正在为您跳转中，请稍候......</p>
-              <input type="hidden" name="file" value="yl" />
-              <?php foreach ($data as $arr_key => $arr_value) { ?>
-                <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-              <?php } ?>
-          </form>
-          <script language="javascript">
-              document.getElementById("frm2").submit();
-          </script>
-       </body>
-    </html>
-<?php }}
 
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
@@ -67,9 +41,9 @@ $stmt = $mydata1_db->prepare($sql);
 //$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//商户号
-$pay_mkey = $row['mer_key'];//商戶私钥
-$pay_account = $row['mer_account'];//商戶公钥
+$pay_mid = $row['mer_id'];//appid
+$pay_mkey = $row['mer_key'];//key
+$pay_account = $row['mer_account'];//session
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -77,53 +51,49 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-$private_pem = chunk_split($pay_mkey,64,"\r\n");//转换为pem格式的私钥
-$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
-
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='https://www.senyopay.com/Api/Pay';
+$form_url ='http://bank.fjelt.com/pay/Rest';
+
 #第三方参数设置
+$parms = array(
+  'amount' => (int)$mymoney*100,
+  'payordernumber' => $order_no,
+  'backurl' => $merchant_url,
+  'body' => "pay",
+  'PayType' => "",
+  'SubpayType' => "",
+);
 $data =array(
-  'Merchants' => $pay_mid,
-  'Description' => "pay",
-  'BusinessOrders' => $order_no,
-  'Amount' => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  'SubmitIP' => $_SERVER["SERVER_ADDR"],
-  'ReturnUrl' => $return_url,
-  'NotifyUrl' => $merchant_url,
-  'TypeService' => "",
-  'PostService' => "",
-  'OrderTime' => time(),
-  'Sign' => "",
+  'appid' => $pay_mid,
+  'method' => "masget.pay.compay.router.font.pay",
+  'format' => "json",
+  'data' => "",
+  'v' => "2.0",
+  'timestamp' => date("Y-m-d H:m:s",time()),
+  'session' => $pay_account,
+  'sign' => "",
 );
 #变更参数设置
-
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $payType = $pay_type."_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
-  $data['TypeService'] = 'UnionPay';
-  $data['PostService'] = 'Scan';
-  if (_is_mobile()) {
-    $data['PostService'] = 'H5';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "银联反扫")) {
-  $scan = 'ylf';
-  $payType = $pay_type."_yl";
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $data['TypeService'] = 'UnionPay';
-  $data['PostService'] = 'Card';
-  $data['CardCode'] = $_POST['authCode'];
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '03';
+}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $payType = $pay_type."_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '02';
 }else {
   $scan = 'wy';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
-  $data['TypeService'] = 'Bank';
-  $data['PostService'] = $_REQUEST['bank_code'];
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '01';
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -135,83 +105,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr =array('Sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
-}
-$signtext = substr($signtext,0,-1);
-$Private_Key = openssl_get_privatekey($private_pem);
-if ($Private_Key == false) {
-	echo "打开密钥出错";
-	exit;
-}
-openssl_sign($signtext, $Sign, $Private_Key, OPENSSL_ALGO_MD5);
-$data['Sign'] = base64_encode($Sign);
-$data_json = json_encode($data);
+$parms_str = json_encode($parms);
+$aes_parms_str = openssl_encrypt($parms_str,"AES-128-CBC",$pay_mkey,OPENSSL_RAW_DATA,$pay_mkey);
+$aes_parms_str2 = base64_encode($aes_parms_str);
+$data['data'] = str_replace(array('+','/'),array('-','_'),$aes_parms_str2);
 
-#curl提交
-$res = curl_post($form_url,$data_json);
-$row = json_decode($res,1);
+$data['sign'] = strtolower(md5($pay_mkey.$data['appid'].$data['data'].$data['format'].$data['method'].$data['session'].$data['timestamp'].$data['v'].$pay_mkey));
 
-$signtext2 = '';
-ksort($row);
-#跳转  
-if ($row['Status'] != 'OK') {
-  echo  '错误代码:' . $row['Code']."\n";
-  echo  '错误讯息:' . $row['Msg']."\n";
-  exit;
-}else {
-  $noarr =array('Sign');
-  foreach ($row as $arr_key => $arr_val) {
-    if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-      $signtext2 .= $arr_key.'='.$arr_val.'&';
-    }
-  }
-  $signtext2 = substr($signtext2,0,-1);
-  $PublicKey = openssl_get_publickey($public_pem);
-  if ($PublicKey == false) {
-    echo "打开公钥出错";
-    exit;
-  }
-  $va = openssl_verify($signtext2, base64_decode($row['Sign']), $PublicKey, OPENSSL_ALGO_MD5);
-  if($va != 1) {
-    echo "数据校验不通过";
-    exit;
-  }else {
-    if ($scan == 'ylf') {
-      echo $row['Data'];
-      exit;
-    }elseif(( _is_mobile() &&  $scan == 'yl' ) || $scan =='wy' ){
-      $jumpurl = $row['Data'];
-    }elseif(!_is_mobile() && $scan == 'yl'){
-      $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['Data']);
-    }
-  }
-}
-#跳轉方法
-
+$postdata = http_build_query($data);
+$options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:application/x-www-form-urlencoded','content' => $postdata,'timeout' =>  60 // 超时时间（单位:s）    
+	)  );
+$context = stream_context_create($options);
+$result = file_get_contents($form_url, false, $context);
+$json=json_decode($result);
+if($json->ret!='0')          
+  echo $json->message;
+else          
+  header("Location:".$json->data);
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>

@@ -1,33 +1,29 @@
-<? header("content-Type: text/html; charset=UTF-8"); ?>
+<? header("content-Type: text/html; charset=utf-8"); ?>
 <?php
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
-//write_log("notify");
 
-
-
-#接收资料
-#post方法
 $data = array();
+
+#post方法
+//write_log('POST方法');
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	//write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['returncode'];//成功讯息
-$success_code = "2";//文档上的成功讯息
+$order_no = $data['order_sn']; //订单号
+$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
 $sign = $data['sign'];//签名
-$echo_msg = "SUCCESS";//回调讯息
+$echo_msg = "ok";//回调讯息(文檔沒寫)
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -35,8 +31,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -48,22 +44,21 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign');//不加入签名的array key值
 ksort($data);
-$signtext = "";
+$noarr =array('sign');
+$signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_key . '^' . $arr_val . '&';
+  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
+		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext, 0,-1).'&key='.$pay_mkey;//验签字串
+$signtext = substr($signtext,0,-1).'&app_key='.$pay_mkey;
+$mysign = md5($signtext);
 //write_log("signtext=".$signtext);
-$mysign = strtoupper(md5($signtext));//签名
 //write_log("mysign=".$mysign);
 
 #到账判断
-if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
+if ($mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
@@ -86,14 +81,9 @@ if ($success_msg == $success_code) {
 			//write_log("支付失败");
 			exit;
 		}
-	}else{
-		echo ('签名不正确！');
-		//write_log("签名不正确！");
-		exit;
-	}
 }else{
-	echo ("交易失败");
-	//write_log("交易失败");
+	echo ("签名不正确！");
+	//write_log("签名不正确！");
 	exit;
 }
 
