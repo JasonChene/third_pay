@@ -111,8 +111,10 @@ $options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:a
 $context = stream_context_create($options);
 $result = file_get_contents($form_url, false, $context);
 $json=json_decode($result);
-if($json->ret!='0')          
+if($json->ret!='0'){
   echo $json->message;
-else          
-header("Location:".$json->data);  
+}else{
+  header("Location:".'./qrcode.php?type='.$scan.'&code=' .base64_encode(QRcodeUrl($json->data)));
+  exit;  
+}
 ?>

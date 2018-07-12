@@ -4,35 +4,18 @@ include_once("../../../database/mysql.config.php");
 //include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-$data = array();
-#接收资料
-$input_data=file_get_contents("php://input");
-$res=json_decode($input_data,1);//json回传资料
-foreach ($res as $key => $value) {
+//write_log("return");
+
+#post方法
+//write_log('post方法');
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	//write_log($key."=".$value);
 }
 
-#设定固定参数
-$order_no = $data['BusinessOrders']; //订单号
-$mymoney = number_format($data['Amount']/100, 2, '.', ''); //订单金额
-$success_msg = $data['OrderStatus'];//成功讯息
-$success_code = "SUCCESS";//文档上的成功讯息(根本沒有)
-$sign = base64_decode($data['Sign']);//签名
-$echo_msg = "SUCCESS";//回调讯息
 
-#根据订单号读取资料库
-$params = array(':m_order' => $order_no);
-$sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
-$stmt->execute($params);
-$row = $stmt->fetch();
-
-#获取该订单的支付名称
-$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-$params = array(':pay_type' => $pay_type);
-$sql = "select * from pay_set where pay_type=:pay_type";
+$params = array(':pay_name' => '易路通');
+$sql = "select * from pay_set where pay_name=:pay_name";
 $stmt = $mydata1_db->prepare($sql);
 //$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
@@ -45,38 +28,43 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-#验签方式
-$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-$private_pem = chunk_split($pay_mkey,64,"\r\n");//转换为pem格式的私钥
-$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
-//write_log("public_pem=".$public_pem);
-ksort($data);
-$noarr =array('Sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
+#解析密文
+$method = $_POST['Method'];
+$data   = $_POST['Data'];
+$sign   = $_POST['Sign'];
+$appid  = $_POST['Appid'];
+$mySign = strtolower(md5($data . $pay_mkey));
+//write_log("mySign=".$mySign);
+if ($mySign != $sign) {    
+	exit(json_encode(['message' => '验证签名失败', 'response' => '01']));
 }
-$signtext = substr($signtext,0,-1);
-//write_log("signtext=".$signtext);
-$PublicKey = openssl_get_publickey($public_pem);
-if ($PublicKey == false) {
-	echo "打开公钥出错";
-	//write_log("打开公钥出错=".$PublicKey);
-	exit;
+$aes_data =base64_decode( str_replace('-','+',str_replace('_', '/',  $data)));
+//write_log("aes_data=".$aes_data);
+$input = openssl_decrypt($aes_data,'AES-128-CBC',$pay_mkey,OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $pay_mkey);
+//write_log("input=".$input);
+$result   = json_decode(rtrim($input, "\0"),TRUE);
+//write_log("result=".$result);
+foreach ($result as $key => $value) {
+	//write_log($key."=".$value);
 }
-$va = openssl_verify($signtext, $sign, $PublicKey, OPENSSL_ALGO_MD5);
-if($va != 1) {
-  echo "数据校验不通过";
-  //write_log("数据校验不通过=".$va);
-  exit;
-}
+if ($method == 'paymentreport') {    
+	$ordernumber  = $result['ordernumber']; //商户订单号    
+	$amount       = $result['amount']; //交易金额    
+	$payorderid   = $result['payorderid']; //交易流水号    
+	$busin= $result['businesstime']; //交易时间yyyy-MM-dd hh:mm:ss    
+	$respcode     = $result['respcode']; //交易状态 1-待支付 2-支付完成 3-已关闭 4-交易撤销    
+	$extraparams  = $result['extraparams']; //扩展内容 原样返回    
+	$respmsg      = $result['respmsg']; //状态说明    
+	//这边写你支付完成的业务逻辑    
+	//处理成功返回    
+	$mymoney = number_format($amount/100, 2, '.', ''); //订单金额
+	$echo_msg = json_encode(['message' => 'success', 'response' => '00']);
+}else {
+	$echo_msg = json_encode(['message' => '未识别的Method', 'response' => '01']);
+} 
 
 #到账判断
-if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
+if ($respcode == "2") {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			$message = ("会员信息不存在，无法入账");
@@ -89,9 +77,6 @@ if ($success_msg == $success_code) {
 		} else {
 			$message = ("支付失败");
 		}
-	}else{
-		$message = ('签名不正确！');
-	}
 }else{
 	$message = ("交易失败");
 }
@@ -118,13 +103,13 @@ if ($success_msg == $success_code) {
 		<tr>
 			<td style="width: 120px; text-align: right;">订单号：</td>
 			<td style="padding-left: 10px;">
-				<label id="lborderno"><?php echo $order_no; ?></label>
+				<label id="lborderno"><?php echo $ordernumber; ?></label>
 			</td>
 		</tr>
 		<tr>
 			<td style="width: 120px; text-align: right;">充值金额：</td>
 			<td style="padding-left: 10px;">
-				<label id="lbpayamount"><?php echo $mymoney; ?></label>
+				<label id="lbpayamount"><?php echo $amount; ?></label>
 			</td>
 		</tr>
 		<tr>

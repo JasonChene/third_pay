@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 #function
@@ -31,12 +31,13 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -74,13 +75,19 @@ $data =array(
   'sign' => "",
 );
 #变更参数设置
-
-$scan = 'qq';
-$payType = $pay_type."_qq";
-$bankname = $pay_type . "->QQ钱包在线充值";
-$parms['PayType'] = '5';
-$parms['SubpayType'] = '10';
-
+if (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $payType = $pay_type."_qq";
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $parms['PayType'] = '5';
+  $parms['SubpayType'] = '10';
+}else{
+  $scan = 'wx';
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $parms['PayType'] = '1';
+  $parms['SubpayType'] = '10';
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -104,9 +111,10 @@ $options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:a
 $context = stream_context_create($options);
 $result = file_get_contents($form_url, false, $context);
 $json=json_decode($result);
-if($json->ret!='0')          
+if($json->ret!='0'){
   echo $json->message;
-else          
+}else{
   header("Location:".'./qrcode.php?type='.$scan.'&code=' .base64_encode(QRcodeUrl($json->data)));
   exit;  
+}
 ?>
