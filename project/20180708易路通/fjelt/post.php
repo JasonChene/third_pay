@@ -32,6 +32,7 @@ function QRcodeUrl($code){
   return $code2;
 }
 
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -75,13 +76,25 @@ $data =array(
   'sign' => "",
 );
 #变更参数设置
-
-$scan = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-$parms['PayType'] = '1';
-$parms['SubpayType'] = '10';
-
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  $scan = 'yl';
+  $payType = $pay_type."_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '03';
+}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $payType = $pay_type."_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '02';
+}else {
+  $scan = 'wy';
+  $payType = $pay_type."_wy";
+  $bankname = $pay_type . "->网银在线充值";
+  $parms['PayType'] = '0';
+  $parms['SubpayType'] = '01';
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -94,11 +107,15 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 $parms_str = json_encode($parms);
 $aes_parms_str = openssl_encrypt($parms_str,"AES-128-CBC",$pay_mkey,OPENSSL_RAW_DATA,$pay_mkey);
+echo $aes_parms_str."<br>";
 $aes_parms_str2 = base64_encode($aes_parms_str);
+echo $aes_parms_str2."<br>";
 $data['data'] = str_replace(array('+','/'),array('-','_'),$aes_parms_str2);
 
 $data['sign'] = strtolower(md5($pay_mkey.$data['appid'].$data['data'].$data['format'].$data['method'].$data['session'].$data['timestamp'].$data['v'].$pay_mkey));
-
+// echo "<pre>";
+// var_dump($parms);
+// var_dump($data);
 $postdata = http_build_query($data);
 $options = array( 'http' => array( 'method' => 'POST','header' =>'Content-type:application/x-www-form-urlencoded','content' => $postdata,'timeout' =>  60 // 超时时间（单位:s）    
 	)  );
@@ -108,11 +125,5 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-<<<<<<< HEAD
-  echo $json->data;
-=======
->>>>>>> parent of f503a1d... 易路通
-  header("Location:".'../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($json->data));
-  // header("Location:".$json->data);
-  exit;  
+  header("Location:".$json->data);
 ?>
