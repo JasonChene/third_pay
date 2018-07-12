@@ -1,6 +1,6 @@
 <?php
 
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 if(isset($_GET['type']))
 {
 	if($_GET['type'] == "wx")
