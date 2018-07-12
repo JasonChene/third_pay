@@ -50,7 +50,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $data = array(
   "user_id" => $pay_mid, //商户号
   "out_trade_no" => $order_no,//商户流水号
-  "product_id" => '907',
+  "product_id" => '',
   "return_url" => $return_url,
   "notify_url" => $merchant_url,
   "subject" => "iPhoneX",//订单标题
@@ -61,9 +61,22 @@ $data = array(
 );
 #变更参数设置
 $form_url = 'http://wallet.donggshenke.com/index/pay/gateway';//wap提交地址
-$scan = 'wy';
-$payType = $pay_type . "_wy";
-$bankname = $pay_type . "->网银在线充值";
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  $scan = 'yl';
+  $payType = $pay_type."_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $data['product_id'] = '912';
+}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $payType = $pay_type."_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $data['product_id'] = '915';
+}else {
+  $scan = 'wy';
+  $payType = $pay_type . "_wy";
+  $bankname = $pay_type . "->网银在线充值";
+  $data['product_id'] = '907';
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
