@@ -75,12 +75,14 @@ $data =array(
   'sign' => "",
 );
 #变更参数设置
-
-$scan = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-$parms['PayType'] = '1';
+$scan = 'zfb';
+$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_zfb";
+$parms['PayType'] = '2';
 $parms['SubpayType'] = '10';
+if (_is_mobile()) {
+  $parms['SubpayType'] = '15';
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -108,7 +110,5 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-  header("Location:".'../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($json->data));
-  // header("Location:".$json->data);
-  exit;  
+  header("Location:".$json->data);
 ?>

@@ -31,7 +31,6 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
-
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -76,10 +75,10 @@ $data =array(
 );
 #变更参数设置
 
-$scan = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-$parms['PayType'] = '1';
+$scan = 'qq';
+$payType = $pay_type."_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
+$parms['PayType'] = '5';
 $parms['SubpayType'] = '10';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -108,7 +107,5 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-  header("Location:".'../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($json->data));
-  // header("Location:".$json->data);
-  exit;  
+  header("Location:".$json->data);  
 ?>

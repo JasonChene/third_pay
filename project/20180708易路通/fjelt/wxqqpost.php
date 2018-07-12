@@ -75,13 +75,19 @@ $data =array(
   'sign' => "",
 );
 #变更参数设置
-
-$scan = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-$parms['PayType'] = '1';
-$parms['SubpayType'] = '10';
-
+if (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $payType = $pay_type."_qq";
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $parms['PayType'] = '5';
+  $parms['SubpayType'] = '10';
+}else{
+  $scan = 'wx';
+  $payType = $pay_type."_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $parms['PayType'] = '1';
+  $parms['SubpayType'] = '10';
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -108,7 +114,5 @@ $json=json_decode($result);
 if($json->ret!='0')          
   echo $json->message;
 else          
-  header("Location:".'../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($json->data));
-  // header("Location:".$json->data);
-  exit;  
+header("Location:".$json->data);  
 ?>
