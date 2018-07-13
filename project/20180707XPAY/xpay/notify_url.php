@@ -17,7 +17,7 @@ foreach ($_POST as $key => $value) {
 
 #设定固定参数
 $order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amoumt'], 2, '.', ''); //订单金额
+$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
 $success_msg = $data['returncode'];//成功讯息
 $success_code = "2";//文档上的成功讯息
 $sign = $data['sign'];//签名

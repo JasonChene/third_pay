@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -34,7 +35,8 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -69,13 +71,13 @@ $data =array(
     'signData' => ''//加密数据
 );
 #变更参数设置
-$form_url ='http://106.14.211.216:8070/payment/ScanPayApply.do';//扫码网关
+$form_url ='http://pay.taikangxm.cn:31588/payment/ScanPayApply.do';//扫码网关
 $scan = 'wx';
 $payType = $pay_type."_wx";
 $bankname = $pay_type . "->微信在线充值";
 $data['payMode'] = '00022';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
 if (_is_mobile()) {
-    $form_url ='http://106.14.211.216:8070/payment/PayApply.do';//h5网关
+    $form_url ='http://pay.taikangxm.cn:31588/payment/PayApply.do';//h5网关
     unset($data['prdAmt']);
     $data['payMode'] = '00016';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
     $data['pnum'] = '1';//商品数量
@@ -113,13 +115,6 @@ if (!_is_mobile()) {
   if ($row['retCode'] != '1') {
     echo '返回状态码:' . $row['status'] . "\n";//返回状态码
     echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
-    echo '<pre>';
-    echo '请求报文：<br>';
-    var_dump($data);
-    echo '响应报文：<br>';
-    var_dump($res);
-    echo '响应报文阵列：<br>';
-    var_dump($row);
     exit;
   } else {
     #不是手机
