@@ -43,7 +43,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://chay.jursm.com/bank/index.aspx';//接入提交地址
+$form_url = 'http://open.74sr.com/bank/index.aspx';//接入提交地址
 $scan = 'zfb';
 $data['type'] = '992';
 if (_is_mobile()) {
