@@ -1,0 +1,15 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','北京银行','BCCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','光大银行','CEB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','广发银行','GDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','交通银行','BOCO');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','上海银行','SHB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','浦发银行','SPDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','兴业银行','CIB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','邮政储蓄银行','PSBS');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','招商银行','CMB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','中国银行','BOC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('星航','中信银行','CTTIC');
