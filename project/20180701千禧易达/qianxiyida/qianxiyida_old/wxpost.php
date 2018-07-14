@@ -67,14 +67,25 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://api.qianxiyida.com/ecpay/xbdo';//提交地址
-$scan = 'wx';
-$data['order_type'] = '2701';
-if (_is_mobile()) {
-  $data['order_type'] = '2706';
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['order_type'] = '2709';
+  $bankname = $pay_type . "->京东钱包在线充值";
+  $payType = $pay_type . "_jd";
+} elseif (strstr($pay_type, "百度钱包")) {
+  $scan = 'bd';
+  $data['order_type'] = '2710';
+  $bankname = $pay_type . "->百度钱包在线充值";
+  $payType = $pay_type . "_bd";
+} else {
+  $scan = 'wx';
+  $data['order_type'] = '2701';
+  if (_is_mobile()) {
+    $data['order_type'] = '2706';
+  }
+  $bankname = $pay_type . "->微信在线充值";
+  $payType = $pay_type . "_wx";
 }
-$bankname = $pay_type . "->微信在线充值";
-$payType = $pay_type . "_wx";
-
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
