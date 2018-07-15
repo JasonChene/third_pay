@@ -16,20 +16,20 @@ if ($data['file'] == 'wx') {
 }
 
 ?>
-<center><h1>圣耀支付</h1></center>
+<center><h1>快捷支付</h1></center>
 <html>
   <head>
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
       <form name="dinpayForm" method="post" id="frm" action=<?php echo $file_name; ?> target="_self">
-        <center><h3>快捷支付，请输入银行预留手机号</h3></center>
+        <center><h3>请输入银行预留手机号</h3></center>
         <center><input type="text" name="phoneNo" value="" /></center>
         <center><h3>请输入银行卡号</h3></center>
         <center><input type="text" name="acctNo" value="" /></center>
         <center><h3>请输入银行卡预留姓名</h3></center>
         <center><input type="text" name="customerName" value="" /></center>
-        <center><h3>请输入身份证号/h3></center>
+        <center><h3>请输入身份证号</h3></center>
         <center><input type="text" name="cerdNo" value="" /></center>
         <center><input type="hidden" name="cerdType" value="1" /></center>
       <?php foreach ($data as $arr_key => $arr_value) { ?>
