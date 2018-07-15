@@ -58,12 +58,14 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://pay.pinganfu1.com/PayBank.aspx';//接入提交地址
+$form_url = 'http://api.pocopayment.com/v2';//接入提交地址
 
 #第三方参数设置
 $data = array(
-  "partner" => $pay_mid, //商户ID
-  "banktype" => '', //类型
+  "partner_id" => $pay_mid, //商户ID
+  "service" => '', //类型
+  "sign_type" => '',//签名方式 RSA和RSA2
+  "rand_str" => '',//随机字符串，必需 32 位
   "paymoney" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "ordernumber" => $order_no, //商户订单号
   "callbackurl" => $merchant_url, //下行异步通知地址
