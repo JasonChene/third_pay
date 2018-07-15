@@ -43,8 +43,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'].$row['wy_returnUrl'];
-$merchant_url = $row['pay_domain'].$row['wy_synUrl'];
+$return_url = $row['pay_domain'].$row['wx_returnUrl'];
+$merchant_url = $row['pay_domain'].$row['wx_synUrl'];
 $pay_type = $row['pay_type'];
 if($pay_mid == "" || $pay_mkey == "")
 {

@@ -11,7 +11,7 @@ if(function_exists("date_default_timezone_set"))
 }
 //获取第三方的资料
 $params = array(':pay_type'=>$_REQUEST['pay_type']);
-$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.qq_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl,t1.qq_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
+$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
@@ -19,8 +19,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'].$row['qq_returnUrl'];
-$merchant_url = $row['pay_domain'].$row['qq_synUrl'];
+$return_url = $row['pay_domain'].$row['wx_returnUrl'];
+$merchant_url = $row['pay_domain'].$row['wx_synUrl'];
 $pay_type = $row['pay_type'];
 if($pay_mid == "" || $pay_mkey == "")
 {
