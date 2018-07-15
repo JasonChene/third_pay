@@ -1,7 +1,7 @@
-﻿<?php
+<?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 $top_uid = $_REQUEST['top_uid'];
 
@@ -11,7 +11,7 @@ if(function_exists("date_default_timezone_set"))
 }
 //获取第三方的资料
 $params = array(':pay_type'=>$_REQUEST['pay_type']);
-$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
+$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.qq_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl,t1.qq_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
@@ -19,8 +19,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'].$row['wx_returnUrl'];
-$merchant_url = $row['pay_domain'].$row['wx_synUrl'];
+$return_url = $row['pay_domain'].$row['qq_returnUrl'];
+$merchant_url = $row['pay_domain'].$row['qq_synUrl'];
 $pay_type = $row['pay_type'];
 if($pay_mid == "" || $pay_mkey == "")
 {
@@ -41,51 +41,23 @@ $public_key = $pay_account;
 $private_key = $pay_mkey;
 // 请求数据赋值
 $data = array();
+
 $data['merchantNo'] =  $pay_mid;
 $data['requestNo'] =  getOrderNo(); //支付流水
 $data['amount'] = number_format($_REQUEST['MOAmount']*100, 0, '.', '');//金额（分）
-$data['payMethod'] = '';//业务代码
+$data['payMethod'] = '6011';//业务代码
 $data['backUrl'] = $notifyurl;   //服务器返回URL
 $data['pageUrl'] = $returnurl;   //页面返回URL
 $data['agencyCode'] = '';
+$data['cashier'] = '0';
 $data['payDate'] = time();   //支付时间，必须为时间戳
 $data['remark1'] = 'GOODS'; 
 $data['remark2'] ='';
 $data['remark3'] = '';
 
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $bankname = $pay_type."->京东钱包在线充值";
-  $payType = $pay_type."_jd";
-  $data['payMethod'] = '6010';//京东扫码
-  if (_is_mobile()) {
-    $data['payMethod'] = '6018';//京东H5
-  }
-}elseif (strstr($pay_type, "微信反扫")) {
-  $scan = 'wxfs';
-  $bankname = $row['pay_type']."->微信在线充值";
-  $payType = $row['pay_type']."_wx";
-  $data['payMethod'] = '6013';
-  $data['authCode'] = "0000";//授权码，填入任意数字即可
-}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $bankname = $row['pay_type']."->QQ钱包在线充值";
-  $payType = $row['pay_type']."_qq";
-  $data['payMethod'] = '6011';//QQ扫码
-  if (_is_mobile()) {
-    $data['payMethod'] = '6016';//QQWAP
-  }
-} else {
-  $scan = 'wx';
-  $bankname = $row['pay_type']."->微信在线充值";
-  $payType = $row['pay_type']."_wx";
-  $data['payMethod'] = '6001';//微信扫码
-  if (_is_mobile()) {
-    $data['payMethod'] = '6005';//微信WAP
-  }
+if (_is_mobile()) {
+    $data["payMethod"] = "6016";
 }
-
-
 
 $signature=$pay_mid."|".$data['requestNo']."|".$data['amount']."|".$data['pageUrl']."|".$data['backUrl']."|".$data['payDate']."|".$data['agencyCode']."|".$data['remark1']."|".$data['remark2']."|".$data['remark3'];
 
@@ -118,14 +90,15 @@ $data['signature'] = $sign;
 
 
 
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
-        curl_setopt($ch, CURLOPT_POST, TRUE); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
-        curl_setopt($ch, CURLOPT_URL, $payUrl);
-        $response =  curl_exec($ch);
-        curl_close($ch);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+curl_setopt($ch, CURLOPT_POST, TRUE); 
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
+curl_setopt($ch, CURLOPT_URL, $payUrl);
+$response =  curl_exec($ch);
+curl_close($ch);
 
 
 
@@ -133,10 +106,6 @@ $str = stripslashes($response);
 
 //转成Array
 $arr = json_decode($str,true);  
-//转成json
-$php_json = json_encode($response);
-//去掉返回字符串
-
 
 //获取返回字符串sign
 $resultsign=$arr['sign'];
@@ -149,7 +118,8 @@ $result=openssl_verify($original_str,base64_decode($resultsign),$public_key);
 
 
 
-
+$bankname = $row['pay_type']."->QQ钱包在线充值";
+$payType = $row['pay_type']."_qq";
 
 $result_insert = insert_online_order($_REQUEST['S_Name'] , $data['requestNo'] ,$value,$bankname,$payType,$top_uid);
 	
@@ -164,28 +134,24 @@ else if ($result_insert == -2)
 	exit;
 }
 
-
-
-
 if ( $result == "1" ) {
-  if ($scan == 'wxfs' || _is_mobile()) {
-    $jumpurl = stripslashes($arr['backQrCodeUrl']);
-  }else{
-    if(strstr($arr['backQrCodeUrl'],"&")){
-        $code=str_replace("&", "aabbcc", $arr['backQrCodeUrl']);//有&换成aabbcc
-    }else{
-        $code=$arr['backQrCodeUrl'];
-    }
-    $jumpurl =('../qrcode/qrcode.php?type='.$scan.'&code=' .$code);
-    
-  }
-	
+	if (_is_mobile()) {
+		$jumpurl = stripslashes($arr['backQrCodeUrl']);
+	}else {
+		if(strstr($arr['backQrCodeUrl'],"&")){
+            $code=str_replace("&", "aabbcc", $arr['backQrCodeUrl']);//有&换成aabbcc
+        }else{
+            $code=$arr['backQrCodeUrl'];
+        }
+        $jumpurl =('../qrcode/qrcode.php?type=qq&code=' .$code);
+	}
 }else{
   echo $arr['msg'];
   exit;
-}			
+}				
 
 ?>
+
 <html>
   <head>
     <title>跳转......</title>

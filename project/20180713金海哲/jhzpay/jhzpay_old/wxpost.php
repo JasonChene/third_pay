@@ -1,7 +1,7 @@
 ﻿<?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 $top_uid = $_REQUEST['top_uid'];
 
@@ -12,8 +12,8 @@ if(function_exists("date_default_timezone_set"))
 //获取第三方的资料
 $params = array(':pay_type'=>$_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -67,14 +67,6 @@ if (strstr($pay_type, "京东钱包")) {
   $payType = $row['pay_type']."_wx";
   $data['payMethod'] = '6013';
   $data['authCode'] = "0000";//授权码，填入任意数字即可
-}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $bankname = $row['pay_type']."->QQ钱包在线充值";
-  $payType = $row['pay_type']."_qq";
-  $data['payMethod'] = '6011';//QQ扫码
-  if (_is_mobile()) {
-    $data['payMethod'] = '6016';//QQWAP
-  }
 } else {
   $scan = 'wx';
   $bankname = $row['pay_type']."->微信在线充值";
