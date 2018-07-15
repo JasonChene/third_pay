@@ -122,7 +122,7 @@ $result=openssl_verify($original_str,base64_decode($resultsign),$public_key);
 $bankname = $row['pay_type']."->支付宝在线充值";
 $payType = $row['pay_type']."_zfb";
 
-$result_insert = insert_online_order($_REQUEST['S_Name'] , $data['requestNo'] ,$data['amount'],$bankname,$payType,$top_uid);
+$result_insert = insert_online_order($_REQUEST['S_Name'] , $data['requestNo'] ,$value,$bankname,$payType,$top_uid);
 	
 if ($result_insert == -1)
 {
@@ -151,6 +151,7 @@ if ( $result == "1" ) {
 	}
 }else{
   echo $arr['msg'];
+  exit;
 }			
 
 ?>

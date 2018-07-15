@@ -146,6 +146,7 @@ if ( $result == "1" ) {
 	}
 }else{
   echo $arr['msg'];
+  exit;
 }				
 
 ?>

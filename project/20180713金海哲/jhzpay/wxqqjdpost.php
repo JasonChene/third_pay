@@ -66,6 +66,14 @@ if (strstr($pay_type, "京东钱包")) {
   $payType = $row['pay_type']."_wx";
   $data['payMethod'] = '6013';
   $data['authCode'] = "0000";//授权码，填入任意数字即可
+}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $bankname = $row['pay_type']."->QQ钱包在线充值";
+  $payType = $row['pay_type']."_qq";
+  $data['payMethod'] = '6011';//QQ扫码
+  if (_is_mobile()) {
+    $data['payMethod'] = '6016';//QQWAP
+  }
 } else {
   $scan = 'wx';
   $bankname = $row['pay_type']."->微信在线充值";
