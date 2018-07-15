@@ -164,7 +164,7 @@ $data['signature'] = $sign;
 
 if ($scan == 'wy' || $scan == 'ylkj') {
     $form_data =  $data;
-    $jumpurl = $form_url;
+    $jumpurl = $payUrl;
 }elseif ($scan == 'yl') {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
