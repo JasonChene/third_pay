@@ -1,0 +1,17 @@
+接口文档：http://apidoc.skyfu.net/
+
+测试环境：  api地址：http://test.api.skyfu.net/
+
+测试密钥：3034B5B50D464995AA8DADFF88425F25
+
+
+
+
+
+生产环境：
+api地址：http://qzhs.api.skyfu.net/
+生产密钥：DF66F674FB9E4FB198AF73B9B89EC069
+后台管理系统：
+地址：http://qzhs.m.skyfu.net/erp/index
+账号：1078133625750792
+密码：qaz123456
