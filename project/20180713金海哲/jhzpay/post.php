@@ -22,12 +22,6 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
         $data[$key] = $value;
       }
       ?>
-      <html>
-        <head>
-            <title>跳转......</title>
-            <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-        </head>
-        <body>
             <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
                 <p>正在为您跳转中，请稍候......</p>
                 <input type="hidden" name="file" value="yl" />
@@ -38,8 +32,6 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
             <script language="javascript">
                 document.getElementById("frm2").submit();
             </script>
-         </body>
-      </html>
   <?php }}
 //获取第三方的资料
 $params = array(':pay_type'=>$_REQUEST['pay_type']);
@@ -209,12 +201,6 @@ if ($scan == 'wy' || $scan == 'ylkj') {
 ?>
 </head>
 <body>
-    <html>
-    <head>
-        <title>跳转......</title>
-        <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-    </head>
-    <body>
     <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
         <p>正在为您跳转中，请稍候......</p>
         <?php if (isset($form_data)) {  foreach ($form_data as $arr_key => $arr_value) { ?>
@@ -224,7 +210,5 @@ if ($scan == 'wy' || $scan == 'ylkj') {
         <script language="javascript">
         document.getElementById("frm1").submit();
         </script>
-    </body>
-    </html>
 </body>
 </html>
