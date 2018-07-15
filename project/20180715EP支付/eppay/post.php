@@ -93,20 +93,15 @@ $data = array(
   "notifyUrl" => $merchant_url, //异步通知地址
   "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "payType" => '', //支付方式(alipay、wxpay、qqpay、jdpay、chinapay、gateway，默认是chianpay)
-  // "userId" => $pay_mid, //用户标记  （chinapay和gateway必传）
-  // "bankName" => '',//银行名称（gateway必传）
+  "userId" => $pay_mid, //用户标记  （chinapay和gateway必传）
+  "bankName" => $_REQUEST['bank_code'],//银行名称（gateway必传）
   "sign" => '', //MD5签名
 );
 
 #变更参数设置
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['payType'] = 'jdpay';
-}else {
-  $scan = 'wx';
-  $data['payType'] = 'wxpay';
-}
+$scan = 'wy';
 payType_bankname($scan,$pay_type);
+$data['payType'] = 'gateway';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

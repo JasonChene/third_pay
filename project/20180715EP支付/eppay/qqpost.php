@@ -99,14 +99,9 @@ $data = array(
 );
 
 #变更参数设置
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['payType'] = 'jdpay';
-}else {
-  $scan = 'wx';
-  $data['payType'] = 'wxpay';
-}
+$scan = 'qq';
 payType_bankname($scan,$pay_type);
+$data['payType'] = 'qqpay';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

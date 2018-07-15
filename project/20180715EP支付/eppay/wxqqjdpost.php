@@ -102,7 +102,10 @@ $data = array(
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['payType'] = 'jdpay';
-}else {
+}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['payType'] = 'qqpay';
+} else {
   $scan = 'wx';
   $data['payType'] = 'wxpay';
 }
