@@ -119,8 +119,10 @@ if ($row['code'] != '1') {
 }else {
   if ($scan == 'yl') {
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['code_url']);
-  }else {
+  }elseif($scan == 'wy') {
     $jumpurl = $row['data']['pay_info'];
+  }else {
+    header('Location:'.$row['data']['pay_info']);
   }
 }
 
