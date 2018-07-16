@@ -52,25 +52,27 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://soso.xinghjk.com/online/gateway';
+
 #第三方参数设置
 $data =array(
-  'version' => "3.0",
-  'method' => "XingHang.online.interface",
-  'partner' => $pay_mid,
-  'banktype' => "",
-  'paymoney' => $mymoney,
-  'ordernumber' => $order_no,
-  'callbackurl' => $merchant_url,
+  'sign_type' => "md5",
+  'mch_id' => $pay_mid,
+  'mch_order' => $order_no,
+  'amt' => (int)number_format($_REQUEST['MOAmount']*1000, 0, '.', ''),
+  'remark' => "pay",
+  'created_at' => time(),
+  'client_ip' => getClientIp(),
+  'notify_url' => $merchant_url,
   'sign' => "",
+  'mch_key' => $pay_mkey
 );
 #变更参数设置
 $scan = 'qq';
+$form_url ='https://n-sdk.retenai.com/api/v1/qq_qrcode.api';
 $payType = $pay_type."_qq";
 $bankname = $pay_type . "->QQ钱包在线充值";
-$data['banktype'] = 'QQ';//qq掃碼
 if (_is_mobile()) {
-  $data['banktype'] = 'QQWAP';
+  $form_url ='https://n-sdk.retenai.com/api/v1/qq_wap.api';
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -83,6 +85,7 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
+ksort($data);
 $noarr =array('sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
@@ -90,24 +93,25 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext,0,-1).$pay_mkey;
+$signtext = substr($signtext,0,-1);
 $data['sign'] = md5($signtext);
+unset($data['mch_key']);
 
-if (_is_mobile()) {
-  $form_data = $data;
-  $jumpurl = $form_url;
-}else{
 #curl提交
-  $res = curl_post($form_url,$data);
-  $row = json_decode($res,1);
-  if ($row['status'] != '1') {
-    echo  '错误代码:' . $row['status']."\n";
-    echo  '错误讯息:' . $row['message']."\n";
-    exit;
+$res = curl_post($form_url,$data);
+$row = json_decode($res,1);
+if ($row['code'] != '1') {
+  echo  '错误代码:' . $row['code']."<br>";
+  echo  '错误讯息:' . $row['msg']."<br>";
+  exit;
+}else {
+  if (_is_mobile()) {
+    $jumpurl = $row['data']['pay_info'];
   }else {
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrurl']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['code_url']);
   }
 }
+
 #跳轉方法
 
 ?>

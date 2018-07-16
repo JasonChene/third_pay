@@ -1,4 +1,4 @@
-<? header("content-Type: text/html; charset=gb2312"); ?>
+<? header("content-Type: text/html; charset=utf-8"); ?>
 <?php
 include_once("../../../database/mysql.config.php");
 //include_once("../../../database/mysql.php");
@@ -10,20 +10,19 @@ foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	//write_log($key."=".$value);
 }
-
 #设定固定参数
-$order_no = $data['ordernumber']; //订单号
-$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['orderstatus'];//成功讯息
-$success_code = "1";//文档上的成功讯息(根本沒有)
+$order_no = $data['mch_order']; //订单号
+$mymoney = number_format($data['mch_amt']/1000, 2, '.', ''); //订单金额
+$success_msg = $data['status'];//成功讯息
+$success_code = "2";//文档上的成功讯息(根本沒有)
 $sign = $data['sign'];//签名
-$echo_msg = "ok";//回调讯息
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -44,8 +43,16 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-
-$signtext = "partner=".$data['partner']."&ordernumber=".$data['ordernumber']."&orderstatus=".$data['orderstatus']."&paymoney=".$data['paymoney'].$pay_mkey;
+$data['mch_key'] = $pay_mkey;
+ksort($data);
+$noarr =array('sign');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
+		$signtext .= $arr_key.'='.$arr_val.'&';
+	}
+}
+$signtext = substr($signtext,0,-1);
 $mysign = md5($signtext);
 //write_log("signtext=".$signtext);
 //write_log("mysign=".$mysign);

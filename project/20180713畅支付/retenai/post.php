@@ -58,14 +58,13 @@ $data =array(
   'sign_type' => "md5",
   'mch_id' => $pay_mid,
   'mch_order' => $order_no,
-  'amt' => (int)number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  'amt' => (int)number_format($_REQUEST['MOAmount']*1000, 0, '.', ''),
   'remark' => "pay",
   'created_at' => time(),
   'client_ip' => getClientIp(),
   'notify_url' => $merchant_url,
-  'user_channel_id' => "",
   'sign' => "",
-  'mch_key' => $pay_mkey
+  'mch_key' => $pay_mkey,  
 );
 #变更参数设置
 
@@ -74,24 +73,19 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $form_url ='https://n-sdk.retenai.com/api/v1/union_qrcode.api';
   $bankname = $pay_type."->银联钱包在线充值";
   $payType = $pay_type."_yl";
-  $data['user_channel_id'] = (int)0;
-  if (_is_mobile()) {
-    $form_url ='https://n-sdk.retenai.com/api/v1/union.api';
-    $data['user_channel_id'] = (int)1;
-  }
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
   $form_url ='https://n-sdk.retenai.com/api/v1/quick_page.api';
   $payType = $pay_type."_ylkj";
   $bankname = $pay_type . "->银联快捷在线充值";
-  $data['user_channel_id'] = (int)4;
 }else {
   $scan = 'wy';
-  $form_url ='https://n-sdk.retenai.com/api/v1/quick_bank.api';
+  $form_url ='https://n-sdk.retenai.com/api/v1/union.api';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
-  $data['user_channel_id'] = (int)6;
-  $data['bank_code'] = $_REQUEST['bank_code'];
+  $data['bank_card_type'] = (int)10;
+  $data['callback_url'] = $return_url;
+  $data['bank_code'] = (int)$_REQUEST['bank_code'];
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -117,17 +111,16 @@ unset($data['mch_key']);
 
 #curl提交
 $res = curl_post($form_url,$data);
-echo $res;exit;
 $row = json_decode($res,1);
 if ($row['code'] != '1') {
-  echo  '错误代码:' . $row['code']."\n";
-  echo  '错误讯息:' . $row['msg']."\n";
+  echo  '错误代码:' . $row['code']."<br>";
+  echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
-  if (_is_mobile()) {
-    $jumpurl = $row['pay_info'];
+  if ($scan == 'yl') {
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['code_url']);
   }else {
-    $jumpurl = $row['pay_info'];
+    $jumpurl = $row['data']['pay_info'];
   }
 }
 
