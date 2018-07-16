@@ -37,6 +37,7 @@ function payType_bankname($scan,$pay_type){
   }
 }
 
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -58,14 +59,12 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://api.pocopayment.com/v2';//接入提交地址
+$form_url = 'http://pay.pinganfu1.com/PayBank.aspx';//接入提交地址
 
 #第三方参数设置
 $data = array(
-  "partner_id" => $pay_mid, //商户ID
-  "service" => '', //类型
-  "sign_type" => '',//签名方式 RSA和RSA2
-  "rand_str" => '',//随机字符串，必需 32 位
+  "partner" => $pay_mid, //商户ID
+  "banktype" => '', //类型
   "paymoney" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "ordernumber" => $order_no, //商户订单号
   "callbackurl" => $merchant_url, //下行异步通知地址
@@ -74,9 +73,9 @@ $data = array(
 );
 
 #变更参数设置
-$scan = 'wx';
+$scan = 'zfb';
 payType_bankname($scan,$pay_type);
-$data['banktype'] = 'HXWX';
+$data['banktype'] = 'HXALISM';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -99,6 +98,7 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
+
 #跳轉方法
 ?>
 <html>

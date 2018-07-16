@@ -8,6 +8,32 @@ date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
+#function
+function curl_post($url,$data){ #POST访问
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $tmpInfo = curl_exec($ch);
+  if (curl_errno($ch)) {
+    return curl_error($ch);
+  }
+  return $tmpInfo;
+}
+function QRcodeUrl($code){
+  if(strstr($code,"&")){
+    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  }else{
+    $code2=$code;
+  }
+  return $code2;
+}
 function payType_bankname($scan,$pay_type){
   global $payType, $bankname;
   if(strstr($scan,"wy")){
@@ -58,25 +84,24 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://api.pocopayment.com/v2';//接入提交地址
+$form_url = 'http://qzhs.api.skyfu.net/channel/pay';//接入提交地址
 
 #第三方参数设置
 $data = array(
-  "partner_id" => $pay_mid, //商户ID
-  "service" => '', //类型
-  "sign_type" => '',//签名方式 RSA和RSA2
-  "rand_str" => '',//随机字符串，必需 32 位
-  "paymoney" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
-  "ordernumber" => $order_no, //商户订单号
-  "callbackurl" => $merchant_url, //下行异步通知地址
-  "hrefbackurl" => $return_url, //下行同步通知地址
+  "tenantOrderNo" => $order_no, //商户订单号
+  "pageUrl" => $return_url, //页面通知地址
+  "notifyUrl" => $merchant_url, //异步通知地址
+  "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
+  "payType" => '', //支付方式(alipay、wxpay、qqpay、jdpay、chinapay、gateway，默认是chianpay)
+  // "userId" => $pay_mid, //用户标记  （chinapay和gateway必传）
+  // "bankName" => '',//银行名称（gateway必传）
   "sign" => '', //MD5签名
 );
 
 #变更参数设置
-$scan = 'wx';
+$scan = 'qq';
 payType_bankname($scan,$pay_type);
-$data['banktype'] = 'HXWX';
+$data['payType'] = 'qqpay';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -89,16 +114,27 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign','hrefbackurl');//不加入签名的array key值
+$noarr = array('sign');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
-$signtext = substr($signtext, 0, -1) . $pay_mkey;
-$sign = md5($signtext);
+$signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
+$sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
+
+#curl提交
+$res = curl_post($form_url,$data);
+$row = json_decode(stripslashes($res),1);
+if ($row['status'] != '200') {
+  echo  '错误代码:' . $row['status']."\n";
+  exit;
+}else {
+  $jumpurl = $row['url'];
+}
+
 #跳轉方法
 ?>
 <html>
@@ -107,12 +143,8 @@ $data['sign'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="get" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="get" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-       <?php 
-    } ?>
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

@@ -8,6 +8,32 @@ date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
+#function
+function curl_post($url,$data){ #POST访问
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $tmpInfo = curl_exec($ch);
+  if (curl_errno($ch)) {
+    return curl_error($ch);
+  }
+  return $tmpInfo;
+}
+function QRcodeUrl($code){
+  if(strstr($code,"&")){
+    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  }else{
+    $code2=$code;
+  }
+  return $code2;
+}
 function payType_bankname($scan,$pay_type){
   global $payType, $bankname;
   if(strstr($scan,"wy")){
@@ -62,21 +88,32 @@ $form_url = 'http://api.pocopayment.com/v2';//接入提交地址
 
 #第三方参数设置
 $data = array(
-  "partner_id" => $pay_mid, //商户ID
-  "service" => '', //类型
-  "sign_type" => '',//签名方式 RSA和RSA2
-  "rand_str" => '',//随机字符串，必需 32 位
-  "paymoney" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
-  "ordernumber" => $order_no, //商户订单号
-  "callbackurl" => $merchant_url, //下行异步通知地址
-  "hrefbackurl" => $return_url, //下行同步通知地址
-  "sign" => '', //MD5签名
+  "application" => '',//应用名称
+  "version" => '1.0.1',//通讯协议版本号
+  "timestamp" => date("YmdHis"),//时间戳
+  "merchantId" => $pay_mid, //商户代码
+  "merchantOrderId" => $order_no, //商户订单号
+  "merchantOrderAmt" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''), //金额
+  "merchantOrderDesc" => 'iPhone6S', //订单描述
+  "userName" => '',//用户名
+  "merchantPayNotifyUrl" => $merchant_url, //下行异步通知地址
 );
 
 #变更参数设置
-$scan = 'wx';
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['application'] = 'JDScanOrder';
+}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['application'] = 'QQScanOrder';
+} else {
+  $scan = 'wx';
+  $data['application'] = 'WeiXinScanOrder';
+  if (_is_mobile()) {
+    $data['application'] = 'WeiXinWapOrder';
+  }
+}
 payType_bankname($scan,$pay_type);
-$data['banktype'] = 'HXWX';
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
