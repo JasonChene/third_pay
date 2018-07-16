@@ -104,10 +104,8 @@ foreach ($data as $arr_key => $arr_val) {
 	}
 }
 $signtext = substr($signtext,0,-1);
-echo $signtext."<pre>";
 $data['sign'] = md5($signtext);
 unset($data['mch_key']);
-var_dump($data);
 #curl提交
 $res = curl_post($form_url,$data);
 $row = json_decode($res,1);
