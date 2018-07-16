@@ -124,6 +124,7 @@ if ($row['code'] != '1') {
     $jumpurl = $row['data']['pay_info'];
   }else {
     header('Location:'.$row['data']['pay_info']);
+    exit;
   }
 }
 
