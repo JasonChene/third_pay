@@ -58,12 +58,11 @@ $data =array(
   'sign_type' => "md5",
   'mch_id' => $pay_mid,
   'mch_order' => $order_no,
-  'amt' => (int)number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  'amt' => (int)number_format($_REQUEST['MOAmount']*1000, 0, '.', ''),
   'remark' => "pay",
   'created_at' => time(),
   'client_ip' => getClientIp(),
   'notify_url' => $merchant_url,
-  'user_channel_id' => "",
   'sign' => "",
   'mch_key' => $pay_mkey
 );
@@ -72,10 +71,8 @@ $scan = 'qq';
 $form_url ='https://n-sdk.retenai.com/api/v1/qq_qrcode.api';
 $payType = $pay_type."_qq";
 $bankname = $pay_type . "->QQ钱包在线充值";
-$data['user_channel_id'] = (int)31;//qq掃碼
 if (_is_mobile()) {
   $form_url ='https://n-sdk.retenai.com/api/v1/qq_wap.api';
-  $data['user_channel_id'] = (int)30;
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -102,17 +99,16 @@ unset($data['mch_key']);
 
 #curl提交
 $res = curl_post($form_url,$data);
-echo $res;exit;
 $row = json_decode($res,1);
 if ($row['code'] != '1') {
-  echo  '错误代码:' . $row['code']."\n";
-  echo  '错误讯息:' . $row['msg']."\n";
+  echo  '错误代码:' . $row['code']."<br>";
+  echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
   if (_is_mobile()) {
-    $jumpurl = $row['pay_info'];
+    $jumpurl = $row['data']['pay_info'];
   }else {
-    $jumpurl = $row['code_img_url'];
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['code_url']);
   }
 }
 

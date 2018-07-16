@@ -58,12 +58,11 @@ $data =array(
   'sign_type' => "md5",
   'mch_id' => $pay_mid,
   'mch_order' => $order_no,
-  'amt' => (int)number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  'amt' => (int)number_format($_REQUEST['MOAmount']*1000, 0, '.', ''),
   'remark' => "pay",
   'created_at' => time(),
   'client_ip' => getClientIp(),
   'notify_url' => $merchant_url,
-  'user_channel_id' => "",
   'sign' => "",
   'mch_key' => $pay_mkey
 );
@@ -74,20 +73,16 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $form_url ='https://n-sdk.retenai.com/api/v1/jd_qrcode.api';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
-  $data['user_channel_id'] = (int)41;//京东扫码
   if (_is_mobile()) {
     $form_url ='https://n-sdk.retenai.com/api/v1/jd_wap.api';
-    $data['user_channel_id'] = (int)40;
   }
 }else {
   $scan = 'wx';
   $form_url ='https://n-sdk.retenai.com/api/v1/wx_qrcode.api';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
-  $data['user_channel_id'] = (int)10;//微信掃碼
   if (_is_mobile()) {
     $form_url ='https://n-sdk.retenai.com/api/v1/wx_h5.api';
-    $data['user_channel_id'] = (int)11;
   }
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -109,23 +104,20 @@ foreach ($data as $arr_key => $arr_val) {
 	}
 }
 $signtext = substr($signtext,0,-1);
-//echo $signtext."<pre>";
 $data['sign'] = md5($signtext);
 unset($data['mch_key']);
-//var_dump($data);
 #curl提交
 $res = curl_post($form_url,$data);
-echo $res;exit;
 $row = json_decode($res,1);
 if ($row['code'] != '1') {
-  echo  '错误代码:' . $row['code']."\n";
-  echo  '错误讯息:' . $row['msg']."\n";
+  echo  '错误代码:' . $row['code']."<br>";
+  echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
   if (_is_mobile()) {
-    $jumpurl = $row['pay_info'];
+    $jumpurl = $row['data']['pay_info'];
   }else {
-    $jumpurl = $row['code_img_url'];
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['code_url']);
   }
 }
 

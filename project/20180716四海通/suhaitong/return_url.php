@@ -1,28 +1,30 @@
-<? header("content-Type: text/html; charset=utf-8"); ?>
+<? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-//write_log("notify");
-$data = array();
+write_log("return");
 #接收资料
-foreach ($_POST as $key => $value) {
+#REQUEST方法
+$data = array();
+foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	//write_log($key."=".$value);
+	write_log("return:".$key."=".$value);
 }
+
 #设定固定参数
-$order_no = $data['mch_order']; //订单号
-$mymoney = number_format($data['mch_amt']/1000, 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
-$success_code = "2";//文档上的成功讯息(根本沒有)
+$order_no = $data['ordernumber']; //订单号
+$mymoney = number_format($data['money'], 2, '.', ''); //订单金额
+$success_msg = $data['orderstatus'];//成功讯息
+$success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "success";//回调讯息
+$echo_msg = "ok";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -30,8 +32,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -43,19 +45,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$data['mch_key'] = $pay_mkey;
+$noarr = array('sign');//不加入签名的array key值
 ksort($data);
-$noarr =array('sign');
-$signtext = '';
+$signtext = "";
 foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext,0,-1);
-$mysign = md5($signtext);
-//write_log("signtext=".$signtext);
-//write_log("mysign=".$mysign);
+$mysign = md5($signtext);//签名
+write_log("return:signtext=".$signtext);
+write_log("return:mysign=".$mysign);
+
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -114,6 +115,12 @@ if ($success_msg == $success_code) {
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage"><?php echo $message; ?></label>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 120px; text-align: right;">备注</td>
+			<td style="padding-left: 10px;">
+				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>
 		</tr>
 		
