@@ -64,6 +64,11 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['pay_bankcode'] = 'jdpay';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['pay_bankcode'] = 'qqpay';
+  $bankname = $pay_type."->QQ钱包在线充值";
+  $payType = $pay_type."_qq";
 }
 if (_is_mobile() && $scan == 'wx') {
   $data['pay_create_ip'] = getClientIp();//微信WAP/H5 必须
