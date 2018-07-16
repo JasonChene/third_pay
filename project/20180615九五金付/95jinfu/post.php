@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -15,7 +16,7 @@ function curl_post($url,$data){ #POST访问
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $tmpInfo = curl_exec($ch);
+  $tmpInfo = curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
   if (curl_errno($ch)) {
     return curl_error($ch);
   }
@@ -34,7 +35,8 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -50,7 +52,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://106.14.211.216:8070/payment/PayApply.do';
+$form_url ='http://pay.taikangxm.cn:31588/payment/PayApply.do';
 #第三方参数设置
 $data =array(
     'versionId' => '1.0',//服务版本号
@@ -130,10 +132,12 @@ $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
 
 #curl获取响应值
+$res = curl_post($form_url,http_build_query($data));
+echo($res);
 
 #跳轉方法
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -149,4 +153,4 @@ $data['signData'] = $sign;
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->

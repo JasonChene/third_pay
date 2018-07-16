@@ -53,7 +53,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $data = array(
   "pay_memberid" => $pay_mid, //商户ID
   "pay_orderid" => $order_no, //订单号
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
+  "pay_amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', '') / 100, //金额
   "pay_applydate" => date("Y-m-d H:i:s"), //订单提交时间
   "pay_bankcode" => '', //银行编号
   "pay_notifyurl" => $merchant_url, //服务端返回地址
@@ -93,8 +93,7 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-$row = json_decode($tran, 1);
+$row = json_decode($res, 1);
 
 #跳转
 if ($row['returncode'] != '00') {
@@ -103,32 +102,12 @@ if ($row['returncode'] != '00') {
   exit;
 } else {
   $qrcodeUrl = $row['qrcode'];
-  if (!_is_mobile()) {
-    if (strstr($qrcodeUrl, "&")) {
-      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-    } else {
-      $code = $qrcodeUrl;
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-  } else {
-    $jumpurl = $qrcodeUrl;
-  }
+  $jumpurl = $qrcodeUrl;
 }
 
 #跳轉方法
+header("Location: $jumpurl");
+exit;
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
+
 

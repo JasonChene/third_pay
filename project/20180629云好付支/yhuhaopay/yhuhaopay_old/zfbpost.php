@@ -52,10 +52,7 @@ $data = array(
 $form_url = 'http://yunhaopay.com/Pay_Index.html';//提交地址
 
 $scan = 'zfb';
-$data['tongdao'] = 'YNZFZFBSM';
-if (_is_mobile()) {
-  $data['tongdao'] = 'YNZFZFBH5';
-}
+$data['tongdao'] = 'MPZFBSM ';
 $bankname = $pay_type . "->支付宝在线充值";
 $payType = $pay_type . "_zfb";
 

@@ -1,0 +1,7 @@
+商户API信息
+
+开放平台：https://www.dabaizf.com/index/index/docpay.html
+商户号：2348
+商户key：ac71d6c453d69ae28c13de79ec59578c
+默认支付密码：123456
+开放平台阅读密码：123456
