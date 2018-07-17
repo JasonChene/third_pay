@@ -35,7 +35,7 @@ $data = array(
   "pay_orderid" => $order_no, //订单号
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "pay_applydate" => date("Y-m-d H:i:s"), //订单提交时间
-  "pay_bankcode" => 'WXZF', //银行编号
+  "pay_bankcode" => 'PAY', //银行编号
   "pay_notifyurl" => $merchant_url, //服务端返回地址
   "pay_callbackurl" => $return_url, // 页面返回地址
   "tongdao" => '', //调用通道编码
@@ -52,7 +52,7 @@ $data = array(
 $form_url = 'http://yunhaopay.com/Pay_Index.html';//提交地址
 
 $scan = 'wx';
-$data['tongdao'] = 'MPWXSM';
+$data['tongdao'] = 'WX';
 $bankname = $pay_type . "->微信在线充值";
 $payType = $pay_type . "_wx";
 
