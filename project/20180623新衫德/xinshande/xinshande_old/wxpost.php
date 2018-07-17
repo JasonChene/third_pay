@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -57,7 +57,7 @@ function parse_result($result){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -103,14 +103,7 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['body']['payTool'] = '0406';//0406：京东钱包
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
-  $scan = 'qq';
-  $data['head']['productId'] = '00000026';//QQ钱包扫码 00000026
-  $data['body']['payTool'] = '0405';//产品id 00000026 "payTool":"0405"
-  $payType = $pay_type."_qq";
-  $bankname = $pay_type . "->QQ钱包在线充值";
-} else {
+}else {
   $form_url = 'https://cashier.sandpay.com.cn/qr/api/order/create';//提交地址
   $scan = 'wx';
   $data['head']['productId'] = '00000005';//微信扫码  00000005
