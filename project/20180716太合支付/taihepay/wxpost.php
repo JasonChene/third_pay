@@ -71,13 +71,13 @@ $data =array(
     'signData' => ''//加密数据
 );
 #变更参数设置
-$form_url ='http://pay.taikangxm.cn:31588/payment/ScanPayApply.do';//扫码网关
+// $form_url ='http://pay.taikangxm.cn:31588/payment/ScanPayApply.do';//扫码网关
 $scan = 'wx';
 $payType = $pay_type."_wx";
 $bankname = $pay_type . "->微信在线充值";
 // $data['payMode'] = '00022';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
 // if (_is_mobile()) {
-    $form_url ='http://pay.taikangxm.cn:31588/payment/PayApply.do';//h5网关
+    $form_url ='http://47.101.43.243:42111/payment/PayUnApply.do';//h5网关
     unset($data['prdAmt']);
     $data['payMode'] = '00016';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
     $data['pnum'] = '1';//商品数量
@@ -106,28 +106,29 @@ $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
 
 // if (!_is_mobile()) {
-//   #curl获取响应值
-//   $res = curl_post($form_url,$data);
-//   $tran = mb_convert_encoding($res, "UTF-8");
-//   $row = json_decode($tran, 1);
+  #curl获取响应值
+  $res = curl_post($form_url,$data);
+  $tran = mb_convert_encoding($res, "UTF-8");
+  $row = json_decode($tran, 1);
   
-//   #跳轉方法
-//   if ($row['retCode'] != '1') {
-//     echo '返回状态码:' . $row['status'] . "\n";//返回状态码
-//     echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
-//     exit;
-//   } else {
-//     #不是手机
-//     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-//   }
+  #跳轉方法
+  if ($row['retCode'] != '1') {
+    echo '返回状态码:' . $row['retCode'] . "\n";//返回状态码
+    echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
+    exit;
+  } else {
+    #不是手机
+    echo $row['htmlText'];
+    exit;
+  }
 // }else {
-  #是手机的话
-  $jumpurl = $form_url;
-  $form_data =$data;
+//   #是手机的话
+//   $jumpurl = $form_url;
+//   $form_data =$data;
 // }
 
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -144,4 +145,4 @@ $data['signData'] = $sign;
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->

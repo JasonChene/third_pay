@@ -106,28 +106,29 @@ $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
 
 // if (!_is_mobile()) {
-//   #curl获取响应值
-//   $res = curl_post($form_url,$data);
-//   $tran = mb_convert_encoding($res, "UTF-8");
-//   $row = json_decode($tran, 1);
+  #curl获取响应值
+  $res = curl_post($form_url,$data);
+  $tran = mb_convert_encoding($res, "UTF-8");
+  $row = json_decode($tran, 1);
   
-//   #跳轉方法
-//   if ($row['retCode'] != '1') {
-//     echo '返回状态码:' . $row['status'] . "\n";//返回状态码
-//     echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
-//     exit;
-//   } else {
-//     #不是手机
-//     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-//   }
+  #跳轉方法
+  if ($row['retCode'] != '1') {
+    echo '返回状态码:' . $row['retCode'] . "\n";//返回状态码
+    echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
+    exit;
+  } else {
+    #不是手机
+    echo $row['htmlText'];
+    exit;
+  }
 // }else {
-  #是手机的话
-  $jumpurl = $form_url;
-  $form_data =$data;
+//   #是手机的话
+//   $jumpurl = $form_url;
+//   $form_data =$data;
 // }
 
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -144,4 +145,4 @@ $data['signData'] = $sign;
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->
