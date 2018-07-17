@@ -35,7 +35,7 @@ $data = array(
   "pay_orderid" => $order_no, //订单号
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
   "pay_applydate" => date("Y-m-d H:i:s"), //订单提交时间
-  "pay_bankcode" => 'ALIPAY', //银行编号
+  "pay_bankcode" => 'PAY', //银行编号
   "pay_notifyurl" => $merchant_url, //服务端返回地址
   "pay_callbackurl" => $return_url, // 页面返回地址
   "tongdao" => '', //调用通道编码
@@ -52,7 +52,7 @@ $data = array(
 $form_url = 'http://yunhaopay.com/Pay_Index.html';//提交地址
 
 $scan = 'zfb';
-$data['tongdao'] = 'MPZFBSM ';
+$data['tongdao'] = 'ZFB ';
 $bankname = $pay_type . "->支付宝在线充值";
 $payType = $pay_type . "_zfb";
 
