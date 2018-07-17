@@ -1,0 +1,19 @@
+点击下载官方DEMO： https://www.zfb996.com/demo.zip
+点击下载官方开发文档（内含统一下单接口和订单查询接口）： https://www.zfb996.com/apidoc.zip
+直接这里下载
+2595996996   这个联系QQ
+技术
+账号cs1234  密码qwe123
+
+if (strstr($_REQUEST['pay_type'], "银联钱包")){
+  $scan = 'yl';
+  $bankname = $pay_type."->银联钱包在线充值";
+  $payType = $pay_type."_yl";
+  $data['pay_type'] = "7";
+  $data['bank_code'] = "qrCode";
+}else {
+  $scan = 'wy';
+  $payType = $pay_type."_wy";
+  $bankname = $pay_type . "->网银在线充值";
+  $data['pay_type'] = "1";
+}
