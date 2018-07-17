@@ -1,7 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -38,8 +37,7 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -59,7 +57,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "userId" => $pay_mid, //商户号
-  "channel" => 'ALIPAY',//支付方式
+  "channel" => 'WXPAY',//支付方式
   "money" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
   "ordernumber" => $order_no,//商户流水号
   "return_url" => $return_url,
@@ -70,11 +68,25 @@ $data = array(
 );
 #变更参数设置
 $form_url = 'http://pay.sihaitongpay.com/API/Pay/Gateway.aspx';//wap提交地址
-$scan = 'zfb';
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$scan = 'wx';
+$payType = $pay_type."_wx";
+$bankname = $pay_type . "->微信在线充值";
 if(_is_mobile()){
-  $data['channel'] = 'ALIPAY_WAP';
+  $data['channel'] = 'WXPAY_WAP';
+}
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['channel'] = 'JDPAY';
+  $bankname = $pay_type."->京东钱包在线充值";
+  $payType = $pay_type."_jd";
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['channel'] = 'QQPAY';
+  if(_is_mobile()){
+    $data['channel'] = 'QQPAY_WAP';
+  }
+  $bankname = $pay_type."->QQ钱包在线充值";
+  $payType = $pay_type."_qq";
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
