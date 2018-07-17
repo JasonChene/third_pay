@@ -1,0 +1,5 @@
+商户号：10083
+登入网址：www.youapay.com
+网关地址：https://www.youapay.com/Pay_Index.html
+APIKEY: h5e2cs46om9nvc4gtf90es7ef6c8u1de
+第三方技术QQ：3373048561
