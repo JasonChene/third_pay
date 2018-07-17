@@ -36,30 +36,33 @@ function QRcodeUrl($code){
 }
 function payType_bankname($scan,$pay_type){
   global $payType, $bankname;
-  if(strstr($scan,"wy")){
+  if($scan == "wy"){
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
-  }elseif(strstr($scan,"yl")){
+  }elseif($scan == "yl" || $scan == "ylfs"){
     $payType = $pay_type . "_yl";
     $bankname = $pay_type . "->银联钱包在线充值";
-  }elseif(strstr($scan,"qq")){
+  }elseif($scan == "qq" || $scan == "qqfs"){
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
-  }elseif(strstr($scan,"wx")){
+  }elseif($scan == "wx" || $scan == "wxfs"){
     $payType = $pay_type . "_wx";
     $bankname = $pay_type . "->微信在线充值";
-  }elseif(strstr($scan,"zfb")){
+  }elseif($scan == "zfb" || $scan == "zfbfs"){
     $payType = $pay_type . "_zfb";
     $bankname = $pay_type . "->支付宝在线充值";
-  }elseif(strstr($scan,"jd")){
+  }elseif($scan == "jd" || $scan == "jdfs"){
     $payType = $pay_type . "_jd";
     $bankname = $pay_type . "->京东钱包在线充值";
-  }elseif(strstr($scan,"ylkj")){
+  }elseif($scan == "ylkj"){
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
-  }elseif(strstr($scan,"bd")){
+  }elseif($scan == "bd" || $scan == "bdfs"){
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
+  }else {
+    echo('payType_bankname出错啦！');
+    exit;
   }
 }
 
@@ -84,24 +87,33 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://qzhs.api.skyfu.net/channel/pay';//接入提交地址
+$form_url = 'http://hx.fjklt.net/gateway';//接入提交地址
 
 #第三方参数设置
 $data = array(
-  "tenantOrderNo" => $order_no, //商户订单号
-  "pageUrl" => $return_url, //页面通知地址
-  "notifyUrl" => $merchant_url, //异步通知地址
-  "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
-  "payType" => '', //支付方式(alipay、wxpay、qqpay、jdpay、chinapay、gateway，默认是chianpay)
-  // "userId" => $pay_mid, //用户标记  （chinapay和gateway必传）
-  // "bankName" => '',//银行名称（gateway必传）
-  "sign" => '', //MD5签名
+  "app_id" => $pay_mid,
+  "method" => "",
+  "sign" => "fsfdsfsafsafsfsf",
+  "sign_type" => "MD5",
+  "version" => "1.0",
+  "content" => ""
+);
+$parms = array(
+  "out_trade_no" => $order_no, 
+  "total_amount" => $mymoney, 
+  "order_name" => "pay", 
+  "spbill_create_ip" => getClientIp(), 
+  "notify_url" => $merchant_url,
+  "return_url" => $return_url,
 );
 
 #变更参数设置
 $scan = 'zfb';
 payType_bankname($scan,$pay_type);
-$data['payType'] = 'alipay';
+$data['method'] = 'alipaycode';
+if (_is_mobile()) {
+  $data['method'] = 'alipay';
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -114,7 +126,10 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign');//不加入签名的array key值
+ksort($parms);
+$data["content"] = json_encode($parms,JSON_UNESCAPED_SLASHES);
+ksort($data);
+$noarr = array('sign','sign_type');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -122,33 +137,10 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 $signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
-$sign = strtoupper(md5($signtext));
+$sign = md5($signtext);
 $data['sign'] = $sign;
 
 #curl提交
 $res = curl_post($form_url,$data);
-$row = json_decode(stripslashes($res),1);
-if ($row['status'] != '200') {
-  echo  '错误代码:' . $row['status']."\n";
-  exit;
-}else {
-  $jumpurl = $row['url'];
-}
-
-#跳轉方法
+echo $res;//直接html跳轉
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-  <form method="get" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-     <p>正在为您跳转中，请稍候......</p>
-   </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-
