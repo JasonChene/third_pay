@@ -11,10 +11,10 @@ foreach ($_REQUEST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-$success_msg = $data['returncode'];//成功讯息
-$success_code = "00";//文档上的成功讯息
+$order_no = $data['pay_orderid']; //订单号
+$mymoney = number_format($data['pay_amount'], 2, '.', ''); //订单金额
+$success_msg = $data['pay_code'];//成功讯息
+$success_code = "HL0000";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "OK";//回调讯息
 
@@ -37,7 +37,6 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	//write_log("非法提交参数");
 	exit;
 }
 

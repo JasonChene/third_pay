@@ -9,8 +9,27 @@ if (function_exists("date_default_timezone_set")) {
 }
 
 #function
+function curl_post($url, $data)
+{ #POST访问
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $tmpInfo = curl_exec($ch);
+  if (curl_errno($ch)) {
+    return curl_error($ch);
+  }
+  return $tmpInfo;
+}
+
 function payType_bankname($scan, $pay_type)
-{#以scan判断bankname/payType
+{ #以scan判断bankname/payType
   global $payType, $bankname;
   $payType = $pay_type . "_" . $scan;
   if (strstr($scan, "wy")) {
@@ -107,8 +126,21 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['pay_md5sign'] = $sign;
+$data_str = http_build_query($data);
 
+#curl获取响应值
+$res = curl_post($form_url, $data_str);
+$tran = mb_convert_encoding("$res", "UTF-8");
+$row = json_decode($tran, 1);
 
+#跳转
+if ($row['pay_code'] != 'HL0000') {
+  echo '订单错误' . "\n";
+  exit;
+} else {
+  $qrcodeUrl = $row['pay_url'];
+  $jumpurl = $qrcodeUrl;
+}
 
 #跳轉方法
 ?>
@@ -118,12 +150,8 @@ $data['pay_md5sign'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="get" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-       <?php 
-    } ?>
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
