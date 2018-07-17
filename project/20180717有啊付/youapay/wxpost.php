@@ -79,12 +79,6 @@ $form_url = 'https://www.youapay.com/Pay_Index.html';//提交地址
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $data['pay_bankcode'] = '910';
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_bankcode'] = '908';
-  if(_is_mobile()){
-    $data['pay_bankcode'] = '905';
-  }
 }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
   $scan = 'bd';
   $data['pay_bankcode'] = '909';
