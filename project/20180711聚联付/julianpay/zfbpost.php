@@ -102,8 +102,19 @@ if ($row['returncode'] != '00') {
   exit;
 } else {
   $qrcodeUrl = $row['qrcode'];
-  $jumpurl = $qrcodeUrl;
+  if (!_is_mobile()) {
+    if (strstr($qrcodeUrl, "&")) {
+      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+    } else {
+      $code = $qrcodeUrl;
+    }
+    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  } else {
+    $jumpurl = $qrcodeUrl;
+  }
 }
+
+
 
 #跳轉方法
 header("Location: $jumpurl");
