@@ -67,6 +67,7 @@ $data = array(
   "request_time" => date("YmdHis"),//商品名称
   "request_ip" => getClientIp(),
   "goods_name" => 'iPhone',//商品
+  "bank_code" => $_REQUEST['bank_code']
 );
 #变更参数设置
 $form_url = 'http://pay.sihaitongpay.com/API/Pay/Gateway.aspx';//wap提交地址
@@ -79,6 +80,36 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $payType = $pay_type . "_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $bank_no = $_REQUEST['bank_no'];
+  $user_phone = $_REQUEST['user_phone'];
+  $user_name = $_REQUEST['user_name'];
+  $user_no = $_REQUEST['user_no'];
+  if(empty($bank_no) || empty($user_phone) || empty($user_name) || empty($user_no)){
+    ?>
+      <html>
+        <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+        </head>
+        <body>
+          <form name="dinpayForm" method="get" id="frm1" action="./card.php" target="_self">
+            <p>正在为您跳转中，请稍候......</p>
+            <?php foreach ($_REQUEST as $arr_key => $arr_value) {?>      
+            <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+            <?php } ?>
+          </form>
+          <script language="javascript">
+            document.getElementById("frm1").submit();
+          </script>
+        </body>
+      </html>
+    <?
+    exit;
+  }
+  $data['bank_no'] = $bank_no;
+  $data['user_phone'] = $user_phone;
+  $data['user_name'] = $user_name;
+  $data['user_no'] = $user_no;
   $scan = 'ylkj';
   $data['channel'] = 'FASTPAY_WAP';
   $payType = $pay_type . "_ylkj";
@@ -102,12 +133,12 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext,0,-1).'&'.$pay_mkey;
+$signtext = substr($signtext,0,-1).$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign; 
-
+$geturl = $form_url.'?'.http_build_query($data);
 #curl获取响应值
-$res = curl_post($form_url,http_build_query($data));
+$res = curl_post($geturl,'');
 $row = json_decode($res,1);
 #跳转
 if ($row['rescode'] != '0000') {
@@ -115,10 +146,10 @@ if ($row['rescode'] != '0000') {
   echo  '错误讯息:' . $row['resMsg']."\n<br>";
   exit;
 }else {
-  if(_is_mobile() || $scan == 'wy' || $scan == 'ylkj'){
-    $jumpurl = $array['qrcode'];
+  if(_is_mobile()){
+    $jumpurl = $row['qrcode'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['qrcode']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrcode']);
   }
 }
 #跳轉方法

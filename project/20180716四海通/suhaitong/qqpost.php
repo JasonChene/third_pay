@@ -66,7 +66,7 @@ $data = array(
   "notify_url" => $merchant_url,//通知地址
   "request_time" => date("YmdHis"),//商品名称
   "request_ip" => getClientIp(),
-  "goods_name" => 'iPhone',//商品
+  "goods_name" => 'iPhone'//商品
 );
 #变更参数设置
 $form_url = 'http://pay.sihaitongpay.com/API/Pay/Gateway.aspx';//wap提交地址
@@ -97,12 +97,12 @@ foreach ($data as $arr_key => $arr_val) {
 }
 
 
-$signtext = substr($signtext,0,-1).'&'.$pay_mkey;
+$signtext = substr($signtext,0,-1).$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign; 
-
+$geturl = $form_url.'?'.http_build_query($data);
 #curl获取响应值
-$res = curl_post($form_url,http_build_query($data));
+$res = curl_post($geturl,'');
 $row = json_decode($res,1);
 #跳转
 if ($row['rescode'] != '0000') {
@@ -111,9 +111,9 @@ if ($row['rescode'] != '0000') {
   exit;
 }else {
   if(_is_mobile()){
-    $jumpurl = $array['qrcode'];
+    $jumpurl = $row['qrcode'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['qrcode']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrcode']);
   }
 }
 #跳轉方法
