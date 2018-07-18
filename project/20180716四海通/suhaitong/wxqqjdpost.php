@@ -123,7 +123,7 @@ if ($row['rescode'] != '0000') {
   echo  '错误讯息:' . $row['resMsg']."\n<br>";
   exit;
 }else {
-  if(_is_mobile()){
+  if(_is_mobile() && $scan != 'jd'){
     $jumpurl = $row['qrcode'];
   }else{
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['qrcode']);
