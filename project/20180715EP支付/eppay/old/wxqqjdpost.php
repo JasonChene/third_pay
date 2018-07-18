@@ -114,7 +114,7 @@ if (strstr($pay_type, "京东钱包")) {
   if (_is_mobile()) {
     $data['method'] = 'jdwap';
   }
-}elseif (strstr($pay_type, "QQ钱包") ||　strstr($pay_type, "qq钱包")) {
+}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
   $scan = 'qq';
   $data['method'] = 'qqqb';
   if (_is_mobile()) {
