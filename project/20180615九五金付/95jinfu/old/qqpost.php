@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -35,8 +35,8 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -71,18 +71,18 @@ $data =array(
     'signData' => ''//加密数据
 );
 #变更参数设置
-$form_url ='http://106.14.211.216:51243/payment/ScanPayApply.do';//扫码网关
-$scan = 'wx';
-$payType = $pay_type."_wx";
-$bankname = $pay_type . "->微信在线充值";
-$data['payMode'] = '00022';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
-if (_is_mobile()) {
-    $form_url ='http://106.14.211.216:51243/payment/PayUnApply.do';//h5网关
-    unset($data['prdAmt']);
-    $data['payMode'] = '00016';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
-    $data['pnum'] = '1';//商品数量
-    $data['prdDesc'] = 'iphone';//商品描述
-}
+$form_url ='http://pay.taikangxm.cn:31588/payment/ScanPayApply.do';//扫码网关
+$scan = 'qq';
+$payType = $pay_type."_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
+$data['payMode'] = '00024';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
+// if (_is_mobile()) {
+//     $form_url ='http://pay.taikangxm.cn:31588/payment/PayApply.do';//h5网关
+//     unset($data['prdAmt']);
+//     $data['payMode'] = '10024';//00028-支付宝H5 00016-微信H5
+//     $data['pnum'] = '1';//商品数量
+//     $data['prdDesc'] = 'iphone';//商品描述
+// }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -101,29 +101,12 @@ foreach ($data as $arr_key => $arr_val) {
         $signtext .= $arr_key.'='.$arr_val.'&';
 	}
 }
-$signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;//demo档有加上key= 文档没有
+$signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;
 $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
-
 #curl获取响应值
-$res = curl_post($form_url,$data);
-$tran = mb_convert_encoding($res, "UTF-8");
-$row = json_decode($tran, 1);
-echo $tran;exit;
-#跳轉方法
-if ($row['retCode'] != '1') {
-  echo '返回状态码:' . $row['status'] . "\n";//返回状态码
-  echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
-  exit;
-}else {
-  if (_is_mobile()) {
-    echo $row['htmlText'];
-    exit;
-  }else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-  }
-}
 
+#跳轉方法
 ?>
 <html>
   <head>
@@ -131,12 +114,11 @@ if ($row['retCode'] != '1') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl; ?>" target="_self">
+    <form name="dinpayForm" method="get" id="frm1" action="<?php echo $form_url; ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
-
-      <?php if (isset($form_data)) { foreach ($form_data as $arr_key => $arr_value) {?>
+      <?php foreach ($data as $arr_key => $arr_value) {?>
       <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
+      <?php } ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
