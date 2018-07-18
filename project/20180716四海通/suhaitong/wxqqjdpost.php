@@ -81,6 +81,14 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['channel'] = 'JDPAY';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['channel'] = 'QQPAY';
+  if(_is_mobile()){
+    $data['channel'] = 'QQPAY_WAP';
+  }
+  $bankname = $pay_type."->QQ钱包在线充值";
+  $payType = $pay_type."_qq";
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
