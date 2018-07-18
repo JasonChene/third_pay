@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -70,8 +70,8 @@ function payType_bankname($scan,$pay_type){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -93,7 +93,7 @@ $form_url = 'http://hx.fjklt.net/gateway';//接入提交地址
 $data = array(
   "app_id" => $pay_mid,
   "method" => "",
-  "sign" => "",
+  "sign" => "fsfdsfsafsafsfsf",
   "sign_type" => "MD5",
   "version" => "1.0",
   "content" => ""
@@ -101,21 +101,18 @@ $data = array(
 $parms = array(
   "out_trade_no" => $order_no, 
   "total_amount" => $mymoney, 
-  "order_name" => "pay",
-  "channel_type" => "07",
-  "subject" => "gateway",
-  "spbill_create_ip" => getClientIp(),
-  "bank_code" => $_REQUEST['bank_code'],
+  "order_name" => "pay", 
+  "spbill_create_ip" => getClientIp(), 
   "notify_url" => $merchant_url,
   "return_url" => $return_url,
 );
 
 #变更参数设置
-$scan = 'wy';
+$scan = 'zfb';
 payType_bankname($scan,$pay_type);
-$data['method'] = 'gateway';
+$data['method'] = 'alipaycode';
 if (_is_mobile()) {
-  $params['channel_type'] = "08";
+  $data['method'] = 'alipay';
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -142,6 +139,7 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
+
 #curl提交
 $res = curl_post($form_url,$data);
 echo $res;//直接html跳轉
