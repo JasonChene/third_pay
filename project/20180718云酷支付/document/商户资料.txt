@@ -1,0 +1,18 @@
+登录网址  http://ykpays.com/reg/agent/2018145.html
+
+
+账号  13178295378
+
+登录密码aa123123
+
+支付密码qq123123
+
+商户ID：
+2018153
+
+商户秘钥：
+YblfqfxruhstPTIStgFopHSKmZUEevSA
+
+网关地址：http://yk.ykpays.com/Pay
+
+文档在 后台
