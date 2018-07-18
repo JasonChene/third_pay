@@ -105,25 +105,23 @@ $signtext = substr($signtext, 0 , -1) .'&key='.  $pay_mkey;//demo档有加上key
 $sign = strtoupper(md5(mb_convert_encoding($signtext, "UTF-8", "GB2312")));
 $data['signData'] = $sign;
 
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url,$data);
-  $tran = mb_convert_encoding($res, "UTF-8");
-  $row = json_decode($tran, 1);
-  
-  #跳轉方法
-  if ($row['retCode'] != '1') {
-    echo '返回状态码:' . $row['status'] . "\n";//返回状态码
-    echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
+#curl获取响应值
+$res = curl_post($form_url,$data);
+$tran = mb_convert_encoding($res, "UTF-8");
+$row = json_decode($tran, 1);
+
+#跳轉方法
+if ($row['retCode'] != '1') {
+  echo '返回状态码:' . $row['status'] . "\n";//返回状态码
+  echo '返回信息:' . $row['retMsg'] . "\n";//返回信息
+  exit;
+}else {
+  if (_is_mobile()) {
+    echo $row['htmlText'];
     exit;
-  } else {
-    #不是手机
+  }else {
     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
   }
-}else {
-  #是手机的话
-  $jumpurl = $form_url;
-  $form_data =$data;
 }
 
 ?>
