@@ -77,6 +77,7 @@ $bankname = $pay_type . "->网银在线充值";
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $data['channel'] = 'UNIONPAY';
+  unset($data['bank_code']);
   $payType = $pay_type . "_yl";
   $bankname = $pay_type . "->银联钱包在线充值";
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
