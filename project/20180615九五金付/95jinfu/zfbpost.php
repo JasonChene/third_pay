@@ -71,13 +71,13 @@ $data =array(
     'signData' => ''//加密数据
 );
 #变更参数设置
-$form_url ='http://pay.taikangxm.cn:31588/payment/ScanPayApply.do';//扫码网关
+$form_url ='http://106.14.211.216:51243/payment/ScanPayApply.do';//扫码网关
 $scan = 'zfb';
 $payType = $pay_type."_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
 $data['payMode'] = '00021';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
 if (_is_mobile()) {
-    $form_url ='http://pay.taikangxm.cn:31588/payment/PayApply.do';//h5网关
+    $form_url ='http://106.14.211.216:51243/payment/PayUnApply.do';//h5网关
     unset($data['prdAmt']);
     $data['payMode'] = '00028';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
     $data['pnum'] = '1';//商品数量
