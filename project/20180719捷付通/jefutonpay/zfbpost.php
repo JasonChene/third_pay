@@ -104,19 +104,8 @@ $data =array(
 );
 
 #变更参数设置
-if (strstr($pay_type, "支付宝反扫")) {
-  $scan = 'wxfs';
-  $data['fxpay'] = 'qqqb';
-  if (_is_mobile()) {
-    $data['fxpay'] = 'qqrcode';
-  }
-}else {
-  $scan = 'zfb';
-  $data['fxpay'] = 'qqqb';
-  if (_is_mobile()) {
-    $data['fxpay'] = 'qqrcode';
-  }
-}
+$scan = 'zfb';
+$data['fxpay'] = 'alipay';
 
 payType_bankname($scan,$pay_type);
 
@@ -131,7 +120,7 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$data["sign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
+$data["fxsign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
 
 #curl提交
 $res = curl_post($form_url,$data);
