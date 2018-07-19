@@ -140,8 +140,7 @@ $data["sign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxn
 
 #curl提交
 $res = curl_post($form_url,$data);
-$tran = mb_convert_encoding($res,"gb2312","UTF-8");
-$row = json_decode($tran,1);
+$row = json_decode($res,1);
 #跳转
 if ($row['status'] != '1') {
   echo  '错误代码:' . $row['status']."<br>";
