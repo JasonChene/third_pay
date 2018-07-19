@@ -1,5 +1,0 @@
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('畅支付','光大银行','1011');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('畅支付','广发银行','1017');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('畅支付','建设银行','1004');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('畅支付','民生银行','1009');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('畅支付','邮政储蓄银行','1007');
