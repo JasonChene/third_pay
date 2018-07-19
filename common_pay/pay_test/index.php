@@ -6,7 +6,6 @@ $sql = "select * from pay_set where is_wy=:is OR is_wx=:is OR is_zfb=:is OR is_q
 $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,8 +13,7 @@ $stmt->execute($params);
   crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
   crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-  crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
   crossorigin="anonymous"></script>
 
@@ -83,10 +81,10 @@ $stmt->execute($params);
           <br>
           <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay7.5566205.com" disabled>
         </div>
-        <div class="form-group div-nowrap">
+        <div class="form-group div-nowrap" id="select_div">
           <label>第三方名称</label>
           <br>
-          <select style="width:96%;height:35px;margin-left:2%;" name="pay_name">
+          <select style="width:96%;height:35px;margin-left:2%;" name="pay_name" id="pay_name_select">
             <?php
             while ($row = $stmt->fetch()) {
               ?>
@@ -103,7 +101,9 @@ $stmt->execute($params);
       </div>
       <div class="form-group">
         <label>bank_code</label>
-        <input id="bank_code" type="text" class="form-control" name="bank_code" placeholder="bank_code">
+        <select style="width:96%;height:35px;margin-left:2%;" name="pay_name" id="bank_select">
+            <option>请选择第三方</option>
+        </select>
       </div>
       <label>post</label>
       <button id="post_wy" type="submit" class="btn btn-outline-primary">网银</button>
@@ -373,6 +373,21 @@ $(document).ready(function() {
       console.log(str);
       jump_url(str);
   });
+
+  $('#select_div').on('change','#pay_name_select', function(){
+       var pj = $(this).val();
+       $.ajax({
+          url:"./mysql.func.php?pay_name="+pj,
+          method:"GET",
+          success:function(res){
+            $('#bank_select').html(res);
+          },
+          error:function() {
+            alert("SQL error");
+          }
+       })
+     });
+
 });
 
 function jump_url(str){
