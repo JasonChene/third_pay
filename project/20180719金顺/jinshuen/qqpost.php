@@ -125,11 +125,10 @@ $data = array(
 );
 
 #变更参数设置
-$scan = 'zfb';
-  $data['application'] = 'ZFBScanOrder';
-  if (_is_mobile()) {
-    $data['application'] = 'ZFBWAPOrder';
-  }
+
+  $scan = 'qq';
+  $data['application'] = 'QQScanOrder';
+
 payType_bankname($scan,$pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

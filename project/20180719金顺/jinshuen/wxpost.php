@@ -107,7 +107,6 @@ $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $form_url = 'http://js.011vip.cn:9090/jspay/payGateway.htm';//接入提交地址
-$form_url =   'http://47.75.142.253/jspay/payGateway.htm';//测试
 
 #第三方参数设置
 $data = array(
@@ -120,6 +119,9 @@ $data = array(
   "merchantOrderDesc" => 'iPhone6S', //订单描述
   "userName" => $_REQUEST['S_Name'],//用户名
   "merchantPayNotifyUrl" => $merchant_url, //下行异步通知地址
+  "payerId" => '',
+  "salerId" => '',
+  "guaranteeAmt" => ''
 );
 
 #变更参数设置
@@ -149,8 +151,10 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
+ksort($data);
 $signtext = Tra_data($data);
-$sign = sign($pay_mkey,md5($signtext));
+$newsigntext = MD5($signtext,1);
+$sign = sign($pay_mkey,$newsigntext);
 $postdata = base64_encode($signtext)."|".$sign;
 $res = curl_post($form_url,$postdata);
 //返回值处理
@@ -165,24 +169,28 @@ foreach($newreparr as $reparr_key => $reparr_value){
   $newdata = explode('=',$reparr_value);
   $respone[$newdata[0]] = substr($newdata[1],1,-1);
 }
-
+//返回值处理
+//印出测试
 echo '<pre>';
-write_log($signtext);
-echo '签名字串2='.'<br>'.md5($signtext).'<br>';
+var_dump($rep1);
+// write_log($signtext);
+echo '签名字串2='.'<br>'.$newsigntext.'<br>';
 echo '签名字串结果='.'<br>'.$sign.'<br>';
 echo $postdata.'<br>';
 var_dump($respone);
 echo '</pre>';
 exit;
-if(1){
-  echo  '错误代码:' . $row['respCode']."\n<br>";
-  echo  '错误讯息:' . $row['respDesc']."\n<br>";
+
+//印出测试END
+if($respone['respCode'] != '000'){
+  echo  '错误代码:' . $respone['respCode']."\n<br>";
+  echo  '错误讯息:' . $respone['respDesc']."\n<br>";
   exit;
 }else{
   if(_is_mobile()){
-    $jumpurl = $row['codeUrl'];
+    $jumpurl = $respone['codeUrl'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['codeUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
   }
 }
 #跳轉方法
