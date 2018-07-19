@@ -1,0 +1,15 @@
+2018-07-19 04:10:34 request方法
+2018-07-19 04:10:34 post方法
+2018-07-19 04:10:34 input方法
+2018-07-19 04:10:34 {"user_id":"nongfusanquan","goodsname":"","pay_type":"200","orderid":"83602820180719160125","key":"476f96c907cb34ca493c51bd64df2141","price":"1000","out_order_id":"2018071916012928223"}
+2018-07-19 04:10:34 {"user_id":"nongfusanquan","goodsname":"","pay_type":"200","orderid":"83602820180719160125","key":"476f96c907cb34ca493c51bd64df2141","price":"1000","out_order_id":"2018071916012928223"}
+2018-07-19 04:10:34 user_id=nongfusanquan
+2018-07-19 04:10:34 goodsname=
+2018-07-19 04:10:34 pay_type=200
+2018-07-19 04:10:34 orderid=83602820180719160125
+2018-07-19 04:10:34 key=476f96c907cb34ca493c51bd64df2141
+2018-07-19 04:10:34 price=1000
+2018-07-19 04:10:34 out_order_id=2018071916012928223
+2018-07-19 04:10:34 signtext=goodsname=&orderid=83602820180719160125&out_order_id=2018071916012928223&pay_type=200&price=1000&user_id=nongfusanquanybub4bl0fed3d5u4cxx43uz31zszemwp
+2018-07-19 04:10:34 mysign=476f96c907cb34ca493c51bd64df2141
+2018-07-19 04:10:34 {"code":"1","msg":"处理成功"}at 0
