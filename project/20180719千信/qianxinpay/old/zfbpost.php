@@ -36,7 +36,7 @@ $version = "1.0";//版本
 $customerid = $pay_mid;  //商戶號
 $sdorderno = getOrderNo();  //随机生成商户订单编号
 $total_fee = number_format($_REQUEST['MOAmount'], 2, '.', ''); //订单金额
-$payType = $pay_type."zfb";
+$payType = $pay_type."_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
 $paytype = "alipay";
 if(_is_mobile()){

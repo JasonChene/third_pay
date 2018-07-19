@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");//现数据库的连接方式
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -70,8 +70,8 @@ function payType_bankname($scan,$pay_type){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -87,33 +87,27 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://hx.fjklt.net/gateway';//接入提交地址
+$form_url = 'http://www.586pay.com/Pay';//接入提交地址
 
 #第三方参数设置
-$data = array(
-  "app_id" => $pay_mid,
-  "method" => "",
-  "sign" => "",
-  "sign_type" => "MD5",
-  "version" => "1.0",
-  "content" => ""
-);
-$parms = array(
-  "out_trade_no" => $order_no, 
-  "total_amount" => $mymoney, 
-  "order_name" => "pay", 
-  "spbill_create_ip" => getClientIp(), 
-  "notify_url" => $merchant_url,
-  "return_url" => $return_url,
+$data =array(
+  'fxid' => $pay_mid,
+  'fxddh' => $order_no,
+  'fxaction' =>"orderpay",
+  'fxdesc' => "pay",
+  'fxfee' => $mymoney,
+  'fxnotifyurl' => $merchant_url,
+  'fxbackurl' => $return_url,
+  'fxpay' => "",
+  'fxsign' => "",
+  'fxip' => getClientIp(),
 );
 
 #变更参数设置
 $scan = 'zfb';
+$data['fxpay'] = 'alipay';
+
 payType_bankname($scan,$pay_type);
-$data['method'] = 'alipaycode';
-if (_is_mobile()) {
-  $data['method'] = 'alipay';
-}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -126,21 +120,43 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($parms);
-$data["content"] = json_encode($parms,JSON_UNESCAPED_SLASHES);
-ksort($data);
-$noarr = array('sign','sign_type');//不加入签名的array key值
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
-}
-$signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
-$sign = md5($signtext);
-$data['sign'] = $sign;
+$data["fxsign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
 
 #curl提交
 $res = curl_post($form_url,$data);
-echo $res;//直接html跳轉
+$row = json_decode($res,1);
+#跳转
+if ($row['status'] != '1') {
+  echo  '错误代码:' . $row['status']."<br>";
+  echo  '错误讯息:' . $row['error']."<br>";
+  exit;
+}else {
+  if(_is_mobile()){
+    $jumpurl = $row['payurl'];
+  }else{
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payurl']);
+  }
+}
+#跳轉方法
+
 ?>
+<html>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if(isset($form_data)){
+        foreach ($form_data as $arr_key => $arr_value) {
+      ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php }} ?>
+    </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
+</html>
