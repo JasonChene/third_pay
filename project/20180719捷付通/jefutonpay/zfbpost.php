@@ -134,7 +134,7 @@ if ($row['status'] != '1') {
   if(_is_mobile()){
     $jumpurl = $row['payurl'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payurl']);
   }
 }
 #跳轉方法

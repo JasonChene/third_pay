@@ -1,6 +1,0 @@
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','工商银行','ICBC');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','建设银行','CCB');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','民生银行','CMBC');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','农业银行','ABC');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','兴业银行','CIB');
-INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('EP支付','招商银行','CMB');

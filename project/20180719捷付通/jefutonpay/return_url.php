@@ -1,16 +1,16 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-// include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("return");
+//write_log("return");
 
 #接收资料
 #request方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	//write_log($key . "=" . $value);
 }
 
 #设定固定参数
@@ -42,15 +42,15 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	write_log("非法提交参数");
+	//write_log("非法提交参数");
 	exit;
 }
 
 #验签方式2
 $signtext = $data['fxstatus'] . $data['fxid'] . $data['fxddh'] . $data['fxfee'] . $pay_mkey; //验证签名
 $mysign = md5($signtext);
-write_log("signtext=".$signtext);
-write_log("mysign=".$mysign);
+// write_log("signtext=".$signtext);
+// write_log("mysign=".$mysign);
 
 
 #到账判断
