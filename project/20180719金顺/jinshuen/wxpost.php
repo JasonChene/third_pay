@@ -21,18 +21,16 @@ function Tra_data($array){//传输资料转格式
   
 }
 function sign($key,$data) {
-	$private_pem = chunk_split($key,64,"\r\n");//转换为pem格式的公钥
-  $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
-  $private_pem = openssl_get_privatekey($private_pem);//签名秘钥
+	// $private_pem = chunk_split($key,64,"\r\n");//转换为pem格式的钥
+  // $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
+  $private_pem = openssl_get_privatekey($key);//签名秘钥
 	$signature = '';  
 	openssl_sign($data, $signature, $private_pem);
 	return base64_encode($signature);
 } 
 function verity($key,$data,$signature)  
 {  
-  $public_pem = chunk_split($key,64,"\r\n");//转换为pem格式的公钥
-  $public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-  $public_pem = openssl_get_publickey($public_pem);//签名秘钥
+  $public_pem = openssl_get_publickey($key);//签名秘钥
 	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
 	return $result;  
 }
@@ -155,6 +153,7 @@ $signtext = Tra_data($data);
 $sign = sign($pay_mkey,md5($signtext));
 $postdata = base64_encode($signtext)."|".$sign;
 $res = curl_post($form_url,$postdata);
+//返回值处理
 $rep0 = explode('|',$res);
 $rep = base64_decode($rep0[0]);
 $rep1 = explode('<',$rep);
@@ -166,6 +165,7 @@ foreach($newreparr as $reparr_key => $reparr_value){
   $newdata = explode('=',$reparr_value);
   $respone[$newdata[0]] = substr($newdata[1],1,-1);
 }
+
 echo '<pre>';
 write_log($signtext);
 echo '签名字串2='.'<br>'.md5($signtext).'<br>';
@@ -173,6 +173,7 @@ echo '签名字串结果='.'<br>'.$sign.'<br>';
 echo $postdata.'<br>';
 var_dump($respone);
 echo '</pre>';
+exit;
 if(1){
   echo  '错误代码:' . $row['respCode']."\n<br>";
   echo  '错误讯息:' . $row['respDesc']."\n<br>";
