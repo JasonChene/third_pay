@@ -97,7 +97,7 @@ $data = array(
   "fxip" => getClientIp()//IP
 );
 #变更参数设置
-$form_url = 'http://yk.ykpays.com/Pay';//提交地址
+$form_url = 'http://yk.ykpay.cc/pay';//提交地址
 $scan = 'wx';
 if(_is_mobile()){
   $data['fxpay'] = 'wxwap' ;

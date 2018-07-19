@@ -154,15 +154,15 @@ $tran = mb_convert_encoding($res,"gb2312","UTF-8");
 $row = json_decode($tran,1);
 #跳转
 if ($row['respCode'] != '0000') {
-  echo  '错误代码:' . $row['respCode']."\n";
-  echo  '错误讯息:' . $row['respInfo']."\n";
+  echo  '错误代码:' . $row['respCode']."<br>";
+  echo  '错误讯息:' . $row['respInfo']."<br>";
   exit;
 }else {
 
   if(_is_mobile()){
-    $jumpurl = $array['payUrl'];
+    $jumpurl = $row['payUrl'];
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($array['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['payUrl']);
   }
 }
 #跳轉方法
