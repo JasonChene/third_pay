@@ -168,7 +168,7 @@ if (empty($row['pay_url'])) {
   exit;
 } else {
   $qrcodeUrl = $row['pay_url'];
-  if (_is_mobile()) {
+  if (_is_mobile() && $scan != 'wx') {
     $jumpurl = $qrcodeUrl;
   } else {
     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
