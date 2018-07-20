@@ -145,7 +145,7 @@ $data['sign'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_blank">
       <p>正在为您跳转中，请稍候......</p>
       <?php
         foreach ($data as $arr_key => $arr_value) {
