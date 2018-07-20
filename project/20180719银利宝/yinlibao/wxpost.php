@@ -160,11 +160,7 @@ if (empty($row['pay_url'])) {
   exit;
 } else {
   $qrcodeUrl = $row['pay_url'];
-  if (_is_mobile()) {
-    $jumpurl = $qrcodeUrl;
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
-  }
+  $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
 }
 
 #跳轉方法

@@ -153,6 +153,9 @@ $data_string = json_encode($data);
 #curl获取响应值
 $row = curl_post($form_url, $data_string);
 
+#curl获取响应值
+$row = curl_post($form_url, $data_string);
+
 #跳转
 if (empty($row['pay_url'])) {
   echo '错误代码:' . $row['code'] . "\n";
@@ -160,11 +163,7 @@ if (empty($row['pay_url'])) {
   exit;
 } else {
   $qrcodeUrl = $row['pay_url'];
-  if (_is_mobile()) {
-    $jumpurl = $qrcodeUrl;
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
-  }
+  $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
 }
 
 #跳轉方法
