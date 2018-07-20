@@ -1,7 +1,7 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");//现数据库的连接方式
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 //write_log("notify");
 
