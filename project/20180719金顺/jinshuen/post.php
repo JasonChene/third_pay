@@ -34,7 +34,7 @@ function verity($key,$data,$signature)
 	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
 	return $result;  
 }
-function curl_post($url,$data){ #POST访问
+function curl_post($url,$data,$scan){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -42,11 +42,17 @@ function curl_post($url,$data){ #POST访问
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
+  if($scan != 'wy'){
+    $tmpInfo = curl_exec($ch);
+    if (curl_errno($ch)) {
+      return curl_error($ch);
+    }
+    return $tmpInfo;
+  }else{
+    curl_setopt($ch,  CURLOPT_FOLLOWLOCATION, 1); // 获取转向后的内容 
+    $tmpInfo = curl_getinfo($ch);
+    return $tmpInfo;
   }
-  return $tmpInfo;
 }
 function QRcodeUrl($code){
   if(strstr($code,"&")){
@@ -154,7 +160,7 @@ $signtext = Tra_data($data);
 $newsigntext = MD5($signtext,1);
 $sign = sign($pay_mkey,$newsigntext);
 $postdata = base64_encode($signtext)."|".$sign;
-$res = curl_post($form_url,$postdata);
+$res = curl_post($form_url,$postdata,$scan);
 //返回值处理
 $rep0 = explode('|',$res);
 $rep = base64_decode($rep0[0]);
@@ -185,10 +191,14 @@ if($respone['respCode'] != '000'){
   echo  '错误讯息:' . $respone['respDesc']."\n<br>";
   exit;
 }else{
-  if(_is_mobile()){
-    $jumpurl = $respone['codeUrl'];
+  if($scan == 'wy'){
+    $jumpurl = $res;
   }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
+    if(_is_mobile()){
+      $jumpurl = $respone['codeUrl'];
+    }else{
+      $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
+    }
   }
 }
 #跳轉方法

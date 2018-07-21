@@ -141,7 +141,11 @@ if ($row['code'] != 200) {
   echo  '错误讯息:' . $row['error']."<br>";
   exit;
 }else {
-  $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['data']);
+  if(_is_mobile()){
+    $jumpurl = $row['data']['data'];
+  }else{
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['data']);
+  }
 }
   
 #跳轉方法
