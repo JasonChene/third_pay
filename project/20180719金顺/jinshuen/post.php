@@ -172,7 +172,7 @@ if($scan == "yl"){
   $newreparr = explode(' ',$rep3);
   $respone = array();
   foreach($newreparr as $reparr_key => $reparr_value){
-    $newdata = explode('=',$reparr_value);
+    $newdata = explode('=',$reparr_value,2);
     $respone[$newdata[0]] = substr($newdata[1],1,-1);
   }
   //返回值处理
@@ -204,7 +204,7 @@ if($scan == "yl"){
       <?php 
       if($scan != "yl"){
       ?>
-         <input type="hidden" neme="msg" value="<?php echo $postdata; ?>" />
+         <input type="hidden" name="msg" value="<?php echo $postdata; ?>" />
        <?php 
       } ?>
    </form>

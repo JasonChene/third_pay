@@ -1,6 +1,0 @@
-2018-07-21 03:16:46 notify
-2018-07-21 03:16:46 request方法
-2018-07-21 03:16:46 post方法
-2018-07-21 03:16:46 input方法
-2018-07-21 03:16:46 
-2018-07-21 15:18:37 <?xml version="1.0" encoding="utf-8" standalone="no"?><message accountType="0" application="SubmitOrder" merchantId="1000053" merchantOrderAmt="10000" merchantOrderId="47539220180721151837" merchantPayNotifyUrl="http://pay7.5566205.com/pay/jinshuen/notify_url.php" orderTime="20180721151837" payMode="0" rptType="1" version="1.0.1"/>

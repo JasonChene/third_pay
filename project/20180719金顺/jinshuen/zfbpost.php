@@ -118,10 +118,7 @@ $data = array(
   "merchantOrderAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''), //金额
   "merchantOrderDesc" => 'iPhone6S', //订单描述
   "userName" => $_REQUEST['S_Name'],//用户名
-  "merchantPayNotifyUrl" => $merchant_url, //下行异步通知地址
-  "payerId" => '',
-  "salerId" => '',
-  "guaranteeAmt" => ''
+  "merchantPayNotifyUrl" => $merchant_url //下行异步通知地址
 );
 
 #变更参数设置
@@ -158,7 +155,7 @@ $rep3 = substr($rep2[0],0,-1);
 $newreparr = explode(' ',$rep3);
 $respone = array();
 foreach($newreparr as $reparr_key => $reparr_value){
-  $newdata = explode('=',$reparr_value);
+  $newdata = explode('=',$reparr_value,2);
   $respone[$newdata[0]] = substr($newdata[1],1,-1);
 }
 //返回值处理
@@ -182,7 +179,7 @@ if($respone['respCode'] != '000'){
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
 
    </form>
