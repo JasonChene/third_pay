@@ -132,7 +132,9 @@ if (strstr($pay_type, "银联钱包")) {
   $data['merchantOrderDesc'] = 'iPhone6S';
 }elseif (strstr($pay_type, "银联快捷")) {
   $scan = 'ylkj';
-  $data['application'] = 'CertPayOrderH5';
+  $data['application'] = 'WebQuickPayOrder';
+  $data['accountType'] = '0';
+  $data['orderTime'] = date("YmdHis");
 } else {
   $scan = 'wy';
   $data['application'] = 'SubmitOrder';
@@ -186,6 +188,7 @@ if($scan == "yl"){
 }
 // echo '<pre>';
 // var_dump($data);
+// write_log($signtext);
 // echo $postdata;
 // exit;
 #跳轉方法
@@ -203,7 +206,7 @@ if($scan == "yl"){
       ?>
          <input type="hidden" neme="msg" value="<?php echo $postdata; ?>" />
        <?php 
-    } ?>
+      } ?>
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

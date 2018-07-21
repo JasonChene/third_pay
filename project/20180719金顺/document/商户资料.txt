@@ -6,3 +6,5 @@ a123456
 1000053
 登入网址
 http://js.011vip.cn:9090/jsmerchant/login.htm
+文档下载位置
+http://js.011vip.cn:9090/jspay/readme/Start.html

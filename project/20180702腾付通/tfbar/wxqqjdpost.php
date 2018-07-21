@@ -52,7 +52,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://www.tfbar.com/apisubmit';
+$form_url ='http://www.u3ka.com/apisubmit';
 #第三方参数设置
 $data =array(
   'version' => "1.0",
