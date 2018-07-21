@@ -142,16 +142,16 @@ $data_str = http_build_query($data);
     exit;
   } else {
     $qrcodeUrl = $row['pay_url'];
-    if (!_is_mobile()) {
+    // if (!_is_mobile()) {
       if (strstr($qrcodeUrl, "&")) {
         $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
       } else {
         $code = $qrcodeUrl;
       }
       $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-    } else {
-      $jumpurl = $qrcodeUrl;
-    }
+    // } else {
+    //   $jumpurl = $qrcodeUrl;
+    // }
   }
 // } else {
 //   $jumpurl = $form_url;
