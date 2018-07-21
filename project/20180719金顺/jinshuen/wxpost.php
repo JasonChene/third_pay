@@ -190,7 +190,7 @@ if($respone['respCode'] != '000'){
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="get" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
 
    </form>
