@@ -60,7 +60,7 @@ $signsuccess = (bool)openssl_verify($mysign, base64_decode($data['sign']), $plat
 
 #到账判断
 if ($success_msg == $success_code) {
-	if ($mysign) {
+	if ($signsuccess) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			$message = ("会员信息不存在，无法入账");
