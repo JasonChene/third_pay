@@ -118,10 +118,7 @@ $data = array(
   "merchantOrderAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''), //金额
   "merchantOrderDesc" => 'iPhone6S', //订单描述
   "userName" => $_REQUEST['S_Name'],//用户名
-  "merchantPayNotifyUrl" => $merchant_url, //下行异步通知地址
-  "payerId" => '',
-  "salerId" => '',
-  "guaranteeAmt" => ''
+  "merchantPayNotifyUrl" => $merchant_url //下行异步通知地址
 );
 
 #变更参数设置
@@ -157,22 +154,11 @@ $rep3 = substr($rep2[0],0,-1);
 $newreparr = explode(' ',$rep3);
 $respone = array();
 foreach($newreparr as $reparr_key => $reparr_value){
-  $newdata = explode('=',$reparr_value);
+  $newdata = explode('=',$reparr_value,2);
   $respone[$newdata[0]] = substr($newdata[1],1,-1);
 }
 //返回值处理
-//印出测试
-echo '<pre>';
-var_dump($rep1);
-// write_log($signtext);
-echo '签名字串2='.'<br>'.$newsigntext.'<br>';
-echo '签名字串结果='.'<br>'.$sign.'<br>';
-echo $postdata.'<br>';
-var_dump($respone);
-echo '</pre>';
-exit;
 
-//印出测试END
 if($respone['respCode'] != '000'){
   echo  '错误代码:' . $respone['respCode']."\n<br>";
   echo  '错误讯息:' . $respone['respDesc']."\n<br>";
@@ -192,12 +178,9 @@ if($respone['respCode'] != '000'){
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="get" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-       <?php 
-    } ?>
+
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

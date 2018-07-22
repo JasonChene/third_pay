@@ -34,7 +34,7 @@ function verity($key,$data,$signature)
 	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
 	return $result;  
 }
-function curl_post($url,$data){ #POST访问
+function curl_post($url,$data,$scan){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -42,11 +42,17 @@ function curl_post($url,$data){ #POST访问
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
+  curl_setopt($ch,  CURLOPT_FOLLOWLOCATION, 1); // 获取转向后的内容 
+  if($scan == 'yl'){
+    $tmpInfo = curl_exec($ch);
+    if (curl_errno($ch)) {
+      return curl_error($ch);
+    }
+    return $tmpInfo;
+  }else{
+    $tmpInfo = curl_getinfo($ch);
+    return $tmpInfo;
   }
-  return $tmpInfo;
 }
 function QRcodeUrl($code){
   if(strstr($code,"&")){
@@ -112,29 +118,30 @@ $form_url = 'http://js.011vip.cn:9090/jspay/payGateway.htm';//接入提交地址
 $data = array(
   "application" => '',//应用名称
   "version" => '1.0.1',//通讯协议版本号
-  "timestamp" => date("YmdHis"),//时间戳
   "merchantId" => $pay_mid, //商户代码
   "merchantOrderId" => $order_no, //商户订单号
   "merchantOrderAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''), //金额
-  "merchantOrderDesc" => 'iPhone6S', //订单描述
-  "userName" => $_REQUEST['S_Name'],//用户名
-  "merchantPayNotifyUrl" => $merchant_url, //下行异步通知地址
-  "payerId" => '',
-  "salerId" => '',
-  "guaranteeAmt" => ''
+  "merchantPayNotifyUrl" => $merchant_url //下行异步通知地址
 );
 
 #变更参数设置
 if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
+  $data['timestamp'] = date("YmdHis");
   $data['application'] = 'UnionScanOrder';
+  $data['merchantOrderDesc'] = 'iPhone6S';
 }elseif (strstr($pay_type, "银联快捷")) {
   $scan = 'ylkj';
-  $data['application'] = 'CertPayOrderH5';
-} else {
-  $scan = 'wy';
   $data['application'] = 'WebQuickPayOrder';
   $data['accountType'] = '0';
+  $data['orderTime'] = date("YmdHis");
+} else {
+  $scan = 'wy';
+  $data['application'] = 'SubmitOrder';
+  $data['accountType'] = '0';
+  $data['orderTime'] = date("YmdHis");
+  $data['rptType'] = '1';
+  $data['payMode'] = '0';
 }
 payType_bankname($scan,$pay_type);
 
@@ -154,43 +161,36 @@ $signtext = Tra_data($data);
 $newsigntext = MD5($signtext,1);
 $sign = sign($pay_mkey,$newsigntext);
 $postdata = base64_encode($signtext)."|".$sign;
-$res = curl_post($form_url,$postdata);
-//返回值处理
-$rep0 = explode('|',$res);
-$rep = base64_decode($rep0[0]);
-$rep1 = explode('<',$rep);
-$rep2 = explode('>',$rep1[2]);
-$rep3 = substr($rep2[0],0,-1);
-$newreparr = explode(' ',$rep3);
-$respone = array();
-foreach($newreparr as $reparr_key => $reparr_value){
-  $newdata = explode('=',$reparr_value);
-  $respone[$newdata[0]] = substr($newdata[1],1,-1);
-}
-//返回值处理
-//印出测试
-echo '<pre>';
-var_dump($rep1);
-// write_log($signtext);
-echo '签名字串2='.'<br>'.$newsigntext.'<br>';
-echo '签名字串结果='.'<br>'.$sign.'<br>';
-echo $postdata.'<br>';
-var_dump($respone);
-echo '</pre>';
-exit;
-
-//印出测试END
-if($respone['respCode'] != '000'){
-  echo  '错误代码:' . $respone['respCode']."\n<br>";
-  echo  '错误讯息:' . $respone['respDesc']."\n<br>";
-  exit;
-}else{
-  if(_is_mobile()){
-    $jumpurl = $respone['codeUrl'];
+if($scan == "yl"){
+  $res = curl_post($form_url,$postdata,$scan);
+  //返回值处理
+  $rep0 = explode('|',$res);
+  $rep = base64_decode($rep0[0]);
+  $rep1 = explode('<',$rep);
+  $rep2 = explode('>',$rep1[2]);
+  $rep3 = substr($rep2[0],0,-1);
+  $newreparr = explode(' ',$rep3);
+  $respone = array();
+  foreach($newreparr as $reparr_key => $reparr_value){
+    $newdata = explode('=',$reparr_value,2);
+    $respone[$newdata[0]] = substr($newdata[1],1,-1);
+  }
+  //返回值处理
+  if($respone['respCode'] != '000'){
+    echo  '错误代码:' . $respone['respCode']."\n<br>";
+    echo  '错误讯息:' . $respone['respDesc']."\n<br>";
+    exit;
   }else{
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
   }
+}else{
+  $jumpurl = $form_url ;
 }
+// echo '<pre>';
+// var_dump($data);
+// write_log($signtext);
+// echo $postdata;
+// exit;
 #跳轉方法
 ?>
 <html>
@@ -199,12 +199,14 @@ if($respone['respCode'] != '000'){
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="get" id="frm1" action="<?php echo $form_url ?>" target="_self">
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php 
+      if($scan != "yl"){
+      ?>
+         <input type="hidden" name="msg" value="<?php echo $postdata; ?>" />
        <?php 
-    } ?>
+      } ?>
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

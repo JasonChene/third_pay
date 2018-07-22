@@ -52,7 +52,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='http://www.tfbar.com/apisubmit';
+$form_url ='http://www.u3ka.com/apisubmit';
 #第三方参数设置
 $data =array(
   'version' => "1.0",
@@ -75,10 +75,8 @@ if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'wy';
   $payType = $pay_type."_wy";
   $bankname = $pay_type . "->网银在线充值";
-  $data['paytype'] = "jbypc";
-  if (_is_mobile()) {
-    $data['paytype'] = "jbywap";
-  }
+  $data['paytype'] = "bank";
+  $data['bankcode'] = $_REQUEST['bank_code'];
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

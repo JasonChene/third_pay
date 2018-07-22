@@ -87,7 +87,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://www.586pay.com/Pay';//接入提交地址
+$form_url = 'http://8jft.com/Pay';//接入提交地址
 
 #第三方参数设置
 $data =array(

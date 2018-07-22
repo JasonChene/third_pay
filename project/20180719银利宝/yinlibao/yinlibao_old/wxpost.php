@@ -153,9 +153,6 @@ $data_string = json_encode($data);
 #curl获取响应值
 $row = curl_post($form_url, $data_string);
 
-#curl获取响应值
-$row = curl_post($form_url, $data_string);
-
 #跳转
 if (empty($row['pay_url'])) {
   echo '错误代码:' . $row['code'] . "\n";
