@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<title>API支付 - 网上开店 | 电子商务首选服务商，支付用API，方便又可靠！</title>
+
+		<link href="css/paytest.css" type="text/css" rel="stylesheet" />
+		<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	</head>
+<body>
+
+           <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #107929">
+		  <tr>
+		    <td><table width="100%" border="0" align="center" cellpadding="5" cellspacing="1">
+		  </tr>
+		  <tr>
+		    <td height="30" align="left"> </td>
+		  </tr>
+		  <tr>
+		  	<td height="30" colspan="2" bgcolor="#6BBE18"><span style="color: #FFFFFF">感谢您使用API支付平台</span></td>
+		  </tr>
+		  <tr>
+		  	<td colspan="2" bgcolor="#CEE7BD">API支付产品通用支付接口演示：</td>
+		  </tr>
+                <tr>
+				<form method="post" action="withdrawReq.php" targe="_blank">
+				</tr>
+				<td align="right" class="style1">业务类型：</td>
+				<td width="76%">&nbsp;<input type="text" name="p0_Cmd" id="p0_Cmd" value="Withdraw"/></td>
+			    </tr>
+                </tr>
+				<td align="right" class="style1">商户编号：</td>
+				<td width="76%">&nbsp;<input type="text" name="p1_MerId" id="p1_MerId" value=""/></td>
+			    </tr>
+
+                <tr>
+                    <td align="right" class="style1">银行编码：</td>
+                    <td width="84%">&nbsp;<input name="p2_BankCode" value=""  id="p2_BankCode" /></td>
+                </tr>
+                <tr>
+                    <td align="right" class="style1">账户类型：</td>
+                    <td width="84%">&nbsp;<select name="p3_CardAcType"  id="p3_CardAcType" >
+						<option value="1">个人</option>
+						<option value="2">企业</option>
+					</select>	</td>
+                </tr>
+
+                <tr>
+                    <td align="right" class="style1">银行卡号：</td>
+                    <td>&nbsp;<input name="p4_BankCardNo"  id="p4_BankCardNo" value="" /></td>
+                </tr>
+                 <tr>
+                    <td align="right" class="style1">收款人姓名：</td>
+                    <td width="84%">&nbsp;<input name="p5_CardHolder" value=""  id="p5_CardHolder" /></td>
+                </tr>
+                 <tr>
+                    <td align="right" class="style1">银行名称：</td>
+                    <td width="84%">&nbsp;<input name="p6_BankName" value=""  id="p6_BankName" /></td>
+                </tr>
+                 <tr>
+                    <td align="right" class="style1">银行支行名称：</td>
+                    <td width="84%">&nbsp;<input name="p7_BankBranchName" value=""  id="p7_BankBranchName" /></td>
+                </tr>
+                 <tr>
+                    <td align="right" class="style1">开户所在省：</td>
+                    <td width="84%">&nbsp;<input name="p8_BankProvince" value=""  id="p8_BankProvince" /></td>
+                </tr>
+                 <tr>
+                    <td align="right" class="style1">开户所在市：</td>
+                    <td width="84%">&nbsp;<input name="p9_BankCity" value="" id="p9_BankCity" /></td>
+                </tr>
+
+				 <tr>
+                    <td align="right" class="style1">金额：</td>
+                    <td width="84%">&nbsp;<input name="p10_PayAmount" value="" id="p10_PayAmount" /></td>
+                </tr>
+
+				<tr>
+                    <td align="right" class="style1">订单号：</td>
+                    <td width="84%">&nbsp;<input name="p11_OrderID" value="" id="p11_OrderID" /></td>
+                </tr>
+
+				<tr>
+                    <td align="right" class="style1">Re</td>
+                    <td width="84%">&nbsp;<input size="50" type="text" name="p12_ReturnUrl" id="p12_ReturnUrl" value="http://localhost/callback.php" /></td>
+                </tr>
+				<tr>
+                    <td align="right" class="style1">Cur</td>
+                    <td width="84%">&nbsp;<input name="p13_Cur" value="CNY"  id="p13_Cur" /></td>
+                </tr>
+				<tr>
+                    <td align="right" class="style1">Channel</td>
+                    <td width="84%">&nbsp;<input name="p14_Channel" value=""  id="p14_Channel" /></td>
+                </tr>
+
+			<tr>
+				<td align="right" class="style1">操作：</td>
+				<td>&nbsp;<input type="submit" name="submit" value="提交"  /></td>
+			</tr>
+
+            </table>
+        </div>
+    </form>
+	<script>
+	$(function () {
+		$("#p11_OrderID").val(random());
+		// $("#tranDate").val(getDate());
+		// $("#tranTime").val(getTime());
+	});
+
+	function random() {
+		var d = new Date();
+		return d.getFullYear() + "" + (d.getMonth() + 1 )+ "" + d.getDate() + "" + d.getHours() + "" + d.getMinutes() + "" + d.getMilliseconds() + "" + parseInt(Math.random() * 1000);
+	}
+
+	function getDate() {
+		var d = new Date();
+		return d.getFullYear() + "" + d.getMonth() + 1 + "" + d.getDay();
+	}
+
+	function getTime() {
+		var d = new Date();
+		return getDate() + "" + d.getHours() + "" + d.getMinutes() + "" + d.getMilliseconds();
+	}
+	</script>
+
+</body>
+</html>

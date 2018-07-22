@@ -1,0 +1,13 @@
+<?php
+
+/*
+ * @Description API֧����Ʒͨ�ýӿڷ���
+ */
+
+#	�̻�����p1_MerId,�Լ���ԿmerchantKey ��Ҫ��API֧��ƽ̨����
+$p1_MerId			= "1608";				 		#����ʹ��
+$merchantKey	= "BLSZw3omXNC7q4UVMHzOz5Mcri22PunG";							#����ʹ��
+
+$logName	= "Bank.log";
+
+?>
