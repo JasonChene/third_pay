@@ -122,19 +122,10 @@ $data = array(
 );
 
 #变更参数设置
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['application'] = 'JDScanOrder';
-  if(_is_mobile()){
-    $data['application'] = 'JDH5Order';
-  }
-}else {
-  $scan = 'wx';
-  $data['application'] = 'WeiXinScanOrder';
-  if (_is_mobile()) {
-    $data['application'] = 'WeiXinWapOrder';
-  }
-}
+
+  $scan = 'qq';
+  $data['application'] = 'QQScanOrder';
+
 payType_bankname($scan,$pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -153,38 +144,32 @@ $signtext = Tra_data($data);
 $newsigntext = MD5($signtext,1);
 $sign = sign($pay_mkey,$newsigntext);
 $postdata = base64_encode($signtext)."|".$sign;
-if(_is_mobile() && $scan == 'jd'){
-  $jumpurl = $form_url;
-  
+$res = curl_post($form_url,$postdata);
+//返回值处理
+$rep0 = explode('|',$res);
+$rep = base64_decode($rep0[0]);
+$rep1 = explode('<',$rep);
+$rep2 = explode('>',$rep1[2]);
+$rep3 = substr($rep2[0],0,-1);
+$newreparr = explode(' ',$rep3);
+$respone = array();
+foreach($newreparr as $reparr_key => $reparr_value){
+  $newdata = explode('=',$reparr_value,2);
+  $respone[$newdata[0]] = substr($newdata[1],1,-1);
+}
+//返回值处理
+
+if($respone['respCode'] != '000'){
+  echo  '错误代码:' . $respone['respCode']."\n<br>";
+  echo  '错误讯息:' . $respone['respDesc']."\n<br>";
+  exit;
 }else{
-  $res = curl_post($form_url,$postdata);
-  //返回值处理
-  $rep0 = explode('|',$res);
-  $rep = base64_decode($rep0[0]);
-  $rep1 = explode('<',$rep);
-  $rep2 = explode('>',$rep1[2]);
-  $rep3 = substr($rep2[0],0,-1);
-  $newreparr = explode(' ',$rep3);
-  $respone = array();
-  foreach($newreparr as $reparr_key => $reparr_value){
-    $newdata = explode('=',$reparr_value,2);
-    $respone[$newdata[0]] = substr($newdata[1],1,-1);
-  }
-  //返回值处理
-  
-  if($respone['respCode'] != '000'){
-    echo  '错误代码:' . $respone['respCode']."\n<br>";
-    echo  '错误讯息:' . $respone['respDesc']."\n<br>";
-    exit;
+  if(_is_mobile()){
+    $jumpurl = $respone['codeUrl'];
   }else{
-    if(_is_mobile()){
-      $jumpurl = $respone['codeUrl'];
-    }else{
-      $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
-    }
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($respone['codeUrl']);
   }
 }
-
 #跳轉方法
 ?>
 <html>
@@ -195,12 +180,7 @@ if(_is_mobile() && $scan == 'jd'){
   <body>
   <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-     <?php 
-      if($scan == "jd" && _is_mobile()){
-      ?>
-         <input type="hidden" name="msg" value="<?php echo $postdata; ?>" />
-       <?php 
-      } ?>
+
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

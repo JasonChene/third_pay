@@ -126,7 +126,7 @@ if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['application'] = 'JDScanOrder';
   if(_is_mobile()){
-    $data['application'] = 'JDH5Order';
+    $data['application'] = 'JDScanOrder';
   }
 }else {
   $scan = 'wx';
