@@ -79,7 +79,7 @@ $stmt->execute($params);
         <div class="form-group div-nowrap">
           <label>請填网域位置</label>
           <br>
-          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay7.5566205.com" disabled>
+          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay.7k111.com" disabled>
         </div>
         <div class="form-group div-nowrap" id="select_div">
           <label>第三方名称</label>
@@ -101,7 +101,7 @@ $stmt->execute($params);
       </div>
       <div class="form-group">
         <label>bank_code</label>
-        <select style="width:96%;height:35px;margin-left:2%;" name="pay_name" id="bank_select">
+        <select style="width:96%;height:35px;margin-left:2%;" name="pay_name" id="bank_code">
             <option>请选择第三方</option>
         </select>
       </div>
@@ -380,7 +380,7 @@ $(document).ready(function() {
           url:"./mysql.func.php?pay_name="+pj,
           method:"GET",
           success:function(res){
-            $('#bank_select').html(res);
+            $('#bank_code').html(res);
           },
           error:function() {
             alert("SQL error");

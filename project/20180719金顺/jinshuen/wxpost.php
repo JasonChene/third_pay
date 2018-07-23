@@ -21,19 +21,11 @@ function Tra_data($array){//传输资料转格式
   
 }
 function sign($key,$data) {
-	// $private_pem = chunk_split($key,64,"\r\n");//转换为pem格式的钥
-  // $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
   $private_pem = openssl_get_privatekey($key);//签名秘钥
 	$signature = '';  
 	openssl_sign($data, $signature, $private_pem);
 	return base64_encode($signature);
 } 
-function verity($key,$data,$signature)  
-{  
-  $public_pem = openssl_get_publickey($key);//签名秘钥
-	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
-	return $result;  
-}
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -126,12 +118,9 @@ if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['application'] = 'JDScanOrder';
   if(_is_mobile()){
-    $data['application'] = 'JDScanOrder';
+    $data['application'] = 'JDH5Order';
   }
-}elseif (strstr($pay_type, "QQ钱包") ||  strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $data['application'] = 'QQScanOrder';
-} else {
+}else {
   $scan = 'wx';
   $data['application'] = 'WeiXinScanOrder';
   if (_is_mobile()) {

@@ -21,18 +21,10 @@ function Tra_data($array){//传输资料转格式
   
 }
 function sign($key,$data) {
-	// $private_pem = chunk_split($key,64,"\r\n");//转换为pem格式的钥
-  // $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
   $private_pem = openssl_get_privatekey($key);//签名秘钥
 	$signature = '';  
 	openssl_sign($data, $signature, $private_pem);
 	return base64_encode($signature);
-} 
-function verity($key,$data,$signature)  
-{  
-  $public_pem = openssl_get_publickey($key);//签名秘钥
-	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
-	return $result;  
 }
 function curl_post($url,$data,$scan){ #POST访问
   $ch = curl_init();
@@ -186,11 +178,7 @@ if($scan == "yl"){
 }else{
   $jumpurl = $form_url ;
 }
-// echo '<pre>';
-// var_dump($data);
-// write_log($signtext);
-// echo $postdata;
-// exit;
+
 #跳轉方法
 ?>
 <html>
