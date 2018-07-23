@@ -71,9 +71,9 @@ $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_doma
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//商户号
+$pay_mid = $row['mer_id'];//
 $pay_mkey = $row['mer_key'];//商戶私钥
-$pay_account = $row['mer_account'];
+$pay_account = $row['mer_account'];//appid
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
 
@@ -88,15 +88,19 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid,
-  "pay_orderid" => $order_no, 
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay",//不簽名
+  "version" => "4.0",
+  "app_id" => $pay_account, 
+  "pay_type" => "",
+  "nonce_str" => $order_no,
+  "sign" => "",
+  "sign_type" => "MD5",
+  "body" => "pay",
+  "out_trade_no" => $order_no,
+  "fee_type" => "CNY",
+  "total_fee" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "return_url" => $return_url,
+  "notify_url" => $merchant_url,
+  "system_time" => date("YmdHis"),
 );
 #变更参数设置
 

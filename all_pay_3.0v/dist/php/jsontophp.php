@@ -2,6 +2,7 @@
 $req = json_decode(file_get_contents('php://input'),1);
 $req = json_decode($req['data'], true);
 
+
 function fix_payment($payment){
     if(strstr($payment,"qq")){
       $payment2['type']='qq';
@@ -68,7 +69,11 @@ echo '#支付方式 : '. $payment['type'] .";\n";
 
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
-echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
+if ($req['key'] == 1) {
+  echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
+}else {
+  # code...
+}
 echo '$S_Name = $_REQUEST[\'S_Name\'];'."\n";
 echo '$top_uid = $_REQUEST[\'top_uid\'];'."\n";
 echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
