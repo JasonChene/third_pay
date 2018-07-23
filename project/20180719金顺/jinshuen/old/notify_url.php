@@ -8,13 +8,50 @@ function verity($key,$data,$signature)
 	$result = openssl_verify($data, base64_decode($signature), $public_pem);  
 	return $result;  
 }
+function public_decrypt($key,$data,$signature)  
+{  
+  $public_pem = openssl_get_publickey($key);//签名秘钥
+	$result = openssl_public_decrypt($data, base64_decode($signature), $public_pem);  
+	return $result;  
+}
+write_log("notify");
 
-// write_log("notify");
+#############################################
+#request方法
+write_log('request方法');
+foreach ($_REQUEST as $key => $value) {
+	// $data[$key] = $value;
+	write_log($key."=".$value);
+}
+#post方法
+write_log('post方法');
+foreach ($_POST as $key => $value) {
+	// $data[$key] = $value;
+	write_log($key."=".$value);
+}
+#input方法
+write_log('input方法');
+$input_data=file_get_contents("php://input");
+write_log($input_data);
+// $res=json_decode($input_data,1);//json回传资料
+
+// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XML回传资料
+
+// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
+
+// foreach ($res as $key => $value) {
+// 	$data[$key] = $value;
+// 	write_log($key."=".$value);
+// }
+###########################################
+
 
 #接收资料
 #input方法
 $result = file_get_contents("php://input");
-// write_log($result);
+write_log($result);
 //资料处理
 $tmp = explode("|", $result);
 $resp_xml = base64_decode($tmp[0]);
@@ -37,9 +74,9 @@ foreach($newreparr2 as $reparr_key => $reparr_value){
 }
 unset($data['message']);
 unset($data['item']);
-// foreach ($data as $key => $value) {
-// 	write_log($key."=".$value);
-// }
+foreach ($data as $key => $value) {
+	write_log($key."=".$value);
+}
 //资料处理END
 #设定固定参数
 $order_no = $data['merchantOrderId']; //订单号
@@ -73,7 +110,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $signsuccess = verity($pay_account,MD5($resp_xml,1),$resp_sign);
-// write_log((int)$signsuccess);
+write_log((int)$signsuccess);
 #到账判断
 if ($success_msg == $success_code) {
   if ( (int)$signsuccess == 1) {

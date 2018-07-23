@@ -1,0 +1,7 @@
+http://dev.heepay.com/index.php?s=/21&page_id=132    开发资料
+
+直接用网银的 接口对接 pay_type=19  version=1
+
+网银和银联：
+
+签名原始数据：version=1&agent_id=2113461&agent_bill_id=20180709095400&agent_bill_time=20180709095439&pay_type=20&pay_amt=0.01?ify_url=http://gzyunshangfxkj.com/gheepay/notify.php&return_url=http://gzyunshangfxkj.com/gheepay/return.php&user_ip=117.61.130.18&key=eb5eb73adbee47dabcd7ac71

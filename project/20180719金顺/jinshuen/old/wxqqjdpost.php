@@ -128,7 +128,10 @@ if (strstr($pay_type, "京东钱包")) {
   if(_is_mobile()){
     $data['application'] = 'JDScanOrder';
   }
-}else {
+}elseif (strstr($pay_type, "QQ钱包") ||  strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['application'] = 'QQScanOrder';
+} else {
   $scan = 'wx';
   $data['application'] = 'WeiXinScanOrder';
   if (_is_mobile()) {

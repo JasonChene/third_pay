@@ -1,0 +1,19 @@
+
+登录地址：https://www.heepay.com/
+
+登陆的时候：商户账号、登陆密码、验证码
+
+提款：资金管理------付款(上班时间单笔最高300万，每笔手续费：10块，非上班时间单笔最高：5万以下如：49999 每笔手续费：5块）  切记切记
+
+
+商户账号：	qzweiquandz@sina.com
+商户编号：	2113384	 
+登陆密码：aa123123
+交易密码：aas123123
+
+签名密钥： E54DBB32B5BD4C49AB6D6D9F
+
+支付域名：eduit17.quanzhouweiquan.com
+
+url通知地址：eduit18.quanzhouweiquan.com
+   ip或别名发给我们解析
