@@ -93,12 +93,16 @@ $data = array(
 
 #变更参数设置
 $form_url = 'https://master-egg.cn/GateWay/ReceiveBank.aspx';//请求地址
-$scan = 'wx';
-$data['pd_FrpId'] = 'wxcode';
-if (_is_mobile()) {
-  $data['pd_FrpId'] = 'wechath5';
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['pd_FrpId'] = 'jdpay';
+} else {
+  $scan = 'wx';
+  $data['pd_FrpId'] = 'wxcode';
+  if (_is_mobile()) {
+    $data['pd_FrpId'] = 'wechath5';
+  }
 }
-
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
