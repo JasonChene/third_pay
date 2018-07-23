@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+	<title>GMStone PHP Demo</title>
+	<link href="css/paytest.css" type="text/css" rel="stylesheet" />
+	<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+	<table width="50%" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #107929">
+		<tr>
+			<td>
+				<table width="100%" border="0" align="center" cellpadding="5" cellspacing="1">
+					<tr>
+						<td height="30" align="left"> </td>
+					</tr>
+					<tr>
+						<td height="30" colspan="2" bgcolor="#6BBE18"><span style="color: #FFFFFF">感谢您使用API支付平台</span></td>
+					</tr>
+					<tr>
+						<td colspan="2" bgcolor="#CEE7BD">API支付产品通用支付接口演示：</td>
+					</tr>
+					<form method="post" action="req.php" targe="_blank">
+						<tr>
+							<td align="left" width="30%">&nbsp;&nbsp;商户订单号</td>
+							<td align="left">&nbsp;&nbsp;<input size="50" type="text" name="p2_Order" id="p2_Order" /></td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;&nbsp;支付金额</td>
+							<td align="left">&nbsp;&nbsp;<input size="50" type="text" name="p3_Amt" id="p3_Amt" value="0.01" />&nbsp;<span style="color:#FF0000;font-weight:100;">*</span></td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;&nbsp;商品名称</td>
+							<td align="left">&nbsp;&nbsp;<input size="50" type="text" name="p5_Pid" id="p5_Pid"  value=""/></td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;&nbsp;返回地址</td>
+							<td align="left">&nbsp;&nbsp;<input size="50" type="text" name="p8_Url" id="p8_Url" value="callback.php" />&nbsp;<span style="color:#FF0000;font-weight:100;">*</span></td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;&nbsp;其他參數</td>
+							<td align="left">&nbsp;&nbsp;<input size="50" type="text" name="pa_MP" id="pa_MP"  value=""/></td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;&nbsp;支付方法</td>
+							<td align="left">&nbsp;&nbsp;<input type="text" name="pd_FrpId" id="pd_FrpId"/> (銀行簡碼／微信(wxcode)／支付寶(alipay)／QQ支付(qqpay)/京東(jdpay)／快捷(quickpay)..)</td>
+						</tr>
+						<tr>
+							<td align="left">&nbsp;</td>
+							<td align="left">&nbsp;&nbsp;<input type="submit" value="提交" /></td>
+						</tr>
+					</form>
+					<tr>
+						<td height="5" bgcolor="#6BBE18" colspan="2"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<script>
+	$(function () {
+		$("#p2_Order").val(random());
+		// $("#tranDate").val(getDate());
+		// $("#tranTime").val(getTime());
+	});
+
+	function random() {
+		var d = new Date();
+		return d.getFullYear() + "" + d.getMonth() + 1 + "" + d.getDay() + "" + d.getHours() + "" + d.getMinutes() + "" + d.getMilliseconds() + "" + parseInt(Math.random() * 1000);
+	}
+
+	function getDate() {
+		var d = new Date();
+		return d.getFullYear() + "" + d.getMonth() + 1 + "" + d.getDay();
+	}
+
+	function getTime() {
+		var d = new Date();
+		return getDate() + "" + d.getHours() + "" + d.getMinutes() + "" + d.getMilliseconds();
+	}
+	</script>
+</body>
+</html>

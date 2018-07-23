@@ -1,27 +1,31 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 include_once("./function.php");
 
 // write_log("notify");
-// #json格式
-// $json_data=file_get_contents("php://input");
-// $res=json_decode($json_data,1);
-// write_log("json");
-// foreach ($res as $key => $value) {
+// #
+// write_log("REQUEST方法");
+// foreach ($_REQUEST as $key => $value) {
 // 	write_log($key."=".$value);
 // }
-// write_log("post");
+// write_log("POST方法");
 // foreach ($_POST as $key => $value) {
 // 	write_log($key."=".$value);
 // }
+// #input方法
+// write_log('input方法');
+// $input_data=file_get_contents("php://input");
+// write_log($input_data);
 
 $data = json_decode($_POST['reqJson'],1);
-
+// foreach ($data as $key => $value) {
+// 	write_log($key."=".$value);
+// }
 $params = array(':m_order' => $data['extra_para']);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -30,7 +34,7 @@ $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -40,19 +44,19 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
-// write_log("验签前");
 $echos=array(
 	"respCode" => "SUCCESS"
 );
 $str = sortData($echos);
 $baseStr = base64_encode($str);
-$aesPrivage = encrypt($baseStr, $pay_account);
+$aesPrivage = encrypt($baseStr, $pay_account,'AES-128-ECB');
 $aesPrivage = strtoupper($aesPrivage);
 $sign = strtoupper(md5($aesPrivage . $pay_mkey));
 $echos['sign'] = $sign;
 
 $echosuccess = json_encode($echos);
 $vdata = VerifySign($data['transData'],$pay_account,$pay_mkey);//含验签
+
 if ($vdata != false) {
   if ( $vdata['isClearOrCancel'] == "0") {
   	$mymoney = number_format($vdata['totalAmount'], 2, '.', ''); //订单金额

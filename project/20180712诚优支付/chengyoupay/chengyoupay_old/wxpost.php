@@ -102,15 +102,15 @@ $form_url = 'http://118.31.21.217/pay_index.html';//扫码提交地址
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['pay_bankcode'] = '958';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '965';
-  }
+    // if (_is_mobile()) {
+    //   $data['pay_bankcode'] = '965';
+    // }
 } else {
   $scan = 'wx';
   $data['pay_bankcode'] = '938';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '967';
-  }
+    // if (_is_mobile()) {
+    //   $data['pay_bankcode'] = '967';
+    // }
 }
 payType_bankname($scan, $pay_type);
 
@@ -139,31 +139,31 @@ $data['pay_md5sign'] = $sign;
 $data_str = http_build_query($data);
 
 #curl获取响应值
-if (!_is_mobile()) {
-  $res = curl_post($form_url, $data_str);
-  $tran = mb_convert_encoding("$res", "UTF-8");
-  $row = json_decode($tran, 1);
+// if (!_is_mobile()) {
+$res = curl_post($form_url, $data_str);
+$tran = mb_convert_encoding("$res", "UTF-8");
+$row = json_decode($tran, 1);
 
 #跳转
-  if ($row['pay_code'] != 'HL0000') {
-    echo '订单错误' . "\n";
-    exit;
-  } else {
-    $qrcodeUrl = $row['pay_url'];
-    if (!_is_mobile()) {
-      if (strstr($qrcodeUrl, "&")) {
-        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-      } else {
-        $code = $qrcodeUrl;
-      }
-      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-    } else {
-      $jumpurl = $qrcodeUrl;
-    }
-  }
+if ($row['pay_code'] != 'HL0000') {
+  echo '订单错误' . "\n";
+  exit;
 } else {
-  $jumpurl = $form_url;
+  $qrcodeUrl = $row['pay_url'];
+    // if (!_is_mobile()) {
+  if (strstr($qrcodeUrl, "&")) {
+    $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+  } else {
+    $code = $qrcodeUrl;
+  }
+  $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+    // } else {
+    //   $jumpurl = $qrcodeUrl;
+    // }
 }
+// } else {
+//   $jumpurl = $form_url;
+// }
 
 #跳轉方法
 ?>
@@ -175,13 +175,15 @@ if (!_is_mobile()) {
   <body>
   <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-     <?php if (_is_mobile()) { ?>
+
+     <?php if (0) { ?>
        <?php foreach ($data as $arr_key => $arr_value) { ?>
          <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
        <?php 
     } ?>
      <?php 
   } ?>
+  
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

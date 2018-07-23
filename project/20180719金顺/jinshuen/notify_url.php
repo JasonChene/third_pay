@@ -43,12 +43,8 @@ write_log($input_data);
 
 
 #接收资料
-#post方法
-$data = array();
-foreach ($_POST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
+#input方法
+$result = file_get_contents("php://input");
 //资料处理
 $tmp = explode("|", $result);
 $resp_xml = base64_decode($tmp[0]);

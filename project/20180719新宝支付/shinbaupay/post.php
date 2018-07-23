@@ -10,30 +10,33 @@ if (function_exists("date_default_timezone_set")) {
 
 function payType_bankname($scan,$pay_type){
   global $payType, $bankname;
-  if(strstr($scan,"wy")){
+  if($scan == "wy"){
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
-  }elseif(strstr($scan,"yl")){
+  }elseif($scan == "yl" || $scan == "ylfs"){
     $payType = $pay_type . "_yl";
     $bankname = $pay_type . "->银联钱包在线充值";
-  }elseif(strstr($scan,"qq")){
+  }elseif($scan == "qq" || $scan == "qqfs"){
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
-  }elseif(strstr($scan,"wx")){
+  }elseif($scan == "wx" || $scan == "wxfs"){
     $payType = $pay_type . "_wx";
     $bankname = $pay_type . "->微信在线充值";
-  }elseif(strstr($scan,"zfb")){
+  }elseif($scan == "zfb" || $scan == "zfbfs"){
     $payType = $pay_type . "_zfb";
     $bankname = $pay_type . "->支付宝在线充值";
-  }elseif(strstr($scan,"jd")){
+  }elseif($scan == "jd" || $scan == "jdfs"){
     $payType = $pay_type . "_jd";
     $bankname = $pay_type . "->京东钱包在线充值";
-  }elseif(strstr($scan,"ylkj")){
+  }elseif($scan == "ylkj"){
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
-  }elseif(strstr($scan,"bd")){
+  }elseif($scan == "bd" || $scan == "bdfs"){
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
+  }else {
+    echo('payType_bankname出错啦！');
+    exit;
   }
 }
 
@@ -142,7 +145,7 @@ $data['sign'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_blank">
       <p>正在为您跳转中，请稍候......</p>
       <?php
         foreach ($data as $arr_key => $arr_value) {

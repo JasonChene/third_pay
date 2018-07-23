@@ -1,0 +1,24 @@
+<?php
+
+include 'queryCommon.php';	
+		
+$p0_Cmd					= $_REQUEST['p0_Cmd'];
+$p1_MerId					= $_REQUEST['p1_MerId'];
+$p2_Order					= $_REQUEST['p2_Order'];
+
+$hmac = getReqHmacString($p0_Cmd,$p1_MerId,$p2_Order);
+     
+?> 
+<html>
+<head>
+<title>To API Page</title>
+</head>
+<body onLoad="document.API.submit();">
+<form name='API' action='<?php echo $reqURL_onLine; ?>' method='post'>
+<input type='hidden' name='p0_Cmd'					value='<?php echo $p0_Cmd; ?>'>
+<input type='hidden' name='p1_MerId'				value='<?php echo $p1_MerId; ?>'>
+<input type='hidden' name='p2_Order'				value='<?php echo $p2_Order; ?>'>
+<input type='hidden' name='hmac'						value='<?php echo $hmac; ?>'>
+</form>
+</body>
+</html>

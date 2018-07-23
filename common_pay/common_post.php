@@ -136,7 +136,6 @@ if ($result_insert == -1) {
 ksort($data);
 $noarr =array('sign');
 $signtext = '';
-$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
 		$signtext .= $arr_key.'='.$arr_val.'&';
