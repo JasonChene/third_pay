@@ -37,33 +37,6 @@ function payType_bankname($scan,$pay_type){
   }
 }
 
-
-#function
-function curl_post($url,$data){ #POST访问
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
-  }
-  return $tmpInfo;
-}
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
-  }
-  return $code2;
-}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -110,30 +83,6 @@ if (strstr($pay_type, "银联钱包")) {
   if(_is_mobile()){
     $data['pay_type'] = '19';
   }
-}elseif (strstr($pay_type, "银联快捷")) {
-  $form_url = 'https://Pay.Heepay.com/ShortPay/SubmitOrder.aspx';
-  $scan = 'ylkj';
-  $curldata = array(
-    "agent_id" => $pay_mid, //商户号
-    "timestamp" =>$yyy,
-    "version" => '1',
-
-  );
-  $data = array(
-    "version" => '1',
-    "agent_id" => $pay_mid, //商户号
-    "hy_auth_uid" => $xxx,
-    "device_type" => '1',//0WAP 1WEB
-    "return_url" => $merchant_url,//同步通知地址
-    "notify_url" => $merchant_url,//异步通知地址
-    "timestamp" =>$yyy,
-    "agent_bill_id" => $order_no,//商户流水号
-    "agent_bill_time" => date("YmdHis"),
-    "pay_amt" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
-    "goods_name" => 'Buy',//商品名称
-    "goods_num" => '1',//商品名称
-    "user_ip" => getClientIp()
-  );
 }else {
   $scan = 'wy';
   if(_is_mobile()){
@@ -164,7 +113,11 @@ $signtext .= 'pay_amt'.$betcon.$data['pay_amt'].$conn;
 $signtext .= 'notify_url'.$betcon.$data['notify_url'].$conn;
 $signtext .= 'return_url'.$betcon.$data['return_url'].$conn;
 $signtext .= 'user_ip'.$betcon.$data['user_ip'].$conn;
-$signtext .= 'bank_card_type'.$betcon.$data['bank_card_type'].$conn;
+if($scan == 'wy'){
+  $signtext .= 'bank_card_type'.$betcon.$data['bank_card_type'].$conn;
+}else{
+  unset($data['bank_card_type']);
+}
 $signtext .= 'key'.$betcon.$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;

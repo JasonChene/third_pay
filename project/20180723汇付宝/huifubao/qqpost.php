@@ -61,7 +61,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "version" => '1',
-  "pay_type" => "30",
+  "pay_type" => "31",
   "agent_id" => $pay_mid, //商户号
   "agent_bill_id" => $order_no,//商户流水号
   "pay_amt" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
@@ -74,26 +74,9 @@ $data = array(
 );
 #变更参数设置
 $form_url = 'https://pay.heepay.com/Payment/Index.aspx';//提交地址
-
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_type'] = '33';
-  if(_is_mobile()){
-    $data['is_phone'] = '1';
-  }
-}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_type'] = '31';
-  if(_is_mobile()){
-    $data['is_phone'] = '1';
-  }
-}else {
-  $scan = 'wx';
-  if(_is_mobile()){
-    $data['is_phone'] = '1';
-    $data['is_frame'] = '0';
-    $data['meta_option'] = urlencode(base64_encode('{"s":"WAP","n":"Pay","id":'.$row['pay_domain'].'}'));
-  }
+$scan = 'qq';
+if(_is_mobile()){
+  $data['is_phone'] = '1';
 }
 payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

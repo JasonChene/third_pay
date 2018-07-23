@@ -1,7 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -21,19 +20,11 @@ function Tra_data($array){//传输资料转格式
   
 }
 function sign($key,$data) {
-	// $private_pem = chunk_split($key,64,"\r\n");//转换为pem格式的钥
-  // $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
   $private_pem = openssl_get_privatekey($key);//签名秘钥
 	$signature = '';  
 	openssl_sign($data, $signature, $private_pem);
 	return base64_encode($signature);
 } 
-function verity($key,$data,$signature)  
-{  
-  $public_pem = openssl_get_publickey($key);//签名秘钥
-	$result = (bool)openssl_verify($data, base64_decode($signature), $public_pem);  
-	return $result;  
-}
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -89,8 +80,7 @@ function payType_bankname($scan,$pay_type){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号

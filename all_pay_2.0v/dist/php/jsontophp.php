@@ -1,82 +1,71 @@
 <?php
 $req = json_decode(file_get_contents('php://input'),1);
-$req = json_decode($req['data'],1);
-function fix_payment($platform){
-  $platformstr = '';
-  foreach ($platform as $value) {
-    $platformstr .= $value.',';
-  }
-  $paytypestr=substr($platformstr,0,-1);
-  return $platformstr;
-}
+$req = json_decode($req['data'], true);
 
-#str_cut
-function cutstr($reqstr){
-    $strarr=array();
-    $str=substr($reqstr,0,-3);
-    $strarr2 = explode(">_<", $str);
-    $length=count($strarr2);
-    for ($i=0; $i < $length ; $i++) {
-        $strarr3=explode("^_^", $strarr2[$i]);
-        $type = $strarr3[0];
-        $strarr[$type] = $strarr3[1];
+function fix_payment($payment){
+    if(strstr($payment,"qq")){
+      $payment2['type']='qq';
+    }elseif(strstr($payment,"wx")){
+      $payment2['type']='wx';
+    }elseif(strstr($payment,"zfb")){
+      $payment2['type']='zfb';
+    }elseif(strstr($payment,"jd")){
+      $payment2['type']='jd';
+    }elseif(strstr($payment,"ylkj")){
+      $payment2['type']='ylkj';
+    }elseif(strstr($payment,"wy")){
+      $payment2['type']='wy';
+    }elseif(strstr($payment,"yl")){
+      $payment2['type']='yl';
+    }else{
+      $payment2['type']= $payment;
     }
-  return $strarr;
-}
-
-function posttype($str){
-  $restr = '';
-  if (strstr($str,'wxbs')) {
-    $restr = '($scan == "wx" && !_is_mobile()) ||';
-  }elseif (strstr($str,'wxh5')) {
-    $restr = '($scan == "wx" && _is_mobile()) ||';
-  }elseif (strstr($str,'wxfs')) {
-    $restr = '($scan == "wxfs" ||';
-  }elseif (strstr($str,'jdbs')) {
-    $restr = '($scan == "jd" && !_is_mobile()) ||';
-  }elseif (strstr($str,'jdh5')) {
-    $restr = '($scan == "jd" && _is_mobile()) ||';
-  }elseif (strstr($str,'jdfs')) {
-    $restr = '($scan == "jdfs" ||';
-  }elseif (strstr($str,'bdbs')) {
-    $restr = '($scan == "bd" && !_is_mobile()) ||';
-  }elseif (strstr($str,'bdh5')) {
-    $restr = '($scan == "bd" && _is_mobile()) ||';
-  }elseif (strstr($str,'bdfs')) {
-    $restr = '$scan == "bdfs" ';
-  }elseif (strstr($str,'qqbs')) {
-    $restr = '($scan == "qq" && !_is_mobile()) ||';
-  }elseif (strstr($str,'qqh5')) {
-    $restr = '($scan == "qq" && _is_mobile()) ||';
-  }elseif (strstr($str,'qqfs')) {
-    $restr = '$scan == "qqfs" ';
-  }elseif (strstr($str,'zfbbs')) {
-    $restr = '($scan == "zfb" && !_is_mobile()) ||';
-  }elseif (strstr($str,'zfbh5')) {
-    $restr = '($scan == "zfb" && _is_mobile()) ||';
-  }elseif (strstr($str,'zfbfs')) {
-    $restr = '$scan == "zfbfs" ';
-  }elseif (strstr($str,'wylk')) {
-    $restr = '($scan == "wy" && !_is_mobile()) ||';
-  }elseif (strstr($str,'wyh5')) {
-    $restr = '($scan == "wy" && _is_mobile()) ||';
-  }elseif (strstr($str,'ylbs')) {
-    $restr = '($scan == "yl" && !_is_mobile()) ||';
-  }elseif (strstr($str,'ylh5')) {
-    $restr = '($scan == "yl" && _is_mobile()) ||';
-  }elseif (strstr($str,'ylkj')) {
-    $restr = '($scan == "ylkj" && !_is_mobile()) ||';
-  }elseif (strstr($str,'ylkjh5')) {
-    $restr = '($scan == "ylkj" && _is_mobile()) ||';
+    return $payment2;
   }
-  return $restr;
-}
+
+
+function payType_bankname($payment){
+    $pay_type_pb=array();
+    if(strstr($payment,"wy")){
+      $pay_type_pb['payType'] = "_wy";
+      $pay_type_pb['bankname'] = "->网银在线充值";
+    }elseif(strstr($payment,"yl")){
+      $pay_type_pb['payType'] = "_yl";
+      $pay_type_pb['bankname'] = "->银联钱包在线充值";
+    }elseif(strstr($payment,"qq")){
+      $pay_type_pb['payType'] = "_qq";
+      $pay_type_pb['bankname'] = "->QQ钱包在线充值";
+    }elseif(strstr($payment,"wx")){
+      $pay_type_pb['payType'] = "_wx";
+      $pay_type_pb['bankname'] = "->微信在线充值";
+    }elseif(strstr($payment,"zfb")){
+      $pay_type_pb['payType'] = "_zfb";
+      $pay_type_pb['bankname'] = "->支付宝在线充值";
+    }elseif(strstr($payment,"jd")){
+      $pay_type_pb['payType'] = "_jd";
+      $pay_type_pb['bankname'] = "->京东钱包在线充值";
+    }elseif(strstr($payment,"ylkj")){
+      $pay_type_pb['payType'] = "_ylkj";
+      $pay_type_pb['bankname'] = "->银联快捷在线充值";
+    }elseif(strstr($payment,"bd")){
+      $pay_type_pb['payType'] = "_bd";
+      $pay_type_pb['bankname'] = "->百度钱包在线充值";
+    }else{
+      $pay_type_pb['payType'] = "_xx";
+      $pay_type_pb['bankname'] = "->在线充值";
+    }
+    return $pay_type_pb;
+  }
+
+
+
+
 
 echo '<?php'."\n";
 echo '#第三方名稱 : '.$req['third_name']."\n";
-$platform = fix_payment($req['platform']);    #渠道字串
-echo '#支付渠道 :'.$platform."\n";
-#汇入档案及基础设定
+$payment = fix_payment($req['payment']);
+echo '#支付方式 : '. $payment['type'] .";\n";
+
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
 echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
@@ -84,6 +73,48 @@ echo '$S_Name = $_REQUEST[\'S_Name\'];'."\n";
 echo '$top_uid = $_REQUEST[\'top_uid\'];'."\n";
 echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
 
+
+
+
+#跳转qrcode.php网址调试
+echo '#跳转qrcode.php网址调试'."\n";
+echo 'function QRcodeUrl($code){'."\n";
+echo '  if(strstr($code,"&")){'."\n";
+echo '    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc'."\n";
+echo '  }else{'."\n";
+echo '    $code2=$code;'."\n";
+echo '  }'."\n";
+echo '  return $code2;'."\n";
+echo '}'."\n\n\n";
+
+
+#curl请求设定
+echo '#curl请求设定'."\n";
+echo 'function curl_post($url, $data){'."\n";
+echo '  $ch = curl_init();'."\n";
+echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);'."\n";
+echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);'."\n";
+echo '  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);'."\n";
+echo '  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);'."\n";
+if ($req['postmethod'] == 'post') {
+  echo '  curl_setopt($ch, CURLOPT_POST, true);'."\n";
+  echo '  curl_setopt($ch, CURLOPT_URL, $url);'."\n";
+  echo '  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");'."\n";
+  echo '  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);'."\n";
+  echo '  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);'."\n";
+  } else{
+  echo '  curl_setopt($ch, CURLOPT_HTTPGET, true);'."\n";
+  echo '  $post_url=fix_postdata_url($url, $data);'."\n";
+  echo '  curl_setopt($ch, CURLOPT_URL, $post_url);'."\n";
+}
+echo '  $tmpInfo = curl_exec($ch);'."\n";
+echo '  if (curl_errno($ch)) {'."\n";
+echo '    echo(curl_errno($ch));'."\n";
+echo '    exit;'."\n";
+echo '  }'."\n";
+echo '  curl_close($ch);'."\n";
+echo '  return $tmpInfo;'."\n";
+echo '}'."\n\n\n";
 
 
 #获取第三方资料(非必要不更动)
@@ -105,7 +136,7 @@ echo '}'."\n\n\n";
 
 #固定参数设置
 echo '#固定参数设置'."\n";
-//echo '$form_url = \''.$req['form_url']."';\n";
+echo '$form_url = \''.$req['form_url']."';\n";
 echo '$bank_code = $_REQUEST[\'bank_code\'];'."\n";
 echo '$order_no = getOrderNo();'."\n";
 echo '$notify_url = $merchant_url;'."\n";
@@ -114,7 +145,6 @@ echo '$pr_key = $pay_mkey;//私钥'."\n";
 echo '$pu_key = $pay_account;//公钥'."\n";
 echo '$order_time = date("YmdHis");'."\n\n\n";
 echo '$mymoney = number_format($_REQUEST[\'MOAmount\'], 2, \'.\', \'\');'."\n";
-echo '$paytype = "";'."\n";//通道
 if($req['amount_unit'] == '2'){
   if($req['decimal']=="2"){
     echo '$MOAmount = number_format($_REQUEST[\'MOAmount\']*100, 2, \'.\', \'\');'."\n";
@@ -133,8 +163,7 @@ if($req['amount_unit'] == '2'){
 
 
 
-
-#第三方传值参数设置，将传值参数转成array
+#第三方传值参数设置
 function echo_arr($key_name,$array){
   $text =  '"'.$key_name.'" => array('."\n";
   foreach ($array as $arr_key => $arr_value) {
@@ -171,248 +200,14 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-function paytype_echo($value){
-  $paytype_echo_scan= '';
-  $array =array();
-  if (strstr($value,'wx')) {
-    $paytype_echo .=  '  $scan = "wx";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->微信在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_wx";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
-  }elseif (strstr($value,'qq')) {
-    $paytype_echo .=  '  $scan = "qq";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->QQ钱包在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_qq";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = 'QQ钱包';
-  }elseif (strstr($value,'zfb')) {
-    $paytype_echo .=  '  $scan = "zfb";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->支付宝在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_zfb";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
-  }elseif(strstr($value,'jd')){
-    $paytype_echo .=  '  $scan = "jd";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->京东钱包在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_jd";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '京东钱包';
-  }elseif(strstr($value,'bd')){
-    $paytype_echo .=  '  $scan = "bd";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->百度钱包在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_bd";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '百度钱包';
-  }elseif (strstr($value,'yl')) {
-    $paytype_echo .=  '  $scan = "yl";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->银联钱包在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_yl";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '银联钱包';
-  }elseif (strstr($value,'ylkj')) {
-    $paytype_echo .=  '  $scan = "ylkj";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->银联快捷在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_ylkj";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '银联快捷';
-  }elseif (strstr($value,'wy')) {
-    $paytype_echo .=  '  $scan = "wy";'."\n";
-    $paytype_echo .=  '  $payType = $pay_type."->网银在线充值";'."\n";
-    $paytype_echo .=  '  $bankname = $pay_type."_wy";'."\n";
-    $array['paytype_echo'] = $paytype_echo;
-    $array['paytype_echo_scan'] = '';
-  }
-  return $array;
-}
 
-#
-function diff_echo($platform,$typekey,$paytypearr,$paytype_echo){
-  
-
-}
-
-#paytype_echo($req['platform']);
-function change_data($platform,$typekey,$paytypearr){
-  $diff = array(
-    'wx' => array('wxbs','wxh5','wxfs'),
-    'qq' => array('qqbs','qqh5','qqfs'),
-    'zfb' => array('zfbbs','zfbh5','zfbfs'),
-    'jd' => array('jdbs','jdh5','jdfs'),
-    'bd' => array('bdbs','bdh5','bdfs'),
-    'wy' => array('wylk','wyh5'), 
-    'yl' => array('ylbs','ylh5'),
-    'ylkj' => array('ylkj','ylkjh5'),
-  );
-  if (count(array_diff($platform,$diff['wx'])) >= 1) {#找到阵列 与$diff的差集 有微信及其他
-    $diff_wx_platform = array_diff($platform,$diff['wx']);
-    if (array_intersect($platform,$diff['wx'])) {#先打印wx
-      // $inter
-      // $paytype_echo = paytype_echo($value);
-      // echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
-      // echo $paytype_echo['paytype_echo'];
-      // echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
-      // echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-      // echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-      // echo (strstr($value, "h5")) ? '}'."\n" : '';
-      // echo '}'."\n";
-    }
-    foreach ($diff_wx_platform as $value) {#除了wxbs,wxh5,wxfs都echo变更的参数
-      $paytype_echo = paytype_echo($value);
-      echo 'if (strstr($_REQUEST["pay_type"], "'.$paytype_echo['paytype_echo_scan'].'")) {'."\n";
-      echo $paytype_echo['paytype_echo'];
-      echo (strstr($value, "h5")) ? 'if(_is_mobile()){'."\n" : '';
-      echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-      echo '  $data["'.$typekey.'"] = "'.$paytypearr[$value].'";'."\n";
-      echo (strstr($value, "h5")) ? '}'."\n" : '';
-      echo '}'."\n";
-    }
-  }elseif (count(array_diff($platform,$diff['wx'])) == 0) {#只有微信
-    # code...
-  }elseif (count(array_diff($platform,$diff['qq'])) == 0) {#只有QQ
-    # code...
-  }elseif (count(array_diff($platform,$diff['zfb'])) == 0) {#只有ZFB
-    # code...
-  }
-}
 
 
 #变更参数设定
-$typekey = array_search('$paytype',$req['params']);
-
 echo '#变更参数设定'."\n";
-$form_urlarr = cutstr($req['form_url']);
-$paytypearr = cutstr($req['paytype']);
-if (strstr($platform, "jd")) {
-echo 'if (strstr($_REQUEST["pay_type"], "京东钱包")) {'."\n";
-echo '  $scan = "jd";'."\n";
-echo '  $payType = $pay_type."->京东钱包在线充值";'."\n";
-echo '  $bankname = $pay_type."_jd";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['jdbs'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['jdbs'].'";'."\n";
-  if(strstr($platform, "jdh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['jdh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['jdh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-if (strstr($platform, "bd")) {
-  if(strstr($platform, "jd")){
-    echo 'elseif';
-  }else{
-    echo 'if';
-  }
-echo '(strstr($_REQUEST["pay_type"], "百度钱包")) {'."\n";
-echo '  $scan = "bd";'."\n";
-echo '  $payType = $pay_type."->百度钱包在线充值";'."\n";
-echo '  $bankname = $pay_type."_bd";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['bdbs'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['bdbs'].'";'."\n";
-  if(strstr($platform, "bdh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['bdh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['bdh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-if (strstr($platform, "qq")){
-  if( strstr($platform, "jd") || strstr($platform, "bd") ){
-    echo 'elseif';
-  }else{
-    echo 'if';
-  }
-echo '(strstr($_REQUEST["pay_type"], "QQ钱包")) {'."\n";
-echo '  $scan = "qq";'."\n";
-echo '  $payType = $pay_type."->QQ钱包在线充值";'."\n";
-echo '  $bankname = $pay_type."_qq";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['qqbs'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['qqbs'].'";'."\n";
-  if(strstr($platform, "qqh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['qqh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['qqh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-if (strstr($platform, "wx")){
-  if( strstr($platform, "jd") || strstr($platform, "bd") ||  strstr($platform, "qq")){
-    echo 'else{'."\n";
-  }
-echo '  $scan = "wx";'."\n";
-echo '  $payType = $pay_type."->微信在线充值";'."\n";
-echo '  $bankname = $pay_type."_wx";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['wxbs'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['wxbs'].'";'."\n";
-  if(strstr($platform, "wxh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['wxh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['wxh5'].'";'."\n";
-echo '  }'."\n";
-  }
-  if( strstr($platform, "jd") || strstr($platform, "bd") ||  strstr($platform, "qq")){
-      echo '}'."\n";
-  }
-}
-if(strstr($platform, "ylbs") || strstr($platform, "ylh5")){
-echo 'if (strstr($_REQUEST["pay_type"], "银联钱包")) {'."\n";
-echo '  $scan = "yl";'."\n";
-echo '  $payType = $pay_type."->银联钱包在线充值";'."\n";
-echo '  $bankname = $pay_type."_yl";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['ylbs'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['ylbs'].'";'."\n";
-  if(strstr($platform, "ylh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['ylh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['ylh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-if (strstr($platform, "ylkj") || strstr($platform, "ylkjh5")){
-  if( strstr($platform, "ylbs") || strstr($platform, "ylh5") ){
-    echo 'elseif';
-  }else{
-    echo 'if';
-  }
-echo '(strstr($_REQUEST["pay_type"], "银联快捷")) {'."\n";
-echo '  $scan = "ylkj";'."\n";
-echo '  $payType = $pay_type."->银联快捷在线充值";'."\n";
-echo '  $bankname = $pay_type."_ylkj";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['ylkj'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['ylkj'].'";'."\n";
-  if(strstr($platform, "ylkjh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['ylkjh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['ylkjh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-if (strstr($platform, "wy")){
-  if( strstr($platform, "wy") || strstr($platform, "yl") ){
-    echo 'else';
-  }else{
-    echo 'if';
-  }
-echo '{'."\n";
-echo '  $scan = "wy";'."\n";
-echo '  $payType = $pay_type."->网银在线充值";'."\n";
-echo '  $bankname = $pay_type."_wy";'."\n";
-echo '  $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['wylk'].'";'."\n";
-echo '  $data["'.$typekey.'"] = "'.$paytypearr['wylk'].'";'."\n";
-  if(strstr($platform, "wyh5")){
-echo '  if(_is_mobile()){'."\n";
-echo '    $data["sign"]["str_arr"]["'.$typekey.'"] = "'.$paytypearr['wyh5'].'";'."\n";
-echo '    $data["'.$typekey.'"] = "'.$paytypearr['wyh5'].'";'."\n";
-echo '  }'."\n";
-  }
-echo '}'."\n";
-}
-
+$pay_type_pb = payType_bankname($req['payment']);
+echo '$payType = $pay_type."'.$pay_type_pb['payType'].'";'."\n";
+echo '$bankname = $pay_type."'.$pay_type_pb['bankname'].'";'."\n";
 
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -429,198 +224,62 @@ echo '}'."\n\n\n";
 
 #签名排列，可自行组字串或使用http_build_query($array)
 echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
-echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
-echo '  if (is_array($arr_value)) {'."\n";
-echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
-echo '  }'."\n";
-echo '}'."\n";
-
-
-
-
-#curl获取响应值
-$typepostarr = cutstr($req['postmethod']);
-$postcurl='';
-$getcurl='';
-$headerpost='';
-$headerget='';
-foreach ($typepostarr as $key => $value) {
-  if (strstr($value, "CURL-POST")) {
-      $postcurl .= posttype($key);
-  }elseif (strstr($value, "CURL-GET")) {
-      $getcurl .= posttype($key);
-  }elseif (strstr($value, "HEADER-POST")) {
-      $headerpost .= posttype($key);
-  }elseif (strstr($value, "HEADER-GET")) {
-      $headerget .= posttype($key);
-  }
-}
-
-$postcurl=substr($postcurl,0,-2);
-$getcurl=substr($getcurl,0,-2);
-$headerpost=substr($headerpost,0,-2);
-$headerget=substr($headerget,0,-2);
-
-
-#抓取响应值方式
-function res_structure($res_structure){
-    if($res_structure=="JSON"){
-        echo '  $row = json_decode($res,1);'."\n";
-    }elseif($res_structure=="XML"){
-        echo '  $xml=(array)simplexml_load_string($res) or die("Error: Cannot create object");'."\n";
-        echo '  $row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
-    }elseif($res_structure=="xmlCDATA"){
-        echo '  $xml=(array)simplexml_load_string($res,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
-        echo '  $row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
-    }
-}
-
-####################################################################################################
-echo '#curl获取响应值'."\n";
-if (!empty($postcurl) || !empty($getcurl)) {
-    if ($req['req_structure'] == 'JSON') {
-        if (!empty($postcurl)){
-            echo 'if('.$postcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,json_encode($data),"CURL-POST");'."\n";
-            res_structure($req['res_structure']);
-        }
-        if (!empty($getcurl)) {
-            echo 'if('.$getcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,json_encode($data),"CURL-GET");'."\n";
-            res_structure($req['res_structure']);
-        }
-    }else {
-        if (!empty($postcurl)){
-            echo 'if('.$postcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,http_build_query($data),"CURL-POST");'."\n";
-            res_structure($req['res_structure']);
-        }
-        if (!empty($getcurl)) {
-            echo 'if('.$getcurl.'){'."\n";
-            echo '  $res = curl_post($form_url,http_build_query($data),"CURL-GET");'."\n";
-            res_structure($req['res_structure']);
-        }
-    }
-
-
-
-    #响应值层数切割
-    function response_url($first_key,$second_key,$response_level){
-        $first_key = cutstr($first_key);
-        $second_key = cutstr($second_key);
-        $response_level = cutstr($response_level);
-        $response_url = array();
-        foreach ($response_level as $res_level_key => $res_level_val) {
-            $response_url[$res_level_key][0] = $res_level_val;
-            foreach ($first_key as $first_key_key => $first_key_val) {
-                if ($first_key_key == $res_level_key) {
-                    $response_url[$res_level_key][1] = $first_key_val;
-                }
-            }
-            foreach ($second_key as $second_key_key => $second_key_val) {
-                if ($second_key_key == $res_level_key) {
-                    $response_url[$res_level_key][2] = $second_key_val;
-                }
-            }
-        }
-        return $response_url;
-    }
-    #响应值层数切割 转换成echo
-    function response_url_echo($res_echo_str,$response_url){
-        foreach ($response_url as $arr_key => $arr_val) {
-            $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
-            if ($arr_val[0] == '0') {
-                $res_echo_str .= '      $jumpurl = $row;'."\n";
-                $res_echo_str .= '  }'."\n";
-            }elseif ($arr_val[0] == '1') {
-                $res_echo_str .= '      $jumpurl = $row';
-                $res_echo_str .= '[\''.$arr_val[1].'\']';
-                $res_echo_str .= ';'."\n";
-                $res_echo_str .= '  }'."\n";
-            }else {
-                $res_echo_str .= '      $jumpurl = $row';
-                $res_echo_str .= '[\''.$arr_val[1].'\']';
-                $res_echo_str .= '[\''.$arr_val[2].'\']';
-                $res_echo_str .= ';'."\n";
-                $res_echo_str .= '  }'."\n";
-            }
-        }
-    }
-    #响应值层数切割 转换成echo
-    function response_url_echo($res_echo_str,$response_url){
-        foreach ($response_url as $arr_key => $arr_val) {
-            $res_echo_str .= '  if ('.substr(posttype($arr_key),0,-2).') {'."\n";
-            if ($arr_val[0] == '0') {
-                $res_echo_str .= '      $jumpurl = $row;'."\n";
-            }elseif ($arr_val[0] == '1') {
-                $res_echo_str .= '      $jumpurl = $row';
-                $res_echo_str .= '[\''.$arr_val[1].'\']';
-                $res_echo_str .= ';'."\n";
-            }else {
-                $res_echo_str .= '      $jumpurl = $row';
-                $res_echo_str .= '[\''.$arr_val[1].'\']';
-                $res_echo_str .= '[\''.$arr_val[2].'\']';
-                $res_echo_str .= ';'."\n";
-            }
-            if (strstr(substr(posttype($arr_key),0,-2),'_is_mobile()')) {
-                $res_echo_str .= '      $jumpurl = \'../qrcode/qrcode.php?type='.'.$scan.'.'&code=\' . QRcodeUrl($jumpurl);'."\n";
-            }
-            $res_echo_str .= '  }'."\n";
-        }
-        return $res_echo_str;
-    }
-    #跳转qrcode
-    echo '#跳转qrcode'."\n";
-    echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-    $response_url = response_url($req['first_key'],$req['second_key'],$req['response_level']);
-    $res_echo_str = '';
-    $res_echo_str = response_url_echo($res_echo_str,$response_url);
-    echo $res_echo_str;
-    echo '  }else{'."\n";
-    echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
-    echo '    echo "<pre>";'."\n";
-    echo '    var_dump("请求报文：");'."\n";
-    echo '    var_dump($data);'."\n";
-    echo '    var_dump("响应报文：");'."\n";
-    echo '    var_dump($res);'."\n";
-    echo '    exit();'."\n";
+if ($req['postmethod']=='HEADER'):
+    echo '$form_data = $data;'."\n";
+    echo '$jumpurl = $form_url;'."\n";
+elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
+    echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
+    echo '  if (is_array($arr_value)) {'."\n";
+    echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
     echo '  }'."\n";
     echo '}'."\n";
-}
-####################################################################################################
-if (!empty($headerpost) || !empty($headerget)) {
-    echo 'if('.$headerpost.$headerget.'){'."\n\n";
-    echo '  $form_data=$data;'."\n";
-    echo '  $jumpurl=$form_url;'."\n";
+    echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
+    echo '  $data_str = $arr_key.\'=\'.$arr_value.\'&\';'."\n";
     echo '}'."\n";
-}
 
+    echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
 
+    #curl获取响应值
+    echo '#curl获取响应值'."\n";
+    echo '$res = curl_post($form_url,$data_str);'."\n";
+    if($req['res_structure']=="json"){
+        echo '$row = json_decode($res,1);'."\n";
+    }elseif($req['res_structure']=="xml"){
+        echo '$xml=(array)simplexml_load_string($data) or die("Error: Cannot create object");'."\n";
+        echo '$row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
+    }elseif($req['res_structure']=="xmlCDATA"){
+        echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
+        echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
+    }
 
+    #跳转qrcode
+    echo '#跳转qrcode'."\n";
+    // echo '$url = $row[\''.$req['qrcodeUrl'].'\'];'."\n";
+    echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+    if ($payment['platform']=='h5') {
+        echo '  $jumpurl = $url;'."\n";
+    }elseif ($payment['platform']=='bs') {
+        echo '  $qrurl = QRcodeUrl($url);'."\n";
+        echo '  $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
+    }
+endif;
 
-#html跳转
 echo '?>'."\n";
+
+
 echo '<html>'."\n";
 echo '  <head>'."\n";
 echo '      <title>跳转......</title>'."\n";
 echo '      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />'."\n";
 echo '  </head>'."\n";
 echo '  <body>'."\n";
-if (!empty($postcurl) || !empty($headerpost)) {
-    echo '<?php if('.$postcurl.$headerpost.'){ ?>'."\n\n";
-    echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
-    echo '<?php } ?>'."\n";
-}elseif (!empty($getcurl) || !empty($headerget)) {
-    echo '<?php if('.$getcurl.$headerget.'){ ?>'."\n\n";
-    echo '      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
-    echo '<?php } ?>'."\n";
-}
+echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
 echo '          <p>正在为您跳转中，请稍候......</p>'."\n";
 echo '          <?php'."\n";
 echo '          if(isset($form_data)){'."\n";
-echo '              foreach ($form_data as $arr_key => $arr_value) {'."\n";
+echo '              foreach ($data as $arr_key => $arr_value) {'."\n";
 echo '          ?>'."\n";
-echo '              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>">'."\n";
+echo '              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />'."\n";
 echo '          <?php }} ?>'."\n";
 echo '      </form>'."\n";
 echo '      <script language="javascript">'."\n";
@@ -628,10 +287,9 @@ echo '          document.getElementById("frm1").submit();'."\n";
 echo '      </script>'."\n";
 echo '   </body>'."\n";
 echo '</html>'."\n";
-
-
-
-
-
-
- ?>
+echo '<?php'."\n";
+echo '}else {'."\n";
+echo '  echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
+echo '}'."\n";
+echo '?>'."\n";
+?>
