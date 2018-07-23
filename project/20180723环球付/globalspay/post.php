@@ -2,7 +2,34 @@
 header("Content-type:text/html; charset=UTF-8");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-
+function payType_bankname($scan,$pay_type){
+  global $payType, $bankname;
+  if(strstr($scan,"wy")){
+    $payType = $pay_type . "_wy";
+    $bankname = $pay_type . "->网银在线充值";
+  }elseif(strstr($scan,"yl")){
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
+  }elseif(strstr($scan,"qq")){
+    $payType = $pay_type . "_qq";
+    $bankname = $pay_type . "->QQ钱包在线充值";
+  }elseif(strstr($scan,"wx")){
+    $payType = $pay_type . "_wx";
+    $bankname = $pay_type . "->微信在线充值";
+  }elseif(strstr($scan,"zfb")){
+    $payType = $pay_type . "_zfb";
+    $bankname = $pay_type . "->支付宝在线充值";
+  }elseif(strstr($scan,"jd")){
+    $payType = $pay_type . "_jd";
+    $bankname = $pay_type . "->京东钱包在线充值";
+  }elseif(strstr($scan,"ylkj")){
+    $payType = $pay_type . "_ylkj";
+    $bankname = $pay_type . "->银联快捷在线充值";
+  }elseif(strstr($scan,"bd")){
+    $payType = $pay_type . "_bd";
+    $bankname = $pay_type . "->百度钱包在线充值";
+  }
+}
 $top_uid = $_REQUEST['top_uid'];
 
 $pay_type = urldecode($_REQUEST['pay_type']);
