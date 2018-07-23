@@ -135,8 +135,8 @@ function curl_post($url, $data ,$str){
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   } elseif(strstr($str ,"CURL-GET")){
   curl_setopt($ch, CURLOPT_HTTPGET, true);
-  $post_url=fix_postdata_url($url, $data);
-  curl_setopt($ch, CURLOPT_URL, $post_url);
+  // $post_url=fix_postdata_url($url, $data);
+  curl_setopt($ch, CURLOPT_URL, $data);
   }
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
