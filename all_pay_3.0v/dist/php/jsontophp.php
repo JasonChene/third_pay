@@ -96,7 +96,7 @@ echo '}'."\n\n\n";
 echo '#获取第三方资料(非必要不更动)'."\n";
 echo '$params = array(\':pay_type\' => $pay_type);'."\n";
 echo '$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";'."\n";
-if ($key == 1) {
+if ($key == 2) {
   echo '$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);'."\n";
 }else {
   echo '$stmt = $mydata1_db->prepare($sql);'."\n";
