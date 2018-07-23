@@ -81,12 +81,6 @@ if (strstr($pay_type, "京东钱包")) {
   if(_is_mobile()){
     $data['is_phone'] = '1';
   }
-}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_type'] = '31';
-  if(_is_mobile()){
-    $data['is_phone'] = '1';
-  }
 }else {
   $scan = 'wx';
   if(_is_mobile()){
