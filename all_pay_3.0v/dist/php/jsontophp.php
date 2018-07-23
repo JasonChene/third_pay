@@ -1,5 +1,6 @@
 <?php
 $req = json_decode(file_get_contents('php://input'),1);
+$key = json_decode($req['key'], true);
 $req = json_decode($req['data'], true);
 
 
@@ -30,9 +31,6 @@ function payType_bankname($payment){
     if(strstr($payment,"wy")){
       $pay_type_pb['payType'] = "_wy";
       $pay_type_pb['bankname'] = "->网银在线充值";
-    }elseif(strstr($payment,"yl")){
-      $pay_type_pb['payType'] = "_yl";
-      $pay_type_pb['bankname'] = "->银联钱包在线充值";
     }elseif(strstr($payment,"qq")){
       $pay_type_pb['payType'] = "_qq";
       $pay_type_pb['bankname'] = "->QQ钱包在线充值";
@@ -48,6 +46,9 @@ function payType_bankname($payment){
     }elseif(strstr($payment,"ylkj")){
       $pay_type_pb['payType'] = "_ylkj";
       $pay_type_pb['bankname'] = "->银联快捷在线充值";
+    }elseif(strstr($payment,"yl")){
+      $pay_type_pb['payType'] = "_yl";
+      $pay_type_pb['bankname'] = "->银联钱包在线充值";
     }elseif(strstr($payment,"bd")){
       $pay_type_pb['payType'] = "_bd";
       $pay_type_pb['bankname'] = "->百度钱包在线充值";
@@ -63,22 +64,21 @@ function payType_bankname($payment){
 
 
 echo '<?php'."\n";
+echo 'header("Content-type:text/html; charset=utf-8");'."\n";
 echo '#第三方名稱 : '.$req['third_name']."\n";
 $payment = fix_payment($req['payment']);
 echo '#支付方式 : '. $payment['type'] .";\n";
 
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
-if ($req['key'] == 1) {
+if ($key == 1) {
   echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
 }else {
-  # code...
+  echo 'include_once("../../../database/mysql.php");'."\n\n\n";
 }
 echo '$S_Name = $_REQUEST[\'S_Name\'];'."\n";
 echo '$top_uid = $_REQUEST[\'top_uid\'];'."\n";
 echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
-
-
 
 
 #跳转qrcode.php网址调试
@@ -93,40 +93,15 @@ echo '  return $code2;'."\n";
 echo '}'."\n\n\n";
 
 
-#curl请求设定
-echo '#curl请求设定'."\n";
-echo 'function curl_post($url, $data){'."\n";
-echo '  $ch = curl_init();'."\n";
-echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);'."\n";
-echo '  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);'."\n";
-echo '  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);'."\n";
-echo '  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);'."\n";
-if ($req['postmethod'] == 'post') {
-  echo '  curl_setopt($ch, CURLOPT_POST, true);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_URL, $url);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");'."\n";
-  echo '  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);'."\n";
-  } else{
-  echo '  curl_setopt($ch, CURLOPT_HTTPGET, true);'."\n";
-  echo '  $post_url=fix_postdata_url($url, $data);'."\n";
-  echo '  curl_setopt($ch, CURLOPT_URL, $post_url);'."\n";
-}
-echo '  $tmpInfo = curl_exec($ch);'."\n";
-echo '  if (curl_errno($ch)) {'."\n";
-echo '    echo(curl_errno($ch));'."\n";
-echo '    exit;'."\n";
-echo '  }'."\n";
-echo '  curl_close($ch);'."\n";
-echo '  return $tmpInfo;'."\n";
-echo '}'."\n\n\n";
-
-
 #获取第三方资料(非必要不更动)
 echo '#获取第三方资料(非必要不更动)'."\n";
 echo '$params = array(\':pay_type\' => $pay_type);'."\n";
 echo '$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";'."\n";
-echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+if ($key == 1) {
+  echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+}else {
+  echo '$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);'."\n";
+}
 echo '$stmt->execute($params);'."\n";
 echo '$row = $stmt->fetch();'."\n";
 echo '$pay_mid = $row[\'mer_id\'];'."\n";
@@ -229,10 +204,10 @@ echo '}'."\n\n\n";
 
 #签名排列，可自行组字串或使用http_build_query($array)
 echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
-if ($req['postmethod']=='HEADER'):
+if (strstr($req['postmethod'],"HEADER")){
     echo '$form_data = $data;'."\n";
     echo '$jumpurl = $form_url;'."\n";
-elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
+}elseif(strstr($req['postmethod'],"CURL")){
     echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
     echo '  if (is_array($arr_value)) {'."\n";
     echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
@@ -246,7 +221,7 @@ elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
 
     #curl获取响应值
     echo '#curl获取响应值'."\n";
-    echo '$res = curl_post($form_url,$data_str);'."\n";
+    echo '$res = curl_post($form_url,$data_str,$req[\"postmethod\"]);'."\n";
     if($req['res_structure']=="json"){
         echo '$row = json_decode($res,1);'."\n";
     }elseif($req['res_structure']=="xml"){
@@ -256,18 +231,43 @@ elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
+  }
 
-    #跳转qrcode
-    echo '#跳转qrcode'."\n";
-    // echo '$url = $row[\''.$req['qrcodeUrl'].'\'];'."\n";
-    echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-    if ($payment['platform']=='h5') {
-        echo '  $jumpurl = $url;'."\n";
-    }elseif ($payment['platform']=='bs') {
-        echo '  $qrurl = QRcodeUrl($url);'."\n";
-        echo '  $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
-    }
-endif;
+  #跳转qrcode
+  echo '#跳转qrcode'."\n";
+  $response_key = '$url = $row';
+  for ($i=0; $i < intval($req['response_key'][0]); $i++) {
+    $response_key .= '[\''.$req['response_key'][1+$i].'\']';
+  }
+  $response_key .= ';';
+  echo $response_key."\n";
+  echo '  if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+  echo '    if (_is_mobile()) {'."\n";
+  echo '      $jumpurl = $url;'."\n";
+  echo '    }else{'."\n";
+  echo '      $qrurl = QRcodeUrl($url);'."\n";
+  echo '      $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
+  echo '    }'."\n";
+  echo '  }else{'."\n";
+  echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
+  echo '    exit();'."\n";
+  echo '  }'."\n";
+
+//    #跳转qrcode
+//   echo '#跳转qrcode'."\n";
+//   $response_key = ' $url = $row';
+//   for ($i=0; $i < intval($req['response_key'][0]); $i++) {
+//     $response_key .= '[\''.$req['response_key'][1+$i].'\']';
+//   }
+//   $response_key .= ';';
+//   echo $response_key."\n";
+//   echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+//     if ($payment['payment']=='h5') {
+//         echo '  $jumpurl = $url;'."\n";
+//     }elseif ($payment['platform']=='bs') {
+//         echo '  $qrurl = QRcodeUrl($url);'."\n";
+//         echo '  $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
+//     }
 
 echo '?>'."\n";
 
@@ -292,9 +292,5 @@ echo '          document.getElementById("frm1").submit();'."\n";
 echo '      </script>'."\n";
 echo '   </body>'."\n";
 echo '</html>'."\n";
-echo '<?php'."\n";
-echo '}else {'."\n";
-echo '  echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
-echo '}'."\n";
-echo '?>'."\n";
+
 ?>
