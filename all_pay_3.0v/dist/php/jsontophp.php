@@ -198,10 +198,10 @@ echo '}'."\n\n\n";
 
 #签名排列，可自行组字串或使用http_build_query($array)
 echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
-if (strstr($req['postmethod'],"HEADER")):
+if (strstr($req['postmethod'],"HEADER")){
     echo '$form_data = $data;'."\n";
     echo '$jumpurl = $form_url;'."\n";
-elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
+}elseif(strstr($req['postmethod'],"CURL")){
     echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
     echo '  if (is_array($arr_value)) {'."\n";
     echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
@@ -225,6 +225,7 @@ elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
+  }
 
   #跳转qrcode
   echo '#跳转qrcode'."\n";
@@ -261,7 +262,6 @@ elseif($req['postmethod']=='POST' || $req['postmethod']=='GET'):
 //         echo '  $qrurl = QRcodeUrl($url);'."\n";
 //         echo '  $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
 //     }
-// endif;
 
 echo '?>'."\n";
 
