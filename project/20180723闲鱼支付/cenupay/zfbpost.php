@@ -102,9 +102,7 @@ $data = array(
   "body" => "pay",
   "sign" => "",
 );
-$params = array(
-  "params" => ""//要傳的資料
-);
+
 #变更参数设置
 $scan = 'zfb';
 $data['productId'] = (int)8007;
@@ -134,19 +132,16 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 $signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
-echo "<pre>";
-echo $signtext."<br>";
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
-$params["params"] = json_encode($data,JSON_UNESCAPED_SLASHES);
-var_dump($params);
-$form_data = $params;
+$params = json_encode($data,JSON_UNESCAPED_SLASHES);
+echo $params;
 $jumpurl = $form_url;
-#curl提交
-// $res = curl_post($form_url,$data);
+// #curl提交
+// $res = curl_post($form_url,$params);
 // echo $res;
 // $row = json_decode($res,1);
-// #跳转
+#跳转
 // if ($row['retCode'] != '0000') {
 //   echo  '错误代码:' . $row['retCode']."<br>";
 //   echo  '错误讯息:' . $row['retMsg']."<br>";
@@ -169,18 +164,10 @@ $jumpurl = $form_url;
   <body>
     <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="black">
       <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
+      <input type="hidden" name="params" value="<?php echo $params; ?>" />
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
 </html>
-
-
-?>

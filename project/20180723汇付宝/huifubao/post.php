@@ -113,7 +113,11 @@ $signtext .= 'pay_amt'.$betcon.$data['pay_amt'].$conn;
 $signtext .= 'notify_url'.$betcon.$data['notify_url'].$conn;
 $signtext .= 'return_url'.$betcon.$data['return_url'].$conn;
 $signtext .= 'user_ip'.$betcon.$data['user_ip'].$conn;
-$signtext .= 'bank_card_type'.$betcon.$data['bank_card_type'].$conn;
+if($scan == 'wy'){
+  $signtext .= 'bank_card_type'.$betcon.$data['bank_card_type'].$conn;
+}else{
+  unset($data['bank_card_type']);
+}
 $signtext .= 'key'.$betcon.$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;

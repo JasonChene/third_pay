@@ -1,6 +1,6 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 function verity($key,$data,$signature)  
 {  
@@ -8,50 +8,13 @@ function verity($key,$data,$signature)
 	$result = openssl_verify($data, base64_decode($signature), $public_pem);  
 	return $result;  
 }
-function public_decrypt($key,$data,$signature)  
-{  
-  $public_pem = openssl_get_publickey($key);//签名秘钥
-	$result = openssl_public_decrypt($data, base64_decode($signature), $public_pem);  
-	return $result;  
-}
-write_log("notify");
 
-#############################################
-#request方法
-write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	// $data[$key] = $value;
-	write_log($key."=".$value);
-}
-#post方法
-write_log('post方法');
-foreach ($_POST as $key => $value) {
-	// $data[$key] = $value;
-	write_log($key."=".$value);
-}
-#input方法
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-write_log($input_data);
-// $res=json_decode($input_data,1);//json回传资料
-
-// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XML回传资料
-
-// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
-
-// foreach ($res as $key => $value) {
-// 	$data[$key] = $value;
-// 	write_log($key."=".$value);
-// }
-###########################################
-
+// write_log("notify");
 
 #接收资料
 #input方法
 $result = file_get_contents("php://input");
-write_log($result);
+// write_log($result);
 //资料处理
 $tmp = explode("|", $result);
 $resp_xml = base64_decode($tmp[0]);
@@ -74,9 +37,9 @@ foreach($newreparr2 as $reparr_key => $reparr_value){
 }
 unset($data['message']);
 unset($data['item']);
-foreach ($data as $key => $value) {
-	write_log($key."=".$value);
-}
+// foreach ($data as $key => $value) {
+// 	write_log($key."=".$value);
+// }
 //资料处理END
 #设定固定参数
 $order_no = $data['merchantOrderId']; //订单号
@@ -89,7 +52,7 @@ $echo_msg = "success";//回调讯息
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -97,7 +60,7 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -110,7 +73,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $signsuccess = verity($pay_account,MD5($resp_xml,1),$resp_sign);
-write_log((int)$signsuccess);
+// write_log((int)$signsuccess);
 #到账判断
 if ($success_msg == $success_code) {
   if ( (int)$signsuccess == 1) {

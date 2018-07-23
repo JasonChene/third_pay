@@ -37,33 +37,6 @@ function payType_bankname($scan,$pay_type){
   }
 }
 
-
-#function
-function curl_post($url,$data){ #POST访问
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
-  }
-  return $tmpInfo;
-}
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
-  }
-  return $code2;
-}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -76,7 +49,6 @@ $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
-
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
@@ -88,33 +60,39 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid,
-  "pay_orderid" => $order_no, 
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay",//不簽名
+  "version" => '1',
+  "pay_type" => "30",
+  "agent_id" => $pay_mid, //商户号
+  "agent_bill_id" => $order_no,//商户流水号
+  "pay_amt" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
+  "notify_url" => $merchant_url,//异步通知地址
+  "return_url" => $merchant_url,//同步通知地址
+  "user_ip" => getClientIp(),
+  "agent_bill_time" => date("YmdHis"),
+  "goods_name" => 'Buy',//商品名称
+  "remark" => 'yesOhyes'//备注
 );
 #变更参数设置
+$form_url = 'https://pay.heepay.com/Payment/Index.aspx';//提交地址
 
-$form_url = 'http://mmp.9baopay.com/Pay_Index.html';//提交地址
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_bankcode'] = '908';
+  $data['pay_type'] = '33';
   if(_is_mobile()){
-    $data['pay_bankcode'] = '912';
+    $data['is_phone'] = '1';
+  }
+}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['pay_type'] = '31';
+  if(_is_mobile()){
+    $data['is_phone'] = '1';
   }
 }else {
   $scan = 'wx';
-  $data['pay_bankcode'] = '902';
   if(_is_mobile()){
-    $data['pay_bankcode'] = '905';
+    $data['is_phone'] = '1';
+    $data['is_frame'] = '0';
+    $data['meta_option'] = urlencode(base64_encode('{"s":"WAP","n":"Pay","id":'.$row['pay_domain'].'}'));
   }
 }
 payType_bankname($scan,$pay_type);
@@ -128,20 +106,22 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr =array('pay_md5sign','pay_productname');
+
 $signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
-}
-
-
-$signtext = substr($signtext,0,-1).'&key='.$pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign; 
-
+$conn = '&';
+$betcon = '=';
+$signtext .= 'version'.$betcon.$data['version'].$conn;
+$signtext .= 'agent_id'.$betcon.$data['agent_id'].$conn;
+$signtext .= 'agent_bill_id'.$betcon.$data['agent_bill_id'].$conn;
+$signtext .= 'agent_bill_time'.$betcon.$data['agent_bill_time'].$conn;
+$signtext .= 'pay_type'.$betcon.$data['pay_type'].$conn;
+$signtext .= 'pay_amt'.$betcon.$data['pay_amt'].$conn;
+$signtext .= 'notify_url'.$betcon.$data['notify_url'].$conn;
+$signtext .= 'return_url'.$betcon.$data['return_url'].$conn;
+$signtext .= 'user_ip'.$betcon.$data['user_ip'].$conn;
+$signtext .= 'key'.$betcon.$pay_mkey;
+$sign = md5($signtext);
+$data['sign'] = $sign;
 #跳轉方法
 
 ?>
