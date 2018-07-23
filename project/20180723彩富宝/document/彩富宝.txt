@@ -1,0 +1,11 @@
+登录密码：baidu888
+
+取款密码:258369
+
+商户后台登录地址：https://mch.i6pay.com
+
+商户APP_ID：in4f6fbce172944795bbecb2a8f83528fd
+
+秘钥APP_SECRET：f6f6a8f86b7642d1996c268335fcb804
+
+开发文档：https://dev.i6pay.com
