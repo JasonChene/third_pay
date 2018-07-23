@@ -1,7 +1,6 @@
 <?php
 $req = json_decode(file_get_contents('php://input'),1);
 $key = json_decode($req['key'], true);
-var_dump($key);
 $req = json_decode($req['data'], true);
 
 
@@ -97,7 +96,11 @@ echo '}'."\n\n\n";
 echo '#获取第三方资料(非必要不更动)'."\n";
 echo '$params = array(\':pay_type\' => $pay_type);'."\n";
 echo '$sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";'."\n";
-echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+if ($key == 1) {
+  echo '$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);'."\n";
+}else {
+  echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+}
 echo '$stmt->execute($params);'."\n";
 echo '$row = $stmt->fetch();'."\n";
 echo '$pay_mid = $row[\'mer_id\'];'."\n";
@@ -288,9 +291,5 @@ echo '          document.getElementById("frm1").submit();'."\n";
 echo '      </script>'."\n";
 echo '   </body>'."\n";
 echo '</html>'."\n";
-echo '<?php'."\n";
-echo '}else {'."\n";
-echo '  echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
-echo '}'."\n";
-echo '?>'."\n";
+
 ?>
