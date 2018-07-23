@@ -1,5 +1,4 @@
 <?php
-#递回加密字串
 function sign_text($array){
   $signtext = "";
   foreach ($array['str_arr'] as $arr_key => $arr_value) {
@@ -20,6 +19,7 @@ function sign_text($array){
   }
   $len = strlen($array['last_conn']);
   $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
+  var_dump($array);
   $encrypt_len = strlen($array['encrypt']);
   for ($i=0; $i < $encrypt_len; $i++) {
       $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
@@ -94,56 +94,35 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     return $sign;
 }
 
-
-
-#跳转qrcode.php网址调试
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
-  }
-  return $code2;
+function encrypt($input, $key) {
+  $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+  $input = $this->pkcs5_pad($input, $size);
+  $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_ECB, '');
+  $iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+  mcrypt_generic_init($td, $key, $iv);
+  $data = mcrypt_generic($td, $input);
+  mcrypt_generic_deinit($td);
+  mcrypt_module_close($td);
+  $data = base64_encode($data);
+  return $data;
 }
 
-
-#修正url
-function fix_postdata_url($url, $data){
-    $post_url='';
-    if(substr($url,-1) == '?' || substr($url,-1) == '/'){
-      $post_url=substr($url,0,-1)."?".$data;
- }else{
-       $post_url=$url."?".$data;
- }
- return $post_url ;
+function pkcs5_pad ($text, $blocksize) {
+  $pad = $blocksize - (strlen($text) % $blocksize);
+  return $text . str_repeat(chr($pad), $pad);
 }
 
-
-#curl请求设定
-function curl_post($url, $data ,$str){
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  #curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
-  if (strstr($str ,"CURL-POST")) {
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-      curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  } elseif(strstr($str ,"CURL-GET")){
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  $post_url=fix_postdata_url($url, $data);
-  curl_setopt($ch, CURLOPT_URL, $post_url);
-  }
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    echo(curl_errno($ch));
-    exit;
-  }
-  curl_close($ch);
-  return $tmpInfo;
+function decrypt($sStr, $sKey) {
+  $decrypted= mcrypt_decrypt(
+    MCRYPT_RIJNDAEL_128,
+    $sKey,
+    base64_decode($sStr),
+    MCRYPT_MODE_ECB
+  );
+  $dec_s = strlen($decrypted);
+  $padding = ord($decrypted[$dec_s-1]);
+  $decrypted = substr($decrypted, 0, -$padding);
+  return $decrypted;
 }
+
 ?>
