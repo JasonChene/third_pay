@@ -107,9 +107,9 @@ if (strstr($pay_type, "京东钱包")) {
   $payType = $pay_type . "_qq";
 } else {
   $scan = 'wx';
-  $data['payType'] = '2';//微信扫码 17微信刷卡
+  $data['payType'] = '2';//微信扫码
   if (_is_mobile()) {
-    $data['payType'] = '3';//微信H5 12微信app
+    $data['payType'] = '3';//微信H5
     $data['deviceType'] = device_type();
   }
   $bankname = $pay_type . "->微信在线充值";
