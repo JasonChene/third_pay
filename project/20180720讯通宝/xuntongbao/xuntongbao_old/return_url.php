@@ -2,14 +2,12 @@
 <?php
 include_once("../../../database/mysql.config.php");//原新数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("-----return");
 
 #接收资料
 #request方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value . "-----return");
 }
 
 #设定固定参数
@@ -44,9 +42,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $signtext = $data['p1_MerId'] . $data['r0_Cmd'] . $data['r1_Code'] . $data['r2_TrxId'] . $data['r3_Amt'] . $data['r4_Cur'] . $data['r5_Pid'] . $data['r6_Order'] . $data['r7_Uid'] . $data['r8_MP'] . $data['r9_BType'];//验签字串
-write_log("signtext=" . $signtext);
 $mysign = md5($signtext);//签名
-write_log("mysign=" . $mysign);
 $platformPublicKey = openssl_get_publickey($pay_account);
 if (!$platformPublicKey) {
 	echo '打开公钥失败';
@@ -54,10 +50,8 @@ if (!$platformPublicKey) {
 }
 $sign = str_replace("*", "+", $sign);
 $sign = str_replace("-", "/", $sign);
-write_log("sign=" . $sign);
 $signsuccess = (boolean)openssl_verify($signtext, base64_decode($sign), $platformPublicKey);
 openssl_free_key($platformPublicKey);
-write_log("signsuccess=" . $signsuccess);
 
 #到账判断
 if ($success_msg == $success_code) {
