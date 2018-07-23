@@ -1,5 +1,7 @@
 <?php
 $req = json_decode(file_get_contents('php://input'),1);
+$key = json_decode($req['key'], true);
+var_dump($key);
 $req = json_decode($req['data'], true);
 
 
@@ -69,7 +71,7 @@ echo '#支付方式 : '. $payment['type'] .";\n";
 
 echo 'include_once("./addsign.php");'."\n";
 echo 'include_once("../moneyfunc.php");'."\n";
-if ($req['key'] == 1) {
+if ($key == 1) {
   echo 'include_once("../../../database/mysql.config.php");'."\n\n\n";
 }else {
   echo 'include_once("../../../database/mysql.php");'."\n\n\n";
@@ -229,7 +231,7 @@ if (strstr($req['postmethod'],"HEADER")){
 
   #跳转qrcode
   echo '#跳转qrcode'."\n";
-  $response_key = ' $url = $row';
+  $response_key = '$url = $row';
   for ($i=0; $i < intval($req['response_key'][0]); $i++) {
     $response_key .= '[\''.$req['response_key'][1+$i].'\']';
   }
