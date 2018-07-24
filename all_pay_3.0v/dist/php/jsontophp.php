@@ -81,16 +81,16 @@ echo '$top_uid = $_REQUEST[\'top_uid\'];'."\n";
 echo '$pay_type =$_REQUEST[\'pay_type\'];'."\n";
 
 
-#跳转qrcode.php网址调试
-echo '#跳转qrcode.php网址调试'."\n";
-echo 'function QRcodeUrl($code){'."\n";
-echo '  if(strstr($code,"&")){'."\n";
-echo '    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc'."\n";
-echo '  }else{'."\n";
-echo '    $code2=$code;'."\n";
-echo '  }'."\n";
-echo '  return $code2;'."\n";
-echo '}'."\n\n\n";
+// #跳转qrcode.php网址调试
+// echo '#跳转qrcode.php网址调试'."\n";
+// echo 'function QRcodeUrl($code){'."\n";
+// echo '  if(strstr($code,"&")){'."\n";
+// echo '    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc'."\n";
+// echo '  }else{'."\n";
+// echo '    $code2=$code;'."\n";
+// echo '  }'."\n";
+// echo '  return $code2;'."\n";
+// echo '}'."\n\n\n";
 
 
 #获取第三方资料(非必要不更动)
@@ -223,56 +223,41 @@ if (strstr($req['postmethod'],"HEADER")){
     #curl获取响应值
     echo '#curl获取响应值'."\n";
     if ($req['req_structure'] == 'JSON') {
-      echo '$res = curl_post($form_url,$data_json,$req[\"req_structure\"]\.\"-\"\.$req[\"postmethod\"]);'."\n";
+      echo '$res = curl_post($form_url,$data_json,"'.$req["req_structure"].'-'.$req["postmethod"].'");'."\n";
     }else {
-      echo '$res = curl_post($form_url,$data_str,$req[\"postmethod\"]);'."\n";
+      echo '$res = curl_post($form_url,$data_str,'.$req["postmethod"].');'."\n";
     }
-    if($req['res_structure']=="json"){
-        echo '$row = json_decode($res,1);'."\n";
-    }elseif($req['res_structure']=="xml"){
+    if($req['res_structure']=="JSON"){
+        echo '$res = json_decode($res,1);'."\n";
+    }elseif($req['res_structure']=="XML"){
         echo '$xml=(array)simplexml_load_string($data) or die("Error: Cannot create object");'."\n";
-        echo '$row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
+        echo '$res=json_decode(json_encode($xml),1);//XML回传资料'."\n";
     }elseif($req['res_structure']=="xmlCDATA"){
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
-        echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
+        echo '$res=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
 }
 
   #跳转qrcode
   echo '#跳转qrcode'."\n";
-  $response_key = '$url = $row';
+  $response_key = '$url = $res';
   for ($i=0; $i < intval($req['response_key'][0]); $i++) {
     $response_key .= '[\''.$req['response_key'][1+$i].'\']';
   }
   $response_key .= ';';
   echo $response_key."\n";
-  echo '  if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-  echo '    if (_is_mobile()) {'."\n";
-  echo '      $jumpurl = $url;'."\n";
-  echo '    }else{'."\n";
-  echo '      $qrurl = QRcodeUrl($url);'."\n";
-  echo '      $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
-  echo '    }'."\n";
+  echo 'if ($res[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+  echo '  if (_is_mobile()) {'."\n";
+  echo '    $jumpurl = $url;'."\n";
   echo '  }else{'."\n";
-  echo '    echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
-  echo '    exit();'."\n";
+  echo '    $qrurl = QRcodeUrl($url);'."\n";
+  echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
   echo '  }'."\n";
+  echo '}else{'."\n";
+  echo '  echo "错误码：".$res[\''.$req['Error_No'].'\']."错误讯息：".$res[\''.$req['Error_Msg'].'\'];'."\n";
+  echo '  exit();'."\n";
+  echo '}'."\n";
 
-//    #跳转qrcode
-//   echo '#跳转qrcode'."\n";
-//   $response_key = ' $url = $row';
-//   for ($i=0; $i < intval($req['response_key'][0]); $i++) {
-//     $response_key .= '[\''.$req['response_key'][1+$i].'\']';
-//   }
-//   $response_key .= ';';
-//   echo $response_key."\n";
-//   echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-//     if ($payment['payment']=='h5') {
-//         echo '  $jumpurl = $url;'."\n";
-//     }elseif ($payment['platform']=='bs') {
-//         echo '  $qrurl = QRcodeUrl($url);'."\n";
-//         echo '  $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
-//     }
 
 echo '?>'."\n";
 
