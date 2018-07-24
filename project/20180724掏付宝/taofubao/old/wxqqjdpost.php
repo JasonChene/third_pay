@@ -100,6 +100,12 @@ $form_url = 'http://www.taodll.cn/gateway';//提交地址
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['paytype'] = 'jdsm';
+}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['paytype'] = 'qqrcode';
+  if(_is_mobile()){
+    $data['paytype'] = 'qqwallet';
+  }
 }else {
   $scan = 'wx';
   if(_is_mobile()){
