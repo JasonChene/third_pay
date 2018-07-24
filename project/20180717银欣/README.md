@@ -15,4 +15,5 @@
 备注：支付宝wap最低500  
 
 20180724
+修改档案：zfbpost.php
 新增订单提交参数user_id,username  
