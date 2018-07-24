@@ -207,7 +207,7 @@ echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
 if (strstr($req['postmethod'],"HEADER")){
     echo '$form_data = $data;'."\n";
     echo '$jumpurl = $form_url;'."\n";
-}elseif(strstr($req['postmethod'],"CURL")){
+}else{
     echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
     echo '  if (is_array($arr_value)) {'."\n";
     echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
@@ -216,12 +216,17 @@ if (strstr($req['postmethod'],"HEADER")){
     echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
     echo '  $data_str = $arr_key.\'=\'.$arr_value.\'&\';'."\n";
     echo '}'."\n";
-
     echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
-
+    if ($req['req_structure'] == 'JSON') {
+      echo '$data_json = json_encode($data,JSON_UNESCAPED_SLASHES);'."\n";
+    }
     #curl获取响应值
     echo '#curl获取响应值'."\n";
-    echo '$res = curl_post($form_url,$data_str,$req[\"postmethod\"]);'."\n";
+    if ($req['req_structure'] == 'JSON') {
+      echo '$res = curl_post($form_url,$data_json,$req[\"req_structure\"]\.\"-\"\.$req[\"postmethod\"]);'."\n";
+    }else {
+      echo '$res = curl_post($form_url,$data_str,$req[\"postmethod\"]);'."\n";
+    }
     if($req['res_structure']=="json"){
         echo '$row = json_decode($res,1);'."\n";
     }elseif($req['res_structure']=="xml"){
@@ -231,7 +236,7 @@ if (strstr($req['postmethod'],"HEADER")){
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
-  }
+}
 
   #跳转qrcode
   echo '#跳转qrcode'."\n";
