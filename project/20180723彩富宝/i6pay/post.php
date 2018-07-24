@@ -3,9 +3,9 @@ header("Content-type:text/html; charset=utf-8");
 
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(_is_mobile()){
-    $form_url = './ylsmpost.php';
-  }elseif(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './yltmpost.php';
+    $form_url = './ylbspost.php';
+  }elseif(strstr($_REQUEST['pay_type'], "反扫")){
+    $form_url = './ylfspost.php';
   }else{
     $form_url = './ylh5post.php';
   }

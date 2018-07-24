@@ -3,10 +3,10 @@ header("Content-type:text/html; charset=utf-8");
 
 if(_is_mobile()){
   $form_url = './zfbh5post.php';
-}elseif(strstr($_REQUEST['pay_type'], "条码")){
-  $form_url = './zfbtmpost.php';
+}elseif(strstr($_REQUEST['pay_type'], "反扫")){
+  $form_url = './zfbfspost.php';
 }else{
-  $form_url = './zfbsmpost.php';
+  $form_url = './zfbbspost.php';
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 彩富宝
-#支付方式 : wx;
+#支付方式 : jd;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -16,9 +16,9 @@ $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_doma
 $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
-//$pay_mid = $row['mer_id'];
+$pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
-$pay_mid = $row['mer_account'];
+$pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//同步
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//异步
 if ($pay_mid == "" || $pay_mkey == "") {
@@ -47,7 +47,7 @@ $data = array(
 "total_fee" => $MOAmount,
 "notify_url" => $notify_url,
 "app_id" => $pay_account,
-"pay_type" => '2',
+"pay_type" => '17',
 "version" => '4.0',
 "nonce_str" => $order_no,
 "sign_type" => 'MD5',
@@ -57,8 +57,8 @@ $data = array(
 "system_time" => 'date("YmdHis")',
 );
 #变更参数设定
-$payType = $pay_type."_wx";
-$bankname = $pay_type."->微信在线充值";
+$payType = $pay_type."_jd";
+$bankname = $pay_type."->京东钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -93,7 +93,7 @@ if ($res['return_code'] == 'true') {
     $jumpurl = $url;
   }else{
     $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+    $jumpurl = '../qrcode/qrcode.php?type=jd&code=' . $qrurl;
   }
 }else{
   echo "错误码：".$res['return_code']."错误讯息：".$res['return_msg'];
