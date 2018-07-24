@@ -127,16 +127,21 @@ function curl_post($url, $data ,$str){
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   #curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
-  if (strstr($str ,"CURL-POST")) {
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-      curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  } elseif(strstr($str ,"CURL-GET")){
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  // $post_url=fix_postdata_url($url, $data);
-  curl_setopt($ch, CURLOPT_URL, $data);
+  if (strstr($str,"POST")) {
+    if (strstr($str,"JSON")) {
+      curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
+    }
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  } elseif(strstr($str,"GET")){
+    if (strstr($str,"JSON")) {
+      curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
+    }
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    // $post_url=fix_postdata_url($url, $data);
+    curl_setopt($ch, CURLOPT_URL, $data);
   }
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {

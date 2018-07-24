@@ -107,18 +107,18 @@ $data = array(
 $form_url = 'http://mmp.9baopay.com/Pay_Index.html';//提交地址
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
-  $data['pay_bankcode'] = '910';
+  $data['pay_type'] = '910';
 }elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
-  $data['pay_bankcode'] = '908';
+  $data['pay_type'] = '908';
   if(_is_mobile()){
-    $data['pay_bankcode'] = '912';
+    $data['pay_type'] = '912';
   }
 }else {
   $scan = 'wx';
-  $data['pay_bankcode'] = '902';
+  $data['pay_type'] = '902';
   if(_is_mobile()){
-    $data['pay_bankcode'] = '905';
+    $data['pay_type'] = '905';
   }
 }
 payType_bankname($scan,$pay_type);
