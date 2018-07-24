@@ -13,3 +13,6 @@
 修改档案：zfbpost.php,qqpost.php,wxpost.php,post.php,wxjdqqpost.php  
 修改提交网关地址
 备注：支付宝wap最低500  
+
+20180724
+新增订单提交参数user_id,username  
