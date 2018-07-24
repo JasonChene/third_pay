@@ -148,7 +148,7 @@ function echo_arr($key_name,$array){
   $text =  '"'.$key_name.'" => array('."\n";
   foreach ($array as $arr_key => $arr_value) {
     if (!is_array($arr_value)) {
-      (is_null(json_decode($arr_value,1))) ? $arr_value = $arr_value:$arr_value = json_decode($arr_value,1);
+      $arr_value = (is_null(json_decode(stripslashes($arr_value),1))) ? $arr_value:json_decode($arr_value,1);
     }
     if (is_array($arr_value)) {
       $arr_value = echo_arr($arr_key,$arr_value);
