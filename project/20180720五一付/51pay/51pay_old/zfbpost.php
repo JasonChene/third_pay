@@ -82,11 +82,7 @@ $notifyUrl = $merchant_url;  //异步
 $nonceStr = '1234567890';//随机字符串
 $stlType = 'T1';//结算类型 支付宝，微信是T1  银联扫码和QQT0
 $termIp = getClientIp();
-if (_is_mobile()) {
-  $payChannel = 'ALIWAPPAY'; //支付宝H5支付
-}else {
-  $payChannel = 'ALIPAY'; //支付宝支付
-}
+$payChannel = 'ALIWAPPAY'; //支付宝H5支付
 
 
 $parms = array(
@@ -136,13 +132,8 @@ if ($result_insert == -1) {
 $res = curl_post($form_url,$data,20);
 $row = json_decode($res);
 if ($row->REP_BODY->orderState == '00') {
-  if (_is_mobile()) {
     header("location:" . $row->REP_BODY->codeUrl);
     exit;
-  }else {
-    header("location:" .'../qrcode/qrcode.php?type=zfb&code=' .$row->REP_BODY->codeUrl);
-    exit;
-  }
 }else {
   echo  'rspcode:' . $row->REP_BODY->rspcode.'rspmsg:' . $row->REP_BODY->rspmsg;
 }
