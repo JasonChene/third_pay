@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -68,15 +68,14 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//
+$pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
-$pay_account = $row['mer_account'];//appid
+$pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
-
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
@@ -88,37 +87,29 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "version" => "4.0",
-  "app_id" => $pay_account, 
-  "pay_type" => "",
-  "nonce_str" => $order_no,
-  "sign" => "",
-  "sign_type" => "MD5",
-  "body" => "pay",
-  "out_trade_no" => $order_no,
-  "fee_type" => "CNY",
-  "total_fee" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  "return_url" => $return_url,
-  "notify_url" => $merchant_url,
-  "system_time" => date("YmdHis"),
+  "version" => "1.0",
+  "customerid" => $pay_mid, //商户号
+  "total_fee" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
+  "sdorderno" => $order_no,//商户流水号
+  "paytype" => 'weixin',
+  "notifyurl" => $merchant_url,//通知地址
+  "returnurl" => $return_url//通知地址
 );
 #变更参数设置
-
-$form_url = 'http://mmp.9baopay.com/Pay_Index.html';//提交地址
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+$form_url = 'http://www.taodll.cn/gateway';//提交地址
+if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
-  $data['pay_type'] = '910';
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $data['paytype'] = 'jdsm';
+}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
   $scan = 'qq';
-  $data['pay_type'] = '908';
+  $data['paytype'] = 'qqrcode';
   if(_is_mobile()){
-    $data['pay_type'] = '912';
+    $data['paytype'] = 'qqwallet';
   }
 }else {
   $scan = 'wx';
-  $data['pay_type'] = '902';
   if(_is_mobile()){
-    $data['pay_type'] = '905';
+    $data['paytype'] = 'wxh5';
   }
 }
 payType_bankname($scan,$pay_type);
@@ -132,8 +123,7 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr =array('pay_md5sign','pay_productname');
+$noarr =array('sign','paytype');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
@@ -142,9 +132,9 @@ foreach ($data as $arr_key => $arr_val) {
 }
 
 
-$signtext = substr($signtext,0,-1).'&key='.$pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign; 
+$signtext = substr($signtext,0,-1).'&'.$pay_mkey;
+$sign = md5($signtext);
+$data['sign'] = $sign; 
 
 #跳轉方法
 
