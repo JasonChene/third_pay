@@ -64,7 +64,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "merchantNo" => $pay_mid, //商户编号
-  "orderAmount" => $_REQUEST['MOAmount'] * 100, //商户订单金额
+  "orderAmount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //商户订单金额
   "orderNo" => $order_no, //商户订单号
   "notifyUrl" => $merchant_url, //异步通知
   "callbackUrl" => $return_url, //页面回调

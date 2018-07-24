@@ -64,7 +64,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $other_data = array(
   "merchantNo" => $pay_mid, //商户编号
-  "orderAmount" => $_REQUEST['MOAmount'] * 100, //商户订单金额
+  "orderAmount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //商户订单金额
   "orderNo" => $order_no, //商户订单号
   "notifyUrl" => $merchant_url, //异步通知
   "callbackUrl" => $return_url, //页面回调
@@ -89,7 +89,7 @@ $other_data = array(
 $wy_data = array(
   "orderNo" => $order_no, //商户订单号
   "merchantNo" => $pay_mid, //商户编号
-  "orderAmount" => $_REQUEST['MOAmount'] * 100, //交易金额分为单位
+  "orderAmount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //商户订单金额
   "notifyUrl" => $merchant_url, //服务器端处理通知接口
   "callbackUrl" => $return_url, //页面回调
   "bankName" => $_REQUEST['bank_code'], //银行简码
