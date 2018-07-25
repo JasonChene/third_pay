@@ -86,7 +86,7 @@ if ($result_insert == -1){
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
-
+echo'<pre>';
 
 #签名排列，可自行组字串或使用http_build_query($array)
 foreach ($data as $arr_key => $arr_value) {
@@ -102,6 +102,7 @@ $data_str = substr($data_str,0,-1);
 
 #curl获取响应值
 $res = curl_post($form_url,$data_str,POST);
+var_dump($res);
 #跳转qrcode
 $url = $res['data'];
 if ($res['code'] == '0') {
