@@ -141,8 +141,10 @@ $signtext .= '&key='.$pay_mkey ;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
 $data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
+echo $data_json."<br>";
 #curl获取响应值
 $res = curl_post($form_url,$data_json);
+echo $res;exit;
 $row = json_decode($res,1);
 #跳转
 if ($row['return_code'] != true) {

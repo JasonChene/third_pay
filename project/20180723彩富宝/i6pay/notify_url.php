@@ -4,16 +4,19 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 write_log("notify");
 #接收资料
-#post方法
-$data = array();
-foreach ($POST as $key => $value) {
+write_log('input方法');
+$input_data=file_get_contents("php://input");
+write_log($input_data);
+$res=json_decode($input_data,1);//json回传资料
+foreach ($res as $key => $value) {
 	$data[$key] = $value;
 	write_log($key."=".$value);
 }
 
+
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
+$order_no = $data['out_trade_no']; //订单号
+$mymoney = number_format($data['total_fee']/100, 2, '.', ''); //订单金额
 $success_msg = $data['trade_state'];//成功讯息
 $success_code = "SUCCESS";//文档上的成功讯息
 $sign = $data['sign'];//签名
@@ -33,9 +36,9 @@ $sql = "select * from pay_set where pay_type=:pay_type";
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
-$pay_mid = $payInfo['mer_id'];
+//$pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
-$pay_account = $payInfo['mer_account'];
+$pay_mid = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
@@ -45,11 +48,11 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $signtext .= 'app_id='.$data['app_id'];
 $signtext .= '&nonce_str='.$data['nonce_str'];
 $signtext .= '&out_trade_no='.$data['out_trade_no'];
-$signtext .= '&sign_type='.$data['sign_type'];
+$signtext .= '&sign_type='.'MD5';
 $signtext .= '&total_fee='.$data['total_fee'];
-$signtext .= '&version='.$data['version'];
+$signtext .= '&version='.'4.0';
 $signtext .= '&key='.$pay_mkey ;
-$mysign = md5($signtext);//签名
+$mysign = strtoupper(md5($signtext));//签名
 write_log("signtext=".$signtext);
 write_log("mysign=".$mysign);
 
