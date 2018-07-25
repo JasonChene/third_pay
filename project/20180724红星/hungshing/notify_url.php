@@ -8,16 +8,16 @@ write_log("notify");
 #request方法
 write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
-	write_log($key."=".$value);
+	write_log($key . "=" . $value);
 }
 #post方法
 write_log('post方法');
 foreach ($_POST as $key => $value) {
-	write_log($key."=".$value);
+	write_log($key . "=" . $value);
 }
 #input方法
 write_log('input方法');
-$input_data=file_get_contents("php://input");
+$input_data = file_get_contents("php://input");
 write_log($input_data);
 // $res=json_decode($input_data,1);//json回传资料
 
@@ -39,16 +39,16 @@ write_log($input_data);
 $data = array();
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	write_log($key . "=" . $value);
 }
 
 #设定固定参数
-$order_no = $data['order_no']; //订单号
-$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
-$success_code = "1";//文档上的成功讯息
-$sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$order_no = $data['apporderid']; //订单号
+$mymoney = number_format($data['realamount'], 2, '.', ''); //订单金额
+$success_msg = $data['status'];//成功讯息
+$success_code = "0";//文档上的成功讯息
+$sign = $data['hmac'];//签名
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -73,60 +73,50 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign');//不加入签名的array key值
+$noarr = array('hmac');//不加入签名的array key值
 ksort($data);
 $signtext = "";
 foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0,-1);//验签字串
+$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;//验签字串
 $mysign = md5($signtext);//签名
-write_log("signtext=".$signtext);
-write_log("mysign=".$mysign);
-
-#验签方式2
-$signtext = "";
-$signtext .= 'order_no='.$data['order_no'].'&';
-$signtext .= 'pay_amoumt='.$data['pay_amoumt'].'&';
-$signtext .= 'is_success='.$data['is_success'].'&';
-$signtext = substr($signtext, 0,-1);//验签字串
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
+write_log("signtext=" . $signtext);
+write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
+	if ($mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
 			write_log("会员信息不存在，无法入账");
 			exit;
-		}else if($result_insert == 0){
+		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			write_log($echo_msg.'at 0');
+			write_log($echo_msg . 'at 0');
 			exit;
-		}else if($result_insert == -2){
+		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
 			write_log("数据库操作失败");
 			exit;
-		}else if($result_insert == 1){
+		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			write_log($echo_msg.'at 1');
+			write_log($echo_msg . 'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
 			write_log("支付失败");
 			exit;
 		}
-	}else{
+	} else {
 		echo ('签名不正确！');
 		write_log("签名不正确！");
 		exit;
 	}
-}else{
+} else {
 	echo ("交易失败");
 	write_log("交易失败");
 	exit;

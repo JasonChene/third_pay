@@ -137,22 +137,7 @@ $data['sign'] = $sign;
 $params = json_encode($data,JSON_UNESCAPED_SLASHES);
 echo $params;
 $jumpurl = $form_url;
-// #curl提交
-// $res = curl_post($form_url,$params);
-// echo $res;
-// $row = json_decode($res,1);
-#跳转
-// if ($row['retCode'] != '0000') {
-//   echo  '错误代码:' . $row['retCode']."<br>";
-//   echo  '错误讯息:' . $row['retMsg']."<br>";
-//   exit;
-// }else {
-//   if(!_is_mobile() && $scan == 'wx'){
-//     $jumpurl = $row['payParams']['codeImgUrl'];
-//   }else{
-//     $jumpurl = $row['payParams']; //要看實際開發時的資料
-//   }
-// }
+
 #跳轉方法
 
 ?>

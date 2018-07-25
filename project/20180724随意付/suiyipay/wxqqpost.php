@@ -155,11 +155,7 @@ if ($row['respData']['respCode'] != '00') {
   exit;
 } else {
   $qrcodeUrl = base64_decode($row['respData']['codeUrl']);
-  if (_is_mobile()) {
-    $jumpurl = $qrcodeUrl;
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
-  }
+  $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
 }
 
 #跳轉方法
