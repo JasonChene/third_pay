@@ -19,7 +19,8 @@ include_once("./function.php");
 // $input_data=file_get_contents("php://input");
 // write_log($input_data);
 
-$data = json_decode($_POST['reqJson'],1);
+$olddata = stripslashes($_POST['reqJson']);
+$data = json_decode($olddata,1);
 // foreach ($data as $key => $value) {
 // 	write_log($key."=".$value);
 // }
