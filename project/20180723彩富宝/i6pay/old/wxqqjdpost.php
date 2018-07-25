@@ -104,19 +104,24 @@ $data = array(
 #变更参数设置
 
 $form_url = 'https://pay.i6pay.com/pay/unified/order';//提交地址
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-    $scan = 'yl';
-    $data['pay_type'] = '9';
-    if(_is_mobile()){
-        $data['pay_type'] = '15';
-    }
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-    $scan = 'ylkj';
-    $data['pay_type'] = '5';
-    $data['quick_user_id'] = "123";
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['pay_type'] = '10';
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['pay_type'] = '6';
+  if(_is_mobile()){
+    $data['pay_type'] = '21';
+  }
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $data['pay_type'] = '14';
 }else {
-    $scan = 'wx';
-    $data['pay_type'] = '8';
+  $scan = 'wx';
+  $data['pay_type'] = '2';
+  if(_is_mobile()){
+    $data['pay_type'] = '12';
+  }
 }
 
 payType_bankname($scan,$pay_type);
