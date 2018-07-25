@@ -58,9 +58,6 @@ function payType_bankname($scan,$pay_type){
   if(strstr($scan,"wy")){
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
-  }elseif(strstr($scan,"yl")){
-    $payType = $pay_type . "_yl";
-    $bankname = $pay_type . "->银联钱包在线充值";
   }elseif(strstr($scan,"qq")){
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
@@ -76,12 +73,14 @@ function payType_bankname($scan,$pay_type){
   }elseif(strstr($scan,"ylkj")){
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
+  }elseif(strstr($scan,"yl")){
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
   }elseif(strstr($scan,"bd")){
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
   }
 }
-
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
