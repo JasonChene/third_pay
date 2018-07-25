@@ -1,101 +1,117 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-include_once("function.php");
+write_log("notify");
 
-$trade_no = trim($_REQUEST['trade_no']);
-$trade_type = trim($_REQUEST['trade_type']);
-$time_start = trim($_REQUEST['time_start']);
-$pay_time = trim($_REQUEST['pay_time']);
-$goods_name = trim($_REQUEST['goods_name']);
-$goods_detail = trim($_REQUEST['goods_detail']);
-$fee_type = trim($_REQUEST['fee_type']);
-$orig_trade_no = trim($_REQUEST['orig_trade_no']);
-$mchid = trim($_REQUEST['mchid']);
-$src_code = trim($_REQUEST['src_code']);
-$total_fee = trim($_REQUEST['total_fee']);
-$out_mchid = trim($_REQUEST['out_mchid']);
-$cancel = trim($_REQUEST['cancel']);
-$order_status = trim($_REQUEST['order_status']);
-$sign = trim($_REQUEST['sign']);//签名
-$time_expire = trim($_REQUEST['time_expire']);
-$out_trade_no = trim($_REQUEST['out_trade_no']);
-$order_type = trim($_REQUEST['order_type']);
+#############################################
+#request方法
+write_log('request方法');
+foreach ($_REQUEST as $key => $value) {
+	write_log($key."=".$value);
+}
+#post方法
+write_log('post方法');
+foreach ($_POST as $key => $value) {
+	write_log($key."=".$value);
+}
+#input方法
+write_log('input方法');
+$input_data=file_get_contents("php://input");
+write_log($input_data);
+// $res=json_decode($input_data,1);//json回传资料
 
-$params = array(':m_order' => $out_trade_no);
+// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XML回传资料
+
+// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
+// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
+
+// foreach ($res as $key => $value) {
+// 	$data[$key] = $value;
+// 	write_log($key."=".$value);
+// }
+###########################################
+
+
+#接收资料
+#post方法
+$data = array();
+foreach ($_POST as $key => $value) {
+	$data[$key] = $value;
+	write_log($key."=".$value);
+}
+
+#设定固定参数
+$order_no = $data['corp_flow_no']; //订单号
+$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
+$success_msg = $data['respCode'];//成功讯息
+$success_code = "00";//文档上的成功讯息
+$sign = $data['sign'];//签名
+$echo_msg = "00";//回调讯息
+
+#根据订单号读取资料库
+$params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
-//获取该订单的支付名称
+#获取该订单的支付名称
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
-
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
-$parms=array(
-	"trade_no" => $trade_no,//平台订单号
-	"trade_type" => $trade_type,//交易类型
-	"time_start" => $time_start,//发起交易的时间
-	"pay_time" => $pay_time,//交易时间
-	"goods_name" => $goods_name,//商品名称
-	"fee_type" => $fee_type,//货币类型（默认CNY）
-	"src_code" => $src_code,//商户唯一标识
-	"total_fee" => $total_fee,//订单总金额，单位分
-	"cancel" => $cancel,//是否已退款,无退款:1;已退款:2
-	"order_status" => $order_status,//订单状态
-	"time_expire" => $time_expire,//订单有效期
-	"out_trade_no" => $out_trade_no,//接入的交易订单号
-	"order_type" => $order_type,//订单类型
-);
 
-if($orig_trade_no !=""){
-	$parms['orig_trade_no']=$orig_trade_no;//外部订单号
-}	
-if($goods_detail !=""){
-	$parms['goods_detail']=$goods_detail;//商品详情
-}	
-if ($out_mchid !="" && $mchid =="") {
-	$parms['out_mchid']=$out_mchid;//接入方商户号
-}else{
-	$parms['mchid']=$mchid;//商户号
-}
-ksort($parms);
-$mysign=get_md5($parms,$pay_mkey);
-if ($order_status == "3") {
-	//1:下单中；2:等待支付；3:支付成功；4:支付失败；6:用户未支付
-  if ($sign == $mysign) {
-  		$mymoney=number_format($total_fee/100, 2, '.', '');
-		$result_insert = update_online_money($out_trade_no, $mymoney);
+#验签方式
+$signtext = '';
+$signtext .= $data['merchantId'].$data['corp_flow_no'].$data['reqMsgId'].$data['respType'].$pay_mkey;
+$mysign = md5($signtext);//签名
+write_log("signtext=".$signtext);
+write_log("mysign=".$mysign);
+
+#到账判断
+if ($success_msg == $success_code) {
+  if ( $mysign == $sign) {
+		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
-			echo ("会员信息不存在，无法入账");	
+			echo ("会员信息不存在，无法入账");
+			write_log("会员信息不存在，无法入账");
+			exit;
 		}else if($result_insert == 0){
-			echo ("SUCCESS");
+			echo ($echo_msg);
+			write_log($echo_msg.'at 0');
+			exit;
 		}else if($result_insert == -2){
 			echo ("数据库操作失败");
+			write_log("数据库操作失败");
+			exit;
 		}else if($result_insert == 1){
-			echo ("SUCCESS");
+			echo ($echo_msg);
+			write_log($echo_msg.'at 1');
+			exit;
 		} else {
 			echo ("支付失败");
+			write_log("支付失败");
+			exit;
 		}
 	}else{
-		echo '签名不正确！';
+		echo ('签名不正确！');
+		write_log("签名不正确！");
 		exit;
 	}
 }else{
-	echo '交易失败！';
+	echo ("交易失败");
+	write_log("交易失败");
 	exit;
 }
 
