@@ -89,7 +89,13 @@ if (_is_mobile()){
   $data['service_type'] ="weixin_h5api";//微信手機掃碼
   $form_url = "https://api.suifupay.com/gateway/api/h5apipay";
 }
-
+if(strstr($pay_type,'微信反扫')){
+  $form_url = 'https://api.suifupay.com/gateway/api/micropay';
+  $scan = 'wxfs';
+  $data['service_type'] ="weixin_micropay";//微信掃碼
+  $data['interface_version'] ="V3.0";
+  $data['input_charset'] ="UTF-8";
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
