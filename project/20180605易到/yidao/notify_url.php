@@ -4,25 +4,27 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 include_once("./function.php");
 
-write_log("notify");
+// write_log("notify");
 
-write_log("REQUEST方法");
-foreach ($_REQUEST as $key => $value) {
-	write_log($key."=".$value);
-}
-write_log("POST方法");
-foreach ($_POST as $key => $value) {
-	write_log($key."=".$value);
-}
-#input方法
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-write_log($input_data);
+// write_log("REQUEST方法");
+// foreach ($_REQUEST as $key => $value) {
+// 	write_log($key."=".$value);
+// }
+// write_log("POST方法");
+// foreach ($_POST as $key => $value) {
+// 	write_log($key."=".$value);
+// }
+// #input方法
+// write_log('input方法');
+// $input_data=file_get_contents("php://input");
+// write_log($input_data);
 
-$data = json_decode($_POST['reqJson'],1);
-foreach ($data as $key => $value) {
-	write_log($key."=".$value);
-}
+$olddata = stripslashes($_POST['reqJson']);
+$data = json_decode($olddata,1);
+// foreach ($data as $key => $value) {
+// 	write_log($key."=".$value);
+// }
+
 $params = array(':m_order' => $data['extra_para']);
 $sql = "select operator from k_money where m_order=:m_order";
 $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
