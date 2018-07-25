@@ -1,0 +1,36 @@
+2018-07-25 02:12:53 notify
+2018-07-25 02:12:53 input方法
+2018-07-25 02:12:53 {"return_code":true,"result_code":true,"app_id":"in4f6fbce172944795bbecb2a8f83528fd","nonce_str":"15c47f8a054b4081ab73bcc2b10121ec","sign":"E210B54ABCF167F4FF35A0BAFCF7FB0F","trade_state":"SUCCESS","total_fee":1000,"real_total_fee":1000,"fee_type":"CNY","transaction_no":"5348087245617561663","out_trade_no":"70467920180725120651","notify_Url":"http://pay7.5566205.com/pay/i6pay/notify_url.php"}
+2018-07-25 02:12:53 return_code=1
+2018-07-25 02:12:53 result_code=1
+2018-07-25 02:12:53 app_id=in4f6fbce172944795bbecb2a8f83528fd
+2018-07-25 02:12:53 nonce_str=15c47f8a054b4081ab73bcc2b10121ec
+2018-07-25 02:12:53 sign=E210B54ABCF167F4FF35A0BAFCF7FB0F
+2018-07-25 02:12:53 trade_state=SUCCESS
+2018-07-25 02:12:53 total_fee=1000
+2018-07-25 02:12:53 real_total_fee=1000
+2018-07-25 02:12:53 fee_type=CNY
+2018-07-25 02:12:53 transaction_no=5348087245617561663
+2018-07-25 02:12:53 out_trade_no=70467920180725120651
+2018-07-25 02:12:53 notify_Url=http://pay7.5566205.com/pay/i6pay/notify_url.php
+2018-07-25 02:12:53 signtext=app_id=in4f6fbce172944795bbecb2a8f83528fd&nonce_str=15c47f8a054b4081ab73bcc2b10121ec&out_trade_no=70467920180725120651&sign_type=MD5&total_fee=1000&version=4.0&key=f6f6a8f86b7642d1996c268335fcb804
+2018-07-25 02:12:53 mysign=E210B54ABCF167F4FF35A0BAFCF7FB0F
+2018-07-25 02:12:53 SUCCESSat 0
+2018-07-25 02:16:29 notify
+2018-07-25 02:16:29 input方法
+2018-07-25 02:16:29 {"return_code":true,"result_code":true,"app_id":"in4f6fbce172944795bbecb2a8f83528fd","nonce_str":"19a744df156545318565fd6b712a1e11","sign":"5F58E7150D0C6CC3DE9B5B75E0689DAF","trade_state":"SUCCESS","total_fee":1000,"real_total_fee":1000,"fee_type":"CNY","transaction_no":"5351330135928012863","out_trade_no":"45949120180725141542","notify_Url":"http://pay7.5566205.com/pay/i6pay/notify_url.php"}
+2018-07-25 02:16:29 return_code=1
+2018-07-25 02:16:29 result_code=1
+2018-07-25 02:16:29 app_id=in4f6fbce172944795bbecb2a8f83528fd
+2018-07-25 02:16:29 nonce_str=19a744df156545318565fd6b712a1e11
+2018-07-25 02:16:29 sign=5F58E7150D0C6CC3DE9B5B75E0689DAF
+2018-07-25 02:16:29 trade_state=SUCCESS
+2018-07-25 02:16:29 total_fee=1000
+2018-07-25 02:16:29 real_total_fee=1000
+2018-07-25 02:16:29 fee_type=CNY
+2018-07-25 02:16:29 transaction_no=5351330135928012863
+2018-07-25 02:16:29 out_trade_no=45949120180725141542
+2018-07-25 02:16:29 notify_Url=http://pay7.5566205.com/pay/i6pay/notify_url.php
+2018-07-25 02:16:29 signtext=app_id=in4f6fbce172944795bbecb2a8f83528fd&nonce_str=19a744df156545318565fd6b712a1e11&out_trade_no=45949120180725141542&sign_type=MD5&total_fee=1000&version=4.0&key=f6f6a8f86b7642d1996c268335fcb804
+2018-07-25 02:16:29 mysign=5F58E7150D0C6CC3DE9B5B75E0689DAF
+2018-07-25 02:16:29 SUCCESSat 1
