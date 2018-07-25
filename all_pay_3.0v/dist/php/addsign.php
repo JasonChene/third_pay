@@ -1,5 +1,4 @@
 <?php
-#递回加密字串
 function sign_text($array){
   $signtext = "";
   foreach ($array['str_arr'] as $arr_key => $arr_value) {
@@ -20,6 +19,7 @@ function sign_text($array){
   }
   $len = strlen($array['last_conn']);
   $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
+  var_dump($array);
   $encrypt_len = strlen($array['encrypt']);
   for ($i=0; $i < $encrypt_len; $i++) {
       $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
@@ -94,31 +94,6 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     return $sign;
 }
 
-
-
-#跳转qrcode.php网址调试
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
-  }
-  return $code2;
-}
-
-
-#修正url
-function fix_postdata_url($url, $data){
-    $post_url='';
-    if(substr($url,-1) == '?' || substr($url,-1) == '/'){
-      $post_url=substr($url,0,-1)."?".$data;
- }else{
-       $post_url=$url."?".$data;
- }
- return $post_url ;
-}
-
-
 #curl请求设定
 function curl_post($url, $data ,$str){
   $ch = curl_init();
@@ -151,4 +126,15 @@ function curl_post($url, $data ,$str){
   curl_close($ch);
   return $tmpInfo;
 }
+
+#跳转qrcode.php网址调试
+function QRcodeUrl($code){
+  if(strstr($code,"&")){
+    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  }else{
+    $code2=$code;
+  }
+  return $code2;
+}
+
 ?>

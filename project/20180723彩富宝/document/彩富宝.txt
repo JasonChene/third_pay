@@ -9,3 +9,9 @@
 ÃØÔ¿APP_SECRET£ºf6f6a8f86b7642d1996c268335fcb804
 
 ¿ª·¢ÎÄµµ£ºhttps://dev.i6pay.com
+
+$scan = 'zfb';
+$data['pay_type'] = '4';
+if(_is_mobile()){
+$data['pay_type'] = '20';
+}
