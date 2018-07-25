@@ -3,11 +3,11 @@ header("Content-type:text/html; charset=utf-8");
 
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(_is_mobile()){
-    $form_url = './ylsmpost.php';
-  }elseif(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './yltmpost.php';
-  }else{
     $form_url = './ylh5post.php';
+  }elseif(strstr($_REQUEST['pay_type'], "条码")){
+    $form_url = './ylfspost.php';
+  }else{
+    $form_url = './ylbspost.php';
   }
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")){
   if(_is_mobile()){

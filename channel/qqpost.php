@@ -4,9 +4,9 @@ header("Content-type:text/html; charset=utf-8");
 if(_is_mobile()){
   $form_url = './qqh5post.php';
 }elseif(strstr($_REQUEST['pay_type'], "条码")){
-  $form_url = './qqtmpost.php';
+  $form_url = './qqfspost.php';
 }else{
-  $form_url = './qqsmpost.php';
+  $form_url = './qqbspost.php';
 }
 
 ?>

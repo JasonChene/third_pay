@@ -2,11 +2,11 @@
 <?php
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-// write_log("notify");
+write_log("notify");
 #接收资料
 #post方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($POST as $key => $value) {
 	$data[$key] = $value;
 	write_log($key."=".$value);
 }
@@ -14,10 +14,10 @@ foreach ($_REQUEST as $key => $value) {
 #设定固定参数
 $order_no = $data['orderid']; //订单号
 $mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-$success_msg = $data['returncode'];//成功讯息
-$success_code = "00";//文档上的成功讯息
+$success_msg = $data['trade_state'];//成功讯息
+$success_code = "SUCCESS";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "OK";//回调讯息
+$echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -42,15 +42,13 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign','attach');//不加入签名的array key值
-ksort($data);
-$signtext = "";
-foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_key . '=' . $arr_val . '&';
-	}
-}
-$signtext = substr($signtext, 0,-1).'&key='.$pay_mkey;//验签字串
+$signtext .= 'app_id='.$data['app_id'];
+$signtext .= '&nonce_str='.$data['nonce_str'];
+$signtext .= '&out_trade_no='.$data['out_trade_no'];
+$signtext .= '&sign_type='.$data['sign_type'];
+$signtext .= '&total_fee='.$data['total_fee'];
+$signtext .= '&version='.$data['version'];
+$signtext .= '&key='.$pay_mkey ;
 $mysign = md5($signtext);//签名
 write_log("signtext=".$signtext);
 write_log("mysign=".$mysign);
