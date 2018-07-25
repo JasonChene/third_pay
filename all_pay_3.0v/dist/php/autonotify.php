@@ -3,6 +3,7 @@
 $req = json_decode(file_get_contents('php://input'),1);
 $key = json_decode($req['key'], true);
 $req = json_decode($req['data'], true);
+
 echo 'header("content-Type: text/html; charset=UTF-8");'."\n";
 if ($key == 1) {
     echo 'include_once("../../../database/mysql.config.php");'."\n";
@@ -17,19 +18,19 @@ if (condition) {
     echo 'foreach ($_REQUEST as $key => $value) {'."\n";
     echo '$data[$key] = $value;'."\n";
     echo 'write_log($key."=".$value);'."\n";
-    echo '}'."\n";
+    echo '}'."\n\n";
 }elseif (condition) {
     echo "write_log(post方法);";
     echo 'foreach ($_REQUEST as $key => $value) {'."\n";
     echo '$data[$key] = $value;'."\n";
     echo 'write_log($key."=".$value);'."\n";
-    echo '}'."\n";
+    echo '}'."\n\n";
 }elseif (condition) {
     echo "write_log(get方法);";
     echo 'foreach ($_REQUEST as $key => $value) {'."\n";
     echo '$data[$key] = $value;'."\n";
     echo 'write_log($key."=".$value);'."\n";
-    echo '}'."\n";
+    echo '}'."\n\n";
 }elseif (condition) {
     echo "write_log(input方法);";
     echo '$input_data=file_get_contents("php://input");'."\n";
@@ -38,36 +39,42 @@ if (condition) {
     echo 'foreach ($res as $key => $value) {'."\n";
     echo '$data[$key] = $value;'."\n";
     echo 'write_log($key."=".$value);'."\n";
-    echo '}'."\n";
+    echo '}'."\n\n";
 }
 
-#设定固定参数
-echo '$order_no = $data[\"order_no\"]; //订单号'."\n";
-echo '$mymoney = number_format($data[\"pay_amoumt\"], 2, ".", ""); //订单金额'."\n";
-$success_msg = $data['is_success'];//成功讯息
-$success_code = "1";//文档上的成功讯息
-$sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+echo '#设定固定参数'."\n";;
+echo '$order_no = $data["order_no"]; //订单号'."\n";
+echo '$mymoney = number_format($data["pay_amoumt"], 2, ".", ""); //订单金额'."\n";
+echo '$success_msg = $data["is_success"];//成功讯息'."\n";
+echo '$success_code = "1";//文档上的成功讯息'."\n";
+echo '$sign = $data["sign"];//签名'."\n";
+echo '$echo_msg = "";//回调讯息'."\n\n";
 
-#根据订单号读取资料库
-$params = array(':m_order' => $order_no);
-$sql = "select operator from k_money where m_order=:m_order";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
-$stmt->execute($params);
-$row = $stmt->fetch();
+echo '#根据订单号读取资料库'."\n";
+echo '$params = array(":m_order" => $order_no);'."\n";
+echo '$sql = "select operator from k_money where m_order=:m_order";'."\n";
+if ($key == 1) {
+	echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+}else {
+	echo '$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式'."\n";
+}
+echo '$stmt->execute($params);'."\n";
+echo '$row = $stmt->fetch();'."\n\n";
 
-#获取该订单的支付名称
-$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-$params = array(':pay_type' => $pay_type);
-$sql = "select * from pay_set where pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
-$stmt->execute($params);
-$payInfo = $stmt->fetch();
-$pay_mid = $payInfo['mer_id'];
-$pay_mkey = $payInfo['mer_key'];
-$pay_account = $payInfo['mer_account'];
+echo '#获取该订单的支付名称'."\n";
+echo '$pay_type = substr($row["operator"], 0, strripos($row["operator"], "_"));'."\n";
+echo '$params = array(":pay_type" => $pay_type);'."\n";
+echo '$sql = "select * from pay_set where pay_type=:pay_type";'."\n";
+if ($key == 1) {
+	echo '$stmt = $mydata1_db->prepare($sql);'."\n";
+}else {
+	echo '$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式'."\n";
+}
+echo '$stmt->execute($params);'."\n";
+echo '$payInfo = $stmt->fetch();'."\n";
+echo '$pay_mid = $payInfo["mer_id"];'."\n";
+echo '$pay_mkey = $payInfo["mer_key"];'."\n";
+echo '$pay_account = $payInfo["mer_account"];'."\n";
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
