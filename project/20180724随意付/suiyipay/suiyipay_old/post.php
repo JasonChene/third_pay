@@ -86,13 +86,13 @@ $data = array(
   "merchParam" => 'merchParam', //商户参数
   "tradeSummary" => 'tradeSummary', //交易摘要
   "signMsg" => '', //签名
+  "bankCode" => $_REQUEST['bank_code'], //签名
 );
 
 #变更参数设置
 $form_url = 'http://sytrade.fjjxjj.com/cgi-bin/netpayment/pay_gate.cgi';//提交地址
 $scan = 'wy';
 $data['apiName'] = 'WEB_PAY_B2C';
-$data['bankCode'] = $_REQUEST['bank_code'];
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
