@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-
+include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(_is_mobile()){
     $form_url = './ylh5post.php';

@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-
+include_once("../moneyfunc.php");
 if(_is_mobile()){
   $form_url = './qqh5post.php';
 }elseif(strstr($_REQUEST['pay_type'], "条码")){
