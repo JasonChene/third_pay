@@ -8,18 +8,18 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	write_log("return:" . $key . "=" . $value);
 }
 $manyshow = 0;
-if(!empty($data)){
+if (!empty($data)) {
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['from_order_id']; //订单号
-	$mymoney = number_format($data['money'], 2, '.', ''); //订单金额
+	$order_no = $data['apporderid']; //订单号
+	$mymoney = number_format($data['realamount'], 2, '.', ''); //订单金额
 	$success_msg = $data['status'];//成功讯息
 	$success_code = "0";//文档上的成功讯息
-	$sign = $data['sign'];//签名
-	$echo_msg = "SUCCESS";//回调讯息
+	$sign = $data['hmac'];//签名
+	$echo_msg = "success";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -44,42 +44,42 @@ if(!empty($data)){
 	}
 
 	#验签方式
-	$noarr = array('sign');//不加入签名的array key值
+	$noarr = array('hmac');//不加入签名的array key值
 	ksort($data);
 	$signtext = "";
 	foreach ($data as $arr_key => $arr_val) {
-		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
 			$signtext .= $arr_key . '=' . $arr_val . '&';
 		}
 	}
-	$signtext = substr($signtext, 0,-1).'&'.$pay_mkey;//验签字串
+	$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;//验签字串
 	$mysign = md5($signtext);//签名
-	write_log("return:signtext=".$signtext);
-	write_log("return:mysign=".$mysign);
+	write_log("return:signtext=" . $signtext);
+	write_log("return:mysign=" . $mysign);
 
 
 	#到账判断
 	if ($success_msg == $success_code) {
-	if ( $mysign == $sign) {
+		if ($mysign == $sign) {
 			$result_insert = update_online_money($order_no, $mymoney);
 			if ($result_insert == -1) {
 				$message = ("会员信息不存在，无法入账");
-			}else if($result_insert == 0){
+			} else if ($result_insert == 0) {
 				$message = ("支付成功");
-			}else if($result_insert == -2){
+			} else if ($result_insert == -2) {
 				$message = ("数据库操作失败");
-			}else if($result_insert == 1){
+			} else if ($result_insert == 1) {
 				$message = ("支付成功");
 			} else {
 				$message = ("支付失败");
 			}
-		}else{
+		} else {
 			$message = ('签名不正确！');
 		}
-	}else{
+	} else {
 		$message = ("交易失败");
 	}
-}else{
+} else {
 	$message = ("支付成功");
 }
 ?>
@@ -103,7 +103,7 @@ if(!empty($data)){
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
 		<?php 
-			if($manyshow == 1){
+	if ($manyshow == 1) {
 		?>
 		<tr>
 			<td style="width: 120px; text-align: right;">订单号：</td>
@@ -118,8 +118,9 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<?php
-			}
-		?>
+
+}
+?>
 		<tr>
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
