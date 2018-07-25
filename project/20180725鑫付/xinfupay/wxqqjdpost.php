@@ -102,6 +102,12 @@ $form_url = 'http://xinfugood.com:8081/trade/doPay.do';//提交地址
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['model'] = 'JD';
+}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['model'] = 'QQSM';
+  if(_is_mobile()){
+    $data['model'] = 'H5QQSM';
+  }
 }else {
   $scan = 'wx';
   $data['model'] = 'WXZF';
