@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-
+include_once("../moneyfunc.php");
 if(strstr($_REQUEST['pay_type'], "京东钱包")){
   if(strstr($_REQUEST['pay_type'], "条码")){
     $form_url = './jdfspost.php';
