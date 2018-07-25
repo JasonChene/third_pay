@@ -111,13 +111,8 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://sytrade.fjjxjj.com/cgi-bin/netpayment/pay_gate.cgi';//提交地址
-if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $data['apiName'] = 'QQ_PAY';
-} else {
-  $scan = 'wx';
-  $data['apiName'] = 'WECHAT_PAY';
-}
+$scan = 'zfb';
+$data['apiName'] = 'ALIPY_PAY';
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

@@ -140,16 +140,16 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-$row = json_decode($tran, 1);
+$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+$row = json_decode(json_encode($xml), 1);//XML回传资料
 
 #跳转
-if ($row['respCode'] != '00') {
-  echo '错误代码:' . $row['respCode'] . "\n";
-  echo '错误讯息:' . $row['respDesc'] . "\n";
+if ($row['respData']['respCode'] != '00') {
+  echo '错误代码:' . $row['respData']['respCode'] . "\n";
+  echo '错误讯息:' . $row['respData']['respDesc'] . "\n";
   exit;
 } else {
-  $qrcodeUrl = base64_decode($row['codeUrl']);
+  $qrcodeUrl = base64_decode($row['respData']['codeUrl']);
   if (_is_mobile()) {
     $jumpurl = $qrcodeUrl;
   } else {
