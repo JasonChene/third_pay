@@ -12,13 +12,13 @@ if (function_exists("date_default_timezone_set")) {
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -71,7 +71,7 @@ $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -87,16 +87,16 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = 'http://139.159.144.172/api/pay/create_order';//接入提交地址
+$form_url = 'http://139.159.144.172:3020/api/pay/create_order';//接入提交地址
 
 #第三方参数设置
 $data = array(
   "mchId" => $pay_mid,
-  "app_id" => $pay_account,
+  "appId" => $pay_account,
   "productId" => "",
   "mchOrderNo" => $order_no,
   "currency" => "cny",
-  "amount" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
+  "amount" => (int)number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
   "notifyUrl" => $merchant_url,
   "subject" => "pay",//商品主题
   "body" => "pay",
@@ -120,6 +120,7 @@ if (strstr($pay_type, "京东钱包")) {
     $data['productId'] = '8003';
   }
 }
+
 payType_bankname($scan,$pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -144,45 +145,17 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
+$params = "params=".json_encode($data,JSON_UNESCAPED_SLASHES);
 
-#curl提交
-$res = curl_post($form_url,$data);
+$res = curl_post($form_url,$params);
 $row = json_decode($res,1);
-#跳转
-if ($row['retCode'] != '0000') {
-  echo  '错误代码:' . $row['retCode']."<br>";
-  echo  '错误讯息:' . $row['retMsg']."<br>";
+if ($row['retCode'] != "SUCCESS") {
+  echo  '错误代码:' . $row['errCode']."<br>";
+  echo  '错误讯息:' . $row['errDes']."<br>";
   exit;
 }else {
-  if(!_is_mobile() && $scan == 'wx'){
-    $jumpurl = $row['payParams']['codeImgUrl'];
-  }else{
-    $jumpurl = $row['payParams']; //要看實際開發時的資料
-  }
+  echo $row['payParams']['payUrl'];
+  exit;
 }
-#跳轉方法
-
-?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-
 
 ?>

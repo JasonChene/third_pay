@@ -12,13 +12,13 @@ if (function_exists("date_default_timezone_set")) {
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -105,7 +105,7 @@ $data = array(
 
 #变更参数设置
 $scan = 'zfb';
-$data['productId'] = (int)8007;
+$data['productId'] = (int)8006;
 if (_is_mobile()) {
   $data['productId'] = (int)8007;
 }
@@ -134,25 +134,17 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' .$pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
-$params = json_encode($data,JSON_UNESCAPED_SLASHES);
-echo $params;
-$jumpurl = $form_url;
+$params = "params=".json_encode($data,JSON_UNESCAPED_SLASHES);
 
-#跳轉方法
+$res = curl_post($form_url,$params);
+$row = json_decode($res,1);
+if ($row['retCode'] != "SUCCESS") {
+  echo  '错误代码:' . $row['errCode']."<br>";
+  echo  '错误讯息:' . $row['errDes']."<br>";
+  exit;
+}else {
+  echo $row['payParams']['payUrl'];
+  exit;
+}
 
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="black">
-      <p>正在为您跳转中，请稍候......</p>
-      <input type="hidden" name="params" value="<?php echo $params; ?>" />
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
