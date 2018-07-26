@@ -109,7 +109,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.115.136.13/pay/redirect/unifiedorder';//请求URL
+$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
 $scan = 'qq';
 $data['payType'] = 'H5-qqWallet';
 payType_bankname($scan, $pay_type);
@@ -159,7 +159,7 @@ if ($jumptype == '1') {
     }
   }
 } else {
-  $jumpurl = $form_url;
+  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法
