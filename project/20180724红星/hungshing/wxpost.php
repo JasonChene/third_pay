@@ -158,12 +158,14 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
 $sign = md5($signtext);
 $data['hmac'] = $sign;
+// if (0) {
 if (!_is_mobile()) {
   #curl获取响应值
   $res = curl_post($form_url, http_build_query($data));
   $tran = mb_convert_encoding($res, "UTF-8", "auto");
   $row = json_decode($tran, 1);
   echo '<pre>';
+  var_dump($data);
   echo $res . '<br>';
   var_dump($res);
   #跳转
