@@ -8,7 +8,7 @@
 
 商户号：ST20180722808
 
-支付域名：http://pay8.nenkupay.com
+支付域名： http://www.6666gou.com/api
 
 商户秘钥：4fcf0a1bd44a8db9a93ada6e2546a99b
 

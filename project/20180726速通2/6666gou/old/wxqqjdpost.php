@@ -14,6 +14,9 @@ function payType_bankname($scan,$pay_type){
   if(strstr($scan,"wy")){
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
+  }elseif(strstr($scan,"yl")){
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
   }elseif(strstr($scan,"qq")){
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
@@ -29,9 +32,6 @@ function payType_bankname($scan,$pay_type){
   }elseif(strstr($scan,"ylkj")){
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
-  }elseif(strstr($scan,"yl")){
-    $payType = $pay_type . "_yl";
-    $bankname = $pay_type . "->银联钱包在线充值";
   }elseif(strstr($scan,"bd")){
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
@@ -103,18 +103,21 @@ $data = array(
 #变更参数设置
 
 $form_url = 'http://www.6666gou.com/api';//提交地址
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  $scan = 'yl';
-  $data['trade_type'] = 'unionqr';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['trade_type'] = 'jd';
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['trade_type'] = 'qqscan';
   if(_is_mobile()){
-    $data['trade_type'] = 'union';
+    $data['trade_type'] = 'qqh5';
   }
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['trade_type'] = 'quick';
 }else {
-  $scan = 'wy';
-  $data['trade_type'] = 'wg';
+  $scan = 'wx';
+  $data['trade_type'] = 'wxscan';
+  if(_is_mobile()){
+    $data['trade_type'] = 'wxh5';
+  }
 }
 payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
