@@ -8,42 +8,7 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 
-function payType_bankname($scan, $pay_type)
-{
-  global $payType, $bankname;
-  if (strstr($scan, "wy")) {
-    $payType = $pay_type . "_wy";
-    $bankname = $pay_type . "->网银在线充值";
-  } elseif (strstr($scan, "yl")) {
-    $payType = $pay_type . "_yl";
-    $bankname = $pay_type . "->银联钱包在线充值";
-  } elseif (strstr($scan, "qq")) {
-    $payType = $pay_type . "_qq";
-    $bankname = $pay_type . "->QQ钱包在线充值";
-  } elseif (strstr($scan, "wx")) {
-    $payType = $pay_type . "_wx";
-    $bankname = $pay_type . "->微信在线充值";
-  } elseif (strstr($scan, "zfb")) {
-    $payType = $pay_type . "_zfb";
-    $bankname = $pay_type . "->支付宝在线充值";
-  } elseif (strstr($scan, "jd")) {
-    $payType = $pay_type . "_jd";
-    $bankname = $pay_type . "->京东钱包在线充值";
-  } elseif (strstr($scan, "ylkj")) {
-    $payType = $pay_type . "_ylkj";
-    $bankname = $pay_type . "->银联快捷在线充值";
-  } elseif (strstr($scan, "bd")) {
-    $payType = $pay_type . "_bd";
-    $bankname = $pay_type . "->百度钱包在线充值";
-  }
-}
-
-
 #function
-function des_ecb_decrypt($data, $key)
-{
-  return openssl_decrypt($data, 'des-ecb', $key);
-}
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
@@ -61,9 +26,44 @@ function curl_post($url, $data)
     return curl_error($ch);
   }
   return $tmpInfo;
+  curl_close($ch);
 }
-function QRcodeUrl($code)
+
+function payType_bankname($scan, $pay_type)
 {
+  global $payType, $bankname;
+  if ($scan == "wy") {
+    $payType = $pay_type . "_wy";
+    $bankname = $pay_type . "->网银在线充值";
+  } elseif ($scan == "yl" || $scan == "ylfs") {
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
+  } elseif ($scan == "qq" || $scan == "qqfs") {
+    $payType = $pay_type . "_qq";
+    $bankname = $pay_type . "->QQ钱包在线充值";
+  } elseif ($scan == "wx" || $scan == "wxfs") {
+    $payType = $pay_type . "_wx";
+    $bankname = $pay_type . "->微信在线充值";
+  } elseif ($scan == "zfb" || $scan == "zfbfs") {
+    $payType = $pay_type . "_zfb";
+    $bankname = $pay_type . "->支付宝在线充值";
+  } elseif ($scan == "jd" || $scan == "jdfs") {
+    $payType = $pay_type . "_jd";
+    $bankname = $pay_type . "->京东钱包在线充值";
+  } elseif ($scan == "ylkj") {
+    $payType = $pay_type . "_ylkj";
+    $bankname = $pay_type . "->银联快捷在线充值";
+  } elseif ($scan == "bd" || $scan == "bdfs") {
+    $payType = $pay_type . "_bd";
+    $bankname = $pay_type . "->百度钱包在线充值";
+  } else {
+    echo ('payType_bankname出错啦！');
+    exit;
+  }
+}
+
+function QRcodeUrl($code)
+{ #替换QRcodeUrl中&符号
   if (strstr($code, "&")) {
     $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
   } else {
@@ -71,6 +71,7 @@ function QRcodeUrl($code)
   }
   return $code2;
 }
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -94,30 +95,36 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "cmd" => '',
-  "version" => '2.0',
-  "hmac" => '',
-  "appid" => $pay_mid, //商户号
-  "userid" => $pay_mid,
-  "apporderid" => $order_no,//商户流水号
-  "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
-  "ordertime" => date("YmdHis"),
-  "orderbody" => 'iPhone',
-  "notifyurl" => $merchant_url//通知地址
+  "outTradeNo" => $order_no, //订单号
+  "merchantId" => $pay_mid, //商户号,平台下发
+  "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额,单位 元
+  "payType" => '', //支付方式
+  "goodsName" => 'goodsName', //商品名称
+  "subject" => 'subject', //商品描述
+  "notifyUrl" => $merchant_url, //异步通知URL
+  "outTradeTime" => date("Y-m-d H:i:s"), //订单生成时间
+  "callbackUrl" => $return_url, //同步返回用户的地址
+  "clientIp" => getClientIp(), //用户IP
+  "sign" => '', //签名
 );
-#变更参数设置
 
-$form_url = 'http://47.90.116.46:18000/GW/gw.inter';
-$scan = 'zfb';
-$data['cmd'] = 'PAYH5ALIPAY';
-if (_is_mobile()) {
-  $data['cmd'] = 'PAYH5ALIPAY';
-  $data['front_skip_url'] = $return_url;
-  $form_url = 'http://zs.qilijiakeji.com:18000/GW/PayH5Ali.do';//提交地址
+#变更参数设置
+$form_url = 'http://114.115.136.13/pay/redirect/unifiedorder';//请求URL
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['payType'] = 'H5-jd';
+} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['payType'] = 'H5-qqWallet';
 } else {
-  $data['custip'] = getClientIp();
+  $scan = 'wx';
+  $data['payType'] = 'QRCode-wx';
+  if (_is_mobile()) {
+    $data['payType'] = 'H5-wx';
+  }
 }
 payType_bankname($scan, $pay_type);
+
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -127,44 +134,46 @@ if ($result_insert == -1) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
+
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('hmac');
+$noarr = array('sign');//不加入签名的array key值
 $signtext = '';
-$data_str = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
-
-
-$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = md5($signtext);
-$data['hmac'] = $sign;
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url, http_build_query($data));
-  $tran = mb_convert_encoding($res, "UTF-8", "auto");
+$data['sign'] = $sign;
+$data_str = http_build_query($data);
+
+#curl获取响应值
+$jumptype = '1';//跳转方式 1为返回json 2为页面跳转
+if ($jumptype == '1') {
+  $res = curl_post($form_url, $data_str);
+  $tran = mb_convert_encoding("$res", "UTF-8");
   $row = json_decode($tran, 1);
-  echo '<pre>';
-  var_dump($data);
-  echo $res . '<br>';
-  var_dump($res);
-  #跳转
-  if ($row['errcode'] != '0') {
-    echo '错误代码:' . $row['errcode'] . "\n<br>";
-    echo '错误讯息:' . $row['errdesc'] . "\n<br>";
+
+#跳转
+  if ($row['success'] != 'true') {
+    echo '错误代码:' . $row['returnCode'] . "\n";
+    echo '错误讯息:' . $row['message'] . "\n";
     exit;
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payurl']);
+    $qrcodeUrl = $row['data']['payUrl'];
+    if (_is_mobile()) {
+      $jumpurl = $qrcodeUrl;
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+    }
   }
 } else {
   $jumpurl = $form_url;
-  $form_data = $data;
 }
-#跳轉方法
 
+#跳轉方法
 ?>
 <html>
   <head>
@@ -172,17 +181,16 @@ if (!_is_mobile()) {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if (isset($form_data)) {
-        foreach ($form_data as $arr_key => $arr_value) {
-          ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php 
-    }
+  <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+     <p>正在为您跳转中，请稍候......</p>
+     <?php if ($jumptype == '2') { ?>
+       <?php foreach ($data as $arr_key => $arr_value) { ?>
+         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+       <?php 
+    } ?>
+     <?php 
   } ?>
-    </form>
+   </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
