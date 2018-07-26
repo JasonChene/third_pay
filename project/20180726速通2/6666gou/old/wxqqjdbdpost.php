@@ -9,6 +9,14 @@ if(strstr($_REQUEST['pay_type'], "京东钱包")){
   }else{
     $form_url = './jdbspost.php';
   }
+}elseif(strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")){
+  if(strstr($_REQUEST['pay_type'], "条码")){
+    $form_url = './qqfspost.php';
+  }elseif(_is_mobile()){
+    $form_url = './qqh5post.php';
+  }else{
+    $form_url = './qqbspost.php';
+  }
 }elseif(strstr($_REQUEST['pay_type'], "百度钱包")){
   if(strstr($_REQUEST['pay_type'], "条码")){
     $form_url = './bdfspost.php';
