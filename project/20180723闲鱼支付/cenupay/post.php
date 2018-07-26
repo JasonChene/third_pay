@@ -140,12 +140,12 @@ $params = "params=".json_encode($data,JSON_UNESCAPED_SLASHES);
 
 $res = curl_post($form_url,$params);
 $row = json_decode($res,1);
-if ($row['retCode'] != "SUCCESS") {
-  echo  '错误代码:' . $row['errCode']."<br>";
-  echo  '错误讯息:' . $row['errDes']."<br>";
+if (($row['retCode'] || $row['retCode']) == "SUCCESS") {
+  echo $row['payParams']['payUrl'];
   exit;
 }else {
-  echo $row['payParams']['payUrl'];
+  echo  '错误代码:' . $row['retCode']."<br>";
+  echo  '错误讯息:' . $row['retMsg']."<br>";
   exit;
 }
 
