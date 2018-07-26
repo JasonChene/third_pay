@@ -258,12 +258,12 @@ if (strstr($req['postmethod'],"HEADER")){
   $response_key .= ';';
   echo $response_key."\n";
   echo 'if ($res[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-  echo '  if (_is_mobile()) {'."\n";
-  echo '    $jumpurl = $url;'."\n";
-  echo '  }else{'."\n";
-  echo '    $qrurl = QRcodeUrl($url);'."\n";
-  echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
-  echo '  }'."\n";
+  if (strstr($req['payment'],"bs")) {
+    echo '    $qrurl = QRcodeUrl($url);'."\n";
+    echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
+  }else {
+    echo '    $jumpurl = $url;'."\n";
+  }
   echo '}else{'."\n";
   echo '  echo "错误码：".$res[\''.$req['Error_No'].'\']."错误讯息：".$res[\''.$req['Error_Msg'].'\'];'."\n";
   echo '  exit();'."\n";
