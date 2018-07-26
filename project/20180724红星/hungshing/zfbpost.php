@@ -49,14 +49,19 @@ function curl_post($url, $data)
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_POST, 1);
+  // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  // curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  // curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_VERBOSE, 1);
   $tmpInfo = curl_exec($ch);
+  // $tmpInfo = curl_getinfo($ch);
   if (curl_errno($ch)) {
     return curl_error($ch);
   }
@@ -142,13 +147,16 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
 $sign = md5($signtext);
 $data['hmac'] = $sign;
+echo '<pre>';
+  var_dump($data);
+
 if (!_is_mobile()) {
   #curl获取响应值
   $res = curl_post($form_url, http_build_query($data));
+  // $res = curl_post($form_url, $data);
   $tran = mb_convert_encoding($res, "UTF-8", "auto");
   $row = json_decode($tran, 1);
-  echo '<pre>';
-  var_dump($data);
+  
   echo $res . '<br>';
   var_dump($res);
   #跳转

@@ -1,0 +1,17 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','北京银行','989');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','工商银行','967');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','光大银行','986');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','广发银行','985');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','华夏银行','982');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','建设银行','965');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','交通银行','981');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','民生银行','980');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','农业银行','964');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','平安银行','978');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','上海银行','975');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','浦发银行','977');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','兴业银行','972');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','邮政储蓄银行','971');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','招商银行','970');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','中国银行','963');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('易信2','中信银行','962');
