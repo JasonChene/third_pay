@@ -101,24 +101,72 @@ echo '$payInfo = $stmt->fetch();'."\n";
 echo '$pay_mid = $payInfo["mer_id"];'."\n";
 echo '$pay_mkey = $payInfo["mer_key"];'."\n";
 echo '$pay_account = $payInfo["mer_account"];'."\n";
-if ($pay_mid == "" || $pay_mkey == "") {
-	echo "非法提交参数";
-	exit;
+echo 'if ($pay_mid == "" || $pay_mkey == "") {'."\n";
+echo 'echo "非法提交参数";'."\n";
+echo 'exit;'."\n";
+echo '}'."\n\n\n";
+
+
+#第三方传值参数设置
+function echo_arr($key_name,$array){
+    $text =  '"'.$key_name.'" => array('."\n";
+    if ($key_name == 'str_arr') {
+      foreach ($array as $obj) {
+        foreach ($obj as $arr_key => $arr_value) {
+          if (!is_array($arr_value)) {
+            $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+          }
+          if (is_array($arr_value)) {
+            $arr_value = echo_arr($arr_key,$arr_value);
+            $text .= $arr_value;
+          } else {
+            if (substr($arr_value,0,1) == '$') {
+              $text .= '"'.$arr_key.'" => '.$arr_value.','."\n";
+            } else {
+              $text .= '"'.$arr_key.'" => "'.$arr_value.'",'."\n";
+            }
+          }
+        }
+      }
+    }else {
+      foreach ($array as $arr_key => $arr_value) {
+        if (!is_array($arr_value)) {
+          $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+        }
+        if (is_array($arr_value)) {
+          $arr_value = echo_arr($arr_key,$arr_value);
+          $text .= $arr_value;
+        } else {
+          if (substr($arr_value,0,1) == '$') {
+            $text .= '"'.$arr_key.'" => '.$arr_value.','."\n";
+          } else {
+            $text .= '"'.$arr_key.'" => "'.$arr_value.'",'."\n";
+          }
+        }
+      }
+    }
+    $text .= '),'."\n";
+    return $text;
 }
 
-#验签方式
-$noarr = array('sign');//不加入签名的array key值
-ksort($data);
-$signtext = "";
-foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_key . '=' . $arr_val . '&';
-	}
+echo '#验签方式'."\n";
+echo '$data = array('."\n";
+foreach ($req['params'] as $arr_key => $arr_value) {
+  if (!is_array($arr_value)) {
+    $arr_value = tranjsonstr($arr_value);
+    $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+  }
+  if (!is_array($arr_value)) {
+    if (substr($arr_value,0,1) == '$') {
+      echo '"'.$arr_key.'" => '.$arr_value.','."\n";
+    } else {
+      echo '"'.$arr_key.'" => \''.$arr_value.'\','."\n";
+    }
+  } else {
+    echo echo_arr($arr_key,$arr_value);
+  }
 }
-$signtext = substr($signtext, 0,-1);//验签字串
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
+echo ');'."\n";
 
 #验签方式2
 $signtext = "";
