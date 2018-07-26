@@ -148,6 +148,7 @@ if (!_is_mobile()) {
   $tran = mb_convert_encoding($res, "UTF-8", "auto");
   $row = json_decode($tran, 1);
   echo '<pre>';
+  var_dump($data);
   echo $res . '<br>';
   var_dump($res);
   #跳转
