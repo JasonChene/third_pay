@@ -4,7 +4,7 @@ $key = json_decode($req['key'], true);
 $req = json_decode($req['data'], true);
 
 
-function QRcodeUrl2($code)
+function tranjsonstr($code)
 {
   $code2 = str_replace("\"{", "{", $code);//有&换成aabbcc
     $code3 = str_replace("}\"", "}", $code2);//有&换成aabbcc
@@ -153,18 +153,38 @@ if($req['amount_unit'] == '2'){
 #第三方传值参数设置
 function echo_arr($key_name,$array){
   $text =  '"'.$key_name.'" => array('."\n";
-  foreach ($array as $arr_key => $arr_value) {
-    if (!is_array($arr_value)) {
-      $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+  if ($key_name == 'str_arr') {
+    foreach ($array as $obj) {
+      foreach ($obj as $arr_key => $arr_value) {
+        if (!is_array($arr_value)) {
+          $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+        }
+        if (is_array($arr_value)) {
+          $arr_value = echo_arr($arr_key,$arr_value);
+          $text .= $arr_value;
+        } else {
+          if (substr($arr_value,0,1) == '$') {
+            $text .= '"'.$arr_key.'" => '.$arr_value.','."\n";
+          } else {
+            $text .= '"'.$arr_key.'" => "'.$arr_value.'",'."\n";
+          }
+        }
+      }
     }
-    if (is_array($arr_value)) {
-      $arr_value = echo_arr($arr_key,$arr_value);
-      $text .= $arr_value;
-    } else {
-      if (substr($arr_value,0,1) == '$') {
-        $text .= '"'.$arr_key.'" => '.$arr_value.','."\n";
+  }else {
+    foreach ($array as $arr_key => $arr_value) {
+      if (!is_array($arr_value)) {
+        $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
+      }
+      if (is_array($arr_value)) {
+        $arr_value = echo_arr($arr_key,$arr_value);
+        $text .= $arr_value;
       } else {
-        $text .= '"'.$arr_key.'" => "'.$arr_value.'",'."\n";
+        if (substr($arr_value,0,1) == '$') {
+          $text .= '"'.$arr_key.'" => '.$arr_value.','."\n";
+        } else {
+          $text .= '"'.$arr_key.'" => "'.$arr_value.'",'."\n";
+        }
       }
     }
   }
@@ -176,7 +196,7 @@ echo '#第三方传值参数设置'."\n";
 echo '$data = array('."\n";
 foreach ($req['params'] as $arr_key => $arr_value) {
   if (!is_array($arr_value)) {
-    $arr_value = QRcodeUrl2($arr_value);
+    $arr_value = tranjsonstr($arr_value);
     $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
   }
   if (!is_array($arr_value)) {
