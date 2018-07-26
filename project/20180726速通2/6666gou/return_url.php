@@ -41,7 +41,7 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log("非法提交参数");
+		// write_log("非法提交参数");
 		exit;
 	}
 
@@ -57,8 +57,8 @@ if(!empty($data)){
 	$signtext = substr($signtext,0,-1).$pay_mkey;
 	$mysign = strtoupper(md5($signtext));
 
-	write_log("signtext=".$signtext);
-	write_log("mysign=".$mysign);
+	// write_log("signtext=".$signtext);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
