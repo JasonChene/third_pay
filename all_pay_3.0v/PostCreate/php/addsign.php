@@ -19,7 +19,6 @@ function sign_text($array){
   }
   $len = strlen($array['last_conn']);
   $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
-  var_dump($array);
   $encrypt_len = strlen($array['encrypt']);
   for ($i=0; $i < $encrypt_len; $i++) {
       $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
