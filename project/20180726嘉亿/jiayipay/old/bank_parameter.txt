@@ -1,0 +1,7 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','北京银行','E_BANK_BOB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','工商银行','E_BANK_ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','建设银行','E_BANK_CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','民生银行','E_BANK_CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','农业银行','E_BANK_ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','上海银行','E_BANK_BOS');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('嘉亿','邮政储蓄银行','E_BANK_PSBC');

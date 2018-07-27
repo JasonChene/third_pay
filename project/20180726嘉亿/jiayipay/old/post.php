@@ -26,12 +26,12 @@ function payType_bankname($scan,$pay_type){
   }elseif(strstr($scan,"jd")){
     $payType = $pay_type . "_jd";
     $bankname = $pay_type . "->京东钱包在线充值";
-  }elseif(strstr($scan,"ylkj")){
-    $payType = $pay_type . "_ylkj";
-    $bankname = $pay_type . "->银联快捷在线充值";
   }elseif(strstr($scan,"yl")){
     $payType = $pay_type . "_yl";
     $bankname = $pay_type . "->银联钱包在线充值";
+  }elseif(strstr($scan,"ylkj")){
+    $payType = $pay_type . "_ylkj";
+    $bankname = $pay_type . "->银联快捷在线充值";
   }elseif(strstr($scan,"bd")){
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
@@ -64,16 +64,78 @@ function QRcodeUrl($code){
   }
   return $code2;
 }
+function create_sign($data,$key){
+  ksort($data);
+  $sign = strtoupper(md5(json_encode_ex($data) . $key));
+  return $sign;
+}
+function json_encode_ex($value){
+  if (version_compare(PHP_VERSION,'5.4.0','<')){
+   $str = json_encode($value);
+   $str = preg_replace_callback("#\\\u([0-9a-f]{4})#i","replace_unicode_escape_sequence",$str);
+   $str = stripslashes($str);
+   return $str;
+ }else{
+   return json_encode($value,320);
+ }
+}
+function encode_pay($data,$pay_public_key){#加密//		
+  $pu_key =  openssl_pkey_get_public($pay_public_key);
+  if ($pu_key == false){
+    echo "打开密钥出错";
+    die;
+  }
+  $encryptData = '';
+  $crypto = '';
+  foreach (str_split($data, 117) as $chunk) {            
+          openssl_public_encrypt($chunk, $encryptData, $pu_key);  
+          $crypto = $crypto . $encryptData;
+      }
+
+  $crypto = base64_encode($crypto);
+  return $crypto;
+}
+function json_to_array($json,$key){
+  $array=json_decode($json,true);
+  if ($array['stateCode'] == '00'){
+    $sign_string = $array['sign'];
+    ksort($array);
+    $sign_array = array();
+    foreach ($array as $k => $v) {
+      if ($k !== 'sign'){
+        $sign_array[$k] = $v;
+      }
+    }
+    // 生成签名 并将字母转为大写
+    $md5 =  strtoupper(md5(json_encode_ex($sign_array) . $key));
+     if ($md5 == $sign_string){
+       return $sign_array;
+     }else{
+       $result = array();
+       $result['stateCode'] = '99';
+       $result['msg'] = '返回签名验证失败';
+       return $result;
+     }
+  }else{
+    $result = array();
+     $result['stateCode'] = $array['stateCode'];
+     $result['msg'] = $array['msg'];
+    return $result;
+  }
+}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
+$idArray = explode("###", $pay_mkey);
+$md5key = $idArray[0];//合作方md5密钥
+$private_key = $idArray[1];//合作方私钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
@@ -82,40 +144,30 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
+$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
+$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
+$private_pem = chunk_split($private_key,64,"\r\n");//转换为pem格式的私钥
+$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-
 #第三方参数设置
 $data = array(
-  "version" => "V1.0",
-  "mch_id" => $pay_mid, 
-  "trade_type" => "",
-  "out_trade_no" => $order_no,
-  "amount" => $mymoney,
-  "attach" => "pay",
-  "body" => "pay",
-  "mch_create_ip" => getClientIp(),
-  "notify_url" => $merchant_url,
-  "return_url" => $return_url,
-  "sign" => ""
+  "orderNum" => $order_no,
+  "version" => "V3.1.0.0", 
+  "charset" => "UTF-8",
+  "random" => (string)rand(1000,9999),//随机数,
+  "merNo" => $pay_mid,
+  "netway" => $_REQUEST['bank_code'],
+  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "goodsName" => "pay",
+  "callBackUrl" => $merchant_url,
+  "callBackViewUrl" => $return_url,
 );
 #变更参数设置
+$form_url = 'http://120.79.87.165:8070/api/pay.action';//提交地址
+$scan = 'wy';
 
-$form_url = 'http://www.6666gou.com/api';//提交地址
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  $scan = 'yl';
-  $data['trade_type'] = 'unionqr';
-  if(_is_mobile()){
-    $data['trade_type'] = 'union';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['trade_type'] = 'quick';
-}else {
-  $scan = 'wy';
-  $data['trade_type'] = 'wg';
-}
 payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -127,56 +179,22 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr =array('sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signtext .= $arr_key.'='.$arr_val.'&';
-	}
-}
+//生成签名
+$data['sign'] = create_sign($data,$md5key);
+//生成 json字符串
+$json = json_encode_ex($data);
+//加密
+$dataStr =encode_pay($json,$public_pem);
 
-
-$signtext = substr($signtext,0,-1).$pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['sign'] = $sign; 
-
+//请求字符串
+$param = 'data=' . urlencode($dataStr) . '&merchNo=' . $data['merNo'] . '&version='.$data['version'];
 #curl获取响应值
-$res = curl_post($form_url,http_build_query($data));
-$row = json_decode($res,1);
-#跳转
-if ($row['code'] != '0') {
-  echo  '错误代码:' . $row['code']."<br>";
-  echo  '错误讯息:' . $row['msg']."<br>";
-  exit;
-}else {
-  if(_is_mobile()){
-    $jumpurl = $row['data']['payUrl'];
-  }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['payUrl']);
-  }
+$res = curl_post($form_url,$param);
+//效验 sign
+$rows = json_to_array($res,$md5key);
+if($rows['stateCode']==0){
+	echo "下单成功,返回的结果如下";
+	header('Location: '.$rows['qrcodeUrl'].''); 
+}else{
+	echo "下单失败 ,".$rows['stateCode'] .$rows['msg'];
 }
-#跳轉方法
-
-?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-
