@@ -7,11 +7,11 @@ include_once("../moneyfunc.php");
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
+  curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -45,29 +45,27 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "app_id" => $pay_mid, //appid
-  "notify_url" => $merchant_url,//异步通知url
-  "order_no" => $order_no,//商户订单，原样回传给商户
-  "pay_amt" => $mymoney,//支付金金额
-  "pay_cur" => 'CNY',//（固定参数：CNY)支付货币
-  "pay_type" => 'alipay_qr',//支付宝掃碼
-  "return_url" => $return_url,//同步通知url
-  "goods_name" => 'test',//商品名字
-  "goods_num" => '1',//商品数量
-  "goods_cat" => 'pay',//商品种类(可隨便填)
-  "goods_desc" => 'pay'//商品描述
+  "version" => "1.0", 
+  "merId" => $pay_mid,
+  "orderId" => $order_no,
+  "totalMoney" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//支付金金额
+  "tradeType" => '',
+  "ip" => getClientIp(),
+  "describe" => "pay",
+  "notify" => $merchant_url,
+  "redirectUrl" => $return_url,
+  "fromtype" => '',
+  "sign" => ''
 );
-$ts = time(); //時間戳
-$user_id = md5($_REQUEST['S_Name']); //用户在平台里的id
-$username = $_REQUEST['S_Name']; //用户在平台的用户名
 
 #变更参数设置
-$form_url = 'http://www.qxymy.cn/api/pay';
+$form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
 $scan = 'zfb';
 $payType = $pay_type . "_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
+$data['tradeType'] = 'alipay';//支付宝wap
 if (_is_mobile()) {
-  $data['pay_type'] = 'alipay_h5';//支付宝wap
+  $data['fromtype'] = 'wap';//支付宝wap
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -80,20 +78,52 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
+$signtext = "merId=".$data['merId'];
+$signtext .= "orderId=".$data['orderId'];
+$signtext .= "totalMoney=".$data['totalMoney'];
+$signtext .= "tradeType=".$data['tradeType'].$pay_mkey;
+$data['sign'] = strtoupper(md5($signtext));//簽名
+$data_json = json_encode($data,320);
 
-$noarr = array('goods_name', 'goods_num', 'goods_cat', 'goods_desc');
-$signtext = '';
-$data_str = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val;//簽名字串
+#curl获取响应值
+$res = curl_post($form_url, $data_json);
+$row = json_decode($res, 1);
+#跳转
+if ($row['code'] != '0') {
+  echo '错误代码:' . $row['code'] . "<br>";
+  exit;
+} else {
+  if (_is_mobile()) {
+    $jumpurl = $row['data'];
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['data']);
   }
-  $data_str .= $arr_key . '=' . $arr_val . '&';//提交字串
 }
-$signtext .= $ts . $pay_mkey;
-$sign = md5($signtext);//簽名
-$data_str .= "ts=" . $ts . "&user_id=" . $user_id . "&username=" . $username . "&sign=" . $sign;//提交字串
+#跳轉方法
 
-#跳轉
-header("location:" . $form_url . '?' . $data_str);
+?>
+<html>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if (isset($form_data)) {
+        foreach ($form_data as $arr_key => $arr_value) {
+          ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php 
+    }
+  } ?>
+    </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
+</html>
+
+
 ?>
