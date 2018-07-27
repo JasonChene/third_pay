@@ -8,30 +8,31 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 
-function payType_bankname($scan,$pay_type){
+function payType_bankname($scan, $pay_type)
+{
   global $payType, $bankname;
-  if(strstr($scan,"wy")){
+  if (strstr($scan, "wy")) {
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
-  }elseif(strstr($scan,"yl")){
+  } elseif (strstr($scan, "yl")) {
     $payType = $pay_type . "_yl";
     $bankname = $pay_type . "->银联钱包在线充值";
-  }elseif(strstr($scan,"qq")){
+  } elseif (strstr($scan, "qq")) {
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
-  }elseif(strstr($scan,"wx")){
+  } elseif (strstr($scan, "wx")) {
     $payType = $pay_type . "_wx";
     $bankname = $pay_type . "->微信在线充值";
-  }elseif(strstr($scan,"zfb")){
+  } elseif (strstr($scan, "zfb")) {
     $payType = $pay_type . "_zfb";
     $bankname = $pay_type . "->支付宝在线充值";
-  }elseif(strstr($scan,"jd")){
+  } elseif (strstr($scan, "jd")) {
     $payType = $pay_type . "_jd";
     $bankname = $pay_type . "->京东钱包在线充值";
-  }elseif(strstr($scan,"ylkj")){
+  } elseif (strstr($scan, "ylkj")) {
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
-  }elseif(strstr($scan,"bd")){
+  } elseif (strstr($scan, "bd")) {
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
   }
@@ -39,12 +40,13 @@ function payType_bankname($scan,$pay_type){
 
 
 #function
-function curl_post($url,$data){ #POST访问
+function curl_post($url, $data)
+{ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
@@ -56,11 +58,12 @@ function curl_post($url,$data){ #POST访问
   }
   return $tmpInfo;
 }
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
+function QRcodeUrl($code)
+{
+  if (strstr($code, "&")) {
+    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  } else {
+    $code2 = $code;
   }
   return $code2;
 }
@@ -93,16 +96,16 @@ $data = array(
   "fxfee" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
   "fxnotifyurl" => $merchant_url,//通知地址
   "fxbackurl" => $return_url,
-  "fxpay" => 'zfbpc',//支付方式
+  "fxpay" => 'zfbsm',//支付方式
   "fxip" => getClientIp()//IP
 );
 #变更参数设置
-$form_url = 'http://yk.ykpay.cc/pay';//提交地址
+$form_url = 'http://pay.djvod.cn/Pay';//提交地址
 $scan = 'zfb';
-if(_is_mobile()){
-  $data['fxpay'] = 'zfbwap' ;
+if (_is_mobile()) {
+  $data['fxpay'] = 'zfbwap';
 }
-payType_bankname($scan,$pay_type);
+payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -113,20 +116,20 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = $data['fxid'].$data['fxddh'].$data['fxfee'].$data['fxnotifyurl'].$pay_mkey;
+$signtext = $data['fxid'] . $data['fxddh'] . $data['fxfee'] . $data['fxnotifyurl'] . $pay_mkey;
 
 $sign = md5($signtext);
 $data['fxsign'] = $sign; 
 
 #curl获取响应值
-$res = curl_post($form_url,http_build_query($data));
-$row = json_decode($res,1);
+$res = curl_post($form_url, http_build_query($data));
+$row = json_decode($res, 1);
 #跳转
 if ($row['status'] != '1') {
-  echo  '错误代码:' . $row['status']."\n";
-  echo  '错误讯息:' . $row['error']."\n";
+  echo '错误代码:' . $row['status'] . "\n";
+  echo '错误讯息:' . $row['error'] . "\n";
   exit;
-}else {
+} else {
   $jumpurl = $row['payurl'];
 }
 #跳轉方法
@@ -138,7 +141,7 @@ if ($row['status'] != '1') {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
     </form>
     <script language="javascript">

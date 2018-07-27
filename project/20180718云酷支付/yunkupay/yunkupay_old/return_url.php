@@ -11,10 +11,10 @@ foreach ($_REQUEST as $key => $value) {
 	// write_log("return、:".$key."=".$value);
 }
 
-if(!empty($data['fxddh'])){
+if (!empty($data['fxddh'])) {
 	$renodata = 0;
 	#设定固定参数
-	$order_no = $data['fxddh']; //订单号
+	$order_no = trim($data['fxddh']); //订单号
 	$mymoney = number_format($data['fxfee'], 2, '.', ''); //订单金额
 	$success_msg = $data['fxstatus'];//成功讯息
 	$success_code = "1";//文档上的成功讯息
@@ -45,32 +45,32 @@ if(!empty($data['fxddh'])){
 
 	#验签方式
 
-	$signtext = $data['fxstatus'].$data['fxid'].$data['fxddh'].$data['fxfee'].$pay_mkey;
+	$signtext = $data['fxstatus'] . $data['fxid'] . $data['fxddh'] . $data['fxfee'] . $pay_mkey;
 	$mysign = md5($signtext);//签名
 
 
 	#到账判断
 	if ($success_msg == $success_code) {
-	if ( $mysign == $sign) {
+		if ($mysign == $sign) {
 			$result_insert = update_online_money($order_no, $mymoney);
 			if ($result_insert == -1) {
 				$message = ("会员信息不存在，无法入账");
-			}else if($result_insert == 0){
+			} else if ($result_insert == 0) {
 				$message = ("支付成功");
-			}else if($result_insert == -2){
+			} else if ($result_insert == -2) {
 				$message = ("数据库操作失败");
-			}else if($result_insert == 1){
+			} else if ($result_insert == 1) {
 				$message = ("支付成功");
 			} else {
 				$message = ("支付失败");
 			}
-		}else{
+		} else {
 			$message = ('签名不正确！');
 		}
-	}else{
+	} else {
 		$message = ("交易失败");
 	}
-}else{
+} else {
 	$renodata = 1;
 	$message = ("支付成功");
 }
@@ -95,7 +95,7 @@ if(!empty($data['fxddh'])){
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
 		<?php
-		if($renodata == 0){
+	if ($renodata == 0) {
 		?>
 		<tr>
 			<td style="width: 120px; text-align: right;">订单号：</td>
@@ -110,8 +110,9 @@ if(!empty($data['fxddh'])){
 			</td>
 		</tr>
 		<?php
-		}
-		?>
+
+}
+?>
 		<tr>
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
