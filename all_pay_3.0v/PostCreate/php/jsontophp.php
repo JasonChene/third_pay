@@ -156,7 +156,7 @@ function echo_arr($key_name,$array){
   if ($key_name == 'str_arr') {
     foreach ($array as $obj) {
       foreach ($obj as $arr_key => $arr_value) {
-        if (!is_array($arr_value)) {
+        if (!is_array($arr_value) && !is_numeric($arr_value)) {
           $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
         }
         if (is_array($arr_value)) {
@@ -173,7 +173,7 @@ function echo_arr($key_name,$array){
     }
   }else {
     foreach ($array as $arr_key => $arr_value) {
-      if (!is_array($arr_value)) {
+      if (!is_array($arr_value) && !is_numeric($arr_value)) {
         $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
       }
       if (is_array($arr_value)) {
@@ -195,7 +195,7 @@ function echo_arr($key_name,$array){
 echo '#第三方传值参数设置'."\n";
 echo '$data = array('."\n";
 foreach ($req['params'] as $arr_key => $arr_value) {
-  if (!is_array($arr_value)) {
+  if (!is_array($arr_value) && !is_numeric($arr_value)) {
     $arr_value = tranjsonstr($arr_value);
     $arr_value = (is_null(json_decode($arr_value,1))) ? $arr_value:json_decode($arr_value,1);
   }
