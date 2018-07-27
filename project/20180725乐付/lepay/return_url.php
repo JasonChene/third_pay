@@ -11,7 +11,7 @@ foreach ($_REQUEST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['tradeNo']; //订单号
+$order_no = $data['outTradeNo']; //订单号
 $mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
 $success_msg = $data['tradeStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息

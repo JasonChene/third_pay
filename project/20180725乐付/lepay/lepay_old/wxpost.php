@@ -160,7 +160,7 @@ if ($jumptype == '1') {
     exit;
   } else {
     $qrcodeUrl = $row['data']['payUrl'];
-    if (_is_mobile()) {
+    if (_is_mobile() || $scan == 'jd') {
       $jumpurl = $qrcodeUrl;
     } else {
       $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
