@@ -4,6 +4,9 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 // include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
+
+$mymoney = '';
+$order_no = '';
 function decode($data,$private_content){   
 	//读取秘钥
    $pr_key = openssl_pkey_get_private($private_content);
@@ -20,6 +23,7 @@ function decode($data,$private_content){
 	   openssl_private_decrypt($chunk, $decryptData, $pr_key);
 	   $crypto .= $decryptData;
    }
+   //write_log("crypto=".$crypto);
    return $crypto;
 }
 function callback_to_array($json,$key){
@@ -59,7 +63,7 @@ function json_encode_ex($value){
 $datakey = array();
 foreach ($_POST as $key => $value) {
 	$datakey[$key] = $value;
-	// write_log($key."=".$value);
+	//write_log($key."=".$value);
 }
 
 #获取该订单的支付名称
@@ -86,7 +90,10 @@ $private_pem = chunk_split($private_key,64,"\r\n");//转换为pem格式的私钥
 $private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
 
 //解密
-$data = decode($datakey['data'],$private_pem);
+$arr = decode($datakey['data'],$private_pem);
+$moneyarr = json_decode($arr,true);
+$mymoney = number_format($moneyarr['amount']/100, 2, '.', ''); //订单金额
+$order_no = $moneyarr['orderNum'];
 
 //效验 sign 签名
 $rows = callback_to_array($data, $md5key);
