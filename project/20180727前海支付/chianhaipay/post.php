@@ -117,9 +117,9 @@ if ($scan == 'ylkj') {
   }
 }else {
   $signtext = "merId=".$data['merId'];
-  $signtext .= "orderId=".$data['orderId'];
-  $signtext .= "totalMoney=".$data['totalMoney'];
-  $signtext .= "tradeType=".$data['tradeType'].$pay_mkey;
+  $signtext .= "&orderId=".$data['orderId'];
+  $signtext .= "&totalMoney=".$data['totalMoney'];
+  $signtext .= "&tradeType=".$data['tradeType'].$pay_mkey;
   $data['sign'] = strtoupper(md5($signtext));//簽名
   $data_json = json_encode($data,320);
 

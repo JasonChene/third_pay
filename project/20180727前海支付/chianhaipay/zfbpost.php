@@ -79,9 +79,9 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = "merId=".$data['merId'];
-$signtext .= "orderId=".$data['orderId'];
-$signtext .= "totalMoney=".$data['totalMoney'];
-$signtext .= "tradeType=".$data['tradeType'].$pay_mkey;
+$signtext .= "&orderId=".$data['orderId'];
+$signtext .= "&totalMoney=".$data['totalMoney'];
+$signtext .= "&tradeType=".$data['tradeType'].$pay_mkey;
 $data['sign'] = strtoupper(md5($signtext));//簽名
 $data_json = json_encode($data,320);
 
