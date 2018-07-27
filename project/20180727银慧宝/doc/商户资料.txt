@@ -1,0 +1,8 @@
+登陆网址：www.yinhuibaopay.com  
+用户名：北京春广德鑫
+登陆密码：2fi8w9
+对接QQ：804489999
+
+商户号：10493
+网关地址：http://www.yinhuibaopay.com/Pay_Index.html
+APIKEY: v7jw6p41s4x0vy7wvsuj89ab53v5ze3v
