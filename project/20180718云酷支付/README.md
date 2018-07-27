@@ -12,4 +12,9 @@
   
 备注：
 微信扫码的return没有参数  
-20180727修改支付宝扫码支付渠道的编号,zfbpc改成zfbsm  
+
+20180727
+修改档案：wxpost.php,zfbpost.php,notify_url.php,return_url.php
+修改支付宝扫码支付渠道的编号,zfbpc改成zfbsm  
+修正异步回调参数错误（商户号前面多一个空格）
+新系统档案write1改成read1  
