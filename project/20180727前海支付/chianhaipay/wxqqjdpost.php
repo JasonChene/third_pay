@@ -61,17 +61,32 @@ $ts = time(); //時間戳
 
 #变更参数设置
 $form_url = 'http://www.qxymy.cn/api/pay';
-$scan = 'wx';
-$payType = $pay_type . "_wx";
-$bankname = $pay_type . "->微信在线充值";
-if (_is_mobile()) {
-  $data['pay_type'] = 'wx_h5';//微信wap
-}
+$scan = '';
+$payType = '';
+$bankname = '';
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $bankname = $pay_type . "->京东钱包在线充值";
   $payType = $pay_type . "_jd";
   $data['pay_type'] = 'jd_h5';//京东支付h5
+} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $payType = $pay_type . "_qq";
+  if (_is_mobile()) {
+    $data['pay_type'] = 'qq_h5';//qqwap
+  } else {
+    $data['pay_type'] = 'qq_qr';//qq掃碼
+  }
+} else {
+  $scan = 'wx';
+  $payType = $pay_type . "_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  if (_is_mobile()) {
+    $data['pay_type'] = 'wx_h5';//微信wap
+  } else {
+    $data['pay_type'] = 'wx_qr';//微信掃碼
+  }
 }
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
