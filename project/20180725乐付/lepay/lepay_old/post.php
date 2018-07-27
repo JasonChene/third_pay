@@ -147,7 +147,10 @@ $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
 #curl获取响应值
-$jumptype = '1';//跳转方式 1为返回json 2为页面跳转
+$jumptype = '2';//跳转方式 1为返回json 2为页面跳转
+if ($scan == 'yl') {
+  $jumptype = '1';//跳转方式 1为返回json 2为页面跳转
+}
 if ($jumptype == '1') {
   $res = curl_post($form_url, $data_str);
   $tran = mb_convert_encoding("$res", "UTF-8");
