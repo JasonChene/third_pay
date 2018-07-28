@@ -1,0 +1,19 @@
+登入账户：quanyin1873
+密码：ai8gp56789
+http://www.quanyinzf.com
+
+商户名称：quanyin1873
+商户简称：全银1873
+联系人手机号：15900546278
+动态令牌号：052709905
+
+商户号：1ab11404b2ff4db29192b2fb1bd81f25
+支付密钥：f3b9344bff9a4c2280511aa6026f9746
+
+
+网银支付(ZITOPAY_185374_BANK_SCAN)   费率: 0.7%
+京东扫码支付(JPAY_JDPAY)   费率: 1.5%
+银联扫码支付(ZITOPAY_UNION_SCAN)   费率: 1.5%
+支付宝扫码支付(ZITOPAY_ALI_SCAN)   费率: 4.0%
+PC快捷支付(JPAY_QUICKPAY_PC)   费率: 1.8%
+快捷支付(JPAY_QUICKPAY)   费率: 1.8%
