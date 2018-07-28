@@ -15,12 +15,12 @@ foreach ($_REQUEST as $key => $value) {
 $manyshow = 0;
 if(!empty($data)){
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-$success_msg = $data['returncode'];//成功讯息
-$success_code = "00";//文档上的成功讯息
+$order_no = $data['orderId']; //订单号
+$mymoney = number_format($data['money']/100, 2, '.', ''); //订单金额
+$success_msg = $data['code'];//成功讯息
+$success_code = "0";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "OK";//回调讯息
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -46,20 +46,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	write_log("非法提交参数");
 	exit;
 }
-ksort($data);
-$noarr = array('sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
-}
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$signtext = "code".$data['code'];
+$signtext .= "merId".$data['merId'];
+$signtext .= "money".$data['money'];
+$signtext .= "orderId".$data['orderId'];
+$signtext .= "payWay".$data['payWay'];
+$signtext .= "remark".$data['remark'];
+$signtext .= "time".$data['time'];
+$signtext .= "tradeId".$data['tradeId'].$pay_mkey;
 $mysign = strtoupper(md5($signtext));
+
 write_log("signtext=".$signtext);
 write_log("mysign=".$mysign);
-
 
 #到账判断
 if ($success_msg == $success_code) {
