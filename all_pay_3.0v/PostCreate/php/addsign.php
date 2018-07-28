@@ -11,9 +11,9 @@ function sign_text($array){
       }
     } else {
       if ($array['havekey']) {
-        $signtext .= $arr_key.$array['mid_conn'].$arr_value_str. $array['last_conn'] ;
+        $signtext .= $arr_key.$array['mid_conn'].$arr_value. $array['last_conn'] ;
       }else {
-        $signtext .= $arr_value_str. $array['last_conn'] ;
+        $signtext .= $arr_value. $array['last_conn'] ;
       }
     }
   }
