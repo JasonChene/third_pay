@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.config.php");//原数据库的连接方式
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -27,7 +28,8 @@ function curl_post($url, $data)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -92,18 +94,20 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = "merId=".$data['merId'];
-$signtext .= "orderId=".$data['orderId'];
-$signtext .= "totalMoney=".$data['totalMoney'];
-$signtext .= "tradeType=".$data['tradeType'].$pay_mkey;
+$signtext .= "&orderId=".$data['orderId'];
+$signtext .= "&totalMoney=".$data['totalMoney'];
+$signtext .= "&tradeType=".$data['tradeType'].$pay_mkey;
 $data['sign'] = strtoupper(md5($signtext));//簽名
 $data_json = json_encode($data,320);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_json);
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['code'] != '0') {
   echo '错误代码:' . $row['code'] . "<br>";
+  echo '错误讯息:' . $row['errMsg'] . "<br>";
   exit;
 } else {
   if (_is_mobile()) {

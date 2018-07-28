@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -28,8 +28,8 @@ function curl_post($url, $data)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -65,14 +65,23 @@ $form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'qq';
-$bankname = $pay_type . "->QQ钱包在线充值";
-$payType = $pay_type . "_qq";
-$data['tradeType'] = 'qqpay';
-if (_is_mobile()) {
-  $data['fromtype'] = 'wap';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $bankname = $pay_type . "->京东钱包在线充值";
+  $payType = $pay_type . "_jd";
+  $data['tradeType'] = 'jdpay';
+  if (_is_mobile()) {
+    $data['fromtype'] = 'wap';
+  }
+}else {
+  $scan = 'wx';
+  $payType = $pay_type . "_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $data['tradeType'] = 'wechat';
+  if (_is_mobile()) {
+    $data['fromtype'] = 'weixinwap';
+  }
 }
-
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -94,6 +103,7 @@ $data_json = json_encode($data,320);
 #curl获取响应值
 $res = curl_post($form_url, $data_json);
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['code'] != '0') {
   echo '错误代码:' . $row['code'] . "<br>";
