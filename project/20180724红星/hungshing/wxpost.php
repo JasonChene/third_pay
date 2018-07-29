@@ -51,10 +51,9 @@ function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POST, ture);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -161,16 +160,15 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
 $sign = md5($signtext);
 $data['hmac'] = $sign;
+echo "<pre>";
+var_dump($data);
 // if (0) {
 if (!_is_mobile()) {
   #curl获取响应值
   $res = curl_post($form_url, http_build_query($data));
   $tran = mb_convert_encoding($res, "UTF-8", "auto");
   $row = json_decode($tran, 1);
-  echo '<pre>';
-  var_dump($data);
-  echo $res . '<br>';
-  var_dump($res);
+  echo $res;
   #跳转
   if ($row['errcode'] != '0') {
     echo '错误代码:' . $row['errcode'] . "\n<br>";

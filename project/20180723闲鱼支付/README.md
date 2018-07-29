@@ -10,3 +10,11 @@
 现有渠道：支付宝手机  
 测试到账：支付宝手机  
    
+第三方名称：闲魚支付  
+档案位置：php@60.245.31.1\xianyupay
+
+修改档案：新,舊系統的wxpost,wxqqjdbdpost,zfbpost,qqpost,post
+新测试到账：支付宝h5
+旧测试到账：支付宝h5  
+
+备注：修改网关
