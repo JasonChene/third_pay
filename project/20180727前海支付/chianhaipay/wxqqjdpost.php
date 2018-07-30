@@ -135,7 +135,11 @@ if ($result_insert == -1) {
 $signtext = "merId=".$data['merId'];
 $signtext .= "&orderId=".$data['orderId'];
 $signtext .= "&totalMoney=".$data['totalMoney'];
+<<<<<<< HEAD
+$signtext .= "&tradeType=".$data['tradeType'].$pay_mkey;
+=======
 $signtext .= "&tradeType=".$data['tradeType'].'&'.$pay_mkey;
+>>>>>>> 0cda54e7146a35592c160ccd3dac651095f1008f
 $data['sign'] = strtoupper(md5($signtext));//簽名
 $data_json = json_encode($data,320);
 #curl获取响应值
