@@ -114,15 +114,27 @@ $data = array(
 #变更参数设置
 
 $form_url = 'http://47.90.116.46:18000/GW/gw.inter';
-$scan = 'qq';
-$data['cmd'] = 'PAYQQ';
-if (_is_mobile()) {
-  $data['cmd'] = 'PAYH5';
-  $data['biztype'] = 'qq';
-  $data['pageyurl'] = $return_url;
-  $form_url = 'http://zs.qilijiakeji.com:18000/GW/payqqh5.do';//提交地址
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['cmd'] = 'PAYJD';
+  if (_is_mobile()) {
+    $form_url = "http://zs.qilijiakeji.com:18000/GW/payh5jd.do";
+    $data['tradetype'] = '2';
+  }
+} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['cmd'] = 'PAYQQ';
+  if (_is_mobile()) {
+    $data['cmd'] = 'PAYH5';
+    $data['biztype'] = 'qq';
+    $data['pageyurl'] = $return_url;
+    $form_url = 'http://zs.qilijiakeji.com:18000/GW/payqqh5.do';//提交地址
+  }
+} else {
+  $scan = 'wx';
+  $data['cmd'] = 'PAYCSB';
+  $data['custip'] = getClientIp();
 }
-
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -145,18 +157,44 @@ if (!_is_mobile()) {
   $res = curl_post($form_url, http_build_query($data));
   parse_str($res, $resarr);
   #跳转
-  if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
-    $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
-  }else {
-    echo '错误'. "<br>";
-    echo '错误代码:' . $resarr['errcode'] . "<br>";
-    echo '错误讯息:' . $resarr['errdesc'] . "<br>";
-    exit;
-  } 
+  if ($scan == 'qq' || $scan == 'jd') {
+    if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
+      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+    }else {
+      echo '错误'. "<br>";
+      echo '错误代码:' . $resarr['errcode'] . "<br>";
+      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
+      exit;
+    } 
+  }else{
+    if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
+      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+    }else {
+      echo '错误'. "<br>";
+      echo '错误代码:' . $resarr['errcode'] . "<br>";
+      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
+      exit;
+    } 
+  }
 }else {
-  $jumpurl = $form_url;
-  $form_data = $data;
+  if ($scan == 'wx') {
+    $res = curl_post($form_url, http_build_query($data));
+    parse_str($res, $resarr);
+    if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
+      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
+      $jumpurl = $decrypted;
+    }else {
+      echo '错误'. "<br>";
+      echo '错误代码:' . $resarr['errcode'] . "<br>";
+      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
+      exit;
+    } 
+  }else {
+    $jumpurl = $form_url;
+    $form_data = $data;
+  }
 }
 #跳轉方法
 

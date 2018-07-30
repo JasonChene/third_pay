@@ -43,10 +43,6 @@ function payType_bankname($scan, $pay_type)
 
 
 #function
-function des_ecb_decrypt($data, $key)
-{
-  return openssl_decrypt($data, 'des-ecb', $key);
-}
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
@@ -87,6 +83,9 @@ $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
+$idArray = explode("###", $pay_mkey);
+$md5key = $idArray[0];//md5密钥
+$des_key = $idArray[1];//des密钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
@@ -105,11 +104,12 @@ $data = array(
   "version" => '2.0',
   "hmac" => '',
   "appid" => $pay_mid, //商户号
-  "userid" => $pay_mid,
-  "apporderid" => $order_no,//商户流水号
-  "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
   "ordertime" => date("YmdHis"),
-  "orderbody" => 'iPhone',
+  "userid" => $pay_account,
+  "apporderid" => $order_no,//商户流水号
+  "orderbody" => 'pay',
+  "orderdesc" => 'pay',
+  "amount" => $mymoney,//订单金额：单位/元
   "notifyurl" => $merchant_url//通知地址
 );
 #变更参数设置
@@ -117,13 +117,8 @@ $data = array(
 $form_url = 'http://47.90.116.46:18000/GW/gw.inter';
 $scan = 'zfb';
 $data['cmd'] = 'PAYH5ALIPAY';
-if (_is_mobile()) {
-  $data['cmd'] = 'PAYH5ALIPAY';
-  $data['front_skip_url'] = $return_url;
-  $form_url = 'http://zs.qilijiakeji.com:18000/GW/PayH5Ali.do';//提交地址
-} else {
-  $data['custip'] = getClientIp();
-}
+$data['custip'] = getClientIp();
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -135,44 +130,29 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
+
+$data = array_filter($data);
 ksort($data);
-$noarr = array('hmac');
-$signtext = '';
-$data_str = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
+$signature = sprintf('%s%s', urldecode(http_build_query($data)), $md5key);
+$data['hmac'] = md5($signature);
+
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data));
+parse_str($res, $resarr);
+#跳转
+if (!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null) {
+  $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
+  if (_is_mobile()) {
+    $jumpurl = $decrypted;
+  }else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
   }
+}else {
+  echo '错误代码:' . $resarr['errcode'] . "<br>";
+  echo '错误讯息:' . $resarr['errdesc'] . "<br>";
+  exit;
 }
 
-
-$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
-$sign = md5($signtext);
-$data['hmac'] = $sign;
-echo '<pre>';
-  var_dump($data);
-
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url, http_build_query($data));
-  // $res = curl_post($form_url, $data);
-  $tran = mb_convert_encoding($res, "UTF-8", "auto");
-  $row = json_decode($tran, 1);
-  
-  echo $res . '<br>';
-  var_dump($res);
-  #跳转
-  if ($row['errcode'] != '0') {
-    echo '错误代码:' . $row['errcode'] . "\n<br>";
-    echo '错误讯息:' . $row['errdesc'] . "\n<br>";
-    exit;
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payurl']);
-  }
-} else {
-  $jumpurl = $form_url;
-  $form_data = $data;
-}
 #跳轉方法
 
 ?>

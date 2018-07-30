@@ -3,16 +3,17 @@
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
-#接收资料
-#REQUEST方法
-$data = array();
-foreach ($_REQUEST as $key => $value) {
+write_log("return");
+
+#############################################
+#post方法
+write_log('post方法');
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:" . $key . "=" . $value);
+	write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if (!empty($data)) {
-	$manyshow = 1;
 	#设定固定参数
 	$order_no = $data['apporderid']; //订单号
 	$mymoney = number_format($data['realamount'], 2, '.', ''); //订单金额
@@ -24,7 +25,7 @@ if (!empty($data)) {
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
-	$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -32,31 +33,35 @@ if (!empty($data)) {
 	$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
-	$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
 	$pay_mkey = $payInfo['mer_key'];
+	$idArray = explode("###", $pay_mkey);
+	$md5key = $idArray[0];//md5密钥
+	$des_key = $idArray[1];//des密钥
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
+		write_log("非法提交参数");
 		exit;
 	}
 
 	#验签方式
-	$noarr = array('hmac');//不加入签名的array key值
 	ksort($data);
-	$signtext = "";
+	$noarr = array('hmac');
+	$signtext = '';
 	foreach ($data as $arr_key => $arr_val) {
-		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-			$signtext .= $arr_key . '=' . $arr_val . '&';
-		}
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
-	$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;//验签字串
-	$mysign = md5($signtext);//签名
-	write_log("return:signtext=" . $signtext);
-	write_log("return:mysign=" . $mysign);
+	}
 
+	$signtext = substr($signtext, 0, -1) . $md5key;
+	$mysign = md5($signtext);
+	write_log("signtext=" . $signtext);
+	write_log("mysign=" . $mysign);
 
 	#到账判断
 	if ($success_msg == $success_code) {
