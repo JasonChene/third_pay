@@ -89,7 +89,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('sign');
+$noarr = array('pay_md5sign','pay_productname');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -99,12 +99,11 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-$data['sign'] = $sign; 
+$data['pay_md5sign'] = $sign; 
 
+#跳轉方法
 $form_data = $data;
 $jumpurl = $form_url;
-#跳轉方法
-
 ?>
 <html>
   <head>
