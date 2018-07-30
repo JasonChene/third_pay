@@ -11,10 +11,10 @@ foreach ($_REQUEST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['orderNo']; //订单号
-$mymoney = number_format($data['orderPrice'], 2, '.', ''); //订单金额
-$success_msg = $data['tradeStatus'];//成功讯息
-$success_code = "SUCCESS";//文档上的成功讯息
+$order_no = $data['mch_order_number']; //订单号
+$mymoney = number_format($data['pay_money'] / 100, 2, '.', ''); //订单金额
+$success_msg = $data['order_status'];//成功讯息
+$success_code = "3";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "success";//回调讯息
 
@@ -49,7 +49,7 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0, -1) . '&paySecret=' . $pay_mkey;//验签字串
+$signtext = substr($signtext, 0, -1) . $pay_mkey;//验签字串
 $mysign = strtoupper(md5($signtext));//签名
 
 #到账判断

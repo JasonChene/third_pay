@@ -107,7 +107,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
+$form_url = 'http://www.fybhsc.com:9091/business/order/prepareOrder';
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['tradeType'] = 'jdpay';

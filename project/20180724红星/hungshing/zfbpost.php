@@ -50,14 +50,14 @@ function curl_post($url, $data)
   curl_setopt($ch, CURLOPT_POST, 1);
   // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  // curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   // curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
+  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_VERBOSE, 1);
+  curl_setopt ($ch, CURLOPT_REFERER, $url);
   $tmpInfo = curl_exec($ch);
   // $tmpInfo = curl_getinfo($ch);
   if (curl_errno($ch)) {
@@ -162,7 +162,7 @@ if (!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null)
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_blank">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {

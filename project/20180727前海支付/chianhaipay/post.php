@@ -107,7 +107,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
+$form_url = 'http://www.fybhsc.com:9091/business/order/prepareOrder';
 $scan = 'yl';
 $data['tradeType'] = 'unionpay';//银联
 $data['fromtype'] = 'wap';//支付宝wap
