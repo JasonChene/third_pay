@@ -107,7 +107,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
+$form_url = 'http://www.fybhsc.com:9091/business/order/prepareOrder';
 $scan = 'qq';
 $data['tradeType'] = 'qqpay';//QQ
 $data['fromtype'] = 'wap';//支付宝wap
@@ -126,11 +126,7 @@ if ($result_insert == -1) {
 $signtext = "merId=".$data['merId'];
 $signtext .= "&orderId=".$data['orderId'];
 $signtext .= "&totalMoney=".$data['totalMoney'];
-<<<<<<< HEAD
-$signtext .= "&tradeType=".$data['tradeType'].$pay_mkey;
-=======
 $signtext .= "&tradeType=".$data['tradeType'].'&'.$pay_mkey;
->>>>>>> 0cda54e7146a35592c160ccd3dac651095f1008f
 $data['sign'] = strtoupper(md5($signtext));//簽名
 $data_json = json_encode($data,320);
 #curl获取响应值
