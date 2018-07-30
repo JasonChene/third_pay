@@ -2,13 +2,13 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-write_log("notify");
+// write_log("notify");
 
 #post方法
-write_log('post方法');
+// write_log('post方法');
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	// write_log($key . "=" . $value);
 }
 
 #设定固定参数
@@ -41,7 +41,7 @@ $des_key = $idArray[1];//des密钥
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	write_log("非法提交参数");
+	// write_log("非法提交参数");
 	exit;
 }
 
@@ -57,8 +57,8 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . $md5key;
 $mysign = md5($signtext);
-write_log("signtext=" . $signtext);
-write_log("mysign=" . $mysign);
+// write_log("signtext=" . $signtext);
+// write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -66,33 +66,33 @@ if ($success_msg == $success_code) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
+			// write_log("会员信息不存在，无法入账");
 			exit;
 		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 0');
+			// write_log($echo_msg . 'at 0');
 			exit;
 		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			write_log("数据库操作失败");
+			// write_log("数据库操作失败");
 			exit;
 		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 1');
+			// write_log($echo_msg . 'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
-			write_log("支付失败");
+			// write_log("支付失败");
 			exit;
 		}
 	} else {
 		echo ('签名不正确！');
-		write_log("签名不正确！");
+		// write_log("签名不正确！");
 		exit;
 	}
 } else {
 	echo ("交易失败");
-	write_log("交易失败");
+	// write_log("交易失败");
 	exit;
 }
 
