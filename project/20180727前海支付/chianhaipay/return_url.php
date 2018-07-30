@@ -1,75 +1,97 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.config.php");//原数据库的连接方式
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
+write_log("return");
+#接收资料
+#POST方法
 $data = array();
-foreach ($_GET as $key => $value) {
+foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	//write_log($key."=".$value);
+	write_log($key."=".$value);
 }
-$params = array(':m_order' => $data['order_no']);
+$manyshow = 0;
+if(!empty($data)){
+#设定固定参数
+$order_no = $data['orderId']; //订单号
+$mymoney = number_format($data['money']/100, 2, '.', ''); //订单金额
+$success_msg = $data['code'];//成功讯息
+$success_code = "0";//文档上的成功讯息
+$sign = $data['sign'];//签名
+$echo_msg = "success";//回调讯息
+
+#根据订单号读取资料库
+$params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
-//获取该订单的支付名称
+#获取该订单的支付名称
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
-
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
+	write_log("非法提交参数");
 	exit;
 }
-$ts = time();
-$signtext='app_id='.$data['app_id'].'is_success='.$data['is_success'].'order_no='.$data['order_no'].'pay_actual_amt='.$data['pay_actual_amt'].$ts.$pay_mkey;
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);
-//write_log("mysign=".$mysign);
+$signtext = "code".$data['code'];
+$signtext .= "merId".$data['merId'];
+$signtext .= "money".$data['money'];
+$signtext .= "orderId".$data['orderId'];
+$signtext .= "payWay".$data['payWay'];
+$signtext .= "remark".$data['remark'];
+$signtext .= "time".$data['time'];
+$signtext .= "tradeId".$data['tradeId'].$pay_mkey;
+$mysign = strtoupper(md5($signtext));
 
-if ($data['is_success'] == "1") {
-  if ( $mysign == $data['sign']) {
-  	$mymoney = number_format($data['pay_actual_amt'], 2, '.', ''); //订单金额
-		$result_insert = update_online_money($data['order_no'], $mymoney);
-		if ($result_insert == -1) {
-			$message= ("会员信息不存在，无法入账");
-			exit;
-		}else if($result_insert == 0){
-			$message= ("ok");
-			exit;
-		}else if($result_insert == -2){
-			$message= ("数据库操作失败");
-			exit;
-		}else if($result_insert == 1){
-			$message= ("ok");
-			exit;
-		} else {
-			$message= ("支付失败");
-			exit;
+write_log("signtext=".$signtext);
+write_log("mysign=".$mysign);
+
+#到账判断
+if ($success_msg == $success_code) {
+	if ( $mysign == $sign) {
+			$result_insert = update_online_money($order_no, $mymoney);
+			if ($result_insert == -1) {
+				$message = ("会员信息不存在，无法入账");
+			}else if($result_insert == 0){
+				$message = ("支付成功");
+			}else if($result_insert == -2){
+				$message = ("数据库操作失败");
+			}else if($result_insert == 1){
+				$message = ("支付成功");
+			} else {
+				$message = ("支付失败");
+			}
+		}else{
+			$message = ('签名不正确！');
 		}
 	}else{
-		$message= ('签名不正确！');
-		exit;
+		$message = ("交易失败");
 	}
 }else{
-	$message= ("交易失败");
-	exit;
+	$message = ("支付成功");
 }
-
 ?>
+
+<!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
+<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>支付结果</title>
+    <title>支付同步结果展示</title>
     <style type="text/css">
         *,html,body{ background: #fff;font-size: 14px;font-family: "Microsoft Yahei", "微软雅黑"}
         html,body{ width: 100%;margin: 0;padding: 0;}
@@ -78,27 +100,40 @@ if ($data['is_success'] == "1") {
 </head>
 <body>
 	<table width="98%" border="1" cellspacing="0" cellpadding="3" bordercolordark="#fff" bordercolorlight="#d3d3d3" style="margin: 10px auto;">
-		<tr>
+    <tr>
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
+		<?php 
+			if($manyshow == 1){
+		?>
 		<tr>
-			<td style="width: 120px; text-align: right;">订单号</td>
+			<td style="width: 120px; text-align: right;">订单号：</td>
 			<td style="padding-left: 10px;">
-				<label id="lborderid"><?php echo $order_no; ?></label>
+				<label id="lborderno"><?php echo $order_no; ?></label>
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">处理结果</td>
+			<td style="width: 120px; text-align: right;">充值金额：</td>
 			<td style="padding-left: 10px;">
-				<label id="lborderid"><?php echo $message; ?></label>
+				<label id="lbpayamount"><?php echo $mymoney; ?></label>
 			</td>
 		</tr>
-
+		<?php
+			}
+		?>
 		<tr>
-			<td colspan="2" style="text-align: center;">
-				<input type="button" value="关闭"/>
+			<td style="width: 120px; text-align: right;">处理结果：</td>
+			<td style="padding-left: 10px;">
+				<label id="lbmessage"><?php echo $message; ?></label>
 			</td>
 		</tr>
+		<tr>
+			<td style="width: 120px; text-align: right;">备注</td>
+			<td style="padding-left: 10px;">
+				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
+			</td>
+		</tr>
+		
 	</table>
 </body>
 </html>

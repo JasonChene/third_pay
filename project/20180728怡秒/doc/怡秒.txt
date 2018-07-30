@@ -1,0 +1,11 @@
+商户后台：www.scckym.com
+账号：yimiao009
+密码：1234567
+
+k8558 2018/7/27 17:03:40
+https://www.kancloud.cn/payapi/api-demo?token=dWjdA8Epqw#/catalog
+这里有demo和说明文档
+
+商户号：180750544
+网关地址：https://scckym.com/Pay_Index.html
+APIKEY: hezlgo015l2lb1tgd92ty89svzolz53b
