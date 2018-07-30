@@ -11,18 +11,17 @@ function sign_text($array){
       }
     } else {
       if ($array['havekey']) {
-        $signtext .= $arr_key.$array['mid_conn'].$arr_value_str. $array['last_conn'] ;
+        $signtext .= $arr_key.$array['mid_conn'].$arr_value. $array['last_conn'] ;
       }else {
-        $signtext .= $arr_value_str. $array['last_conn'] ;
+        $signtext .= $arr_value. $array['last_conn'] ;
       }
     }
   }
   $len = strlen($array['last_conn']);
   $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
-  var_dump($array);
-  $encrypt_len = strlen($array['encrypt']);
+  $encrypt_len = count($array['encrypt']);
   for ($i=0; $i < $encrypt_len; $i++) {
-      $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
+    $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
   }
   return $signtext;
 }
@@ -38,10 +37,14 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
       $sign = base64_encode($signtext);
     }elseif ($encrypt == 'base64d') {
       $sign = base64_decode($signtext);
-    }elseif ($encrypt='urlencode') {
+    }elseif ($encrypt == 'urlencode') {
       $sign = urlencode($signtext);
-    }elseif ($encrypt='urldecode') {
+    }elseif ($encrypt == 'urldecode') {
       $sign = urldecode($signtext);
+    }elseif ($encrypt == 'upper') {
+      $sign = mb_strtoupper($signtext);
+    }elseif ($encrypt == 'lower') {
+      $sign = mb_strtolower($signtext);
     }elseif ($encrypt == 'RSApr') {
       $pay_mkey = openssl_get_privatekey($key);//打開私钥
       if ($pay_mkey == false) {
@@ -86,10 +89,6 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
       }else {
         die("publickey decrypt error");
       }
-    }elseif ($encrypt == 'upper') {
-      $sign=mb_strtoupper($signtext);
-    }elseif ($encrypt == 'lower') {
-      $sign=mb_strtolower($signtext);
     }
     return $sign;
 }
@@ -104,7 +103,10 @@ function curl_post($url, $data ,$str){
   #curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
   if (strstr($str,"POST")) {
     if (strstr($str,"JSON")) {
-      curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data))
+    );
     }
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -112,7 +114,10 @@ function curl_post($url, $data ,$str){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   } elseif(strstr($str,"GET")){
     if (strstr($str,"JSON")) {
-      curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data))
+    );
     }
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     // $post_url=fix_postdata_url($url, $data);
