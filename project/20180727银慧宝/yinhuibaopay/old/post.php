@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -27,7 +28,8 @@ function curl_post($url, $data)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+// $stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -58,33 +60,18 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://www.yinhuibaopay.com/Pay_Index.html';
-$scan = '';
-$payType = '';
-$bankname = '';
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $bankname = $pay_type . "->京东钱包在线充值";
-  $payType = $pay_type . "_jd";
-  $data['pay_bankcode'] = '910';
-} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $bankname = $pay_type . "->QQ钱包在线充值";
-  $payType = $pay_type . "_qq";
-  $data['pay_bankcode'] = '908';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '905';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
-  $scan = 'bd';
-  $bankname = $pay_type . "->百度钱包在线充值";
-  $payType = $pay_type . "_bd";
-  $data['pay_bankcode'] = '909';
-} else {
-  $scan = 'wx';
-  $payType = $pay_type . "_wx";
-  $bankname = $pay_type . "->微信在线充值";
-  $data['pay_bankcode'] = '902';
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  $scan = 'yl';
+  $payType = $pay_type . "_yl";
+  $bankname = $pay_type . "->银联钱包在线充值";
+  $data['pay_bankcode'] = '911';
+}else {
+  $scan = 'wy';
+  $payType = $pay_type . "_wy";
+  $bankname = $pay_type . "->网银在线充值";
+  $data['pay_bankcode'] = '907';
 }
+
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -97,7 +84,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('sign');
+$noarr = array('pay_md5sign','pay_productname');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -107,11 +94,11 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-$data['sign'] = $sign; 
+$data['pay_md5sign'] = $sign; 
 
+#跳轉方法
 $form_data = $data;
 $jumpurl = $form_url;
-#跳轉方法
 
 ?>
 <html>

@@ -58,18 +58,33 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://www.yinhuibaopay.com/Pay_Index.html';
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  $scan = 'yl';
-  $payType = $pay_type . "_yl";
-  $bankname = $pay_type . "->银联钱包在线充值";
-  $data['pay_bankcode'] = '911';
-}else {
-  $scan = 'wy';
-  $payType = $pay_type . "_wy";
-  $bankname = $pay_type . "->网银在线充值";
-  $data['pay_bankcode'] = '907';
+$scan = '';
+$payType = '';
+$bankname = '';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $bankname = $pay_type . "->京东钱包在线充值";
+  $payType = $pay_type . "_jd";
+  $data['pay_bankcode'] = '910';
+} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $bankname = $pay_type . "->QQ钱包在线充值";
+  $payType = $pay_type . "_qq";
+  $data['pay_bankcode'] = '908';
+  if (_is_mobile()) {
+    $data['pay_bankcode'] = '905';
+  }
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $bankname = $pay_type . "->百度钱包在线充值";
+  $payType = $pay_type . "_bd";
+  $data['pay_bankcode'] = '909';
+} else {
+  $scan = 'wx';
+  $payType = $pay_type . "_wx";
+  $bankname = $pay_type . "->微信在线充值";
+  $data['pay_bankcode'] = '902';
 }
-
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
