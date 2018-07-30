@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -41,25 +41,24 @@ function payType_bankname($scan, $pay_type)
   }
 }
 
-
 #function
+function des_ecb_decrypt($data, $key)
+{
+  return openssl_decrypt($data, 'des-ecb', $key);
+}
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  // curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  // curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
+  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_VERBOSE, 1);
   $tmpInfo = curl_exec($ch);
-  // $tmpInfo = curl_getinfo($ch);
   if (curl_errno($ch)) {
     return curl_error($ch);
   }
@@ -78,7 +77,7 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -113,16 +112,24 @@ $data = array(
 );
 #变更参数设置
 
-$form_url = 'http://47.90.116.46:18000/GW/gw.inter';
-$scan = 'qq';
-$data['cmd'] = 'PAYQQ';
-if (_is_mobile()) {
-  $data['cmd'] = 'PAYH5';
-  $data['biztype'] = 'qq';
-  $data['pageyurl'] = $return_url;
-  $form_url = 'http://zs.qilijiakeji.com:18000/GW/payqqh5.do';//提交地址
+$form_url = 'http://zs.qilijiakeji.com:18000/GW/netbank.do';
+if (strstr($pay_type, "银联钱包")) {
+  $form_url = 'http://47.90.116.46:18000/GW/gw.inter';
+  $scan = 'yl';
+  $data['cmd'] = 'PAYYLCODE';
+  $data['cardtype'] = '1';
+} elseif (strstr($pay_type, "银联快捷")) {
+  $form_url = 'http://zs.qilijiakeji.com:18000/GW/fast.do';//提交地址
+  $scan = 'ylkj';
+  $data['cmd'] = 'FASTPAY';
+  $data['biztype'] = '1';
+  $data['pageurl'] = $return_url;
+} else {
+  $scan = 'wy';
+  $data['cmd'] = 'NETPAY';
+  $daa['bankcode'] = $_REQUEST['bank_code'];
+  $data['cardtype'] = '1';
 }
-
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -134,30 +141,30 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-
 $data = array_filter($data);
 ksort($data);
 $signature = sprintf('%s%s', urldecode(http_build_query($data)), $md5key);
 $data['hmac'] = md5($signature);
 
-if (!_is_mobile()) {
-  #curl获取响应值
+#curl获取响应值
+if ($scan == "yl") {
   $res = curl_post($form_url, http_build_query($data));
   parse_str($res, $resarr);
   #跳转
-  if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
-    $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
+  if (!empty($resarr) && $resarr['codeurl'] != 'null' && $resarr['codeurl'] != null) {
+    $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
   }else {
     echo '错误'. "<br>";
     echo '错误代码:' . $resarr['errcode'] . "<br>";
     echo '错误讯息:' . $resarr['errdesc'] . "<br>";
     exit;
-  } 
+  }
 }else {
   $jumpurl = $form_url;
   $form_data = $data;
 }
+
 #跳轉方法
 
 ?>
