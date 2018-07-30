@@ -54,14 +54,14 @@ function curl_post($url, $data)
   curl_setopt($ch, CURLOPT_POST, 1);
   // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  // curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   // curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
+  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_VERBOSE, 1);
+  curl_setopt ($ch, CURLOPT_REFERER, $url);
   $tmpInfo = curl_exec($ch);
   // $tmpInfo = curl_getinfo($ch);
   if (curl_errno($ch)) {
@@ -117,13 +117,13 @@ $data = array(
 $form_url = 'http://47.90.116.46:18000/GW/gw.inter';
 $scan = 'zfb';
 $data['cmd'] = 'PAYH5ALIPAY';
-if (_is_mobile()) {
+// if (_is_mobile()) {
   $data['cmd'] = 'PAYH5ALIPAY';
   $data['front_skip_url'] = $return_url;
   $form_url = 'http://zs.qilijiakeji.com:18000/GW/PayH5Ali.do';//提交地址
-} else {
-  $data['custip'] = getClientIp();
-}
+// } else {
+  // $data['custip'] = getClientIp();
+// }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -152,7 +152,7 @@ $data['hmac'] = $sign;
 echo '<pre>';
   var_dump($data);
 
-if (!_is_mobile()) {
+if (_is_mobile()) {
   #curl获取响应值
   $res = curl_post($form_url, http_build_query($data));
   // $res = curl_post($form_url, $data);
@@ -182,7 +182,7 @@ if (!_is_mobile()) {
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_blank">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {
