@@ -93,11 +93,11 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "version" => "1.0", 
-  "merId" => $pay_mid,
-  "orderId" => $order_no,
-  "totalMoney" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//支付金金额
-  "tradeType" => '',
+  "appid" => $pay_mid, 
+  "amount"=> $mymoney,
+  "remark" => "pay",
+  "orderno" => $order_no,
+  "returnurl" => $return_url,
   "ip" => getClientIp(),
   "describe" => "pay",
   "notify" => $merchant_url,
@@ -107,7 +107,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://pay.phcygmc.com:9091/business/order/prepareOrder';
+$form_url = 'http://api.zhongmin8.com/pay/qrOrderThree.doAdminJJ';
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['tradeType'] = 'jdpay';
