@@ -105,10 +105,10 @@ $data = array(
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-$scan = 'zfb';
-$data['pay_bankcode'] = '903';//903	支付宝扫码支付
+$scan = 'qq';
+$data['pay_bankcode'] = '908';//908	QQ扫码支付
 if (_is_mobile()) {
-  $data['pay_bankcode'] = '904';//904	支付宝手机
+  $data['pay_bankcode'] = '905';//905	QQ手机支付
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
