@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://scckym.com/Pay_Index.html';
+$form_url = 'https://www.0351nfc.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -105,10 +105,10 @@ $data = array(
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-$scan = 'qq';
-$data['pay_bankcode'] = '908';//908	QQ扫码支付
+$scan = 'zfb';
+$data['pay_bankcode'] = '904';//904	支付宝扫码支付
 if (_is_mobile()) {
-  $data['pay_bankcode'] = '905';//905	QQ手机支付
+  $data['pay_bankcode'] = '905';//905	支付宝手机
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -133,7 +133,6 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-echo $signtext;
 $data['pay_md5sign'] = $sign; 
 
 #curl获取响应值

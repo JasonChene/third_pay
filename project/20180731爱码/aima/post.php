@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://scckym.com/Pay_Index.html';
+$form_url = 'https://www.0351nfc.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -107,7 +107,7 @@ $data = array(
 #变更参数设置
 if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
-  $data['pay_bankcode'] = '913'; //快捷913
+  $data['pay_bankcode'] = '908'; //快捷913
 } else {
   $scan = 'wy';
   $data['pay_bankcode'] = '907';//907	网银支付
@@ -135,7 +135,6 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-echo $signtext;
 $data['pay_md5sign'] = $sign; 
 
 #curl获取响应值

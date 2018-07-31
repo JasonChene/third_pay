@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -74,8 +74,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://scckym.com/Pay_Index.html';
+$form_url = 'https://www.0351nfc.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -105,10 +105,21 @@ $data = array(
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-$scan = 'zfb';
-$data['pay_bankcode'] = '903';//903	支付宝扫码支付
-if (_is_mobile()) {
-  $data['pay_bankcode'] = '904';//904	支付宝手机
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['pay_bankcode'] = '912'; //912	京东支付
+} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['pay_bankcode'] = '910';//910	QQ扫码支付
+} elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $data['pay_bankcode'] = '911';//911	百度钱包
+} else {
+  $scan = 'wx';
+  $data['pay_bankcode'] = '902';//902	微信扫码支付
+  if (_is_mobile()) {
+    $data['pay_bankcode'] = '903';//903	微信h5支付
+  }
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -133,7 +144,6 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-echo $signtext;
 $data['pay_md5sign'] = $sign; 
 
 #curl获取响应值
