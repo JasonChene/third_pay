@@ -1,0 +1,17 @@
+                                       新一支付
+
+接口文档地址：http://pay.qishidai.cn:8097/api/#/1?page_id=1
+
+
+商户登录：http://mch.qishidai.cn/merchant/login
+
+
+
+马上付支付商户号
+100028
+商户平台登录帐号
+A201807283
+商户平台登录密码
+123456
+马上付支付密钥
+t5qdby1ht217wmgwupjfbd0ddb3sq6l0
