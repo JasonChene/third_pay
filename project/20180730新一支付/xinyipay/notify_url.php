@@ -4,6 +4,7 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #//write_log("notify");
 
+
 #接收资料
 #request方法
 $data = array();
