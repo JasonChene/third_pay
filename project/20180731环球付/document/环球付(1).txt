@@ -1,0 +1,16 @@
+http://www.xiaocaofu.com/s
+
+账号：13426303415  密码：483927
+
+支付配置
+商户号(user_seller)
+378601
+
+商户pid(user_pid)
+005251271790867
+
+商户秘钥(user_key)
+zSwc7qJ3xZ8RMmvnSwjk7Ft8KPNKizh7
+
+old
+155	环球付	113854	pwBbkHWPiHz8U3TCpIHv2Vz3DseKmWAv	148756194112900	http://pay7.5566205.com	环球付	1	1	1	环球付	1
