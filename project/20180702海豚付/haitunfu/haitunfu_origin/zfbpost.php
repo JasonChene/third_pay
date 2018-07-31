@@ -58,7 +58,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $data = array(
   "user_id" => $pay_mid, //商户号
   "out_trade_no" => $order_no,//商户流水号
-  "product_id" => '914',
+  "product_id" => '917',
   "return_url" => $return_url,
   "notify_url" => $merchant_url,
   "subject" => "iPhoneX",//订单标题
@@ -107,11 +107,7 @@ if ($row['code'] != 0) {
   echo  '错误讯息:'.$row['msg']."\n";
   exit;
 }else {
-  if(_is_mobile()){
     $jumpurl = $row['data']['pay_extends']['pay_url'];
-  }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['pay_extends']['pay_url']);
-  }
 }
 #跳轉方法
 
