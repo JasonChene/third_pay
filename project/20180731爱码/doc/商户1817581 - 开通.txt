@@ -6,3 +6,8 @@
 支付密码:123456(请更改)
 
 
+API对接参数：
+商户号：1817581
+网关地址：https://www.0351nfc.com/Pay_Index.html
+APIKEY: 6w9d2rxqvijr5epz5ttzpqy1dy3d27l9
+

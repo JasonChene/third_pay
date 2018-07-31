@@ -1,13 +1,16 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");//原新数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-#//write_log("notify");
+//write_log("notify");
+
+
 
 #接收资料
-#request方法
+#post方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	//write_log($key . "=" . $value);
 }
@@ -18,12 +21,13 @@ $mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
 $success_msg = $data['returncode'];//成功讯息
 $success_code = "00";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "OK";//回调讯息
+$echo_msg = "ok";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);//原新数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -31,7 +35,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);//原新数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -39,22 +44,24 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
+	//write_log('非法提交参数');
 	exit;
 }
 
 #验签方式
+$noarr = array('sign');//不加入签名的array key值
 ksort($data);
-$noarr = array('reserved1', 'reserved2', 'reserved3', 'sign');//不加入签名的array key值
-$signtext = '';
+$signtext = "";
 foreach ($data as $arr_key => $arr_val) {
 	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-		$signtext .= $arr_key . '=>' . $arr_val . '&';
+		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;//验签字串
-//write_log("signtext=" . $signtext);
+$signtext = substr($signtext, 0, -1).'&key='.$pay_mkey;//验签字串
+//write_log("signtext=".$signtext);
 $mysign = strtoupper(md5($signtext));//签名
-//write_log("mysign=" . $mysign);
+//write_log("mysign=".$mysign);
+
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -88,6 +95,7 @@ if ($success_msg == $success_code) {
 	}
 } else {
 	echo ("交易失败");
+	//write_log("交易失败");
 	exit;
 }
 

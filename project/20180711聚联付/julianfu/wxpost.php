@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://scckym.com/Pay_Index.html';
+$form_url = 'http://www.i3pay.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -101,16 +101,19 @@ $data = array(
   "pay_bankcode" => '',//银行编码 快捷913
   "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
   "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额：单位/元
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['pay_bankcode'] = '913'; //快捷913
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['pay_bankcode'] = '910'; //910	京东支付
+} elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+  $scan = 'bd';
+  $data['pay_bankcode'] = '909';//909	百度钱包
 } else {
-  $scan = 'wy';
-  $data['pay_bankcode'] = '907';//907	网银支付
+  $scan = 'wx';
+  $data['pay_bankcode'] = '902';//902	微信扫码支付
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -135,7 +138,6 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-echo $signtext;
 $data['pay_md5sign'] = $sign; 
 
 #curl获取响应值
