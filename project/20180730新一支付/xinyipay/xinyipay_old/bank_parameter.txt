@@ -1,0 +1,15 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','工商银行','9040');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','光大银行','9002');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','广发银行','9012');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','华夏银行','9003');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','建设银行','9008');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','交通银行','9005');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','民生银行','9010');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','农业银行','9009');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','平安银行','9013');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','浦发银行','9020');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','兴业银行','9015');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','邮政储蓄银行','9006');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','招商银行','9004');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','中国银行','9021');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('新一支付','中信银行','9001');

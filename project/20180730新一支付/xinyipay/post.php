@@ -1,6 +1,5 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
@@ -77,7 +76,6 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
@@ -103,7 +101,7 @@ $data = array(
   "fee_type" => 'CNY', //货币类型
   "total_amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //订单金额
   "out_trade_no" => $order_no, //商户订单号
-  "device_info" => getClientIp(), //设备号
+  "device_info" => '0', //设备号
   "notify_url" => $merchant_url, //通知地址
   "body" => 'body', //商品描述
   "attach" => '', //附加信息
@@ -139,18 +137,6 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
-
-// exit;
 
 #跳轉方法
 ?>
