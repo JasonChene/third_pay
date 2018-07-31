@@ -147,7 +147,7 @@ if (!_is_mobile()) {
   #跳转
   if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
     $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
   }else {
     echo '错误'. "<br>";
     echo '错误代码:' . $resarr['errcode'] . "<br>";

@@ -145,7 +145,7 @@ if (!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null)
   if (_is_mobile()) {
     $jumpurl = $decrypted;
   }else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
   }
 }else {
   echo '错误代码:' . $resarr['errcode'] . "<br>";

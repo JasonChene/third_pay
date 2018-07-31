@@ -160,7 +160,7 @@ if (!_is_mobile()) {
   if ($scan == 'qq' || $scan == 'jd') {
     if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
       $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
     }else {
       echo '错误'. "<br>";
       echo '错误代码:' . $resarr['errcode'] . "<br>";
@@ -170,7 +170,7 @@ if (!_is_mobile()) {
   }else{
     if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
       $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . $decrypted;
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
     }else {
       echo '错误'. "<br>";
       echo '错误代码:' . $resarr['errcode'] . "<br>";
@@ -184,7 +184,7 @@ if (!_is_mobile()) {
     parse_str($res, $resarr);
     if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
       $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
-      $jumpurl = $decrypted;
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
     }else {
       echo '错误'. "<br>";
       echo '错误代码:' . $resarr['errcode'] . "<br>";

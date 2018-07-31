@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -47,19 +48,14 @@ function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  // curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
-  // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded','Content-Length: ' . strlen($data)));
+  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt ($ch, CURLOPT_REFERER, $url);
   $tmpInfo = curl_exec($ch);
-  // $tmpInfo = curl_getinfo($ch);
   if (curl_errno($ch)) {
     return curl_error($ch);
   }
@@ -79,13 +75,11 @@ $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 $stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
-$idArray = explode("###", $pay_mkey);
-$md5key = $idArray[0];//md5密钥
-$des_key = $idArray[1];//des密钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
@@ -94,37 +88,27 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
+$form_url = 'https://scckym.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "cmd" => '',
-  "version" => '2.0',
-  "hmac" => '',
-  "appid" => $pay_mid, //商户号
-  "ordertime" => date("YmdHis"),
-  "userid" => $pay_account,
-  "apporderid" => $order_no,//商户流水号
-  "orderbody" => 'pay',
-  "amount" => $mymoney,//订单金额：单位/元
-  "notifyurl" => $merchant_url//通知地址
+  "pay_memberid" => $pay_mid, //商户号
+  "pay_orderid" => $order_no,//上送订单号唯一, 字符长度20
+  "pay_applydate" => date('Y-m-d H:i:s'),//时间格式：2016-12-26 18:18:18
+  "pay_bankcode" => '',//银行编码 快捷913
+  "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
+  "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
+  "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-
-$form_url = 'http://47.90.116.46:18000/GW/gw.inter';
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['cmd'] = 'PAYJD';
-  if (_is_mobile()) {
-    $form_url = "http://zs.qilijiakeji.com:18000/GW/payh5jd.do";
-    $data['tradetype'] = '2';
-  }
-} else {
-  $scan = 'wx';
-  $data['cmd'] = 'PAYCSB';
-  $data['custip'] = getClientIp();
+$scan = 'zfb';
+$data['pay_bankcode'] = '903';//903	支付宝扫码支付
+if (_is_mobile()) {
+  $data['pay_bankcode'] = '904';//904	支付宝手机
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -137,56 +121,25 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-
-$data = array_filter($data);
 ksort($data);
-$signature = sprintf('%s%s', urldecode(http_build_query($data)), $md5key);
-$data['hmac'] = md5($signature);
-
-if (!_is_mobile()) {
-  #curl获取响应值
-  $res = curl_post($form_url, http_build_query($data));
-  parse_str($res, $resarr);
-  #跳转
-  if ($scan == 'qq' || $scan == 'jd') {
-    if(!empty($resarr) && $resarr['codeurl'] != null && $resarr['codeurl'] != 'null'){
-      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['codeurl'])), 'des-ecb', $des_key);
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
-    }else {
-      echo '错误'. "<br>";
-      echo '错误代码:' . $resarr['errcode'] . "<br>";
-      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
-      exit;
-    } 
-  }else{
-    if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
-      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
-    }else {
-      echo '错误'. "<br>";
-      echo '错误代码:' . $resarr['errcode'] . "<br>";
-      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
-      exit;
-    } 
-  }
-}else {
-  if ($scan == 'wx') {
-    $res = curl_post($form_url, http_build_query($data));
-    parse_str($res, $resarr);
-    if(!empty($resarr) && $resarr['payurl'] != 'null' && $resarr['payurl'] != null){
-      $decrypted = openssl_decrypt(base64_encode(hex2bin($resarr['payurl'])), 'des-ecb', $des_key);
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($decrypted);
-    }else {
-      echo '错误'. "<br>";
-      echo '错误代码:' . $resarr['errcode'] . "<br>";
-      echo '错误讯息:' . $resarr['errdesc'] . "<br>";
-      exit;
-    } 
-  }else {
-    $jumpurl = $form_url;
-    $form_data = $data;
+$noarr = array('pay_md5sign');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
+
+
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$sign = strtoupper(md5($signtext));
+echo $signtext;
+$data['pay_md5sign'] = $sign; 
+
+#curl获取响应值
+#跳转
+$jumpurl = $form_url;
+$form_data = $data;
 #跳轉方法
 
 ?>

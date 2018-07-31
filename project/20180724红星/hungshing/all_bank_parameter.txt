@@ -1,0 +1,17 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','北京银行','BJBANK');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','渤海银行','CBHB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','光大银行','CEB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','广发银行','CGB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','华夏银行','HXB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','交通银行','BCOM');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','平安银行','PABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','浦发银行','SPDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','兴业银行','CIB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','邮政储蓄银行','PSBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','招商银行','CMB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','中国银行','BOC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('红星','中信银行','CITIC');
