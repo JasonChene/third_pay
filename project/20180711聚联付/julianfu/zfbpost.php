@@ -62,10 +62,14 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://www.julianfu.com/Pay_Index.html';//扫码提交地址
+$form_url = 'http://www.i3pay.com/Pay_Index.html';//扫码提交地址
 $scan = 'zfb';
+$data['pay_bankcode'] = '903';//903	支付宝扫码支付
 $bankname = $pay_type . "->支付宝在线充值";
 $payType = $pay_type . "_zfb";
+if (_is_mobile()) {
+  $data['pay_bankcode'] = '904';//904	支付宝WAP/H5
+}
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -89,36 +93,57 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['pay_md5sign'] = $sign;
-$data_str = http_build_query($data);
+// $data_str = http_build_query($data);
 
 #curl获取响应值
-$res = curl_post($form_url, $data_str);
-$row = json_decode($res, 1);
+// $res = curl_post($form_url, $data_str);
+// $row = json_decode($res, 1);
 
 #跳转
-if ($row['returncode'] != '00') {
-  echo '错误代码:' . $row['returncode'] . "\n";
-  echo '错误讯息:' . $row['msg'] . "\n";
-  exit;
-} else {
-  $qrcodeUrl = $row['qrcode'];
-  if (!_is_mobile()) {
-    if (strstr($qrcodeUrl, "&")) {
-      $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-    } else {
-      $code = $qrcodeUrl;
-    }
-    $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
-  } else {
-    $jumpurl = $qrcodeUrl;
-  }
-}
+// if ($row['returncode'] != '00') {
+//   echo '错误代码:' . $row['returncode'] . "\n";
+//   echo '错误讯息:' . $row['msg'] . "\n";
+//   exit;
+// } else {
+//   $qrcodeUrl = $row['qrcode'];
+//   if (!_is_mobile()) {
+//     if (strstr($qrcodeUrl, "&")) {
+//       $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+//     } else {
+//       $code = $qrcodeUrl;
+//     }
+//     $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+//   } else {
+//     $jumpurl = $qrcodeUrl;
+//   }
+// }
+$jumpurl = $form_url;
+$form_data = $data;
 
 
 
 #跳轉方法
-header("Location: $jumpurl");
-exit;
+
 ?>
-
-
+<html>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if (isset($form_data)) {
+        foreach ($form_data as $arr_key => $arr_value) {
+          ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php 
+    }
+  } ?>
+    </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
+</html>
