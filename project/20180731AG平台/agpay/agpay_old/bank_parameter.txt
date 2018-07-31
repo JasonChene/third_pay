@@ -1,0 +1,16 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','北京银行','10016');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','工商银行','10001');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','光大银行','10010');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','广发银行','10007');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','华夏银行','10014');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','建设银行','10004');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','交通银行','10005');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','民生银行','10009');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','农业银行','10002');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','平安银行','10011');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','浦发银行','10012');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','兴业银行','10015');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','邮政储蓄银行','10013');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','招商银行','10006');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','中国银行','10003');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('AG平台','中信银行','10008');
