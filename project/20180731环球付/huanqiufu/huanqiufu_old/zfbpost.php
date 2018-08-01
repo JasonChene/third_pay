@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=UTF-8");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../moneyfunc.php");
 
 $top_uid = $_REQUEST['top_uid'];
@@ -8,7 +8,7 @@ $top_uid = $_REQUEST['top_uid'];
 $pay_type = urldecode($_REQUEST['pay_type']);
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -49,16 +49,12 @@ $signtext2 = substr($signtext, 0, -1) . $pay_mkey;
 
 $sign = md5($signtext2);
 $parms['sign'] = $sign;
-if (strstr($pay_type, "银联快捷")) {
-  $scan = 'ylkj';
-  $payType = $pay_type . "_ylkj";
-  $bankname = $pay_type . "->银联快捷在线充值";
-  $parms['pay_type'] = 'kuaijie';
-} else {
-  $scan = 'wy';
-  $payType = $pay_type . "_wy";
-  $bankname = $pay_type . "->网银在线充值";
-  $parms['pay_type'] = 'wangyin';
+$scan = 'zfb';
+$payType = $pay_type . "_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
+$parms['pay_type'] = 'zfb';
+if (_is_mobile()) {
+  $parms['pay_type'] = 'zfbh5';
 }
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', ''); //订单金额

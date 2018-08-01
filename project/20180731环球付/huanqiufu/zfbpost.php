@@ -49,16 +49,12 @@ $signtext2 = substr($signtext, 0, -1) . $pay_mkey;
 
 $sign = md5($signtext2);
 $parms['sign'] = $sign;
-if (strstr($pay_type, "银联快捷")) {
-  $scan = 'ylkj';
-  $payType = $pay_type . "_ylkj";
-  $bankname = $pay_type . "->银联快捷在线充值";
-  $parms['pay_type'] = 'kuaijie';
-} else {
-  $scan = 'wy';
-  $payType = $pay_type . "_wy";
-  $bankname = $pay_type . "->网银在线充值";
-  $parms['pay_type'] = 'wangyin';
+$scan = 'zfb';
+$payType = $pay_type . "_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
+$parms['pay_type'] = 'zfb';
+if (_is_mobile()) {
+  $parms['pay_type'] = 'zfbh5';
 }
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', ''); //订单金额

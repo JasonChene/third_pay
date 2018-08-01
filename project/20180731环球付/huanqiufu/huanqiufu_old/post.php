@@ -49,9 +49,17 @@ $signtext2 = substr($signtext, 0, -1) . $pay_mkey;
 
 $sign = md5($signtext2);
 $parms['sign'] = $sign;
-$payType = $pay_type . "_wy";
-$bankname = $pay_type . "->网银在线充值";
-
+if (strstr($pay_type, "银联快捷")) {
+  $scan = 'ylkj';
+  $payType = $pay_type . "_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+  $parms['pay_type'] = 'kuaijie';
+} else {
+  $scan = 'wy';
+  $payType = $pay_type . "_wy";
+  $bankname = $pay_type . "->网银在线充值";
+  $parms['pay_type'] = 'wangyin';
+}
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', ''); //订单金额
 $result_insert = insert_online_order($_REQUEST['S_Name'], $orderno, $mymoney, $bankname, $payType, $top_uid);
