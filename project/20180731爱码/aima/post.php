@@ -107,7 +107,7 @@ $data = array(
 #变更参数设置
 if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
-  $data['pay_bankcode'] = '908'; //快捷913
+  $data['pay_bankcode'] = '908'; //快捷908
 } else {
   $scan = 'wy';
   $data['pay_bankcode'] = '907';//907	网银支付
