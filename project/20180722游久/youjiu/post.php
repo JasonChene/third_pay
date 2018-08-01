@@ -88,8 +88,14 @@ $data = array(
 
 #变更参数设置
 $form_url = 'https://www.u9pay.com/Pay_Index.html';//支付网关地址
-$scan = 'wy';
-$data['pay_bankcode'] = '907';
+if (strstr($pay_type, "银联钱包")) {
+  $scan = 'yl';
+  $data['pay_bankcode'] = '911';
+}else {
+  $scan = 'ylkj';
+  $data['pay_bankcode'] = '907';
+}
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
