@@ -65,9 +65,17 @@ foreach ($_POST as $key => $value) {
 	$datakey[$key] = $value;
 	//write_log($key."=".$value);
 }
+$order_no = $datakey['orderNum'];
+$params = array(':m_order' => $order_no);
+$sql = "select operator from k_money where m_order=:m_order";
+$stmt = $mydata1_db->prepare($sql);
+$stmt->execute($params);
+$row = $stmt->fetch();
 
-#获取该订单的支付名称
-$params = array(':pay_type' => "嘉亿");
+//获取该订单的支付名称
+$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
+
+$params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
 // $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt = $mydata1_db->prepare($sql);

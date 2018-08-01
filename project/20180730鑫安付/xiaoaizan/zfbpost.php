@@ -91,13 +91,15 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$form_url = "http://www.xiaoaizan.cn/pay/json";
 #第三方参数设置
 $data = array(
-  "app_id	" => $pay_mid, 
+  "app_id" => $pay_mid, 
   "channel"=> "",
-  "order_sn	" => $order_no,
+  "order_sn" => $order_no,
   "amount" => $mymoney,
   "notify_url" => $merchant_url,
+  "return_url" => $return_url,
   "nonce_str" => $order_no,
   "sign" => ''
 );
@@ -133,8 +135,7 @@ $data['sign'] = $sign;
 $data_json = json_encode($data,320);
 #curl获取响应值
 $res = curl_post($form_url, $data_json);
-write_log($res);
-echo $res;exit;
+
 $row = json_decode($res, 1);
 #跳转
 if ($row['code'] != 200) {
