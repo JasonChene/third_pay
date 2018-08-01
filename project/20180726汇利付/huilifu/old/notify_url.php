@@ -3,12 +3,13 @@
 // include_once("../../../database/mysql.php");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-
+// write_log('notify');
 
 #接收资料
 $data = array();
 foreach ($_POST as $key => $value) {
 	$jsondata=$key;
+	// write_log('$jsondata'.$jsondata);
 }
 $data=json_decode($jsondata,1);//json回传资料
 foreach ($data as $key => $value) {
