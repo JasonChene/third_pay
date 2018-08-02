@@ -3,20 +3,20 @@ header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(_is_mobile()){
-    $form_url = './pay/ylh5post.php';
+    $form_url = './ylh5post.php';
   }elseif(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/ylfspost.php';
+    $form_url = './ylfspost.php';
   }else{
-    $form_url = './pay/ylbspost.php';
+    $form_url = './ylbspost.php';
   }
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")){
   if(_is_mobile()){
-    $form_url = './pay/ylkjh5post.php';
+    $form_url = './ylkjh5post.php';
   }else{
-    $form_url = './pay/ylkjpost.php';
+    $form_url = './ylkjpost.php';
   }
 }else{
-  $form_url = './pay/wypost.php';
+  $form_url = './wypost.php';
 }
 
 ?>

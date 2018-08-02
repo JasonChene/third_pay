@@ -3,35 +3,35 @@ header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if(strstr($_REQUEST['pay_type'], "京东钱包")){
   if(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/jdfspost.php';
+    $form_url = './jdfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './pay/jdh5post.php';
+    $form_url = './jdh5post.php';
   }else{
-    $form_url = './pay/jdbspost.php';
+    $form_url = './jdbspost.php';
   }
 }elseif(strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")){
   if(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/qqfspost.php';
+    $form_url = './qqfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './pay/qqh5post.php';
+    $form_url = './qqh5post.php';
   }else{
-    $form_url = './pay/qqbspost.php';
+    $form_url = './qqbspost.php';
   }
 }elseif(strstr($_REQUEST['pay_type'], "百度钱包")){
   if(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/bdfspost.php';
+    $form_url = './bdfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './pay/bdh5post.php';
+    $form_url = './bdh5post.php';
   }else{
-    $form_url = './pay/bdbspost.php';
+    $form_url = './bdbspost.php';
   }
 }else{
   if(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/wxfspost.php';
+    $form_url = './wxfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './pay/wxh5post.php';
+    $form_url = './wxh5post.php';
   }else{
-    $form_url = './pay/wxbspost.php';
+    $form_url = './wxbspost.php';
   }
 }
 

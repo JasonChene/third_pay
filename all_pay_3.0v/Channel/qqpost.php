@@ -2,11 +2,11 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if(_is_mobile()){
-  $form_url = './qqh5post.php';
+  $form_url = './pay/qqh5post.php';
 }elseif(strstr($_REQUEST['pay_type'], "条码")){
-  $form_url = './qqfspost.php';
+  $form_url = './pay/qqfspost.php';
 }else{
-  $form_url = './qqbspost.php';
+  $form_url = './pay/qqbspost.php';
 }
 
 ?>

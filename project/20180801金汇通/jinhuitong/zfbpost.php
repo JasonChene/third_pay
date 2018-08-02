@@ -1,22 +1,12 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
-if (strstr($_REQUEST['pay_type'], "银联钱包")){
-  if(_is_mobile()){
-    $form_url = './pay/ylh5post.php';
-  }elseif(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './pay/ylfspost.php';
-  }else{
-    $form_url = './pay/ylbspost.php';
-  }
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")){
-  if(_is_mobile()){
-    $form_url = './pay/ylkjh5post.php';
-  }else{
-    $form_url = './pay/ylkjpost.php';
-  }
+if(_is_mobile()){
+  $form_url = './zfbh5post.php';
+}elseif(strstr($_REQUEST['pay_type'], "条码")){
+  $form_url = './zfbfspost.php';
 }else{
-  $form_url = './pay/wypost.php';
+  $form_url = './zfbbspost.php';
 }
 
 ?>
