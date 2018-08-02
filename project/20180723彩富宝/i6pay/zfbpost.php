@@ -148,6 +148,8 @@ if ($row['return_code'] != true) {
     }else {
         if(_is_mobile()){
             $jumpurl = $row['code_url'];
+            header('Location:'.$jumpurl);
+            exit;
         }else{
             $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['code_url']);
         }
