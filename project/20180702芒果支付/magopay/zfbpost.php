@@ -69,7 +69,11 @@ if ($pay_mid == "" || $pay_mkey == "") {
 //芒果支付參數設定
 $form_url = 'http://www.magopay.net/api/trans/pay';  //提交地址
 $member_code = $pay_mid;//商戶號
-$type_code = 'zfbbs'; //支付宝被扫
+if (_is_mobile()) {
+  $type_code = 'zfbh5'; //支付宝h5
+}else {
+  $type_code = 'zfbbs'; //支付宝被扫
+}
 
 $down_sn = date("YmdHis") . substr(microtime(), 2, 5) . rand(1, 9);  //隨機生成商户訂單編號
 $subject = 'OhYesBaby';
@@ -138,7 +142,11 @@ $row = json_decode($return, true); //将返回json数据转换为数组
 //echo $return;
 
 if ($row['code'] == '0000') {
+  if (_is_mobile()) {
+    header("location:" . $row['code_url']);
+  }else {
     header("location:" . '../qrcode/qrcode.php?type=zfb&code=' . $row['code_url']);
+  }
 }else {
   echo $row['code']."<br>";
   echo $row['msg'];
