@@ -48,7 +48,7 @@ $data = array(
 "notifyUrl" => $notify_url,
 "operationCode" => 'order.createOrder',
 "version" => '1.0',
-"date" => 'time()',
+"date" => time(),
 "subject" => 'pay',
 "body" => 'pay',
 "paymentType" => 'WEIXIN_QRCODE',
@@ -58,7 +58,7 @@ $data = array(
 "str_arr" => array(
 "amount" => $MOAmount,
 "body" => "pay",
-"date" => "time()",
+"date" => time(),
 "frontUrl" => $return_url,
 "merchantNo" => $pay_mid,
 "notifyUrl" => $notify_url,
@@ -101,13 +101,12 @@ foreach ($data as $arr_key => $arr_value) {
   }
 }
 foreach ($data as $arr_key => $arr_value) {
-  $data_str = $arr_key.'='.$arr_value.'&';
+  $data_str .= $arr_key.'='.$arr_value.'&';
 }
 $data_str = substr($data_str,0,-1);
 
-
 #curl获取响应值
-$res = curl_post($form_url,$data_str,POST);
+$res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['payCode'];

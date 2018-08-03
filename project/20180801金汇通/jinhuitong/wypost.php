@@ -80,7 +80,6 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"" => '',
 "bankCode" => $bank_code,
 );
 #变更参数设定

@@ -1,26 +1,30 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
 // include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
-#接收资料
-#REQUEST方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+
+#input方法
+// write_log('input方法');
+$input_data=file_get_contents("php://input");
+// write_log($input_data);
+$res=json_decode($input_data,1);//json回传资料
+foreach ($res as $key => $value) {
 	$data[$key] = $value;
-	//write_log("return:".$key."=".$value);
+	// write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['orderid']; //订单号
-	$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-	$success_msg = $data['returncode'];//成功讯息
-	$success_code = "00";//文档上的成功讯息
+	$order_no = $data['tradeNo']; //订单号
+	$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
+	$success_msg = $data['status'];//成功讯息
+	$success_code = "0";//文档上的成功讯息
 	$sign = $data['sign'];//签名
-	$echo_msg = "ok";//回调讯息
+	$echo_msg = "100";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -43,6 +47,7 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
+		write_log('非法提交参数');
 		exit;
 	}
 
@@ -55,10 +60,10 @@ if(!empty($data)){
 			$signtext .= $arr_key . '=' . $arr_val . '&';
 		}
 	}
-	$signtext = substr($signtext, 0, -1).'&key='.$pay_mkey;//验签字串
-	//write_log("return:signtext=".$signtext);
+	$signtext = substr($signtext, 0, -1).'&appkey='.$pay_mkey;//验签字串
+	// write_log("signtext:".$signtext);
 	$mysign = strtoupper(md5($signtext));//签名
-	//write_log("return:mysign=".$mysign);
+	// write_log("mysign:".$mysign);
 
 
 	#到账判断
