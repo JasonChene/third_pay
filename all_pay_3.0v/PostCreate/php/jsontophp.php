@@ -250,7 +250,7 @@ if (strstr($req['postmethod'],"HEADER")){
     echo '  }'."\n";
     echo '}'."\n";
     echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
-    echo '  $data_str = $arr_key.\'=\'.$arr_value.\'&\';'."\n";
+    echo '  $data_str .= $arr_key.\'=\'.$arr_value.\'&\';'."\n";
     echo '}'."\n";
     echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
     if ($req['req_structure'] == 'JSON') {
@@ -261,7 +261,7 @@ if (strstr($req['postmethod'],"HEADER")){
     if ($req['req_structure'] == 'JSON') {
       echo '$res = curl_post($form_url,$data_json,"'.$req["req_structure"].'-'.$req["postmethod"].'");'."\n";
     }else {
-      echo '$res = curl_post($form_url,$data_str,'.$req["postmethod"].');'."\n";
+      echo '$res = curl_post($form_url,$data_str,"'.$req["postmethod"].'");'."\n";
     }
     if($req['res_structure']=="JSON"){
         echo '$res = json_decode($res,1);'."\n";
