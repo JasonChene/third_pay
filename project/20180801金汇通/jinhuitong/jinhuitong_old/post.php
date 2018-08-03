@@ -2,21 +2,25 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
-  if(_is_mobile()){
-    $form_url = './ylh5post.php';
-  }elseif(strstr($_REQUEST['pay_type'], "条码")){
-    $form_url = './ylfspost.php';
+  if(strstr($_REQUEST['pay_type'], "反扫")){
+    $form_url = './post/ylfspost.php';
+  }elseif(_is_mobile()){
+    $form_url = './post/ylh5post.php';
   }else{
-    $form_url = './ylbspost.php';
+    $form_url = './post/ylbspost.php';
   }
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")){
   if(_is_mobile()){
-    $form_url = './ylkjh5post.php';
+    $form_url = './post/ylkjh5post.php';
   }else{
-    $form_url = './ylkjpost.php';
+    $form_url = './post/ylkjpost.php';
   }
 }else{
-  $form_url = './wypost.php';
+  if(_is_mobile()){
+    $form_url = './post/wyh5post.php';
+  }else{
+    $form_url = './post/wypost.php';
+  }
 }
 
 ?>
