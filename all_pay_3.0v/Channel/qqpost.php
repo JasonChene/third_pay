@@ -1,12 +1,12 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
-if(_is_mobile()){
-  $form_url = './pay/qqh5post.php';
-}elseif(strstr($_REQUEST['pay_type'], "条码")){
-  $form_url = './pay/qqfspost.php';
+if(strstr($_REQUEST['pay_type'], "反扫")){
+  $form_url = './post/qqfspost.php';
+}elseif(_is_mobile()){
+  $form_url = './post/qqh5post.php';
 }else{
-  $form_url = './pay/qqbspost.php';
+  $form_url = './post/qqbspost.php';
 }
 
 ?>
