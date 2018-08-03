@@ -101,13 +101,13 @@ $data = array(
   "pay_bankcode" => '',//银行编码 快捷913
   "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
   "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额：单位/元
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
 if (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
-  $data['pay_bankcode'] = '908'; //快捷908
+  $data['pay_bankcode'] = '908'; //908
 } else {
   $scan = 'wy';
   $data['pay_bankcode'] = '907';//907	网银支付

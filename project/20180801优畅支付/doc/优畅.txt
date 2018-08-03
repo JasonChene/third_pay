@@ -6,3 +6,4 @@
 ÍË¿îÃÜÂë:
 ³õÊ¼ÃÜÔ¿£ºE4C50E9FA1CB898821D078CF1A39B439
 µÇÂ½µØÖ·£ºhttp://cms.bosc.uline.cc/merchant/login
+/wechat/orders

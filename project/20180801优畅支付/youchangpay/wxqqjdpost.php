@@ -48,6 +48,7 @@ function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,"Content-type: text/xml");
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -70,6 +71,19 @@ function QRcodeUrl($code)
   }
   return $code2;
 }
+function toXml($arr){
+  $xml = "<xml>";
+  foreach ($arr as $key=>$val)
+  {
+      if (is_numeric($val)){
+          $xml.="<".$key.">".$val."</".$key.">";
+      }else{
+           $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+      }
+  }
+  $xml.="</xml>";
+  return $xml;
+}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -88,35 +102,38 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://www.0351nfc.com/Pay_Index.html';
+$form_url = '';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid, //商户号
-  "pay_orderid" => $order_no,//上送订单号唯一, 字符长度20
-  "pay_applydate" => date('Y-m-d H:i:s'),//时间格式：2016-12-26 18:18:18
-  "pay_bankcode" => '',//银行编码 快捷913
-  "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
-  "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
-  "pay_md5sign" => '',//MD5签名
+  "mch_id" => $pay_mid, 
+  "nonce_str" => $order_no,
+  "sign" => "",
+  "body" => "pay",
+  "out_trade_no" => $order_no,
+  "total_fee" => (int)number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  "spbill_create_ip" => getClientIp(),
+  "notify_url" => $merchant_url,
+  "trade_type" => "",
+  "payment_code" => "",
 );
 #变更参数设置
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
-  $data['pay_bankcode'] = '912'; //912	京东支付
-} elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
-  $scan = 'bd';
-  $data['pay_bankcode'] = '911';//911	百度钱包
+  $data['order_type'] = '1';
+  unset($data['treade_type']);
+  $data['payment_code'] = 'JD_OFFLINE_NATIVE'; 
+} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['trade_type'] = "JSAPI";
+  $data['payment_code'] = 'QQ_OFFLINE_NATIVE';
 } else {
   $scan = 'wx';
-  $data['pay_bankcode'] = '902';//902	微信扫码支付
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '903';//903	微信h5支付
-  }
+  $data['trade_type'] = "APP";
+  $data['payment_code'] = 'WX_OFFLINE_NATIVE';
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -130,7 +147,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign');
+$noarr = array('sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -138,15 +155,31 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 
-
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign; 
+$data['sign'] = $sign; 
 
+$xmldata = toXml($data);
 #curl获取响应值
+$res = curl_post($form_url,$xmldata);
+$res = simplexml_load_string($res,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
+$result_code = $res->result_code;
+$return_code = $res->return_code;
+$return_msg = $res->return_msg;
+$code_url = $res->code_url;
 #跳转
-$jumpurl = $form_url;
-$form_data = $data;
+if ($result_code != '0000') {
+  echo '错误代码:' . $return_code . "<br>";
+  echo '错误讯息:' . $return_msg . "<br>";
+  exit;
+} else {
+
+  if (_is_mobile()) {
+    $jumpurl = $code_url;
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($code_url);
+  }
+}
 #跳轉方法
 
 ?>
@@ -172,4 +205,3 @@ $form_data = $data;
     </script>
   </body>
 </html>
-

@@ -101,16 +101,13 @@ $data = array(
   "pay_bankcode" => '',//银行编码 快捷913
   "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
   "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额：单位/元
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
   $data['pay_bankcode'] = '912'; //912	京东支付
-} elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_bankcode'] = '910';//910	QQ扫码支付
 } elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
   $scan = 'bd';
   $data['pay_bankcode'] = '911';//911	百度钱包
