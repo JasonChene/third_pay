@@ -146,35 +146,17 @@ if ($row['return_code'] != true) {
         echo  '错误讯息:' . $row['err_code_des']."<br>";
         exit;
     }else {
-        if(_is_mobile()){
-            $jumpurl = $row['code_url'];
-        }else{
-            $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['code_url']);
-        }
+      if(_is_mobile()){
+        $jumpurl = $row['code_url'];
+        header("Location: $jumpurl");
+        exit;
+      }else{
+        $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['code_url']);
+        header("Location: $jumpurl");
+        exit;
+    }
     
     }
 }
 
-#跳轉方法
-
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if(isset($form_data)){
-        foreach ($form_data as $arr_key => $arr_value) {
-      ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php }} ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
