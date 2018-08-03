@@ -79,7 +79,6 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"" => '',
 );
 #变更参数设定
 $payType = $pay_type."_zfb";
@@ -101,6 +100,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
+echo "<pre>";
+var_dump($data);
 $form_data = $data;
 $jumpurl = $form_url;
 ?>
