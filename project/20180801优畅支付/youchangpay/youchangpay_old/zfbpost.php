@@ -101,12 +101,15 @@ $data = array(
   "pay_bankcode" => '',//银行编码 快捷913
   "pay_notifyurl" => $merchant_url,//通知地址 服务端返回地址.（POST返回数据）
   "pay_callbackurl" => $return_url,//页面跳转通知 （POST返回数据）
-  "pay_amount" => number_format($_REQUEST['MOAmount'], 4, '.', ''),//订单金额：单位/元
+  "pay_amount" => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额：单位/元
   "pay_md5sign" => '',//MD5签名
 );
 #变更参数设置
-$scan = 'qq';
-$data['pay_bankcode'] = '910';//910	QQ扫码支付
+$scan = 'zfb';
+$data['pay_bankcode'] = '904';//904	支付宝扫码支付
+if (_is_mobile()) {
+  $data['pay_bankcode'] = '905';//905	支付宝手机
+}
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
