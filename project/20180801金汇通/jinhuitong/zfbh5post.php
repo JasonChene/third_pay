@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.865805.com/api/payment/createH5Order';
+$form_url = 'http://www.865805.com/api/payment/createOrder';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -51,7 +51,7 @@ $data = array(
 "date" => time(),
 "subject" => 'pay',
 "body" => 'pay',
-"paymentType" => 'ALIPAY_H5',
+"paymentType" => 'ALIPAY_QRCODE',
 "frontUrl" => $return_url,
 "spbillCreateIp" => $client_ip,
 "sign" => array(
@@ -63,7 +63,7 @@ $data = array(
 "merchantNo" => $pay_mid,
 "notifyUrl" => $notify_url,
 "operationCode" => "order.createOrder",
-"paymentType" => "ALIPAY_H5",
+"paymentType" => "ALIPAY_QRCODE",
 "spbillCreateIp" => $client_ip,
 "subject" => "pay",
 "tradeNo" => $order_no,
@@ -100,10 +100,24 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-echo "<pre>";
-var_dump($data);
-$form_data = $data;
-$jumpurl = $form_url;
+foreach ($data as $arr_key => $arr_value) {
+  $data_str .= $arr_key.'='.$arr_value.'&';
+}
+$data_str = substr($data_str,0,-1);
+
+
+#curl获取响应值
+$res = curl_post($form_url,$data_str,"POST");
+$res = json_decode($res,1);
+#跳转qrcode
+$url = $res['payCode'];
+if ($res['code'] == '100') {
+    $qrurl = QRcodeUrl($url);
+    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+}else{
+  echo "错误码：".$res['code']."错误讯息：".$res['msg'];
+  exit();
+}
 ?>
 <html>
   <head>
