@@ -236,6 +236,11 @@ echo '}'."\n\n\n";
 #签名排列，可自行组字串或使用http_build_query($array)
 echo '#签名排列，可自行组字串或使用http_build_query($array)'."\n";
 if (strstr($req['postmethod'],"HEADER")){
+    echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
+    echo '  if (is_array($arr_value)) {'."\n";
+    echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
+    echo '  }'."\n";
+    echo '}'."\n";
     echo '$form_data = $data;'."\n";
     echo '$jumpurl = $form_url;'."\n";
 }else{
@@ -267,27 +272,28 @@ if (strstr($req['postmethod'],"HEADER")){
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
         echo '$res=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
+    #跳转qrcode
+    echo '#跳转qrcode'."\n";
+    $response_key = '$url = $res';
+    for ($i=0; $i < intval($req['response_key'][0]); $i++) {
+      $response_key .= '[\''.$req['response_key'][1+$i].'\']';
+    }
+    $response_key .= ';';
+    echo $response_key."\n";
+    echo 'if ($res[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+    if (strstr($req['payment'],"bs")) {
+      echo '    $qrurl = QRcodeUrl($url);'."\n";
+      echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
+    }else {
+      echo '    $jumpurl = $url;'."\n";
+    }
+    echo '}else{'."\n";
+    echo '  echo "错误码：".$res[\''.$req['Error_No'].'\']."错误讯息：".$res[\''.$req['Error_Msg'].'\'];'."\n";
+    echo '  exit();'."\n";
+    echo '}'."\n";
 }
 
-  #跳转qrcode
-  echo '#跳转qrcode'."\n";
-  $response_key = '$url = $res';
-  for ($i=0; $i < intval($req['response_key'][0]); $i++) {
-    $response_key .= '[\''.$req['response_key'][1+$i].'\']';
-  }
-  $response_key .= ';';
-  echo $response_key."\n";
-  echo 'if ($res[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
-  if (strstr($req['payment'],"bs")) {
-    echo '    $qrurl = QRcodeUrl($url);'."\n";
-    echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
-  }else {
-    echo '    $jumpurl = $url;'."\n";
-  }
-  echo '}else{'."\n";
-  echo '  echo "错误码：".$res[\''.$req['Error_No'].'\']."错误讯息：".$res[\''.$req['Error_Msg'].'\'];'."\n";
-  echo '  exit();'."\n";
-  echo '}'."\n";
+  
 
 
 echo '?>'."\n";

@@ -92,7 +92,19 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     }
     return $sign;
 }
-
+function toXml($arr){
+  $xml = "<xml>";
+  foreach ($arr as $key=>$val)
+  {
+      if (is_numeric($val)){
+          $xml.="<".$key.">".$val."</".$key.">";
+      }else{
+           $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+      }
+  }
+  $xml.="</xml>";
+  return $xml;
+}
 #curl请求设定
 function curl_post($url, $data ,$str){
   $ch = curl_init();
