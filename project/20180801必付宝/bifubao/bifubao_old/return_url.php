@@ -1,28 +1,3 @@
-<? header("content-Type: text/html; charset=UTF-8"); ?>
-<?php
-
-#接收资料
-#input方法
-$input_data = file_get_contents("php://input");
-$res = json_decode($input_data, 1);//json回传资料
-foreach ($res as $key => $value) {
-	$data[$key] = $value;
-}
-
-#设定固定参数
-$order_no = $data['SYS_CODE']; //订单号
-$mymoney = number_format($data['TOTAL_SUM'] / 100, 2, '.', ''); //订单金额
-$success_msg = $data['STATUS'];//成功讯息
-$success_code = "1";//文档上的成功讯息
-
-#到账判断
-if ($success_msg == $success_code) {
-	$message = ("支付成功");
-} else {
-	$message = ("交易失败");
-}
-?>
-
 <!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
 <!DOCTYPE html>
 
@@ -40,18 +15,6 @@ if ($success_msg == $success_code) {
 	<table width="98%" border="1" cellspacing="0" cellpadding="3" bordercolordark="#fff" bordercolorlight="#d3d3d3" style="margin: 10px auto;">
     <tr>
 			<td colspan="2" class="tips">处理结果</td>
-		</tr>
-		<tr>
-			<td style="width: 120px; text-align: right;">平台订单号</td>
-			<td style="padding-left: 10px;">
-				<label id="lborderno"><?php echo $order_no; ?></label>
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 120px; text-align: right;">充值金额</td>
-			<td style="padding-left: 10px;">
-				<label id="lbpayamount"><?php echo $mymoney; ?></label>
-			</td>
 		</tr>
 		<tr>
 			<td style="width: 120px; text-align: right;">处理结果</td>
