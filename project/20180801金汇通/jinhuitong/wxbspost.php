@@ -1,10 +1,10 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 金汇通
-#支付方式 : wy;
-include_once("../addsign.php");
-include_once("../../moneyfunc.php");
-include_once("../../../../database/mysql.php");
+#支付方式 : wx;
+include_once("./addsign.php");
+include_once("../moneyfunc.php");
+include_once("../../../database/mysql.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.865805.com/api/payment/createBankGatewayOrder';
+$form_url = 'http://www.865805.com/api/payment/createOrder';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -51,20 +51,19 @@ $data = array(
 "date" => time(),
 "subject" => 'pay',
 "body" => 'pay',
-"paymentType" => 'BANK_GATEWAY',
+"paymentType" => 'WEIXIN_QRCODE',
 "frontUrl" => $return_url,
 "spbillCreateIp" => $client_ip,
 "sign" => array(
 "str_arr" => array(
 "amount" => $MOAmount,
-"bankCode" => $bank_code,
 "body" => "pay",
 "date" => time(),
 "frontUrl" => $return_url,
 "merchantNo" => $pay_mid,
 "notifyUrl" => $notify_url,
 "operationCode" => "order.createOrder",
-"paymentType" => "BANK_GATEWAY",
+"paymentType" => "WEIXIN_QRCODE",
 "spbillCreateIp" => $client_ip,
 "subject" => "pay",
 "tradeNo" => $order_no,
@@ -80,11 +79,10 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"bankCode" => $bank_code,
 );
 #变更参数设定
-$payType = $pay_type."_wy";
-$bankname = $pay_type."->网银在线充值";
+$payType = $pay_type."_wx";
+$bankname = $pay_type."->微信在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -102,8 +100,23 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
-$jumpurl = $form_url;
+foreach ($data as $arr_key => $arr_value) {
+  $data_str .= $arr_key.'='.$arr_value.'&';
+}
+$data_str = substr($data_str,0,-1);
+
+#curl获取响应值
+$res = curl_post($form_url,$data_str,"POST");
+$res = json_decode($res,1);
+#跳转qrcode
+$url = $res['payCode'];
+if ($res['code'] == '100') {
+    $qrurl = QRcodeUrl($url);
+    $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+}else{
+  echo "错误码：".$res['code']."错误讯息：".$res['msg'];
+  exit();
+}
 ?>
 <html>
   <head>

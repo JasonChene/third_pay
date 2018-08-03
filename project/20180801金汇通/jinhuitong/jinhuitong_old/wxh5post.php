@@ -1,10 +1,10 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 金汇通
-#支付方式 : zfb;
-include_once("../addsign.php");
-include_once("../../moneyfunc.php");
-include_once("../../../../database/mysql.config.php");
+#支付方式 : wx;
+include_once("./addsign.php");
+include_once("../moneyfunc.php");
+include_once("../../../database/mysql.config.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.865805.com/api/payment/createOrder';
+$form_url = 'http://www.865805.com/api/payment/createH5Order';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -51,7 +51,7 @@ $data = array(
 "date" => time(),
 "subject" => 'pay',
 "body" => 'pay',
-"paymentType" => 'ALIPAY_QRCODE',
+"paymentType" => 'WEIXIN_H5',
 "frontUrl" => $return_url,
 "spbillCreateIp" => $client_ip,
 "sign" => array(
@@ -63,7 +63,7 @@ $data = array(
 "merchantNo" => $pay_mid,
 "notifyUrl" => $notify_url,
 "operationCode" => "order.createOrder",
-"paymentType" => "ALIPAY_QRCODE",
+"paymentType" => "WEIXIN_H5",
 "spbillCreateIp" => $client_ip,
 "subject" => "pay",
 "tradeNo" => $order_no,
@@ -81,8 +81,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_zfb";
-$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_wx";
+$bankname = $pay_type."->微信在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -100,24 +100,9 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-foreach ($data as $arr_key => $arr_value) {
-  $data_str .= $arr_key.'='.$arr_value.'&';
-}
-$data_str = substr($data_str,0,-1);
 
-
-#curl获取响应值
-$res = curl_post($form_url,$data_str,"POST");
-$res = json_decode($res,1);
-#跳转qrcode
-$url = $res['payCode'];
-if ($res['code'] == '100') {
-    $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-}else{
-  echo "错误码：".$res['code']."错误讯息：".$res['msg'];
-  exit();
-}
+$form_data = $data;
+$jumpurl = $form_url;
 ?>
 <html>
   <head>
