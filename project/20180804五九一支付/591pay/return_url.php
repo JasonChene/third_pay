@@ -51,7 +51,7 @@ if(!empty($data)){
 	$signtext = "";
 	$signtext .= 'out_trade_no=' . $data['out_trade_no'] . '&';
 	$signtext .= 'total_amount=' . $data['total_amount'] . '&';
-	$signtext .= 'trade_status=' . $data['trade_status'] . pay_mkey;
+	$signtext .= 'trade_status=' . $data['trade_status'] . $pay_mkey;
 	write_log("return::signtext=".$signtext);
 	$mysign = md5($signtext);//签名
 	write_log("return::mysign=".$mysign);

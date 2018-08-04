@@ -49,7 +49,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $signtext = "";
 $signtext .= 'out_trade_no=' . $data['out_trade_no'] . '&';
 $signtext .= 'total_amount=' . $data['total_amount'] . '&';
-$signtext .= 'trade_status=' . $data['trade_status'] . pay_mkey;
+$signtext .= 'trade_status=' . $data['trade_status'] .$pay_mkey;
 write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
 write_log("mysign=".$mysign);
