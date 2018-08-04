@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
+//include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 
@@ -42,7 +43,8 @@ if (function_exists("date_default_timezone_set")) {
 $pay_type = urldecode($_REQUEST['pay_type']);
 $params = array(':pay_type' => urldecode($_REQUEST['pay_type']));
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -55,9 +57,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 
+if (strstr($_REQUEST['pay_type'], "银联快捷")){
+  $scan = 'ylkj';
+}else {
+  $scan = 'wy';
+}
 
 // 參數設定
-$form_url = "http://api.xunchangtong.cn/gateway.do?m=order";
+if ($scan == 'ylkj') {
+  $form_url = "http://api.wachou.top/h5Quick.do";
+}else {
+  $form_url = "http://api.wachou.top/gateway.do?m=order";
+}
 $merchno = $pay_mid;
 $amount = $_REQUEST['MOAmount'];
 $traceno = getOrderNo();
@@ -69,17 +80,29 @@ $returnUrl = $return_url;
 
 
 
-
-$params = array(
-	"merchno" => $merchno,
-	"amount" => $amount,
-	"traceno" => $traceno,
-	"channel" => $channel,
-	"bankCode" => $bankCode,
-	"settleType" => $settleType,
-	"notifyUrl" => $notifyUrl,
-	"returnUrl" => $returnUrl
-);
+if ($scan == 'ylkj') {
+  $params = array(
+    "interType" => '2',
+    "merchno" => $merchno,
+    "traceno" => $traceno,
+    "amount" => $amount,
+    "settleType" => $settleType,
+    "cardType" => '1',//借记卡
+    "notifyUrl" => $notifyUrl,
+    "returnUrl" => $returnUrl
+  );
+}else {
+  $params = array(
+    "merchno" => $merchno,
+    "amount" => $amount,
+    "traceno" => $traceno,
+    "channel" => $channel,
+    "bankCode" => $bankCode,
+    "settleType" => $settleType,
+    "notifyUrl" => $notifyUrl,
+    "returnUrl" => $returnUrl
+  );
+}
 
 
 
@@ -94,8 +117,13 @@ $sign = md5($postData . $pay_mkey);
 
 $postData .= "signature=" . $sign;
 
-$payType = $pay_type."_wy";
-$bankname = $pay_type . "->网银在线充值";
+if ($scan == 'ylkj') {
+  $payType = $pay_type."_ylkj";
+  $bankname = $pay_type . "->银联快捷在线充值";
+}else {
+  $payType = $pay_type."_wy";
+  $bankname = $pay_type . "->网银在线充值";
+}
 
 
 

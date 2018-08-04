@@ -66,18 +66,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $url = "passivePay";
 $merchno = $pay_mid;
 $amount = $_REQUEST['MOAmount'];
-$authno = "2"; //商户网站与本系统平台间的被扫接口
+$authno = "2";
 $traceno = getOrderNo();
-$payT = "1"; //1-支付宝 2-微信 8-QQ钱包
+$payT = "2";
 $notifyUrl = $merchant_url;
 $goodsName = "test";
-$settleType = "1"; //扫码专用
+$settleType = "1";
 if (_is_mobile()) {
-	$authno = "4";  //商户网站与本系统平台间的WAP接口
+	$authno = "4";
 	$url = "wapPay";
 	$ip = getClientIp();
 }
-$form_url = "http://api.xunchangtong.cn/" . $url;
+$form_url = "http://api.wachou.top/" . $url;
 
 
 $params = array(
@@ -107,8 +107,8 @@ $sign = md5($postData . $pay_mkey);
 $postData .= "signature=" . $sign;
 
 
-$payType = $pay_type."_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type."_wx";
+$bankname = $pay_type . "->微信在线充值";
 
 $result_insert = insert_online_order($_REQUEST['S_Name'], $traceno, number_format($amount, 2, '.', ''), $bankname, $payType, $top_uid);
 
@@ -116,6 +116,7 @@ $result = curl_post($form_url, $postData);
 
 $response = iconv('GB2312', 'UTF-8', $result);
 $respJson = json_decode($response, 1);
+
 
 if ($result_insert == -1) {
   echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
@@ -128,7 +129,7 @@ if ( $respJson['respCode']=="00") {
 	if (_is_mobile()) {
 		header("location:" . $respJson["barCode"]);
 	}else {
-		header("location:" . '../qrcode/qrcode.php?type=zfb&code=' . QRcodeUrl($respJson["barCode"]));
+		header("location:" . '../qrcode/qrcode.php?type=wx&code=' . QRcodeUrl($respJson["barCode"]));
 	}
 }else{
   echo $respJson['message'];

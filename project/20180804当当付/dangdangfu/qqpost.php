@@ -77,7 +77,7 @@ if (_is_mobile()) {
 	$url = "wapPay";
 	$ip = getClientIp();
 }
-$form_url = "http://api.xunchangtong.cn/" . $url;
+$form_url = "http://api.wachou.top/" . $url;
 
 
 $params = array(
