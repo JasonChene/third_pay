@@ -1,0 +1,6 @@
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\bin\Demo_cs.dll.config
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\bin\Demo_cs.dll
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\bin\Demo_cs.pdb
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\obj\Debug\Demo_cs.dll
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\obj\Debug\Demo_cs.pdb
+C:\Users\Administrator\Desktop\qyDemo\c#\Demo_cs\obj\Debug\Demo_cs.csprojResolveAssemblyReference.cache
