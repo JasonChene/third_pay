@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('金汇通', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/jinhuitong/post.php', '/pay/jinhuitong/wxpost.php', '/pay/jinhuitong/zfbpost.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/notify_url.php', '/pay/jinhuitong/notify_url.php', '/pay/jinhuitong/notify_url.php', '1', '1', '/pay/jinhuitong/qqpost.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/notify_url.php');
+ VALUES ('591支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/591pay/post.php', '/pay/591pay/wxpost.php', '/pay/591pay/zfbpost.php', '/pay/591pay/return_url.php', '/pay/591pay/return_url.php', '/pay/591pay/return_url.php', '/pay/591pay/notify_url.php', '/pay/591pay/notify_url.php', '/pay/591pay/notify_url.php', '1', '1', '/pay/591pay/qqpost.php', '/pay/591pay/return_url.php', '/pay/591pay/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('金汇通', '1023554261293727744', '30D0D70F7A234C92B0BA61D3D7BE380B', NULL, 'http://pay7.5566205.com', '金汇通', '1', '1', '1', '金汇通', '1');
+ VALUES ('591支付', '1808030067', '0b85c4a2277dd8c7d51195a16dbb295b', NULL, 'http://pay7.5566205.com', '591支付', '1', '1', '1', '591支付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('金汇通', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/jinhuitong/post.php', '/pay/jinhuitong/wxpost.php', '/pay/jinhuitong/zfbpost.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/notify_url.php', '/pay/jinhuitong/notify_url.php', '/pay/jinhuitong/notify_url.php', '1', '1', '/pay/jinhuitong/qqpost.php', '/pay/jinhuitong/return_url.php', '/pay/jinhuitong/notify_url.php');
+ VALUES ('591支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/591pay/post.php', '/pay/591pay/wxpost.php', '/pay/591pay/zfbpost.php', '/pay/591pay/return_url.php', '/pay/591pay/return_url.php', '/pay/591pay/return_url.php', '/pay/591pay/notify_url.php', '/pay/591pay/notify_url.php', '/pay/591pay/notify_url.php', '1', '1', '/pay/591pay/qqpost.php', '/pay/591pay/return_url.php', '/pay/591pay/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('金汇通', '1023554261293727744', '30D0D70F7A234C92B0BA61D3D7BE380B', NULL, 'http://paytest.7k111.com', '金汇通', '1', '1', '1', '金汇通', '1');
+ VALUES ('591支付', '1808030067', '0b85c4a2277dd8c7d51195a16dbb295b', NULL, 'http://paytest.7k111.com', '591支付', '1', '1', '1', '591支付', '1');
