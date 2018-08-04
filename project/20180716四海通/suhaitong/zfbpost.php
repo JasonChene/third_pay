@@ -102,7 +102,12 @@ $data['sign'] = $sign;
 $geturl = $form_url.'?'.http_build_query($data);
 #curl获取响应值
 $res = curl_post($geturl,'');
-$row = json_decode($res,1);
+if (is_null(json_decode($res,1))) {
+  echo $res;
+}else {
+  $row = json_decode($res,1);
+  exit;
+}
 #跳转
 if ($row['rescode'] != '0000') {
   echo  '错误代码:' . $row['rescode']."\n<br>";
