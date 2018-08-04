@@ -9,7 +9,7 @@ $data = array();
 #request方法
 write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
-	// $data[$key] = $value;
+	$data[$key] = $value;
 	write_log($key."=".$value);
 }
 
@@ -20,7 +20,6 @@ $success_msg = $data['trade_status'];//成功讯息
 $success_code = "SUCCESS";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "SUCCESS";//回调讯息
-
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
