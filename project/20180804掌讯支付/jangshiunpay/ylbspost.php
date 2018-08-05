@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 掌讯支付
-#支付方式 : wx;
+#第三方名稱 : 掌訊支付
+#支付方式 : yl;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -48,17 +48,17 @@ $data = array(
 "backUrl" => $notify_url,
 "version" => '2.1',
 "orgNo" => $pu_key,
-"tranType" => '0402',
-"goodsName" => 'iPhone6S',
+"tranType" => '0801',
+"goodsName" => 'pay',
 "sign" => array(
 "str_arr" => array(
 "backUrl" => $notify_url,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
-"goodsName" => "iPhone6S",
+"goodsName" => "pay",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
-"tranType" => "0402",
+"tranType" => "0801",
 "version" => "2.1",
 ),
 "mid_conn" => "=",
@@ -72,8 +72,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_wx";
-$bankname = $pay_type."->微信在线充值";
+$payType = $pay_type."_yl";
+$bankname = $pay_type."->银联钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -96,6 +96,7 @@ foreach ($data as $arr_key => $arr_value) {
 }
 $data_str = substr($data_str,0,-1);
 
+
 #curl获取响应值
 $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
@@ -103,7 +104,7 @@ $res = json_decode($res,1);
 $url = $res['busContent'];
 if ($res['ordStatus'] == '01') {
     $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+    $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();

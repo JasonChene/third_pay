@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 掌讯支付
+#第三方名稱 : 掌訊支付
 #支付方式 : wx;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
@@ -48,17 +48,17 @@ $data = array(
 "backUrl" => $notify_url,
 "version" => '2.1',
 "orgNo" => $pu_key,
-"tranType" => '0402',
-"goodsName" => 'iPhone6S',
+"tranType" => '0405',
+"goodsName" => 'pay',
 "sign" => array(
 "str_arr" => array(
 "backUrl" => $notify_url,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
-"goodsName" => "iPhone6S",
+"goodsName" => "pay",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
-"tranType" => "0402",
+"tranType" => "0405",
 "version" => "2.1",
 ),
 "mid_conn" => "=",
@@ -96,14 +96,14 @@ foreach ($data as $arr_key => $arr_value) {
 }
 $data_str = substr($data_str,0,-1);
 
+
 #curl获取响应值
 $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
 if ($res['ordStatus'] == '01') {
-    $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+    $jumpurl = $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();
