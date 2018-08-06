@@ -102,9 +102,9 @@ $geturl = $form_url.'?'.http_build_query($data);
 $res = curl_post($geturl,'');
 if (is_null(json_decode($res,1))) {
   echo $res;
+  exit;
 }else {
   $row = json_decode($res,1);
-  exit;
 }
 #跳转
 if ($row['rescode'] != '0000') {
