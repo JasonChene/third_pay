@@ -46,6 +46,7 @@ $data = array(
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
 "payAmt" => $MOAmount,
+"frontUrl" => $return_url,
 "backUrl" => $notify_url,
 "version" => '2.1',
 "orgNo" => $pu_key,
@@ -57,6 +58,7 @@ $data = array(
 "bankCode" => $bank_code,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
+"frontUrl" => $return_url,
 "goodsName" => "iPhone6S",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
@@ -104,7 +106,7 @@ exit;
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
+if ($res['code'] == '000000') {
     $jumpurl = $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];

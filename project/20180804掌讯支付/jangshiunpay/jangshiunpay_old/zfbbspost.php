@@ -46,6 +46,7 @@ $data = array(
 "custOrderNo" => $order_no,
 "payAmt" => $MOAmount,
 "backUrl" => $notify_url,
+"frontUrl" => $return_url,
 "version" => '2.1',
 "orgNo" => $pu_key,
 "tranType" => '0502',
@@ -55,6 +56,7 @@ $data = array(
 "backUrl" => $notify_url,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
+"frontUrl" => $return_url,
 "goodsName" => "pay",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
@@ -100,9 +102,10 @@ $data_str = substr($data_str,0,-1);
 #curl获取响应值
 $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
+
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
+if ($res['code'] == '000000') {
     $qrurl = QRcodeUrl($url);
     $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
 }else{

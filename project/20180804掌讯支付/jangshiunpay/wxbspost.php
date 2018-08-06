@@ -101,7 +101,7 @@ $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
+if ($res['code'] == '000000') {
     $qrurl = QRcodeUrl($url);
     $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
 }else{

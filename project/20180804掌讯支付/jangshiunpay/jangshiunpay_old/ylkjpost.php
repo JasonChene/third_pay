@@ -102,30 +102,10 @@ $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
-    $jumpurl = $url;
+if ($res['code'] == '000000') {
+  echo $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();
 }
 ?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if(isset($form_data)){
-              foreach ($data as $arr_key => $arr_value) {
-          ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php }} ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>

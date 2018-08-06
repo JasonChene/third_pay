@@ -102,7 +102,7 @@ $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
+if ($res['code'] == '000000') {
     $jumpurl = $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
