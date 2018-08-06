@@ -104,9 +104,23 @@ $data = array(
 );
 
 #变更参数设置
-$scan = 'qq';
-$data['payType'] = '8';
-$form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+if (strstr($pay_type, "京东钱包")) {
+  $scan = 'jd';
+  $data['payType'] = '16';
+  $form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+} elseif (strstr($pay_type, "百度钱包")) {
+  $scan = 'bd';
+  $data['payType'] = '4';
+  $form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['payType'] = '8';
+  $form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+} else {
+  $scan = 'wx';
+  $data['payType'] = '2';
+  $form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+}
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
