@@ -54,7 +54,7 @@ $data = array(
 "notify_url" => $notify_url,
 "out_trade_no" => $order_no,
 "total_amount" => $MOAmount,
-"trade_type" => "ALIPAY_NATIVE",
+"trade_type" => "ALIPAY_H5",
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
