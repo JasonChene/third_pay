@@ -1,108 +1,96 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../moneyfunc.php");
 
-$amount = trim($_REQUEST["amount"]);
-$traceno = trim($_REQUEST["traceno"]);
-$status = trim($_REQUEST["status"]);
-$signature = trim($_REQUEST["signature"]);
+//write_log("notify");
 
-$params = array(':m_order' => $traceno);
+#接收资料
+#post方法
+$data = array();
+foreach ($_POST as $key => $value) {
+	$data[$key] = $value;
+	//write_log($key . "=" . $value);
+}
+
+#设定固定参数
+$order_no = $data['traceno']; //订单号
+$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
+$success_msg = $data['status'];//成功讯息
+$success_code = "1";//文档上的成功讯息
+$sign = $data['signature'];//签名
+$echo_msg = "success";//回调讯息
+
+#根据订单号读取资料库
+$params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
-//获取该订单的支付名称
+#获取该订单的支付名称
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
-
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
-
-
-
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
 
-
-
-$post_data = array(
-"transDate" => $_REQUEST['transDate'],
-"transTime" =>$_REQUEST['transTime'],
-"merchno" =>$_REQUEST['merchno'],
-"merchName" =>$_REQUEST['merchName'],
-"customerno" =>$_REQUEST['customerno'],
-"openId"=>$_REQUEST['openId'],
-"amount" =>$_REQUEST['amount'],
-"traceno" => $_REQUEST['traceno'],
-"payType" =>$_REQUEST['payType'],
-"orderno" =>$_REQUEST['orderno'],
-"channelOrderno" => $_REQUEST['channelOrderno'],
-"channelTraceno" =>$_REQUEST['channelTraceno'],
-"status" =>$_REQUEST['status']
-);
-
-//$file = "log.txt";
-
-
-ksort($post_data);
-$signText = "";
-foreach($post_data as $key=>$value){
-	if($value != "" && $value != null && $value != "null"){
-			$signText .= $key . "=" . $value . "&";
+#验签方式
+$noarr = array('signature');//不加入签名的array key值
+ksort($data);
+$signtext = "";
+foreach ($data as $arr_key => $arr_val) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
+$signtext = substr($signtext, 0, -1) . "&" . $pay_mkey;//验签字串
+// write_log("signtext=" . $signtext);
+$mysign = strtoupper(md5($signtext));//签名
+// write_log("mysign=" . $mysign);
 
-$sign = strtoupper(md5($signText . $pay_mkey));
 
-$success = 0;
-
-if($_REQUEST["transDate"]){
-    if ($status == "1") {
-        $success = 1;
-    }
-}else {
-    if ($status = "2") {
-        $success = 1;
-    }
-}
-//file_put_contents($file,"\r\n==signText==".$signText . $pay_mkey,FILE_APPEND);
-//file_put_contents($file,"\r\n==sign==".$sign,FILE_APPEND);
-//file_put_contents($file,"\r\n==signature==".$signature,FILE_APPEND);
-if ($success) {
-  if ($signature == $sign) {
-	  	$myMoney = $amount;
-		$result_insert = update_online_money($traceno, $myMoney);
-//file_put_contents($file,"\r\n==result_insert==".$result_insert,FILE_APPEND);
+#到账判断
+if ($success_msg == $success_code) {
+	if ($mysign == $sign) {
+		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
-            echo "会员信息不存在，无法入账";
+			echo ("会员信息不存在，无法入账");
+			//write_log("会员信息不存在，无法入账");
+			exit;
 		} else if ($result_insert == 0) {
-			echo "success";
+			echo ($echo_msg);
+			//write_log($echo_msg . 'at 0');
+			exit;
 		} else if ($result_insert == -2) {
-            echo "数据库操作失败";
+			echo ("数据库操作失败");
+			//write_log("数据库操作失败");
+			exit;
 		} else if ($result_insert == 1) {
-            echo "success";
+			echo ($echo_msg);
+			//write_log($echo_msg . 'at 1');
+			exit;
 		} else {
-            echo "支付失败";
+			echo ("支付失败");
+			//write_log("支付失败");
+			exit;
 		}
 	} else {
-        echo '签名不正确！';
+		echo ('签名不正确！');
+		//write_log("签名不正确！");
 		exit;
 	}
 } else {
-    echo '交易失败！';
+	echo ("交易失败");
+	//write_log("交易失败");
 	exit;
 }
 
