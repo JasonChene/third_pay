@@ -109,7 +109,10 @@ $data = array(
 #变更参数设置
 $form_url = "http://api.jincaipay.com/v1.0.0/jcpay/jcPayMobile";
   
-if(strstr($pay_type, "京东钱包")) {
+if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+  $scan = 'qq';
+  $data['pay_type'] = "8";
+}elseif(strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['pay_type'] = "9";
   if (_is_mobile()) {
