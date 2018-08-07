@@ -28,11 +28,14 @@ function sign_text($array){
 
 function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     //判断编码类型:md5、sha、base64、RSA、urlencode、upper、lower
+    
     $sign='';
     if($encrypt == 'MD5'){
       $sign = md5($signtext);
     }elseif ($encrypt == 'SHA') {
       $sign = sha1($signtext);
+    }elseif ($encrypt == 'JSON') {
+      $sign = json_encode($signtext,320);
     }elseif ($encrypt == 'base64') {
       $sign = base64_encode($signtext);
     }elseif ($encrypt == 'base64d') {
@@ -46,6 +49,8 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     }elseif ($encrypt == 'lower') {
       $sign = mb_strtolower($signtext);
     }elseif ($encrypt == 'RSApr') {
+      $key = chunk_split($key,64,"\r\n");//转换为pem格式的私钥
+      $key = "-----BEGIN PRIVATE KEY-----\r\n".$key."-----END PRIVATE KEY-----\r\n";
       $pay_mkey = openssl_get_privatekey($key);//打開私钥
       if ($pay_mkey == false) {
         die("open privatekey error");
@@ -57,6 +62,8 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
         die("privatekey encrypt error");
       }
     }elseif ($encrypt == 'RSApu') {
+      $key = chunk_split($key,64,"\r\n");//转换为pem格式的公钥
+      $key = "-----BEGIN PUBLIC KEY-----\r\n".$key."-----END PUBLIC KEY-----\r\n";
       $pay_mkey = openssl_get_publickey($key);//打開公钥
       if ($pay_mkey == false) {
       	die("open publickey error");
@@ -68,6 +75,8 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
         die("publickey encrypt error");
       }
     }elseif ($encrypt == 'RSAprd') {
+      $key = chunk_split($key,64,"\r\n");//转换为pem格式的私钥
+      $key = "-----BEGIN PRIVATE KEY-----\r\n".$key."-----END PRIVATE KEY-----\r\n";
       $pay_mkey = openssl_get_privatekey($key);//打開私钥
       if ($pay_mkey == false) {
       	die("open privatekey error");
@@ -79,6 +88,8 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
         die("privatekey decrypt error");
       }
     }elseif ($encrypt == 'RSApud') {
+      $key = chunk_split($key,64,"\r\n");//转换为pem格式的公钥
+      $key = "-----BEGIN PUBLIC KEY-----\r\n".$key."-----END PUBLIC KEY-----\r\n";
       $pay_mkey = openssl_get_publickey($key);//打開公钥
       if ($pay_mkey == false) {
       	die("open publickey error");
@@ -92,7 +103,7 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     }
     return $sign;
 }
-function toXml($arr){
+function toXml($arr){   
   $xml = "<xml>";
   foreach ($arr as $key=>$val)
   {

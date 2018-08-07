@@ -34,6 +34,8 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
       $sign = md5($signtext);
     }elseif ($encrypt == 'SHA') {
       $sign = sha1($signtext);
+    }elseif ($encrypt == 'JSON') {
+      $sign = json_encode($signtext,320);
     }elseif ($encrypt == 'base64') {
       $sign = base64_encode($signtext);
     }elseif ($encrypt == 'base64d') {
