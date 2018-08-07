@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 易充
-#支付方式 : zfb;
+#第三方名稱 : 掌訊支付
+#支付方式 : yl;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://woniu97.com/api/order/createlink';
+$form_url = 'http://www.lszx0578.com:8086/mpcctp/cashier/pay.ac';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -39,37 +39,41 @@ $order_time = date("YmdHis");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount']*100, 0, '.', '');
 #第三方传值参数设置
 $data = array(
-"id" => $pay_mid,
-"order_no" => $order_no,
-"price" => $MOAmount,
-"pay_id" => $S_Name,
-"type" => '4',
-"timestamp" => time(),
+"custId" => $pay_mid,
+"custOrderNo" => $order_no,
+"payAmt" => $MOAmount,
+"backUrl" => $notify_url,
+"version" => '2.1',
+"orgNo" => $pu_key,
+"tranType" => '0801',
+"goodsName" => 'pay',
 "sign" => array(
 "str_arr" => array(
-"id" => $pay_mid,
-"order_no" => $order_no,
-"pay_id" => $S_Name,
-"price" => $MOAmount,
-"timestamp" => time(),
-"type" => "4",
+"backUrl" => $notify_url,
+"custId" => $pay_mid,
+"custOrderNo" => $order_no,
+"goodsName" => "pay",
+"orgNo" => $pu_key,
+"payAmt" => $MOAmount,
+"tranType" => "0801",
+"version" => "2.1",
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
 "encrypt" => array(
 "0" => "MD5",
 ),
-"key_str" => "",
+"key_str" => "&key=",
 "key" => $pr_key,
 "havekey" => "1",
 ),
 );
 #变更参数设定
-$payType = $pay_type."_zfb";
-$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_yl";
+$bankname = $pay_type."->银联钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -87,22 +91,20 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-echo "<pre>";
-var_dump($data);
 foreach ($data as $arr_key => $arr_value) {
   $data_str .= $arr_key.'='.$arr_value.'&';
 }
 $data_str = substr($data_str,0,-1);
 
+
 #curl获取响应值
 $res = curl_post($form_url,$data_str,"POST");
-echo $res;exit;
 $res = json_decode($res,1);
 #跳转qrcode
-$url = $res['data']['url'];
-if ($res['code'] == '1') {
+$url = $res['busContent'];
+if ($res['code'] == '000000') {
     $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+    $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();

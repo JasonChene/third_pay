@@ -1,0 +1,10 @@
+bh商户信息
+
+后台地址:http://admin.jincaipay.com/
+接口地址:http://api.jincaipay.com/v1.0.0
+
+商户:
+登录帐号:14500008081
+商户名称:bh
+初始密码:7$fX2&
+商户编号:8081
