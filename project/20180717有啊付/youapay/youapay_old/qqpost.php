@@ -72,7 +72,7 @@ $data = array(
   'pay_productname' => 'iPhone'
 );
 #变更参数设置
-$form_url = 'https://www.youapay.com/Pay_Index.html';//提交地址
+$form_url = 'https://www.gongxiangpay.com/Pay_Index.html';//提交地址
   $scan = 'qq';
   if(_is_mobile()){
     $data['pay_bankcode'] = '905';

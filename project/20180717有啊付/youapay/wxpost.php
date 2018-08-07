@@ -74,7 +74,7 @@ $data = array(
   'pay_productname' => 'iPhone'
 );
 #变更参数设置
-$form_url = 'https://www.youapay.com/Pay_Index.html';//提交地址
+$form_url = 'https://www.gongxiangpay.com/Pay_Index.html';//提交地址
 
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'jd';
