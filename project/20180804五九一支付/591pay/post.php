@@ -10,7 +10,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")){
     $form_url = './ylbspost.php';
   }
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")){
-    $form_url = './ylkjpost.php';
+    $form_url = './ylkjh5post.php';
 }else{
   $form_url = './wypost.php';
 }
