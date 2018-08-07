@@ -1,6 +1,5 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
@@ -77,7 +76,6 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
@@ -100,7 +98,7 @@ $data = array(
   //基本参数
   "merchant_code" => $pay_mid, //商家号
   "service_type" => '', //业务类型
-  "notify_url" => $mymoney, //服务器异步通知地址
+  "notify_url" => $merchant_url, //服务器异步通知地址
   "interface_version" => 'V3.1', //接口版本
   "client_ip" => getClientIp(), //客户端IP
   "sign_type" => 'RSA-S', //签名方式
@@ -148,7 +146,7 @@ if ($result_insert == -1) {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('sign');//不加入签名的array key值
+$noarr = array('sign', 'sign_type');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -170,54 +168,27 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 $res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-$row = json_decode($tran, 1);
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> res = <br>');
-var_dump($res);
-echo '</pre>';
-
-exit;
+$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+$row = json_decode(json_encode($xml), 1);
 
 #跳转
-if ($array["response"]['resp_code'] != 'SUCCESS') {
-  echo '处理码:' . $array["response"]['resp_code'] . "<br>";
-  echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
+if ($row["response"]['resp_code'] != 'SUCCESS') {
+  echo '处理码:' . $row["response"]['resp_code'] . "<br>";
+  echo '处理描述信息:' . $row["response"]['resp_desc'] . "<br>";
   exit;
-} else if ($array["response"]['result_code'] != '0') {
-  echo '业务结果:' . $array["response"]['result_code'] . "<br>";
-  echo '错误码定义:' . $array["response"]['error_code'] . "<br>";
-  echo '交易说明:' . $array["response"]['result_desc'] . "<br>";
+} else if ($row["response"]['result_code'] != '0') {
+  echo '业务结果:' . $row["response"]['result_code'] . "<br>";
+  echo '错误码定义:' . $row["response"]['error_code'] . "<br>";
+  echo '交易说明:' . $row["response"]['result_desc'] . "<br>";
   exit;
 } else {
-  $qrcodeUrl = urldecode($array['response']['payURL']);
   if (_is_mobile()) {
-    $jumpurl = $qrcodeUrl;
+    $jumpurl = urldecode($row['response']['payURL']);
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['response']['qrcode']);
   }
 }
 
 #跳轉方法
+header("location:" . $jumpurl);
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-
