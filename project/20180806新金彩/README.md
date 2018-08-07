@@ -1,5 +1,5 @@
 第三方名称：新金彩 
-档案位置：php@60.245.221.62\jangshiunpay
+档案位置：php@60.245.221.62\hsinchintsai
  
 商户号:商户提供的商户号  
 商户密钥KEY：RSA秘钥 
