@@ -4,16 +4,9 @@ include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 #接收资料
-#post方法
-foreach ($_POST as $key => $value) {
-	if ($key != 'sign'){
-		$data[$key] = (string)$value;
-		// write_log($key."=".$value);
-	}else{
-		$signstr = $value;
-		// write_log("signstr=".$signstr);
-	}
-}
+$notify_data = json_decode(file_get_contents('php://input'), true);
+$data = $notify_data['context'];//提取密文
+	
 #设定固定参数
 $order_no = $data['order_id']; //订单号
 $mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
