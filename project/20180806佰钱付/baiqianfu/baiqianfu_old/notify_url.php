@@ -4,10 +4,19 @@ include_once("../moneyfunc.php");
 //$file = "log.txt";
 
 //write_log("notify");
-
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	//write_log($key . "=" . $value);
+$input_data = file_get_contents("php://input");
+//write_log($input_data);
+if (!empty($input_data)) {
+	$res = json_decode($input_data, 1);//json回传资料
+	foreach ($res as $key => $value) {
+		$data[$key] = $value;
+		//write_log($key . "=" . $value);
+	}
+} else {
+	foreach ($_REQUEST as $key => $value) {
+		$data[$key] = $value;
+		//write_log($key . "=" . $value);
+	}
 }
 
 $MerNo = $data['MerNo'];// 商戶號
