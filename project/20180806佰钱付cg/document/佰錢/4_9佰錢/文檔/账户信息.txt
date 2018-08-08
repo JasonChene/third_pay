@@ -1,3 +1,0 @@
-商户号： 1256060676
-商户密钥：C89C2D1BCAF9CA258A34E59DD4BF4668
-API提交地址： https://bq.baiqianpay.com/webezf/web/?app_act=openapi/bq_pay/pay
