@@ -16,12 +16,12 @@ $stmt->execute($params);
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
   crossorigin="anonymous"></script>
-<link rel="stylesheet" href="chosen.css">
+  <link rel="stylesheet" href="chosen.css">
 <script src="chosen.jquery.js"></script>
 
 <head>
   <meta charset="utf-8">
-  <title>新系统付款測試</title>
+  <title>旧系统付款測試</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style media="screen">
     label {
@@ -76,12 +76,12 @@ $stmt->execute($params);
 <body>
   <div class="col-xl-6">
     <div>
-      <h1>新系统付款測試</h1>
+      <h1>旧系统付款測試</h1>
       <div class="box">
         <div class="form-group div-nowrap">
           <label>請填网域位置</label>
           <br>
-          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="pay7.5566205.com" disabled>
+          <input id="domain" type="text" class="form-control form-controlCum" name="domain" placeholder="domain" value="paytest.7k111.com" disabled>
         </div>
         <div class="form-group div-nowrap" id="select_div">
           <label>第三方名称</label>
