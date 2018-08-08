@@ -1,0 +1,13 @@
+商户名 119422  密码 503659  
+
+扫码1.7 wap 2.8
+
+
+登陆地址 www.lbopay.com
+开发文档在后台
+
+
+商户ID：
+1570
+商户密钥：
+2Zm8JJQcnvJ5OOBt4FXqYOZ9hmdL1vRA
