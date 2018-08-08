@@ -1,0 +1,18 @@
+@RequestMapping("/notifyPay")
+	public void notifyPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, String[]> map = request.getParameterMap();
+		String result = map.keySet().iterator().next();
+		String[] resStr = result.split("\\|");
+		String sign = resStr[0];
+		String json = resStr[1];
+		String base64Str = Base64.encode(json.getBytes("UTF-8"));
+		String prevMd5 = YsfUtil.md5UTF8(base64Str);
+		String md5 = YsfUtil.md5UTF8(key + prevMd5).toUpperCase();
+		JsonObject dataJson = new JsonParser().parse(json).getAsJsonObject().get("data").getAsJsonObject();
+		String orderId = dataJson.get("orderId").getAsString();
+		if (!sign.equals(md5)) {
+			response.getWriter().write("error");
+		} else {
+			response.getWriter().write("success");
+		}
+	}
