@@ -5,12 +5,13 @@ include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 #function
-function curl_post($url,$data){ #POST访问
+function curl_post($url, $data)
+{ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -98,10 +99,10 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "company_oid" => $pay_mid, 
+  "company_oid" => $pay_mid,
   "order_id" => $order_no,
   "order_name" => "pay",
-  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''),
   "notify_url" => $merchant_url,
   "pay_type" => "",
 );
@@ -126,7 +127,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
+$data_json = json_encode($data, JSON_UNESCAPED_SLASHES);
 
 #RSA-S签名
 $privatekey = openssl_get_privatekey($private_pem);
@@ -142,7 +143,7 @@ if ($prb) {
   echo "加密失敗";
   exit();
 }
-$datastr="";
+$datastr = "";
 foreach ($data as $key => $val) {
   $datastr .= "$key=" . urlencode($val) . "&";
 }
@@ -154,8 +155,8 @@ $array = json_decode($res, 1);
 if ($array['status'] == '1' || $array['status'] == '2') {
   $ressign = base64_decode($array['sign']);
   $objectArray = array();
-  foreach($array as $key => $value) {
-    if ($key != 'sign'){
+  foreach ($array as $key => $value) {
+    if ($key != 'sign') {
       $objectArray[$key] = (string)$value;
     }
   }
@@ -166,15 +167,17 @@ if ($array['status'] == '1' || $array['status'] == '2') {
     echo "打开公钥出错";
     exit();
   }
-  $result = openssl_verify($json_text, $ressign, $publickey,OPENSSL_ALGO_SHA1);
+  $result = openssl_verify($json_text, $ressign, $publickey, OPENSSL_ALGO_SHA1);
   openssl_free_key($publickey);
-  if ( $result != 1) {
+  if ($result != 1) {
     echo "签名验证失败！";
     exit;
   } else {
+    if (_is_mobile()) {
       $jumpurl = $array['content'];
-      Header("Location: $jumpurl");
-      exit;
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($array['content']);
+    }
   }
 } else {
   echo '错误代码:' . $array['status'] . "<br>";
@@ -182,4 +185,19 @@ if ($array['status'] == '1' || $array['status'] == '2') {
   exit;
 }
 
+#跳轉方法
 ?>
+<html>
+<head>
+  <title>跳转......</title>
+  <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+  <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <p>正在为您跳转中，请稍候......</p>
+  </form>
+  <script language="javascript">
+    document.getElementById("frm1").submit();
+  </script>
+</body>
+</html>
