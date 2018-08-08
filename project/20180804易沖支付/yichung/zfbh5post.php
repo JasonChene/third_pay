@@ -100,7 +100,7 @@ $res = json_decode($res,1);
 $url = $res['data']['url'];
 if ($res['code'] == '1') {
     $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+    $jumpurl = $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();
