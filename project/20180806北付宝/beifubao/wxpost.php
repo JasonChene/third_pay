@@ -194,13 +194,12 @@ $json_context = json_encode($context);
 $res = curl_post($form_url, $json_context);
 $array = json_decode($res, 1);
 
-if ($array['success'] == true) {
+if ($array['success'] == true && $array['message']['code'] == 200) {
   $context_str = $array['context'];
   $context_decrypt = rsa_decrypt($context_str, $privatekey);
   $return_context = json_decode($context_decrypt, 1);
   $return_sign = $return_context['businessHead']['sign'];
   $return_businessContext = $return_context['businessContext'];
-
   ksort($return_businessContext);
   $return_json_businessContext = json_encode($return_businessContext,320);
   $isVerify = openssl_verify($return_json_businessContext, base64_decode($return_sign), $publickey, OPENSSL_ALGO_MD5);

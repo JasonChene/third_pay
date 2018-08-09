@@ -194,7 +194,7 @@ $json_context = json_encode($context);
 $res = curl_post($form_url, $json_context);
 $array = json_decode($res, 1);
 
-if ($array['success'] == true) {
+if ($array['success'] == true && $array['message']['code'] == 200) {
   $context_str = $array['context'];
   $context_decrypt = rsa_decrypt($context_str, $privatekey);
   $return_context = json_decode($context_decrypt, 1);
