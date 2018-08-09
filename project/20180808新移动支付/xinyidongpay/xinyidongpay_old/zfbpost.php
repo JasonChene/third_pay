@@ -107,7 +107,7 @@ $data = array(
 #变更参数设置
 $form_url = 'http://qr.sytpay.cn/api/v1/create.php';
 $scan = 'zfb';
-$data['payMethod'] = '23';
+$data['payMethod'] = '22';
 
 payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
