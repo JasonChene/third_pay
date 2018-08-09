@@ -99,7 +99,7 @@ $data = array(
   "merchant_code" => $pay_mid, //商家号
   "service_type" => '', //业务类型
   "notify_url" => $merchant_url, //服务器异步通知地址
-  "interface_version" => 'V3.1', //接口版本
+  "interface_version" => '', //接口版本
   "client_ip" => getClientIp(), //客户端IP
   "sign_type" => 'RSA-S', //签名方式
   "sign" => '', //签名
@@ -115,12 +115,15 @@ $data = array(
 if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
   $data['service_type'] = 'ylpay_scan';
+  $data['interface_version'] = 'V3.1';//接口版本
   $form_url = 'https://api.wordfod.com/gateway/api/scanpay';//扫码提交地址
 } else {
   $scan = 'wy';
   $data['service_type'] = 'direct_pay';
   $data['input_charset'] = 'UTF-8';
   $data['return_url'] = $return_url;
+  $data['interface_version'] = 'V3.0';//接口版本
+  $data['pay_type'] = 'b2c';//支付类型
   $form_url = 'https://pay.wordfod.com/gateway?input_charset=UTF-8';//网银提交地址
 }
 payType_bankname($scan, $pay_type);
@@ -157,29 +160,50 @@ $sign = base64_encode($sign_info);
 $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
+if ($scan == 'yl') {
 #curl获取响应值
-$res = curl_post($form_url, $data_str);
-$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
-$row = json_decode(json_encode($xml), 1);
+  $res = curl_post($form_url, $data_str);
+  $xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+  $row = json_decode(json_encode($xml), 1);
 
 #跳转
-if ($row["response"]['resp_code'] != 'SUCCESS') {
-  echo '处理码:' . $row["response"]['resp_code'] . "<br>";
-  echo '处理描述信息:' . $row["response"]['resp_desc'] . "<br>";
-  exit;
-} else if ($row["response"]['result_code'] != '0') {
-  echo '业务结果:' . $row["response"]['result_code'] . "<br>";
-  echo '错误码定义:' . $row["response"]['error_code'] . "<br>";
-  echo '交易说明:' . $row["response"]['result_desc'] . "<br>";
-  exit;
-} else {
-  if (_is_mobile()) {
-    $jumpurl = urldecode($row['response']['payURL']);
+  if ($row["response"]['resp_code'] != 'SUCCESS') {
+    echo '处理码:' . $row["response"]['resp_code'] . "<br>";
+    echo '处理描述信息:' . $row["response"]['resp_desc'] . "<br>";
+    exit;
+  } else if ($row["response"]['result_code'] != '0') {
+    echo '业务结果:' . $row["response"]['result_code'] . "<br>";
+    echo '错误码定义:' . $row["response"]['error_code'] . "<br>";
+    echo '交易说明:' . $row["response"]['result_desc'] . "<br>";
+    exit;
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['response']['qrcode']);
+    if (_is_mobile()) {
+      $jumpurl = urldecode($row['response']['payURL']);
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['response']['qrcode']);
+    }
   }
-}
 
 #跳轉方法
-header("location:" . $jumpurl);
+  header("location:" . $jumpurl);
+  exit;
+}
 ?>
+<html>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
+     <p>正在为您跳转中，请稍候......</p>
+       <?php foreach ($data as $arr_key => $arr_value) { ?>
+         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+       <?php 
+    } ?>
+   </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
+</html>

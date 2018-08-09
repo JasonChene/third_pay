@@ -1,0 +1,16 @@
+2018-08-09 03:11:57 trade_no=DE204H111196379
+2018-08-09 03:11:57 sign_type=RSA-S
+2018-08-09 03:11:57 notify_type=offline_notify
+2018-08-09 03:11:57 merchant_code=D666666882004
+2018-08-09 03:11:57 order_no=70313120180809151059
+2018-08-09 03:11:57 trade_status=SUCCESS
+2018-08-09 03:11:57 sign=c6DttoNowOkIA/FMlfeO7yf9FptzfNHuiQ2pC2fne0qrZih+ceBRjhRQQ3fmnF29CxTIT5Hq8mtRcJR2uDDOnZduArO06PlsXp5iD4UlF2+dOuiTFKHV9dXQpVJLpNJz7JfJZAGVUaVXKirOGEzQ6HWUkxBCR0nZl3SoRqE8HAw=
+2018-08-09 03:11:57 order_amount=100
+2018-08-09 03:11:57 interface_version=V3.0
+2018-08-09 03:11:57 bank_seq_no=b0506ffbd47c4ca68c748befd40f544d
+2018-08-09 03:11:57 order_time=2018-08-09 15:10:59
+2018-08-09 03:11:57 notify_id=907e5d0a518547e78347095a853d53ad
+2018-08-09 03:11:57 trade_time=2018-08-09 15:11:03
+2018-08-09 03:11:57 signtext=bank_seq_no=b0506ffbd47c4ca68c748befd40f544d&interface_version=V3.0&merchant_code=D666666882004&notify_id=907e5d0a518547e78347095a853d53ad&notify_type=offline_notify&order_amount=100&order_no=70313120180809151059&order_time=2018-08-09 15:10:59&trade_no=DE204H111196379&trade_status=SUCCESS&trade_time=2018-08-09 15:11:03
+2018-08-09 03:11:57 flag=1
+2018-08-09 03:11:57 SUCCESSat 1
