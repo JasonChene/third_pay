@@ -97,12 +97,17 @@ $form_url = 'https://gateway.easyipay.com/interface/AutoBank/index.aspx';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'zfb';
-$data['type'] = '992';
-if (_is_mobile()) {
-    $data['type'] = '1101';
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  $scan = 'yl';
+  $data['type'] = '1001';
+}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $data['type'] = '1010';
+}else {
+  $scan = 'wy';
+  $data['type'] = '967';
+  
 }
-
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
