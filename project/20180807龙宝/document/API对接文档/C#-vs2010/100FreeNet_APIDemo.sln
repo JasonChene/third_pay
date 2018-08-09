@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{3A63E2F8-3086-4988-A539-F6B6D5483768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.icc", "API.icc\api.icc\API.icc.csproj", "{4E5F0454-1852-457D-B495-9C421309553A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.utils", "API.utils\api.utils\API.utils.csproj", "{B48E309A-35F6-4F2B-9E94-083EB87E6505}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "APIDemoWeb", "APIDemoWeb", "{DB498F6F-88F4-4C4A-A113-36C5234A01FB}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		ProjectReferences = "{4E5F0454-1852-457D-B495-9C421309553A}|API.icc.dll;{B48E309A-35F6-4F2B-9E94-083EB87E6505}|API.utils.dll;{9AF0482B-C266-4BDB-BA9B-E929363688CD}|API.cmbn.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/APIDemoWeb"
+		Debug.AspNetCompiler.PhysicalPath = "APIDemoWeb\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\APIDemoWeb\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/APIDemoWeb"
+		Release.AspNetCompiler.PhysicalPath = "APIDemoWeb\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\APIDemoWeb\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "7223"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.cmbn", "API.cmbn\API.cmbn.csproj", "{9AF0482B-C266-4BDB-BA9B-E929363688CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E5F0454-1852-457D-B495-9C421309553A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5F0454-1852-457D-B495-9C421309553A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5F0454-1852-457D-B495-9C421309553A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5F0454-1852-457D-B495-9C421309553A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B48E309A-35F6-4F2B-9E94-083EB87E6505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B48E309A-35F6-4F2B-9E94-083EB87E6505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B48E309A-35F6-4F2B-9E94-083EB87E6505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B48E309A-35F6-4F2B-9E94-083EB87E6505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB498F6F-88F4-4C4A-A113-36C5234A01FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB498F6F-88F4-4C4A-A113-36C5234A01FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB498F6F-88F4-4C4A-A113-36C5234A01FB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB498F6F-88F4-4C4A-A113-36C5234A01FB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{9AF0482B-C266-4BDB-BA9B-E929363688CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AF0482B-C266-4BDB-BA9B-E929363688CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AF0482B-C266-4BDB-BA9B-E929363688CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AF0482B-C266-4BDB-BA9B-E929363688CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
