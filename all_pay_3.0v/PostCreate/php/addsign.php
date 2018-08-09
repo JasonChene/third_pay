@@ -17,8 +17,12 @@ function sign_text($array){
       }
     }
   }
-  $len = strlen($array['last_conn']);
-  $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
+  if (strlen($array['last_conn']) == '') {
+    $signtext = $signtext . $array['key_str'] . $array['key'];
+  } else {
+    $len = strlen($array['last_conn']);
+    $signtext = substr($signtext,0,-$len) . $array['key_str'] . $array['key'];
+  }
   $encrypt_len = count($array['encrypt']);
   for ($i=0; $i < $encrypt_len; $i++) {
     $signtext = addsign($array['encrypt'][$i],$signtext,$array['key']);
