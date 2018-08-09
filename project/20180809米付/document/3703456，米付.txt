@@ -1,0 +1,12 @@
+登录地址：http://merchants.mifu888.com
+登录账号：15524884500
+登录密码：aa123456
+
+
+商户ID：2018180
+
+商户秘钥：mZrLCqeGgOuHgJpWOwxwbmIbjNvkYVFZ
+
+网关地址：http://api.mifu888.com/Pay
+
+结算周期：T+0
