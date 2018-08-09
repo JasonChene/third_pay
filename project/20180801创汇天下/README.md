@@ -20,3 +20,5 @@ QQ扫码成功率较低（50分之1）
 修改interface_version参数  
 增加参数pay_type参数（让收银台只显示网银）  
 增加新旧return.php  
+
+新增备注：需用后台绑定域名支付  
