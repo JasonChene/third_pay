@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('新移动支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/xinyidongpay/post.php', '/pay/xinyidongpay/wxpost.php', '/pay/xinyidongpay/zfbpost.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/notify_url.php', '/pay/xinyidongpay/notify_url.php', '/pay/xinyidongpay/notify_url.php', '1', '1', '/pay/xinyidongpay/qqpost.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/notify_url.php');
+ VALUES ('随意Y付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/suiyiYfu/post.php', '/pay/suiyiYfu/wxpost.php', '/pay/suiyiYfu/zfbpost.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/notify_url.php', '/pay/suiyiYfu/notify_url.php', '/pay/suiyiYfu/notify_url.php', '1', '1', '/pay/suiyiYfu/qqpost.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('新移动支付', '120171026095369', 'D7F19F0D2EC8D6531DF9738318E9CEF7', NULL, 'http://pay7.5566205.com', '新移动支付', '1', '1', '1', '新移动支付', '1');
+ VALUES ('随意Y付', '667201', 'afb7484fbc4341b990d848b30a07a7e2', NULL, 'http://pay7.5566205.com', '随意Y付', '1', '1', '1', '随意Y付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('新移动支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/xinyidongpay/post.php', '/pay/xinyidongpay/wxpost.php', '/pay/xinyidongpay/zfbpost.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/notify_url.php', '/pay/xinyidongpay/notify_url.php', '/pay/xinyidongpay/notify_url.php', '1', '1', '/pay/xinyidongpay/qqpost.php', '/pay/xinyidongpay/return_url.php', '/pay/xinyidongpay/notify_url.php');
+ VALUES ('随意Y付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/suiyiYfu/post.php', '/pay/suiyiYfu/wxpost.php', '/pay/suiyiYfu/zfbpost.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/notify_url.php', '/pay/suiyiYfu/notify_url.php', '/pay/suiyiYfu/notify_url.php', '1', '1', '/pay/suiyiYfu/qqpost.php', '/pay/suiyiYfu/return_url.php', '/pay/suiyiYfu/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('新移动支付', '120171026095369', 'D7F19F0D2EC8D6531DF9738318E9CEF7', NULL, 'http://paytest.7k111.com', '新移动支付', '1', '1', '1', '新移动支付', '1');
+ VALUES ('随意Y付', '667201', 'afb7484fbc4341b990d848b30a07a7e2', NULL, 'http://paytest.7k111.com', '随意Y付', '1', '1', '1', '随意Y付', '1');
