@@ -99,6 +99,7 @@ $data =array(
   'fxnotifyurl' => $merchant_url,
   'fxbackurl' => $return_url,
   'fxpay' => "",
+  'fxmobile' => "1",
   'fxsign' => "",
   'fxip' => getClientIp(),
 );
@@ -109,18 +110,21 @@ if (strstr($pay_type, "银联钱包")) {
   $data['fxpay'] = 'jdqb';
   if (_is_mobile()) {
     $data['fxpay'] = 'jdwap';
+    $data['fxmobile'] = "0";
   }
 }elseif (strstr($pay_type, "银联快捷")) {
   $scan = 'ylkj';
   $data['fxpay'] = 'qqqb';
   if (_is_mobile()) {
     $data['fxpay'] = 'qqrcode';
+    $data['fxmobile'] = "0";
   }
 }else {
   $scan = 'wy';
   $data['fxpay'] = 'weixin';
   if (_is_mobile()) {
     $data['fxpay'] = 'wxh5';
+    $data['fxmobile'] = "0";
   }
 }
 payType_bankname($scan,$pay_type);
