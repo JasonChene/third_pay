@@ -158,6 +158,3 @@ $jumpurl = $form_url;
     </script>
   </body>
 </html>
-
-
-

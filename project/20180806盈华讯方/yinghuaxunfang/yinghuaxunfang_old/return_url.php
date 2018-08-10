@@ -3,12 +3,12 @@
 include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../moneyfunc.php");
 
-write_log("return");
+// write_log("return");
 
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -40,7 +40,7 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	write_log("非法提交参数");
+	// write_log("非法提交参数");
 	exit;
 }
 $signtext = $data['oid'];
@@ -50,8 +50,8 @@ $signtext .= $data['mz'];
 $signtext .= $pay_mkey;
 
 $mysign = strtoupper(md5($signtext));
-write_log("signtext=".$signtext);
-write_log("mysign=".$mysign);
+// write_log("signtext=".$signtext);
+// write_log("mysign=".$mysign);
 
 
 #到账判断
