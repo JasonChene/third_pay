@@ -7,7 +7,6 @@ include_once("../moneyfunc.php");
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
-  curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8', 'Content-Length:' . strlen($data)]);
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -22,7 +21,47 @@ function curl_post($url, $data)
   }
   return $tmpInfo;
 }
-
+function payType_bankname($scan, $pay_type)
+{
+  global $payType, $bankname;
+  if ($scan == "wy") {
+    $payType = $pay_type . "_wy";
+    $bankname = $pay_type . "->网银在线充值";
+  } elseif ($scan == "yl" || $scan == "ylfs") {
+    $payType = $pay_type . "_yl";
+    $bankname = $pay_type . "->银联钱包在线充值";
+  } elseif ($scan == "qq" || $scan == "qqfs") {
+    $payType = $pay_type . "_qq";
+    $bankname = $pay_type . "->QQ钱包在线充值";
+  } elseif ($scan == "wx" || $scan == "wxfs") {
+    $payType = $pay_type . "_wx";
+    $bankname = $pay_type . "->微信在线充值";
+  } elseif ($scan == "zfb" || $scan == "zfbfs") {
+    $payType = $pay_type . "_zfb";
+    $bankname = $pay_type . "->支付宝在线充值";
+  } elseif ($scan == "jd" || $scan == "jdfs") {
+    $payType = $pay_type . "_jd";
+    $bankname = $pay_type . "->京东钱包在线充值";
+  } elseif ($scan == "ylkj") {
+    $payType = $pay_type . "_ylkj";
+    $bankname = $pay_type . "->银联快捷在线充值";
+  } elseif ($scan == "bd" || $scan == "bdfs") {
+    $payType = $pay_type . "_bd";
+    $bankname = $pay_type . "->百度钱包在线充值";
+  } else {
+    echo ('payType_bankname出错啦！');
+    exit;
+  }
+}
+function QRcodeUrl($code)
+{
+  if (strstr($code, "&")) {
+    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  } else {
+    $code2 = $code;
+  }
+  return $code2;
+}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -45,27 +84,32 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid, 
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date('Y-m-d H:i:s'),
-  "pay_bankcode" => '',
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => '',
-  "pay_productname" => 'pay',
+  "spid" => $pay_mid, 
+  "orderid" => $order_no,
+  "mz" => $mymoney,
+  "uid" => $_REQUEST['S_Name'],
+  "spsuc" => $return_url,
+  "ordertype" => "",//支付类型
+  "interfacetype" => "",//开通类型
+  "productname" => "pay",
+  "sign" => "",
+  "notifyurl" => $merchant_url,
+  "banktype" => "1"
 );
 
 #变更参数设置
-$form_url = 'http://www.yinhuibaopay.com/Pay_Index.html';
-
+$form_url = 'http://dsfzf.vnetone.com/createorder/index';
+$scan = '';
+$payType = '';
+$bankname = '';
 $scan = 'zfb';
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
-$data['pay_bankcode'] = '903';
+$data['ordertype'] = '1';
+$data['interfacetype'] = '1';
 if (_is_mobile()) {
-  $data['pay_bankcode'] = '904';//支付宝wap
+  $data['interfacetype'] = '4';
 }
+
+payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -77,18 +121,15 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
-}
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$signtext = $data['spid'];
+$signtext .= $data['orderid'];
+$signtext .= $pay_mkey;
+$signtext .= $data['mz'];
+$signtext .= $data['spsuc'];
+$signtext .= $data['ordertype'];
+$signtext .= $data['interfacetype'];
 $sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign; 
+$data['sign'] = $sign; 
 
 #跳轉方法
 $form_data = $data;
@@ -119,4 +160,4 @@ $jumpurl = $form_url;
 </html>
 
 
-?>
+
