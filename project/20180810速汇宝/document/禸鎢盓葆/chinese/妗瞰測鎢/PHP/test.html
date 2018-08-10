@@ -1,0 +1,92 @@
+﻿<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script type="text/javascript" src="./js/jquery-1.8.0.js"></script>
+	<script type="text/javascript" src="./js/jquery.qrcode.js"></script>
+	<script type="text/javascript" src="./js/utf.js"></script>
+
+  </head>
+  
+  <body>
+  <table>
+		<tr>
+  			<td>
+	<form id="wxpay">
+					<div>商 家 号(merchant_code)：<input Type="text" Name="merchant_code" id="merchant_code" value="1111110166"> * </div>
+					<div>服务类型(service_type)：<select name="service_type" id="service_type">
+							<option value="weixin_scan">微信</option>
+							<option value="alipay_scan">支付宝</option>
+							<option value="qq_scan">QQ</option>
+						</select> *	</div>		
+					<div>服务器异步通知地址(notify_url)：<input Type="text" Name="notify_url" id="notify_url" value="http://www.xxx.com/dinpay/offline.php"> * </div>				
+					<div>接口版本(interface_version)：<input Type="text" Name="interface_version" id="interface_version" value="V3.1"/> * </div>																	
+					<div>签名方式(sign_type)：<input Type="text" Name="sign_type" id="sign_type" value="RSA-S"/> * </div>													
+					<div>商户订单号(order_no)：<input Type="text" Name="order_no" id="order_no" value=""> * </div>
+					<div>客户端IP(client_ip)：<input Type="text" Name="client_ip" id="client_ip" value="120.237.123.242"> * </div>
+					<div>商户订单时间(order_time)：<input Type="text" Name="order_time" id="order_time" value="2016-12-10 12:36:25"/>* </div>		
+					<div>商户订单金额(order_amount)：<input Type="text" Name="order_amount" id="order_amount" value="0.1"> * </div>		
+					<div>商品名称(product_name)：<input Type="text" Name="product_name" id="product_name" value="product_name"> * </div>	
+					<div>商品描述(product_desc)：<input Type="text" Name="product_desc" value="">  </div>
+					<div>回传参数(extra_return_param)：<input Type="text" Name="extra_return_param"value=""></div>
+					<div>商品数量(product_num)：<input Type="text" Name="product_num"  value="">  </div>
+					<div>商品编号(product_code)：<input Type="text" Name="product_code"  value=""> </div>
+					<div>业务扩展参数(extend_param)：<input Type="text" Name="extend_param"  value=""> </div>					
+				</form>
+				<button id="submit">提交支付参数</button> 			
+  			</td>
+  			<td><div id="showqrcode"></div></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div>同步XML返回：</div>
+				<textarea rows="12" cols="90" id="xmldata"></textarea>
+			</td>
+		</tr>
+	</table>
+	
+		<script>
+
+function sQrcode(qdata){
+
+	$("#showqrcode").empty().qrcode({		// 调用qQcode生成二维码
+			render : "canvas",    			// 设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+			text : qdata,    				// 扫描了二维码后的内容显示,在这里也可以直接填一个网址或支付链接
+			width : "200",              	// 二维码的宽度
+			height : "200",             	// 二维码的高度
+			background : "#ffffff",     	// 二维码的后景色
+			foreground : "#000000",     	// 二维码的前景色
+			src: ""    						// 二维码中间的图片
+		});	
+		
+}	
+	
+$(document).ready(function(){
+
+	$("#submit").click(function(){
+		
+ 		var formParam = $("#wxpay").serialize();		// 序列化表单内容为字符串  
+		alert("请求数据为：" + formParam);
+			$.ajax({  									
+			type:"post",      							
+         	url:"./scan_pay.php",  								
+         	data:formParam,   						
+         	dataType:"text",  						
+         	success:function(data,textStatus){			
+						$("#xmldata").text(data);       	 		
+         	 			var result_code = $(data).find("result_code").text();
+					  	if (result_code=="0"){
+						var qrcode = $(data).find("qrcode").text();
+         	 			sQrcode(qrcode);
+						}else{
+						 $("#showqrcode").text("发生错误，原因请看resp_code或者result_desc值的描述");     
+						}
+         	 		},
+         	error:function(){       					
+         			  alert("连接失败");					
+         			}
+    	});      		
+	});
+});
+</script>
+	</body>
+</html>
