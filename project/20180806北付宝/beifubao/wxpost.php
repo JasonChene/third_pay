@@ -143,7 +143,7 @@ $businessContext = array(
 );
 
 #变更参数设置
-$form_url = "http://39.108.134.13:10017/api/payment/unifiedPay";
+$form_url = "http://bfb.fzqxdc.top/api/payment/unifiedPay";
 $scan = 'wx';
 $businessContext['defrayalType'] = "WECHAT_NATIVE";
 
