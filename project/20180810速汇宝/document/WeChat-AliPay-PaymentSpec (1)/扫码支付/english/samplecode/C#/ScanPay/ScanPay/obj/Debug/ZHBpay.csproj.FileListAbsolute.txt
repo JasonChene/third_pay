@@ -1,0 +1,5 @@
+C:\Users\wd\Desktop\智汇宝api\zhbpay\zhb\bin\CSharp.dll
+C:\Users\wd\Desktop\智汇宝api\zhbpay\zhb\bin\CSharp.pdb
+C:\Users\wd\Desktop\智汇宝api\zhbpay\zhb\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\智汇宝api\zhbpay\zhb\obj\Debug\CSharp.dll
+C:\Users\wd\Desktop\智汇宝api\zhbpay\zhb\obj\Debug\CSharp.pdb
