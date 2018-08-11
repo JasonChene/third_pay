@@ -207,18 +207,6 @@ if (1) {
   $xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
   $rep = json_decode(json_encode($xml), 1);//XML回传资料
 
-//打印
-  echo '<pre>';
-  echo ('<br> parms = <br>');
-  var_dump($parms);
-  // echo ('<br> signtext = <br>');
-  // echo ($signtext);
-  echo ('<br><br> rep = <br>');
-  var_dump($rep);
-  echo '</pre>';
-
-  // exit;
-
   if ($rep['response']['resp_code'] == "SUCCESS" && $rep['response']['result_code'] == "0") {
     Jump_to_Url($rep['response']['qrcode'], $scan);
   } else {

@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=UTF-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../moneyfunc.php");
 function QRcodeUrl($code)
 {
@@ -59,7 +59,7 @@ if (function_exists("date_default_timezone_set")) {
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -143,18 +143,6 @@ if (1) {
   $res = curl_post($form_url, $parms);
   $xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
   $rep = json_decode(json_encode($xml), 1);//XML回传资料
-
-//打印
-  echo '<pre>';
-  echo ('<br> parms = <br>');
-  var_dump($parms);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-  echo ('<br><br> rep = <br>');
-  var_dump($rep);
-  echo '</pre>';
-
-  exit;
 
   if ($rep['response']['resp_code'] == "SUCCESS" && $rep['response']['result_code'] == "0") {
     Jump_to_Url($rep['response']['qrcode'], 'zfb');
