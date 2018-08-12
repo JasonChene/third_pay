@@ -3,20 +3,20 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-	$merchant_code = $_REQUEST["merchant_code"];		
-	$notify_type = $_REQUEST["notify_type"];	
-	$notify_id = $_REQUEST["notify_id"];
-	$interface_version = $_REQUEST["interface_version"];
-	$sign_type = $_REQUEST["sign_type"];
-	$sign = $_REQUEST["sign"];	
-	$order_no = $_REQUEST["order_no"];
-	$order_time = $_REQUEST["order_time"];	
-	$order_amount = $_REQUEST["order_amount"];	
-	$extra_return_param = $_REQUEST["extra_return_param"];
-	$trade_no = $_REQUEST["trade_no"];
-	$trade_time = $_REQUEST["trade_time"];		
-	$trade_status = $_REQUEST["trade_status"];
-	$bank_seq_no = $_REQUEST["bank_seq_no"];
+$merchant_code = $_REQUEST["merchant_code"];
+$notify_type = $_REQUEST["notify_type"];
+$notify_id = $_REQUEST["notify_id"];
+$interface_version = $_REQUEST["interface_version"];
+$sign_type = $_REQUEST["sign_type"];
+$sign = $_REQUEST["sign"];
+$order_no = $_REQUEST["order_no"];
+$order_time = $_REQUEST["order_time"];
+$order_amount = $_REQUEST["order_amount"];
+$extra_return_param = $_REQUEST["extra_return_param"];
+$trade_no = $_REQUEST["trade_no"];
+$trade_time = $_REQUEST["trade_time"];
+$trade_status = $_REQUEST["trade_status"];
+$bank_seq_no = $_REQUEST["bank_seq_no"];
 
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
@@ -66,13 +66,13 @@ foreach ($parms as $arr_key => $arr_value) {
 }
 $signtext2 = substr($signtext, 0, -1);
 $dinpay_public_key = openssl_get_publickey($pay_account);
-$flag = openssl_verify($signtext2, base64_decode($sign), $dinpay_public_key, OPENSSL_ALGO_MD5);	
+$flag = openssl_verify($signtext2, base64_decode($sign), $dinpay_public_key, OPENSSL_ALGO_MD5);
 
 if ($trade_status == "SUCCESS") {
-  if ($flag == 1) {
+	if ($flag == 1) {
 		$result_insert = update_online_money($order_no, $order_amount);
 		if ($result_insert == -1) {
-			echo ("会员信息不存在，无法入账");	
+			echo ("会员信息不存在，无法入账");
 		} else if ($result_insert == 0) {
 			echo ("SUCCESS");
 		} else if ($result_insert == -2) {
