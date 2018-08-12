@@ -1,0 +1,7 @@
+API设置
+API对接参数：
+商户号：10764
+网关地址：http://www.666zf.com/Pay_Index.html
+APIKEY: zpvkwgm87s152ug42chpncgqsl80zhlv
+对接Demo下载
+API文档及示例.

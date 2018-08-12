@@ -1,0 +1,15 @@
+Bpaying后台登入网址
+
+http://www.bpaying.com/user_Login_index.html
+商户号10147 
+登入账号A008008077 
+秘钥 3vcm2g654vprei77q7asfj0mymtlst12  
+
+密码：123456
+开发文档在商户后台，叫技术尽快开发下来的
+这个支持微信WAO
+WAP
+
+
+
+第三方联系方式：3534494177
