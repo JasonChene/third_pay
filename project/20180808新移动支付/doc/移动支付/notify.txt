@@ -1,0 +1,25 @@
+logger.info("接收到一扫付的通知内容:");
+StringBuffer sb = new StringBuffer();
+InputStream is = request.getInputStream();
+InputStreamReader isr = new InputStreamReader(is);
+BufferedReader br = new BufferedReader(isr);
+String s = "";
+while ((s = br.readLine()) != null) {
+	sb.append(s);
+}
+String response = sb.toString();
+logger.info("异步通知内容:\r\n" + response);
+String[] responseArray = response.split("\\|");
+if(responseArray.length < 2){
+	throw new Exception("异步通知内容格式错误");
+}
+//签名 忽略验签
+String sign = responseArray[0];
+//数据		
+JSONObject jsonObj = JSONObject.parseObject(responseArray[1]);
+String status = jsonObj.getString("code");
+if (StrUtil.isEmpty(status) || !"000000".equals(status)) {
+	throw new Exception("交易失败,响应状态[" + status + "]");
+}
+//异步通知返回的数据
+JSONObject dataJson = JSONObject.parseObject(jsonObj.getString("data"));

@@ -1,0 +1,12 @@
+网站   www.shifengpay.com
+帐号1991133416@qq.com
+密码   777777
+提款密码：258369
+ID2397
+
+
+商户ID：2397
+
+密钥(KEY)：f9692a32360e4d0cba3404ee51ebf286
+
+网关地址：http://pay.shifengpay.com/chargebank.aspx

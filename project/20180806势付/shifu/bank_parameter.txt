@@ -1,0 +1,5 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('势付','中国银行','963');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('势付','农业银行','964');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('势付','建设银行','965');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('势付','工商银行','967');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('势付','民生银行','980');

@@ -1,0 +1,16 @@
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\bin\order.dll
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\bin\order.pdb
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\obj\Debug\order.dll
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\obj\Debug\order.pdb
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\bin\log4net.dll
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd\Desktop\微信支付\Wx query\WXQuery\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\bin\order.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\bin\order.pdb
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\bin\log4net.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\obj\Debug\order.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wx query\WXQuery\obj\Debug\order.pdb

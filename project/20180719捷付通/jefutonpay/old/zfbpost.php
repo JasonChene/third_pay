@@ -106,6 +106,10 @@ $data =array(
 #变更参数设置
 $scan = 'zfb';
 $data['fxpay'] = 'alipay';
+$data['fxmobile'] = '1';
+if (_is_mobile()) {
+  $data['fxmobile'] = '0';
+}
 
 payType_bankname($scan,$pay_type);
 

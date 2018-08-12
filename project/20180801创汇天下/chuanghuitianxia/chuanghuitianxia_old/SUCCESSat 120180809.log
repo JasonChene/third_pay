@@ -1,0 +1,30 @@
+2018-08-09 04:21:24 -----re
+2018-08-09 04:21:24 merchant_code=D666666882004-----re
+2018-08-09 04:21:24 notify_type=page_notify-----re
+2018-08-09 04:21:24 notify_id=6e5f4ff04f034d0dbbed68c2e0578255-----re
+2018-08-09 04:21:24 interface_version=V3.0-----re
+2018-08-09 04:21:24 sign_type=RSA-S-----re
+2018-08-09 04:21:24 order_no=44349920180809162024-----re
+2018-08-09 04:21:24 order_amount=100-----re
+2018-08-09 04:21:24 order_time=2018-08-09 16:20:24-----re
+2018-08-09 04:21:24 trade_no=DE204H111196792-----re
+2018-08-09 04:21:24 trade_time=2018-08-09 16:20:32-----re
+2018-08-09 04:21:24 trade_status=SUCCESS-----re
+2018-08-09 04:21:24 bank_seq_no=4b92a833e59a4461bf2686d5937a69f3-----re
+2018-08-09 04:21:24 sign=3Sd2cioqKEzticodliXGNWm290nx2RCokRUP/1jSgNjTLqSk8h1LNqlbAtDBeVB3bCIvLWFHD1JfMUmi5SIykkBDNlIo7fMviT1XERd90ygRgtFf2bEbYYHejCpLQQwvz1eshSLqbw7YfrbzsDTV40Gt3RHSIi9PVQTuf+FSMTk=-----re
+2018-08-09 04:21:25 trade_no=DE204H111196792
+2018-08-09 04:21:25 sign_type=RSA-S
+2018-08-09 04:21:25 notify_type=offline_notify
+2018-08-09 04:21:25 merchant_code=D666666882004
+2018-08-09 04:21:25 order_no=44349920180809162024
+2018-08-09 04:21:25 trade_status=SUCCESS
+2018-08-09 04:21:25 sign=gVD6s40uWZ8YUl8sZ3Pbu2qVOtbjZs8lxk2Yi8vIvrQfmwmbJaDA+/IVoCoKZsoIa6mdClLo/PFQ0wONqG3YdOPtZuWtV+ZMQ8IrbWIY5nc6Rg3f6fvRf1CDc2F5sz+BGnl/Qb5SeuOWpocfCMt9PHyrF0silu5prnsfph9swZA=
+2018-08-09 04:21:25 order_amount=100
+2018-08-09 04:21:25 interface_version=V3.0
+2018-08-09 04:21:25 bank_seq_no=4b92a833e59a4461bf2686d5937a69f3
+2018-08-09 04:21:25 order_time=2018-08-09 16:20:24
+2018-08-09 04:21:25 notify_id=2301d6e3dff54b788101ef946b4cf035
+2018-08-09 04:21:25 trade_time=2018-08-09 16:20:32
+2018-08-09 04:21:25 signtext=bank_seq_no=4b92a833e59a4461bf2686d5937a69f3&interface_version=V3.0&merchant_code=D666666882004&notify_id=2301d6e3dff54b788101ef946b4cf035&notify_type=offline_notify&order_amount=100&order_no=44349920180809162024&order_time=2018-08-09 16:20:24&trade_no=DE204H111196792&trade_status=SUCCESS&trade_time=2018-08-09 16:20:32
+2018-08-09 04:21:25 flag=1
+2018-08-09 04:21:25 SUCCESSat 1

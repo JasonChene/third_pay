@@ -1,0 +1,31 @@
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\bin\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\bin\order.pdb
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\order.pdb
+C:\Users\wd\Desktop\点卡（C#）\查询\query\bin\order.dll
+C:\Users\wd\Desktop\点卡（C#）\查询\query\bin\order.pdb
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\order.dll
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\order.pdb
+C:\Users\wd\Desktop\智汇宝api\zhb query\ZhbQuery\bin\order.dll
+C:\Users\wd\Desktop\智汇宝api\zhb query\ZhbQuery\bin\order.pdb
+C:\Users\wd\Desktop\智汇宝api\zhb query\ZhbQuery\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\智汇宝api\zhb query\ZhbQuery\obj\Debug\order.dll
+C:\Users\wd\Desktop\智汇宝api\zhb query\ZhbQuery\obj\Debug\order.pdb
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\bin\order.dll
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\bin\order.pdb
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\bin\log4net.dll
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\obj\Debug\order.dll
+C:\Users\wd-t083\Desktop\扫码\cn\query\Query\obj\Debug\order.pdb
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\bin\order.dll
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\bin\order.pdb
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\bin\log4net.dll
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\obj\Debug\order.dll
+C:\Users\wd-t083\Desktop\扫码\en\query\Query\obj\Debug\order.pdb

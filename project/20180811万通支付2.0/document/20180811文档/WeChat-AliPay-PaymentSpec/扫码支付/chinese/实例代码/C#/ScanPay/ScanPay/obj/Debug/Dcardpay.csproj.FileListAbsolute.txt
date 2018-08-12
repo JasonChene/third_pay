@@ -1,0 +1,5 @@
+C:\Users\wd\Desktop\点卡demo（C#）\dcardpay\Dcard\bin\CSharp.dll
+C:\Users\wd\Desktop\点卡demo（C#）\dcardpay\Dcard\bin\CSharp.pdb
+C:\Users\wd\Desktop\点卡demo（C#）\dcardpay\Dcard\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\点卡demo（C#）\dcardpay\Dcard\obj\Debug\CSharp.dll
+C:\Users\wd\Desktop\点卡demo（C#）\dcardpay\Dcard\obj\Debug\CSharp.pdb

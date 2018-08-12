@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.lszx0578.com:8086/mpcctp/cashier/pay.ac';
+$form_url = 'http://www.leleec.com:8086/mpcctp/cashier/pay.ac';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -92,17 +92,16 @@ foreach ($data as $arr_key => $arr_value) {
   }
 }
 foreach ($data as $arr_key => $arr_value) {
-  $data_str = $arr_key.'='.$arr_value.'&';
+  $data_str .= $arr_key.'='.$arr_value.'&';
 }
 $data_str = substr($data_str,0,-1);
 
-
 #curl获取响应值
-$res = curl_post($form_url,$data_str,POST);
+$res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
+if ($res['code'] == '000000') {
     $qrurl = QRcodeUrl($url);
     $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
 }else{

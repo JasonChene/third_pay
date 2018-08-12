@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="bankPay"
+  id="myeclipse.1468983360607"
+  context-root="/bankPay"
+  j2ee-spec="5.0"
+  archive="bankPay.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

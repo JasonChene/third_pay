@@ -1,0 +1,33 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style rel="stylesheet" type="text/css">
+span{color:red;}
+</style>
+</head>
+<body>
+<form method="post" action="ScanPay.aspx" target="_blank">
+	接口版本（Interface Version）：<input type="text" name="interface_version" value="V3.1"/><span>*</span><br/>
+	服务类型（Service Type）：<select name="service_type">
+                           <option value="weixin_scan">weixin_scan</option>
+                           <option value="alipay_scan">alipay_scan</option>
+                           <option value="zhb_scan">zhb_scan</option> 
+                           </select><span>*</span><br/>
+    签名方式（Sign Type）：<input type="text" name="sign_type" value="RSA-S"/><span>*</span><br/>
+	商 家 号（Merchant ID）：<input type="text" name="merchant_code" value="1111110166"/><span>*</span><br/>
+	商户网站唯一订单号（Order No.）：<input type="text" name="order_no" value="1234567cc"/><span>*</span><br/>
+	商户订单时间（Order Time）：<input type="text" name="order_time" value="2016-01-19 14:51:51"/><span>*</span><br/>
+	订单金额（Order Amount）：<input type="text" name="order_amount" value="0.11"/><span>*</span><br/>
+	商品名称（Product Name）：<input type="text" name="product_name" value="图书"/><span>*</span><br/>
+    异步通知地址（Notify URL）：<input type="text" name="notify_url" value="www.xhbill.com"/><span>*</span><br/>
+    客户端IP（Client IP）：<input type="text" name="client_ip" value="120.237.123.242"/><span>*</span><br/>
+	商品编号（Product Code）：<input type="text" name="product_code" value="A1"/><br/>
+    商品数量（Product Num）：<input type="text" name="product_num" value="12"/><br/>
+    商品描述（Product Desc）：<input type="text" name="product_desc" value="test"/><br/>
+    公用回传参数（Extra Return Param）：<input type="text" name="extra_return_param" value="pay"/><br/>
+    公用业务扩展参数（Extend Param）：<input type="text" name="extend_param" value=""/><br/>
+    
+	<br/><input type="submit" name="submit" value="在线支付"/>
+</form>
+</body>
+</html>

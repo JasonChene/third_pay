@@ -1,0 +1,8 @@
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\bin\log4net.dll
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\C#\B2C网银支付 C#\order\micropay\obj\Debug\CSharp.pdb

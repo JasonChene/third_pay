@@ -1,0 +1,17 @@
+C:\Users\wd-t083\Desktop\桌面\扫码\cn\ScanPay\ScanPay\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\扫码\cn\ScanPay\ScanPay\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\扫码\cn\ScanPay\ScanPay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\扫码\cn\ScanPay\ScanPay\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\扫码\cn\ScanPay\ScanPay\obj\Debug\CSharp.pdb
+C:\Users\wd-t083\Desktop\C#\cn\ScanPay\ScanPay\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\C#\cn\ScanPay\ScanPay\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\C#\cn\ScanPay\ScanPay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\C#\cn\ScanPay\ScanPay\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\C#\cn\ScanPay\ScanPay\obj\Debug\CSharp.pdb
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\bin\CSharp.dll
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\bin\CSharp.pdb
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\bin\log4net.dll
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\obj\Debug\Scanpay.csprojResolveAssemblyReference.cache
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\obj\Debug\CSharp.dll
+C:\Users\fb-t236\Desktop\微付h5c\c#\ScanPay\ScanPay\obj\Debug\CSharp.pdb

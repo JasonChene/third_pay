@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="H5APIPay_Demo"
+  id="myeclipse.1479432586822"
+  context-root="/H5APIPay_Demo"
+  j2ee-spec="5.0"
+  archive="H5APIPay_Demo.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

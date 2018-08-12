@@ -1,0 +1,16 @@
+支付名称：云派
+商号：8023506000110 
+密钥：2FU#I#6bSLWWZKuao6N/l@8$|O-^y*Zl（md5/rsa）
+商户后台域名：http://cp.huanhe.pro/merchant/login
+商户后台账密：aabb5588
+支付密码：
+支持的支付方式：网关。快捷。QQH5。微信扫码，代付（不包括维护中的）
+是否有域名认证：无（如有 需要附上域名管理地址资料）
+
+通道      通道编码
+
+快捷      FASTPAY_007 
+网关      BANKNET_001 
+微信扫码  WXQRCODE_001 
+QQH5      QQH5_002 
+	

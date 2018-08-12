@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.lszx0578.com:8086/mpcctp/cashier/pay.ac';
+$form_url = 'http://www.leleec.com:8086/mpcctp/cashier/pay.ac';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -42,9 +42,11 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount']*100, 0, '.', '');
 #第三方传值参数设置
 $data = array(
+"bankCode" => $bank_code,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
 "payAmt" => $MOAmount,
+"frontUrl" => $return_url,
 "backUrl" => $notify_url,
 "version" => '2.1',
 "orgNo" => $pu_key,
@@ -53,12 +55,14 @@ $data = array(
 "sign" => array(
 "str_arr" => array(
 "backUrl" => $notify_url,
+"bankCode" => $bank_code,
 "custId" => $pay_mid,
 "custOrderNo" => $order_no,
+"frontUrl" => $return_url,
 "goodsName" => "iPhone6S",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
-"tranType" => "0402",
+"tranType" => "0601",
 "version" => "2.1",
 ),
 "mid_conn" => "=",
@@ -92,40 +96,10 @@ foreach ($data as $arr_key => $arr_value) {
   }
 }
 foreach ($data as $arr_key => $arr_value) {
-  $data_str = $arr_key.'='.$arr_value.'&';
+  $data_str .= $arr_key.'='.$arr_value.'&';
 }
 $data_str = substr($data_str,0,-1);
-
-
 #curl获取响应值
-$res = curl_post($form_url,$data_str,POST);
-$res = json_decode($res,1);
-#跳转qrcode
-$url = $res['busContent'];
-if ($res['ordStatus'] == '01') {
-    $jumpurl = $url;
-}else{
-  echo "错误码：".$res['code']."错误讯息：".$res['msg'];
-  exit();
-}
-?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if(isset($form_data)){
-              foreach ($data as $arr_key => $arr_value) {
-          ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php }} ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>
+$res = curl_post($form_url,$data_str,"POST");
+echo $res;//整個html
+exit;

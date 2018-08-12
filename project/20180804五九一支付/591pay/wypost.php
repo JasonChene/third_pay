@@ -46,7 +46,7 @@ $data = array(
 "out_trade_no" => $order_no,
 "total_amount" => $MOAmount,
 "notify_url" => $notify_url,
-"trade_type" => $band_code,
+"trade_type" => $bank_code,
 "interface_version" => 'V2.0',
 "sign" => array(
 "str_arr" => array(
@@ -54,7 +54,7 @@ $data = array(
 "notify_url" => $notify_url,
 "out_trade_no" => $order_no,
 "total_amount" => $MOAmount,
-"trade_type" => "ALIPAY_NATIVE",
+"trade_type" => $bank_code,
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
