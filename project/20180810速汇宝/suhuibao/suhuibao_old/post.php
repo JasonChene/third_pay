@@ -135,7 +135,6 @@ if ($scan == "yl") {
   $bankname = $pay_type . "->银联钱包在线充值";
 }
 
-
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $order_amount, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
   echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
@@ -144,6 +143,8 @@ if ($result_insert == -1) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
+echo "<pre>";
+var_dump($parms);exit;
 if ($scan == "yl") {
   $res = curl_post($form_url, $parms);
   $xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");

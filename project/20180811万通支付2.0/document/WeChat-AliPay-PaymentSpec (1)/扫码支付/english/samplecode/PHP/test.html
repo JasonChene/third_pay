@@ -1,0 +1,91 @@
+﻿<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script type="text/javascript" src="./js/jquery-1.8.0.js"></script>
+	<script type="text/javascript" src="./js/jquery.qrcode.js"></script>
+	<script type="text/javascript" src="./js/utf.js"></script>
+	<script>
+
+function sQrcode(qdata){
+
+	$("#showqrcode").empty().qrcode({		
+			render : "canvas",    		
+			text : qdata,    			
+			width : "200",              	
+			height : "200",             	
+			background : "#ffffff",     	
+			foreground : "#000000",     	
+			src: ""    						
+		});	
+		
+}	
+	
+$(document).ready(function(){
+
+	$("#submit").click(function(){
+		
+ 		var formParam = $("#wxpay").serialize();		
+		alert("request data：" + formParam);
+
+		$.ajax({  									
+			type:"post",      							
+         	url:"./scan_pay.php",  								
+         	data:formParam,   						
+         	dataType:"text",  						
+         		success:function(data,textStatus){			
+						$("#xmldata").text(data);       	 		
+         	 			var result_code = $(data).find("result_code").text();
+					  	if (result_code=="0"){
+						var qrcode = $(data).find("qrcode").text();
+         	 			sQrcode(qrcode);
+						}else{
+						 $("#showqrcode").text("error，the resp_desc or result_desc parameter decribes the reason");     
+						}
+         	 		},
+         	error:function(){       					
+         			  alert("connect failed");					
+         			}
+    	});      		
+	});
+});
+</script>
+  </head>
+  
+  <body>
+  <table>
+		<tr>
+  			<td>
+	<form id="wxpay">
+					<div>merchant_code：<input Type="text" Name="merchant_code" id="merchant_code" value="1111110166"> * </div>
+					<div>service_type：<select name="service_type" id="service_type">
+							<option value="weixin_scan">wechat</option>
+							<option value="alipay_scan">alipay</option>
+							<option value="qq_scan">qq</option>
+						</select> *	</div>		
+					<div>notify_url：<input Type="text" Name="notify_url" id="notify_url" value="http://www.xxx.com/dinpay/offline.php"> * </div>				
+					<div>interface_version：<input Type="text" Name="interface_version" id="interface_version" value="V3.1"/> * </div>																	
+					<div>sign_type：<input Type="text" Name="sign_type" id="sign_type" value="RSA-S"/> * </div>													
+					<div>order_no：<input Type="text" Name="order_no" id="order_no" value=""> * </div>
+					<div>client_ip：<input Type="text" Name="client_ip" id="client_ip" value="120.237.123.242"> * </div>
+					<div>order_time：<input Type="text" Name="order_time" id="order_time" value="2016-12-10 12:36:25"/>* </div>		
+					<div>order_amount：<input Type="text" Name="order_amount" id="order_amount" value="0.1"> * </div>		
+					<div>product_name：<input Type="text" Name="product_name" id="product_name" value="product_name"> * </div>	
+					<div>product_desc：<input Type="text" Name="product_desc" value="">  </div>
+					<div>extra_return_param：<input Type="text" Name="extra_return_param"value=""></div>
+					<div>product_num：<input Type="text" Name="product_num"  value="">  </div>
+					<div>product_code：<input Type="text" Name="product_code"  value=""> </div>
+					<div>extend_param：<input Type="text" Name="extend_param"  value=""> </div>					
+				</form>
+				<button id="submit">submit</button> 			
+  			</td>
+  			<td><div id="showqrcode"></div></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div>callback：</div>
+				<textarea rows="12" cols="90" id="xmldata"></textarea>
+			</td>
+		</tr>
+	</table>
+	</body>
+</html>

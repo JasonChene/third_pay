@@ -1,0 +1,8 @@
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\bin\log4net.dll
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\扫码\en\ScanPay\ScanPay\obj\Debug\CSharp.pdb

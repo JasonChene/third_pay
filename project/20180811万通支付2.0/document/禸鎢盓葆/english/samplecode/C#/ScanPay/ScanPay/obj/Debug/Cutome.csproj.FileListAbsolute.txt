@@ -1,0 +1,10 @@
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Payment\C#\Cutome\bin\CSharp.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Payment\C#\Cutome\bin\CSharp.pdb
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Payment\C#\Cutome\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Payment\C#\Cutome\obj\Debug\CSharp.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Payment\C#\Cutome\obj\Debug\CSharp.pdb
+C:\Users\wd\Desktop\点卡（C#）\海关申报\Cutome\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\点卡（C#）\海关申报\Cutome\obj\Debug\CSharp.dll
+C:\Users\wd\Desktop\点卡（C#）\海关申报\Cutome\bin\CSharp.dll
+C:\Users\wd\Desktop\点卡（C#）\海关申报\Cutome\bin\CSharp.pdb
+C:\Users\wd\Desktop\点卡（C#）\海关申报\Cutome\obj\Debug\CSharp.pdb

@@ -1,0 +1,10 @@
+D:\PHP\order\order\bin\order.dll
+D:\PHP\order\order\bin\order.pdb
+D:\PHP\order\order\obj\Debug\ResolveAssemblyReference.cache
+D:\PHP\order\order\obj\Debug\order.dll
+D:\PHP\order\order\obj\Debug\order.pdb
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\order\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\order\obj\Debug\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\order\bin\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\order\bin\order.pdb
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\order\obj\Debug\order.pdb

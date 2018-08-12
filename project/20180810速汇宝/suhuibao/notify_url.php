@@ -3,7 +3,7 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-	$merchant_code	= $_REQUEST["merchant_code"];		
+	$merchant_code = $_REQUEST["merchant_code"];		
 	$notify_type = $_REQUEST["notify_type"];	
 	$notify_id = $_REQUEST["notify_id"];
 	$interface_version = $_REQUEST["interface_version"];
@@ -40,7 +40,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
-$parms=array(
+$parms = array(
 	"merchant_code" => $merchant_code,
 	"notify_type" => $notify_type,
 	"notify_id" => $notify_id,
@@ -57,36 +57,36 @@ $parms=array(
 	"bank_seq_no" => $bank_seq_no
 );
 ksort($parms);
-$signtext='';
+$signtext = '';
 foreach ($parms as $arr_key => $arr_value) {
-	if($arr_value == "" || $arr_key == "sign_type"){
-	}else{
+	if ($arr_value == "" || $arr_key == "sign_type") {
+	} else {
 		$signtext .= $arr_key . '=' . $arr_value . '&';
 	}
 }
-$signtext2=substr($signtext, 0,-1);
-	$dinpay_public_key = openssl_get_publickey($pay_account);	
-	$flag = openssl_verify($signtext2,base64_decode($sign),$dinpay_public_key,OPENSSL_ALGO_MD5);
-	
+$signtext2 = substr($signtext, 0, -1);
+$dinpay_public_key = openssl_get_publickey($pay_account);
+$flag = openssl_verify($signtext2, base64_decode($sign), $dinpay_public_key, OPENSSL_ALGO_MD5);	
+
 if ($trade_status == "SUCCESS") {
-  if ( $flag == 1) {
+  if ($flag == 1) {
 		$result_insert = update_online_money($order_no, $order_amount);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");	
-		}else if($result_insert == 0){
+		} else if ($result_insert == 0) {
 			echo ("SUCCESS");
-		}else if($result_insert == -2){
+		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-		}else if($result_insert == 1){
+		} else if ($result_insert == 1) {
 			echo ("SUCCESS");
 		} else {
 			echo ("支付失败");
 		}
-	}else{
+	} else {
 		echo '签名不正确！';
 		exit;
 	}
-}else{
+} else {
 	echo '交易失败！';
 	exit;
 }
