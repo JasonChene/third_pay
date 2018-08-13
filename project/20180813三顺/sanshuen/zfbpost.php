@@ -103,6 +103,7 @@ $data = array(
   "pay_callbackurl" => $return_url,
   "pay_amount" => $mymoney,
   "pay_md5sign" => '',
+  "pay_productname" => "pay"
 );
 #变更参数设置
 $scan = 'zfb';
