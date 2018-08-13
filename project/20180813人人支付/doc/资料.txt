@@ -1,0 +1,13 @@
+网关接口地址：https://qfgames.com/gateway
+
+商户秘钥：9c306963c0c816df450f911c2ba07490
+商户号：10306
+接口支持：微信扫码  微信H5
+
+技术联系方式 QQ:1074743377 Skype:main99game
+
+
+https://qfgames.com/gateway  网关地址
+
+商户后台地址：https://renrenwxpay.app/merchants
+商户号：10306 默认密码：a123456
