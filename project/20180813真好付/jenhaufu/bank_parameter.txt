@@ -1,0 +1,13 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','光大银行','CEB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','华夏银行','HXB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','交通银行','COMM');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','浦发银行','SPDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','兴业银行','CIB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','邮政储蓄银行','POST');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','招商银行','CMB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','中国银行','BOC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('真好付','中信银行','CITIC');
