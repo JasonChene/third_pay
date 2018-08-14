@@ -1,0 +1,6 @@
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\bin\wechat_demo.dll.config
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\bin\wechat_demo.dll
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\bin\wechat_demo.pdb
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\obj\Debug\wechat_demo.csprojResolveAssemblyReference.cache
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\obj\Debug\wechat_demo.dll
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\wechat_demo\obj\Debug\wechat_demo.pdb

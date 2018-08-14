@@ -1,0 +1,156 @@
+.order_content {
+	background:#fff;
+	border:1px solid #E7E7E6;
+	padding:30px 20px;
+	width: 1000px;
+	margin: auto;
+}
+.order_content .black {
+	font-size:16px;
+	color:#313131;
+}
+label {
+	font-weight:normal;
+}
+.money {
+	display: inline;
+	float: right;
+}
+.money:hover {
+	cursor:pointer;
+}
+.money span {
+	color:#ff6307;
+}
+.detail {
+	margin-top:10px;
+}
+.detail div {
+	display:inline-block;
+}
+
+#tabbox{ 
+	width:1000px; 
+	overflow:hidden; 
+	margin: 20px auto;
+}
+.tab_conbox{
+	background:#fff;
+	border: 1px solid #E7E7E6;
+	border-top: none;
+	-webkit-padding-start: 20px;
+	-webkit-margin-before: 0;
+	margin-top:0;
+}
+.tab_conbox .tab_con{ 
+	display:none;
+	list-style: none;
+	padding-top: 20px; 
+	padding-bottom: 20px; 
+	margin: auto;
+	width: 860px;
+}
+.tabs{
+	height: 40px;
+	border-bottom:1px solid #E7E7E6;
+	border-left: 1px solid #E7E7E6;
+	width: 100%;
+	padding-left: 0;
+	-webkit-padding-start: 0;
+	-moz-padding-start: 0;   /*firefox*/
+	-webkit-margin-after: 0;
+	-webkit-margin-before: 0;
+	margin-bottom:0;
+}
+.tabs li{
+	height:40px;
+	float:left;
+	border:1px solid #E7E7E6;
+	border-left:none;
+	margin-bottom: -1px;
+	background: #EEEEEE;
+	overflow: hidden;
+	position: relative;
+}
+.tabs li a {
+	display: block;
+	padding:8px 20px;
+	border: 1px solid #fff;
+	outline: none;
+	text-decoration: none;
+	color:#333;
+	font-size: 16px;
+}
+.tabs li a:hover {
+	background: #EEEEEE;
+}    
+.tabs .thistab,.tabs .thistab a:hover{
+	background: #fff;
+	border-bottom: 1px solid #fff;
+}
+.tab_conbox table {
+	width:854px;
+}
+.tab_conbox table tr{
+	height:60px;
+}
+.tab_conbox table tr td {
+	position: relative;
+	text-align: center;
+}
+.tab_conbox table tr td .img {
+	vertical-align:middle;
+	border: 1px solid #ddd;
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width:139px;
+	height:32px;
+}
+.gouxuan {
+	position: absolute;
+	right: 37px;
+	bottom: 14px;
+}
+.pay button {
+	background:#FEAA26;
+	padding: 13px;
+	color:#fff;
+	border:0;
+	width: 260px;
+	border-radius: 4px;
+	font-size: 16px;
+	margin-top: 10px;
+}
+#turnBank .modal-dialog {
+	margin-top:250px;
+}
+#turnBank .modal-header {
+	border-bottom: 2px solid #FDBD57;
+}
+#turnBank .modal-body {
+	text-align:center;
+}
+#turnBank .modal-body button{
+	background:#EEEEEE;
+	color:#747474;
+	width:200px;
+	margin-bottom: 10px;
+}
+#turnBank .modal-content {
+	border-radius: 2px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+#turnBank p {
+	margin:15px 0 30px 0;
+} 
+.back {
+	filter:alpha(opacity=50); /*IE�˾�*/
+	-moz-opacity:0.5; /*Firefox˽��*/
+	opacity:0.5;/*����*/
+}
+.pay {
+	width:1000px;
+	margin:auto;
+}

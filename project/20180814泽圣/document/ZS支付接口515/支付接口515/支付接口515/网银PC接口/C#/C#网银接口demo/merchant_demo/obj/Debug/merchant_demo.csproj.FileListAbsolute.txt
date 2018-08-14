@@ -1,0 +1,5 @@
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\merchant_demo\bin\merchant_demo.dll.config
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\merchant_demo\bin\merchant_demo.dll
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\merchant_demo\bin\merchant_demo.pdb
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\merchant_demo\obj\Debug\merchant_demo.dll
+d:\documents\visual studio 2013\Projects\WindowsFormsApplication1\merchant_demo\obj\Debug\merchant_demo.pdb

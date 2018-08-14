@@ -1,0 +1,5 @@
+F:\VS2008\vs2013workspace\c#\demo_payment_zs_cs\bin\demo_payment_zs_cs.dll.config
+F:\VS2008\vs2013workspace\c#\demo_payment_zs_cs\bin\demo_payment_zs_cs.dll
+F:\VS2008\vs2013workspace\c#\demo_payment_zs_cs\bin\demo_payment_zs_cs.pdb
+F:\VS2008\vs2013workspace\c#\demo_payment_zs_cs\obj\Debug\demo_payment_zs_cs.dll
+F:\VS2008\vs2013workspace\c#\demo_payment_zs_cs\obj\Debug\demo_payment_zs_cs.pdb

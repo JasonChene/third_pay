@@ -1,0 +1,11 @@
+demo链接：http://expand.clpayment.com/
+
+商户服务平台：
+http://mch.clpayment.com
+测试账号:
+test@qq.com
+xjb405068!
+
+
+对接测试参数：1000000001
+   md5key:123456ADSEF
