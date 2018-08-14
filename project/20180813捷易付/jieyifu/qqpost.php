@@ -13,10 +13,9 @@ function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -95,25 +94,25 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "payKey" => $pay_mid, //商户的支付key
-  "productName" => 'productName', //商品名
-  "orderNo" => $order_no, //订单号编号
-  "orderPrice" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额
-  "payWayCode" => 'ZITOPAY', //支付方式编码
-  "payTypeCode" => '', //支付类型编码
-  "orderIp" => getClientIp(), //商户IP
-  "orderDate" => date("Ymd"), //订单日期
-  "orderTime" => date("YmdHis"), //订单具体时间
-  "returnUrl" => $return_url, //页面支付完成回调url地址
-  "notifyUrl" => $merchant_url, //支付成功结果异步通知url地址
-  "orderPeriod" => '30', //订单有效期
-  "sign" => '', //上述非空字段签名
+  "payKey" => $pay_account,
+  "orderPrice" => (float)$mymoney,
+  "outTradeNo" => $order_no,
+  "productType" => "",
+  "orderTime" => date("YmdHis"),
+  "productName" => 'productName',
+  "orderIp" => getClientIp(),
+  "returnUrl" => $return_url,
+  "notifyUrl" => $merchant_url,
+  "sign" => '',
 );
 
-#变更参数设置
-$form_url = 'http://api.quanyinzf.com:8050/rb-pay-web-gateway/scanPay/initPayIntf';//接口地址
+$form_url = 'https://gateway.meizi50.com/scanPay/initPay';//接口地址
 $scan = 'qq';
-$data['payTypeCode'] = 'ZITOPAY_QQ_SCAN';
+$data['productType'] = '70000101';
+if (_is_mobile()) {
+  $data['productType'] = '70000201';
+}
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -138,22 +137,22 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&paySecret=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
-$data_str = http_build_query($data);
 
 #curl获取响应值
-$res = curl_post($form_url, $data_str);
-$tran = mb_convert_encoding("$res", "UTF-8");
-$row = json_decode($tran, 1);
+$res = curl_post($form_url, http_build_query($data));
+$row = json_decode($res, 1);
 
 #跳转
-if ($row['result'] != 'success') {
-  echo '错误代码:' . $row['result'] . "\n";
-  echo '错误讯息:' . $row['msg'] . "\n";
+if ($row['resultCode'] != '0000') {
+  echo '错误代码:' . $row['resultCode'] . "\n";
+  echo '错误讯息:' . $row['errMsg'] . "\n";
   exit;
 } else {
-  $qrcodeUrl = $row['code_url'];
+  $qrcodeUrl = $row['payMessage'];
   if (_is_mobile()) {
     $jumpurl = $qrcodeUrl;
+    header("location:".$jumpurl);
+    exit;
   } else {
     $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
   }
