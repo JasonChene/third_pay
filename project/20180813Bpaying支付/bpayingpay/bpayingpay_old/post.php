@@ -1,7 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -74,8 +73,7 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -88,7 +86,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://www.bpaying.com/Pay_Index_api.html';
+$form_url = 'http://www.bpaying.com/Pay_Index.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -106,22 +104,18 @@ $data = array(
   "pay_productname" => "pay"
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "百度钱包")) {
-  $scan = 'bd';
-  $data['pay_bankcode'] = '909';
-}elseif (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_bankcode'] = '908';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '905';
-  }
+if (strstr($_REQUEST['pay_type'], "银联快捷")) {
+  $scan = 'ylkj';
+  $data['pay_bankcode'] = '912';
+}elseif(strstr($_REQUEST['pay_type'], "银联钱包")){
+  $scan = 'yl';
+  $data['pay_bankcode'] = '913';
 }else {
-  $scan = 'wx';
-  $data['pay_bankcode'] = '901';//h5
+  $scan = 'wy';
+  $data['pay_bankcode'] = '907';
 }
+
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -146,17 +140,8 @@ $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['pay_md5sign'] = $sign;
 
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
-#跳转
-if ($row['returncode'] != '00') {
-  echo '错误代码:' . $row['returncode'] . "<br>";
-  exit;
-} else {
-    $jumpurl = $row['qrcode'];
-  
-}
+$form_data = $data;
+$jumpurl = $form_url;
 #跳轉方法
 
 ?>

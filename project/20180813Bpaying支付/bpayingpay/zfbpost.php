@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://www.bpaying.com/Pay_Index.html';
+$form_url = 'http://www.bpaying.com/Pay_Index_api.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -141,11 +141,7 @@ if ($row['returncode'] != '00') {
   echo '错误代码:' . $row['returncode'] . "<br>";
   exit;
 } else {
-  if (_is_mobile()) {
     $jumpurl = $row['qrcode'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-  }
 }
 #跳轉方法
 
