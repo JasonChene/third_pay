@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://www.666zf.com/Pay_Index.html';
+$form_url = 'http://www.bpaying.com/Pay_Index_api.html';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -106,15 +106,15 @@ $data = array(
   "pay_productname" => "pay"
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+if (strstr($_REQUEST['pay_type'], "百度钱包")) {
   $scan = 'bd';
   $data['pay_bankcode'] = '909';
+}elseif (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['pay_bankcode'] = '910';
 }else {
   $scan = 'wx';
-  $data['pay_bankcode'] = '902';
+  $data['pay_bankcode'] = '901';//h5
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -148,11 +148,7 @@ if ($row['returncode'] != '00') {
   echo '错误代码:' . $row['returncode'] . "<br>";
   exit;
 } else {
-  if (_is_mobile()) {
     $jumpurl = $row['qrcode'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-  }
 }
 #跳轉方法
 

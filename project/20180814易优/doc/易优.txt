@@ -1,0 +1,7 @@
+接口域名：http://open.eyouc.net/gateway/soa
+商户ID：1039
+商户密钥：095edd18063db7024a6ba22de2f632d5
+充值登录平台：b.eyouc.net  
+账号：320672700@qq.com
+密码：123456
+提现密码：123456

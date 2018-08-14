@@ -142,20 +142,8 @@ $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['pay_md5sign'] = $sign;
 
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
-#跳转
-if ($row['returncode'] != '00') {
-  echo '错误代码:' . $row['returncode'] . "<br>";
-  exit;
-} else {
-  if ($scan != 'yl') {
-    $jumpurl = $row['qrcode'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
-  }
-}
+$form_data = $data;
+$jumpurl = $form_url;
 #跳轉方法
 
 ?>

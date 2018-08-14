@@ -1,0 +1,6 @@
+扫码接口地址：https://gateway.meizi50.com/scanPay/initPay
+网银接口地址：https://gateway.meizi50.com/b2cPay/initPay
+代付接口地址：https://gateway.meizi50.com/backProxyPay/initPay
+代付查询接口地址：https://gateway.meizi50.com/proxyPayQuery/query
+余额查询接口地址：https://gateway.meizi50.com/balance/query
+订单查询接口地址：https://gateway.meizi50.com/query/singleOrder
