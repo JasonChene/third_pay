@@ -1,0 +1,7 @@
+http://zhifu.mganhuo.com/index/user/login.html
+
+用户名735666629     密码qwe123
+
+
+商户编号：10005
+APIKey：4b59ce7595c39aa6daaa1973fd4199b4
