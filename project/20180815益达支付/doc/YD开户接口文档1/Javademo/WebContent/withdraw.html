@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+/*
+
+ *
+ *  Description:
+ *  =========================================================================
+ *  商户代付请求范例页面。
+ *
+ *
+ *  =========================================================================
+ *
+ */
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>网上支付平台-商户接口范例-代付请求</title>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center> <h4>支付网关接口参数提交</h4></center>
+
+
+<form action="withdrawapi.jsp" method="post" onsubmit="AttributeJudge()">
+<input type="hidden" name="serverUrl" id="serverUrl" value="" />
+	<table border="1" cellpadding="1" cellspacing="1" align="center" width="50%">
+
+			<tr>
+				<td>1. 字符集:</td>
+				<td><input type="text" name="inputCharset" value="1"/>1-UTF8</td>
+				<td></td>
+			</tr>	
+			<tr>
+				<td>2. 商户号:</td>
+				<td>PayConfig里配置 <font color="red">*测试商户号</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3. 签名类型:</td>
+				<td><input type="text" name="signType"  size="40" value="1"/><font color="red">1-RSA</font></td>
+				<td>商户自行生成RSA密钥对，保存私钥，并把公钥提供给平台</td>
+			</tr>
+			
+			<tr>
+				<td>4. 商户系统通知地址:</td>
+				<td><input type="text" name="notifyUrl" value="http://本地IP/javademo/notify_url.jsp"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>5. 商户系统订单号:</td>
+				<td><input type="text" name="orderNo"  id="orderNo" value="20170826T457001"/><font color="red">*</font><input type="button" value="生成订单号" onclick="setOrderNo()"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6. 订单金额(单位分):</td>
+				<td><input type="text" name="orderAmount" value="1"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>7. 提现类型:</td>
+				<td><input type="text" name="cashType" value="D0"/></td>
+				<td>D0,D1,T0,T1</td>
+			</tr>
+			<tr>
+				<td>8. 订单金额币种类型:</td>
+				<td><input type="text" name="orderCurrency" value="156"/></td>
+				<td>固定值；156表示人民币</td>
+			</tr>
+			<tr>
+				<td>9. 姓名</td>
+				<td><input type="text" name="accountName" id="accountName" value="某某某"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>10. 银行:</td>
+				<td><input type="text" name="bankName" value="民生银行"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>11. 银行卡号:</td>
+				<td><input type="text" name="bankCardNo" value="6216111122223333"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>12. 联行号:</td>
+				<td><input type="text" name="canps" value="305"/><font color="red"></font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>13. 身份证:</td>
+				<td><input type="text" name="idCard" value="111111200101012222"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>14. 扩展参数:</td>
+				<td><input type="text" name="extraCommonParam" value="0"/></td>
+				<td></td>
+			</tr>
+			
+		</table>
+		<div align="center"><input type="submit" value="提交表单"/></div>
+</form>
+
+<script language="javascript">
+	setOrderNo();	
+	function setOrderNo() {
+		var curr = new Date();
+		var m = curr.getMonth() + 1;
+		if (m < 10) {m = '0' + m;}
+		var d = curr.getDate();
+		if (d < 10) {d = '0' + d;}
+		var h = curr.getHours();
+		if (h < 10) {h = '0' + h;}
+		var mi = curr.getMinutes();
+		if (mi < 10) {mi = '0' + mi;}
+		var s = curr.getSeconds();
+		if (s < 10) {s = '0' + s;}
+		var strDatetime = '' + curr.getFullYear() + m + d + h + mi + s;		
+		
+		document.getElementById("orderNo").value = 'DF' + strDatetime;
+	}
+	
+	function AttributeJudge() {
+	
+	}
+</script>
+
+</BODY>
+</HTML>

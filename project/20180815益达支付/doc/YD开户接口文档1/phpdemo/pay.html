@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+/*
+
+ *
+ *  Description:
+ *  =========================================================================
+ *  商户支付请求范例页面。
+ *
+ *
+ *  =========================================================================
+ *
+ */
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>网上支付平台-商户接口范例-支付请求</title>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center> <h4>支付网关接口参数提交</h4></center>
+
+
+<form action="payApply.php" method="post" onsubmit="return AttributeJudge()">
+	<table border="1" cellpadding="1" cellspacing="1" align="center" width="60%">
+
+			<tr>
+				<td>1. 字符集:</td>
+				<td><input type="text" name="inputCharset" value="1" style="width:255px;" readonly="readonly"/></td>
+				<td>固定值，1：UTF-8</td>
+			</tr>	
+			<tr>
+				<td>2. 商户号:</td>
+				<td><input type="text" name="partnerId" value="1817566501046020" style="width:255px;"/><font color="red">*测试商户号</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3. 返回地址:</td>
+				<td><input type="text" name="returnUrl" value="http://127.0.0.1/phpdemo/notify.php" style="width:255px;"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>4. 异步通知地址:</td>
+				<td><input type="text" name="notifyUrl" value="http://127.0.0.1/phpdemo/notify.php" style="width:255px;"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>5. 商户系统订单号:</td>
+				<td><input type="text" name="orderNo"  id="orderNo" value="20170826T457001" style="width:255px;"/><font color="red">*</font><input type="button" value="生成订单号" onclick="setOrderNo()"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6. 订单金额(单位分):</td>
+				<td><input type="text" name="orderAmount" value="1" style="width:255px;"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>7. 订单金额币种类型:</td>
+				<td><input type="text" name="orderCurrency" value="156" style="width:255px;" readonly="readonly"/></td>
+				<td>固定值；156表示人民币</td>
+			</tr>
+			<tr>
+				<td>8. 商户的订单提交时间:</td>
+				<td><input type="text" name="orderDatetime" id="orderDatetime" value="" style="width:255px;"/><font color="red">*</font></td>
+				<td>时间格式:YYYYMMDDHHIISS</td>
+			</tr>
+			<tr>
+				<td>9. 订单标题:</td>
+				<td><input type="text" name="subject" value="测试订单" style="width:255px;"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>10. 订单描述:</td>
+				<td><input type="text" name="body" value="这是一个测试订单！" style="width:255px;"/></td>
+				<td></td>
+			</tr>
+			<tr>
+			<td>11.  银行编码:</td>
+				<td>
+				  <select name="bnkCd" id="bnkCd" style="width:260px;">  
+				    <option value="">请选择</option>
+					<option value="CCB">建设银行</option>
+					<option value="ABC">农业银行</option>
+					<option value="ICBC">工商银行</option>
+					<option value="BOC">中国银行</option>
+					<option value="SPDB">浦发银行</option>
+					<option value="CEB">光大银行</option>
+					<option value="PINGAN">平安银行</option>
+					<option value="CIB">兴业银行</option>
+					<option value="PSBC">邮政储蓄银行</option>
+					<option value="CITIC">中信银行</option>
+					<option value="HXB">华夏银行</option>
+					<option value="CMB">招商银行</option>
+					<option value="CGB">广发银行</option>
+					<option value="BOB">北京银行</option>
+					<option value="SHB">上海银行</option>
+					<option value="CMBC">民生银行</option>
+					<option value="BCM">交通银行</option>
+					<option value="BJRCB">北京农村商业银行</option>   
+				  </select>  
+				  </td>
+				<td><font color="red">*网银支付必填</font></td>
+			</tr>			
+			<tr>
+				<td>12. 支付卡号:</td>
+				<td><input type="text" name="cardNo" id="cardNo" value="" style="width:255px;"/></td>
+				<td><font color="red">*网银支付必填</font></td>
+			</tr>
+			<tr>
+				<td>13.  卡类型:</td>
+				<td>
+				  <select name="accTyp" id="accTyp" style="width:260px;">  
+				    <option value="">请选择</option>
+					<option value="0">借记卡</option>
+					<option value="1">贷记卡</option>  
+				  </select>  
+				  </td>
+				<td><font color="red">*网银支付必填</font></td>
+			</tr>
+			<tr>
+				<td>14. 签名类型:</td>
+				<td><input type="text" name="signType" value="1" style="width:255px;" readonly="readonly"/><font color="red">*固定值1:RSA</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>15. 扩展参数:</td>
+				<td><input type="text" name="extraCommonParam" value="0" style="width:255px;"/></td>
+				<td></td>
+			</tr>
+			<tr valign="top">
+				<td>16. 支付方式:</td>
+				<td>
+				  <select name="payMode" id="payMode" style="width:260px;">  
+				    <option value="">请选择</option>
+					<option value="1">微信扫码</option>
+					<option value="2">支付宝扫码</option>
+					<option value="3">网银支付</option>
+					<option value="4">快捷支付</option>
+					<option value="5">QQ扫码</option>
+					<option value="6">银联扫码</option>
+					<option value="7">微信H5</option>
+					<option value="8">支付宝H5</option>
+					<option value="9">QQWAP</option>
+					<option value="10">银联H5</option> 
+					<option value="11">京东H5</option> 
+					<option value="12">微信固定金额扫码</option> 
+					<option value="13">支付宝固定金额扫码</option> 
+				  </select>  
+				  </td>
+				<td width="30%">
+				1:微信扫码，2:支付宝扫码，3:网银支付，4:快捷支付，5:QQ扫码，6:银联扫码，
+				7:微信H5，8:支付宝H5，9:QQWAP，10:银联H5，11:京东H5，12:微信固定金额扫码，13:支付宝固定金额扫码
+				</td>
+			</tr>
+		</table>
+		<div align="center"><input type="submit" value="提交表单"/></div>
+</form>
+
+<script language="javascript">
+	setOrderNo();	
+	function setOrderNo() {
+		var curr = new Date();
+		var m = curr.getMonth() + 1;
+		if (m < 10) {m = '0' + m;}
+		var d = curr.getDate();
+		if (d < 10) {d = '0' + d;}
+		var h = curr.getHours();
+		if (h < 10) {h = '0' + h;}
+		var mi = curr.getMinutes();
+		if (mi < 10) {mi = '0' + mi;}
+		var s = curr.getSeconds();
+		if (s < 10) {s = '0' + s;}
+		var strDatetime = '' + curr.getFullYear() + m + d + h + mi + s;		
+		document.getElementById("orderDatetime").value = strDatetime;
+		document.getElementById("orderNo").value = 'NO' + strDatetime;
+	}
+	
+	function AttributeJudge() {
+	  var payMode = document.getElementById("payMode").value;
+	  if(payMode==null||payMode==""){
+	     alert("请选择支付方式!");
+		 return false;
+	  }
+	  if(payMode=="3"){
+	    var bnkCd = document.getElementById("bnkCd").value;
+		var accTyp = document.getElementById("accTyp").value;
+		var cardNo = document.getElementById("cardNo").value;
+	    if(bnkCd==null||bnkCd==""){
+	     alert("请选择银行!");
+		 return false;
+	    }
+		if(cardNo==null||cardNo==""){
+	     alert("请填写银行卡号!");
+		 return false;
+	    }
+		if(accTyp==null||accTyp==""){
+	     alert("请选择银行卡类型!");
+		 return false;
+	    }
+	  }
+	  
+	  return true;
+	}
+</script>
+
+</BODY>
+</HTML>
