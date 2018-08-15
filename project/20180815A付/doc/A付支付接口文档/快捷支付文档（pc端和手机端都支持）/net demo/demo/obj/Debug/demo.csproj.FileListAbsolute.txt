@@ -1,0 +1,12 @@
+E:\Java\projects\net-demo\demo\bin\Debug\demo.exe.config
+E:\Java\projects\net-demo\demo\bin\Debug\demo.exe
+E:\Java\projects\net-demo\demo\bin\Debug\demo.pdb
+E:\Java\projects\net-demo\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+E:\Java\projects\net-demo\demo\obj\Debug\demo.exe
+E:\Java\projects\net-demo\demo\obj\Debug\demo.pdb
+E:\projects\net-demo\demo\bin\Debug\demo.exe.config
+E:\projects\net-demo\demo\obj\Debug\demo.exe
+E:\projects\net-demo\demo\obj\Debug\demo.pdb
+E:\projects\net-demo\demo\bin\Debug\demo.exe
+E:\projects\net-demo\demo\bin\Debug\demo.pdb
+E:\projects\net-demo\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache

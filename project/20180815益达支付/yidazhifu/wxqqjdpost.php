@@ -179,7 +179,7 @@ $datastr = substr($datastr, 0, -1);
 $res = curl_post($form_url, $datastr);
 $array = json_decode($res, 1);
 
-if ($array['errCode'] == '0000 ' || $array['status'] == '2') {
+if ($array['errCode'] == '0000' || $array['status'] == '2') {
   $ressign = base64_decode($array['signMsg']);
   $ressigntext = "";
   ksort($array);
