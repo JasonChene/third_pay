@@ -2,7 +2,7 @@
 
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -53,7 +53,7 @@ function curl_post($url, $data){
   return $tmpInfo;
 }
 
-if (strstr($_REQUEST['pay_type'], "QQ反扫") || strstr($_REQUEST['pay_type'], "qq反扫")) {
+if (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
   if (!$_POST['authCode']) {
     $data = array();
     foreach ($_REQUEST as $key => $value) {
@@ -66,13 +66,13 @@ if (strstr($_REQUEST['pay_type'], "QQ反扫") || strstr($_REQUEST['pay_type'], "
           <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
       </head>
       <body>
-        <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
-            <p>正在为您跳转中，请稍候......</p>
-            <input type="hidden" name="file" value="qq" />
-            <?php foreach ($data as $arr_key => $arr_value) { ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-            <?php } ?>
-        </form>
+          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
+              <p>正在为您跳转中，请稍候......</p>
+              <input type="hidden" name="file" value="zfb" />
+              <?php foreach ($data as $arr_key => $arr_value) { ?>
+                <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+              <?php } ?>
+          </form>
           <script language="javascript">
               document.getElementById("frm2").submit();
           </script>
@@ -82,7 +82,7 @@ if (strstr($_REQUEST['pay_type'], "QQ反扫") || strstr($_REQUEST['pay_type'], "
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -120,7 +120,7 @@ $data = array(
 "notifyUrl" => $notify_url,
 "outTradeNo" => $order_no,
 "payMoney" => (int)$MOAmount,
-"payType" => (int)40,
+"payType" => (int)20,
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
@@ -137,26 +137,26 @@ $data = array(
 "outTradeNo" => $order_no,
 "payMoney" => (int)$MOAmount,
 "notifyUrl" => $notify_url,
-"payType" => (int)40,
+"payType" => (int)20,
 "goodsDesc" => 'pay',
 "ip" => $client_ip,
 );
 #变更参数设定
-$scan = 'qq';
-$bankname = $pay_type."->QQ钱包在线充值";
-$payType = $pay_type."_qq";
-if (strstr($_REQUEST['pay_type'], "QQ反扫")||strstr($_REQUEST['pay_type'], "qq反扫")) {
+$scan = 'zfb';
+$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_zfb";
+if (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
   $form_url = 'http://111.231.252.91/pay/barcode.do';
-  $scan = 'qqf';
-  $data['sign']['str_arr']['payType'] = (int)42;
-  $data['payType'] = (int)42;
-  $bankname = $pay_type."->QQ钱包在线充值";
-  $payType = $pay_type."_qq";
+  $scan = 'zfbf';
+  $data['sign']['str_arr']['payType'] = (int)23;
+  $data['payType'] = (int)23;
+  $bankname = $pay_type."->支付宝在线充值";
+  $payType = $pay_type."_zfb";
 }else {
   if(_is_mobile()){
   $form_url = 'http://111.231.252.91/pay/h5.do';
-  $data['sign']['str_arr']['payType'] = (int)41;
-  $data['payType'] = (int)41;
+  $data['sign']['str_arr']['payType'] = (int)22;
+  $data['payType'] = (int)22;
   $data['sign']['str_arr']['returnUrl'] = $return_url;
   $data['returnUrl'] = $return_url;
   }
@@ -189,10 +189,10 @@ $res = curl_post($form_url,$data_str);
 $row = json_decode($res,1);
 #跳转qrcode
 if ($row['retCode'] == '00') {
-  if (_is_mobile() && $scan == 'qq') {
+  if (_is_mobile() && $scan == 'zfb') {
     $url = $row['prepayUrl'];
     $jumpurl = $url;
-  }elseif ($scan == 'qqf') {
+  }elseif ($scan == 'zfbf') {
     echo "正確码：".$row['retCode']."讯息：".$row['retMsg'];
     exit();
   }else {
