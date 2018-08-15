@@ -1,0 +1,8 @@
+商户资料：
+商户后台访问地址：https://merchant.aabill.com
+登录账号：15010737344
+登陆密码：123456
+支付密码：123456
+
+paykey ：b149a3d1a3f24912aa81ad6feb0573f2（商户号）
+paysecret：fd407519930c4fa2888a2b96df945324（商户密钥）
