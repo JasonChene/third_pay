@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+/*
+
+ *
+ *  Description:
+ *  =========================================================================
+ *  商户订单查询请求范例页面。
+ *
+ *
+ *  =========================================================================
+ *
+ */
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>网上支付平台-商户接口范例-代付查询请求</title>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center> <h4>代付订单查询接口参数提交</h4></center>
+
+
+<form action="withdrawQueryApply.php" method="post" onsubmit="AttributeJudge()">
+	<table border="1" cellpadding="1" cellspacing="1" align="center" width="60%">
+
+			<tr>
+				<td>1. 字符集:</td>
+				<td><input type="text" name="inputCharset" value="1" style="width:260px;" readonly="readonly"/></td>
+				<td>固定值，1：UTF-8</td>
+			</tr>	
+			<tr>
+				<td>2. 商户号:</td>
+				<td><input type="text" name="partnerId" value="1817566501046020" style="width:260px;"/><font color="red">*测试商户号</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3. 代付订单号:</td>
+				<td><input type="text" name="orderNo"  id="orderNo" value="" style="width:260px;"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>4. 签名类型:</td>
+				<td><input type="text" name="signType" value="1" style="width:260px;" readonly="readonly"/><font color="red">*固定值1 ：RSA</font></td>
+				<td></td>
+			</tr>
+		</table>
+		<div align="center"><input type="submit" value="提交表单"/></div>
+</form>
+
+<script language="javascript">
+	
+	function AttributeJudge() {
+		return true;
+	}
+</script>
+
+</BODY>
+</HTML>

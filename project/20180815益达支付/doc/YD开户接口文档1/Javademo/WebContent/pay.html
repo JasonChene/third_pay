@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+/*
+
+ *
+ *  Description:
+ *  =========================================================================
+ *  商户支付请求范例页面。
+ *
+ *
+ *  =========================================================================
+ *
+ */
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>网上支付平台-商户接口范例-支付请求</title>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center> <h4>支付网关接口参数提交</h4></center>
+
+
+<form action="payapi.jsp" method="post" onsubmit="AttributeJudge()">
+<input type="hidden" name="serverUrl" id="serverUrl" value="" />
+	<table border="1" cellpadding="1" cellspacing="1" align="center" width="80%">
+
+			<tr>
+				<td>1. 字符集:</td>
+				<td><input type="text" name="inputCharset" value="1"/>1-UTF8</td>
+				<td></td>
+			</tr>	
+			<tr>
+				<td>2. 商户号:</td>
+				<td>PayConfig里配置<font color="red">*测试商户号</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3. 商户私钥:</td>
+				<td>PayConfig里配置<font color="red">RSA私钥</font></td>
+				<td>商户自行生成RSA密钥对，保存私钥，并把公钥提供给平台</td>
+			</tr>
+			<tr>
+				<td>4. 返回地址:</td>
+				<td><input type="text" name="returnUrl" value="http://本地IP/javademo/return_url.jsp"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>5. 商户系统通知地址:</td>
+				<td><input type="text" name="notifyUrl" value="http://本地IP/javademo/notify_url.jsp"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6. 商户系统订单号:</td>
+				<td><input type="text" name="orderNo"  id="orderNo" value="20170826T457001"/><font color="red">*</font><input type="button" value="生成订单号" onclick="setOrderNo()"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>7. 订单金额(单位分):</td>
+				<td><input type="text" name="orderAmount" value="500"/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>8. 订单金额币种类型:</td>
+				<td><input type="text" name="orderCurrency" value="156"/></td>
+				<td>固定值；156表示人民币</td>
+			</tr>
+			<tr>
+				<td>9. 商户的订单提交时间:</td>
+				<td><input type="text" name="orderDatetime" id="orderDatetime" value=""/><font color="red">*</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>10. 订单标题:</td>
+				<td><input type="text" name="subject" id="subject" value="测试订单"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>11. 订单描述:</td>
+				<td><input type="text" name="body" value="这是一个测试订单！"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>12. 签名类型:</td>
+				<td><input type="text" name="signType" value="1"/><font color="red">*固定值1 ：RSA</font></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>13. 扩展参数:</td>
+				<td><input type="text" name="extraCommonParam" value="0"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>14. 支付方式:</td>
+				<td><input type="text" name="payMode" value="5"/></td>
+				<td>1-微信扫码	2-支付宝扫码	3-网银支付	4-快捷支付	5-QQ扫码	6-银联扫码	7-微信H5	  8-支付宝H5	9-QQWAP	10-银联H5	 11-京东  12-微信固定金额 13-支付宝固定金额
+			</td>
+			</tr>
+			<tr>
+				<td>15. 银行列表：</td>
+				<td><select name="bnkCd">
+				    		<option value="BJRCB">北京农村商业银行</option>
+				    		<option value="ABC">农业银行</option>
+				    		<option value="HXB">华夏银行</option>
+				    		<option value="BOCO">交通银行</option>
+				    		<option value="CGB">广发银行</option>
+				    		<option value="POST">邮政储蓄银行</option>
+				    		<option value="BOC">中国银行</option>
+				    		<option value="CIB">兴业银行</option>
+				    		<option value="ECITIC">中信银行</option>
+				    		<option value="CMBCHINA">招商银行</option>
+				    		<option value="UNION">银联通道</option>
+				    		<option value="CEB">光大银行</option>
+				    		<option value="CCB">建设银行</option>
+				    		<option value="PINGANBANK">平安银行</option>
+				    		<option value="SPDP">浦发银行</option>
+				    		<option value="BCCB">北京银行</option>
+				    		<option value="CMBC">民生银行</option>
+				    		<option value="SHB">上海银行</option>
+				    		<option value="ICBC">工商银行</option>
+				    	</select><br/>
+    			</td>
+				<td>可选</td>
+				<tr>
+				<td>15. 卡类型：</td>
+				<td><select name="accTyp">
+				    		<option value="0">借记</option>
+				    		<option value="1">贷记</option>
+				    	</select><br/>
+    			</td>
+				<td>可选</td>
+			</tr>
+			
+		</table>
+		<div align="center"><input type="submit" value="提交表单"/></div>
+</form>
+
+<script language="javascript">
+	setOrderNo();	
+	function setOrderNo() {
+		var curr = new Date();
+		var m = curr.getMonth() + 1;
+		if (m < 10) {m = '0' + m;}
+		var d = curr.getDate();
+		if (d < 10) {d = '0' + d;}
+		var h = curr.getHours();
+		if (h < 10) {h = '0' + h;}
+		var mi = curr.getMinutes();
+		if (mi < 10) {mi = '0' + mi;}
+		var s = curr.getSeconds();
+		if (s < 10) {s = '0' + s;}
+		var strDatetime = '' + curr.getFullYear() + m + d + h + mi + s;		
+		document.getElementById("orderDatetime").value = strDatetime;
+		document.getElementById("orderNo").value = 'NO' + strDatetime;
+		document.getElementById("subject").value = '测试订单' + strDatetime;
+	}
+	
+	function AttributeJudge() {
+	
+	}
+</script>
+
+</BODY>
+</HTML>
