@@ -49,7 +49,7 @@ $data = array(
   "pay_orderid" => $order_no,//商户流水号
   "pay_amount" => $mymoney,//订单金额：单位/元
   "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => '902',//支付方式
+  "pay_bankcode" => '949',//支付方式
   "pay_notifyurl" => $merchant_url,//通知地址
   "pay_callbackurl" => $return_url//商品名称
 );
@@ -58,17 +58,6 @@ $form_url = 'http://www.51bugu.cc/Pay_Index';//提交地址
 $scan = 'wx';
 $payType = $pay_type."_wx";
 $bankname = $pay_type . "->微信在线充值";
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-  $bankname = $pay_type."->京东钱包在线充值";
-  $payType = $pay_type."_jd";
-}elseif (strstr($pay_type, "百度钱包")) {
-  $scan = 'bd';
-  $data['pay_bankcode'] = '909';
-  $bankname = $pay_type."->百度钱包在线充值";
-  $payType = $pay_type."_bd";
-}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -101,30 +90,11 @@ if ($row['status'] != '0') {
   echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
-  
-    if(strstr($row['codeUrl'],"&")){
-      $code=str_replace("&", "aabbcc", $row['codeUrl']);//有&换成aabbcc
-    }else{
-      $code=$row['codeUrl'];
-    }
-    $jumpurl =('../qrcode/qrcode.php?type='.$scan.'&code=' .$code);
-  }
+  header('Location:'.$row['url']);
+  exit;
+}
 
 #跳轉方法
 
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>    
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
 
