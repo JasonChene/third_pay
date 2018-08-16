@@ -4,21 +4,21 @@ include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 // write_log("notify");
 
-#接收资料
-#post方法
 $data = array();
-foreach ($_POST as $key => $value) {
+
+#接收资料
+foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
 	// write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-$success_msg = $data['returncode'];//成功讯息
+$order_no = $data['orderNo']; //订单号
+$mymoney = number_format($data['money']/100, 2, '.', ''); //订单金额
+$success_msg = $data['respCode'];//成功讯息
 $success_code = "00";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "OK";//回调讯息
+$echo_msg = "true";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -43,7 +43,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign','attach');//不加入签名的array key值
+$noarr = array('sign');//不加入签名的array key值
 ksort($data);
 $signtext="";
 foreach ($data as $arr_key => $arr_val) {
@@ -51,9 +51,9 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0,-1).'&key='.$pay_mkey;//验签字串
+$signtext = substr($signtext, 0,-1).'&'.$pay_mkey;//验签字串
 // write_log("signtext=".$signtext);
-$mysign = strtoupper(md5($signtext));//签名
+$mysign = md5($signtext);//签名
 // write_log("mysign=".$mysign);
 
 #到账判断
@@ -88,6 +88,7 @@ if ($success_msg == $success_code) {
 	}
 }else{
 	echo ("交易失败");
+	// write_log("交易失败");
 	exit;
 }
 
