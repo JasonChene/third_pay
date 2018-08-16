@@ -127,7 +127,7 @@ echo '$form_url = \''.$req['form_url']."';\n";
 echo '$bank_code = $_REQUEST[\'bank_code\'];'."\n";
 echo '$order_no = getOrderNo();'."\n";
 echo '$notify_url = $merchant_url;'."\n";
-echo '$client_ip = http://www.leleec.com:8086/mpcctp/cashier/pay.acentIp();'."\n";
+echo '$client_ip = getClientIp();'."\n";
 echo '$pr_key = $pay_mkey;//私钥'."\n";
 echo '$pu_key = $pay_account;//公钥'."\n";
 echo '$order_time = date("YmdHis");'."\n\n\n";
@@ -249,10 +249,6 @@ if (strstr($req['postmethod'],"HEADER")){
     echo '    $data[$arr_key] = sign_text($arr_value);'."\n";
     echo '  }'."\n";
     echo '}'."\n";
-    echo 'foreach ($data as $arr_key => $arr_value) {'."\n";
-    echo '  $data_str .= $arr_key.\'=\'.$arr_value.\'&\';'."\n";
-    echo '}'."\n";
-    echo '$data_str = substr($data_str,0,-1);'."\n\n\n";
     if ($req['req_structure'] == 'JSON') {
       echo '$data_json = json_encode($data,JSON_UNESCAPED_SLASHES);'."\n";
     }
@@ -261,7 +257,7 @@ if (strstr($req['postmethod'],"HEADER")){
     if ($req['req_structure'] == 'JSON') {
       echo '$res = curl_post($form_url,$data_json,"'.$req["req_structure"].'-'.$req["postmethod"].'");'."\n";
     }else {
-      echo '$res = curl_post($form_url,$data_str,"'.$req["postmethod"].'");'."\n";
+      echo '$res = curl_post($form_url,http_build_query($data),"'.$req["postmethod"].'");'."\n";
     }
     if($req['res_structure']=="JSON"){
         echo '$res = json_decode($res,1);'."\n";
