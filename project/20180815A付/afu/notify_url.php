@@ -3,25 +3,33 @@
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-// write_log("notify");
+write_log("notify");
 
-
-
+$data = array();
+#input方法
+write_log('input方法');
+$input_data=file_get_contents("php://input");
+write_log($input_data);
+$res=json_decode($input_data,1);//json回传资料
+foreach ($ress as $key => $value) {
+	$data[$key] = $value;
+	write_log($key . "=" . $value);
+}
 #接收资料
 #post方法
-$data = array();
+write_log('POST方法');
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	// write_log($key . "=" . $value);
+	write_log($key . "=" . $value);
 }
 
 #设定固定参数
-$order_no = $data['out_trade_no']; //订单号
-$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
-$success_msg = $data['trade_status'];//成功讯息
+$order_no = $data['orderNo']; //订单号
+$mymoney = number_format($data['orderAmount']/100, 2, '.', ''); //订单金额
+$success_msg = $data['payResult'];//成功讯息
 $success_code = "1";//文档上的成功讯息
-$sign = $data['sign'];//签名
-$echo_msg = "SUCCESS";//回调讯息
+$sign = $data['signMsg'];//签名
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -49,7 +57,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign');//不加入签名的array key值
+$noarr = array('signMsg','signType');//不加入签名的array key值
 ksort($data);
 $signtext = "";
 foreach ($data as $arr_key => $arr_val) {
@@ -57,10 +65,10 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0, -1).'&key='.$pay_mkey;//验签字串
-// write_log("signtext=".$signtext);
+$signtext = substr($signtext, 0, -1).'&paySecret='.$pay_mkey;//验签字串
+write_log("signtext=".$signtext);
 $mysign = strtoupper(md5($signtext));//签名
-// write_log("mysign=".$mysign);
+write_log("mysign=".$mysign);
 
 
 #到账判断

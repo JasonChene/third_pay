@@ -92,6 +92,7 @@ $public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公�
 $public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
 $private_pem = chunk_split($pay_mkey, 64, "\r\n");//转换为pem格式的私钥
 $private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
+
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -148,6 +149,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
+
 $noarr = array('signMsg','signType');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
@@ -170,22 +172,18 @@ if ($prb) {
   echo "加密失敗";
   exit();
 }
-$datastr="";
-foreach ($data as $key => $val) {
-  $datastr .= "$key=" . $val . "&";
-}
-$datastr = substr($datastr, 0, -1);
 #curl获取响应值
-$res = curl_post($form_url, $datastr);
+$res = curl_post($form_url, http_build_query($data));
 $array = json_decode($res, 1);
 
 if ($array['errCode'] == '0000' || $array['status'] == '2') {
   $ressign = base64_decode($array['signMsg']);
   $ressigntext = "";
   ksort($array);
-  foreach($array as $key => $value) {
-    if ($key != 'signMsg' && $key != 'signType'){
-      $ressigntext .= "$key=" . $val . "&";
+  $noarr = array('signMsg','signType');
+  foreach ($array as $arr_key => $arr_val) {
+    if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+      $ressigntext .= $arr_key . '=' . $arr_val . '&';
     }
   }
   $ressigntext = substr($ressigntext, 0, -1);
@@ -202,6 +200,8 @@ if ($array['errCode'] == '0000' || $array['status'] == '2') {
   } else {
     if (_is_mobile()) {
       $jumpurl = $array['retHtml'];
+      echo $jumpurl;
+      exit;
     } else {
       $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($array['qrCode']);
     }
