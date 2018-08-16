@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -76,7 +76,7 @@ $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -109,21 +109,12 @@ $data = array(
 );
 
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  $scan = 'yl';
-  $data['productType'] = '60000103';
-} elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $form_url = "https://gateway.rffbe.top/quickGateWayPay/initPay";
-  $scan = 'ylkj';
-  $data['productType'] = '40000503';
-  if (_is_mobile()) {
-    $data['productType'] = '40000701'; 
-  }
-} else {
-  $form_url = "https://gateway.rffbe.top/netGateWayPay/initPay";
-  $scan = 'wy';
-  $data['productType'] = "50000103";
+$scan = 'qq';
+$data['productType'] = "70000203";
+if (_is_mobile()) {
+  $data['productType'] = '70000204'; 
 }
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -147,23 +138,24 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . '&paySecret=' . $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $data['sign'] = $sign; 
-if ($scan == 'yl') {
-  #curl获取响应值
-  $res = curl_post($form_url,http_build_query($data));
-  $row = json_decode($res, 1);
-  #跳转
-  if ($row['resultCode'] != '0000') {
-    echo '错误代码:' . $row['resultCode'] . "<br>";
-    echo '错误讯息:' . $row['errMsg'] . "<br>";
-    exit;
-  } else {
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
-  }
-}else {
-  $form_data = $data;
-  $jumpurl = $form_url;
-}
 
+#curl获取响应值
+$res = curl_post($form_url,http_build_query($data));
+$row = json_decode($res, 1);
+#跳转
+if ($row['resultCode'] != '0000') {
+  echo '错误代码:' . $row['resultCode'] . "<br>";
+  echo '错误讯息:' . $row['errMsg'] . "<br>";
+  exit;
+} else {
+  if (_is_mobile()) {
+      $jumpurl = $row['payMessage'];
+      echo $jumpurl;
+      exit;
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payMessage']);
+  }
+}
 #跳轉方法
 
 ?>
