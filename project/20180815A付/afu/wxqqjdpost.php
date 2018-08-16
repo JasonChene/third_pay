@@ -125,7 +125,7 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $scan = 'wx';
   $data['productType'] = "10000103";
   if (_is_mobile()) {
-    $data['productType'] = '10000203'; 
+    $data['productType'] = '10000203';
   }
 }
 payType_bankname($scan, $pay_type);

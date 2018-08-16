@@ -92,34 +92,44 @@ $public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公�
 $public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
 $private_pem = chunk_split($pay_mkey, 64, "\r\n");//转换为pem格式的私钥
 $private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
+
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "company_oid" => $pay_mid, 
-  "order_id" => $order_no,
-  "order_name" => "pay",
-  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  "notify_url" => $merchant_url,
-  "pay_type" => "",
+  "inputCharset" => "1", 
+  "partnerId" => $pay_mid,
+  "signType" => "1",
+  "notifyUrl" => $merchant_url,
+  "returnUrl" => $return_url,
+  "orderNo" => $order_no,
+  "orderAmount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "orderCurrency" => "156",
+  "orderDatetime" => date("YmdHis"),
+  "signMsg" => "",
+  "payMode" => "",
+  "subject" => "pay",
+  "body" => "pay",
+  "ip" => getClientIp()
 );
 
 #变更参数设置
-$form_url = "http://api.jincaipay.com/v1.0.0/jcpay/jcPayMobile";
+$form_url = "http://pay.yd2580.com/pay/unify";
   
-if(strstr($pay_type, "银联钱包")) {
+if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
-  $data['pay_type'] = "5";
+  $data['payMode'] = "6";
+  if (_is_mobile()) {
+    $data['payMode'] = "10";
+  }
+}elseif(strstr($pay_type, "银联快捷")) {
+  $scan = 'ylkj';
+  $data['payMode'] = "4";
 }else {
   $scan = 'wy';
-  $data['pay_type'] = "10";
-  $data['order_desc'] = "wy";
-  $data['return_url'] = $return_url;
-  $data['card_type'] = "0";
-  $data['tran_type'] = "B2C";
-  $data['bank_id'] = $_REQUEST['bank_code'];
+  $data['payMode'] = "3";
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -133,61 +143,66 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
 
+$noarr = array('signMsg','signType');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
+  }
+}
+$signtext = substr($signtext, 0, -1);
 #RSA-S签名
 $privatekey = openssl_get_privatekey($private_pem);
 if ($privatekey == false) {
   echo "打开私钥出错";
   exit();
 }
-$prb = openssl_sign($data_json, $sign_info, $privatekey, OPENSSL_ALGO_SHA1);
+$prb = openssl_sign($signtext, $sign_info, $privatekey, OPENSSL_ALGO_SHA1);
 if ($prb) {
-  $data['sign'] = base64_encode($sign_info);
+  $data['signMsg'] = base64_encode($sign_info);
   openssl_free_key($privatekey);
 } else {
   echo "加密失敗";
   exit();
 }
-$datastr="";
-foreach ($data as $key => $val) {
-  $datastr .= "$key=" . urlencode($val) . "&";
-}
-$datastr = substr($datastr, 0, -1);
 #curl获取响应值
-$res = curl_post($form_url, $datastr);
+$res = curl_post($form_url, http_build_query($data));
 $array = json_decode($res, 1);
 
-if ($array['status'] == '1' || $array['status'] == '2') {
-  $ressign = base64_decode($array['sign']);
-  $objectArray = array();
-  foreach($array as $key => $value) {
-    if ($key != 'sign'){
-      $objectArray[$key] = (string)$value;
+if ($array['errCode'] == '0000' || $array['status'] == '2') {
+  $ressign = base64_decode($array['signMsg']);
+  $ressigntext = "";
+  ksort($array);
+  $noarr = array('signMsg','signType');
+  foreach ($array as $arr_key => $arr_val) {
+    if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+      $ressigntext .= $arr_key . '=' . $arr_val . '&';
     }
   }
-  ksort($objectArray);
-  $json_text = stripslashes(json_encode($objectArray, JSON_UNESCAPED_UNICODE));
+  $ressigntext = substr($ressigntext, 0, -1);
   $publickey = openssl_get_publickey($public_pem);
   if ($publickey == false) {
     echo "打开公钥出错";
     exit();
   }
-  $result = openssl_verify($json_text, $ressign, $publickey,OPENSSL_ALGO_SHA1);
+  $result = openssl_verify($ressigntext, $ressign, $publickey,OPENSSL_ALGO_SHA1);
   openssl_free_key($publickey);
   if ( $result != 1) {
     echo "签名验证失败！";
     exit;
   } else {
     if (_is_mobile()) {
-      $jumpurl = $array['content'];
+      $jumpurl = $array['retHtml'];
+      echo $jumpurl;
+      exit;
     } else {
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($array['content']);
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($array['qrCode']);
     }
   }
 } else {
-  echo '错误代码:' . $array['status'] . "<br>";
-  echo '错误讯息:' . $array['message'] . "<br>";
+  echo '错误代码:' . $array['errCode'] . "<br>";
+  echo '错误讯息:' . $array['errMsg'] . "<br>";
   exit;
 }
 
