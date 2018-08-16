@@ -136,12 +136,12 @@ if ($res['error'] == '2') {
   $data_str = substr($data_str, 0, -1);
 
 #curl获取响应值
-  $selscter = 1;
+  $selscter = 0;
   while ($res['error'] == '2' && $selscter < 5) {
+    sleep(1);
     $res = curl_post($form_url, $data_str, "POST");
     $res = json_decode($res, 1);
     $selscter++;
-    sleep(1);
   }
 
 #跳转qrcode
