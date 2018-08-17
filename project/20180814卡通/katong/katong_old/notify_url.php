@@ -66,7 +66,7 @@ $mysign = strtoupper(md5($signtext));//签名
 
 $echo_msg_json = array(
 	"status" => '0',
-	"sign" => '0' . '&key=' . $pay_mkey,
+	"sign" => strtoupper(md5('status=0&key=' . $pay_mkey)),
 );
 $echo_msg = json_encode($echo_msg_json, JSON_UNESCAPED_SLASHES);
 

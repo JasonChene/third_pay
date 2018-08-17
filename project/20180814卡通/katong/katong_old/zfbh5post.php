@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://123.56.11.237:8080/gateway_trans/api';
+$form_url = 'http://65.49.145.63:8080/gateway_trans/api';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -115,26 +115,6 @@ if ($res['status'] == '0') {
   echo "错误码：" . $res['status'] . "错误讯息：" . $res['message'];
   exit();
 }
+header('Location:' . $jumpurl);
+exit();
 ?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if (isset($form_data)) {
-            foreach ($data as $arr_key => $arr_value) {
-              ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php 
-        }
-      } ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>
