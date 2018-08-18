@@ -9,7 +9,7 @@ include_once("../../../database/mysql.php");
 
 $S_Name = $_REQUEST['S_Name'];
 $top_uid = $_REQUEST['top_uid'];
-$pay_type =$_REQUEST['pay_type'];
+$pay_type = $_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://open.goodluckchina.net/open/pay/scanCodePayChannel';
+$form_url = 'https://open.goodluckchina.net/open/pay/buildPayCode';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -42,42 +42,40 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 0, '.', '');
 #第三方传值参数设置
 $data = array(
-"custNo" => $pay_mid,
-"mchOrderNo" => $order_no,
-"money" => $MOAmount,
-"callBackUrl" => $notify_url,
-"appId" => $pay_account,
-"payChannel" => '08',
-"attach" => 'attach',
-"sign" => array(
-"str_arr" => array(
-"appId" => $pay_account,
-"attach" => "attach",
-"callBackUrl" => $notify_url,
-"custNo" => $pay_mid,
-"mchOrderNo" => $order_no,
-"money" => $MOAmount,
-"payChannel" => "08",
-),
-"mid_conn" => "=",
-"last_conn" => "&",
-"encrypt" => array(
-"0" => "MD5",
-),
-"key_str" => "",
-"key" => $pr_key,
-"havekey" => "1",
-),
+  "custNo" => $pay_mid,
+  "mchOrderNo" => $order_no,
+  "money" => $MOAmount,
+  "callBackUrl" => $notify_url,
+  "appid" => $pay_mkey,
+  "model" => '00',
+  "sign" => array(
+    "str_arr" => array(
+      "appid" => $pay_mkey,
+      "callBackUrl" => $notify_url,
+      "custNo" => $pay_mid,
+      "mchOrderNo" => $order_no,
+      "model" => "00",
+      "money" => $MOAmount,
+    ),
+    "mid_conn" => "=",
+    "last_conn" => "&",
+    "encrypt" => array(
+      "0" => "MD5",
+    ),
+    "key_str" => "",
+    "key" => $pr_key,
+    "havekey" => "1",
+  ),
 );
 #变更参数设定
-$payType = $pay_type."_zfb";
-$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type . "_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
-$result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
-if ($result_insert == -1){
+$result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
+if ($result_insert == -1) {
   echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
   exit;
-} else if ($result_insert == -2){
+} else if ($result_insert == -2) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
@@ -89,23 +87,20 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-foreach ($data as $arr_key => $arr_value) {
-  $data_str .= $arr_key.'='.$arr_value.'&';
-}
-$data_str = substr($data_str,0,-1);
-
-
 #curl获取响应值
-$res = curl_post($form_url,$data_str,"POST");
-$res = json_decode($res,1);
+$res = curl_post($form_url, http_build_query($data), "POST");
+$res = json_decode($res, 1);
+
 #跳转qrcode
 $url = $res['pay_url'];
 if ($res['code'] == '1') {
-    $jumpurl = $url;
-}else{
-  echo "错误码：".$res['code']."错误讯息：".$res['msg'];
+  $qrurl = QRcodeUrl($url);
+  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+} else {
+  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
   exit();
 }
+
 ?>
 <html>
   <head>
@@ -113,14 +108,16 @@ if ($res['code'] == '1') {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if(isset($form_data)){
-              foreach ($data as $arr_key => $arr_value) {
-          ?>
+          if (isset($form_data)) {
+            foreach ($data as $arr_key => $arr_value) {
+              ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php }} ?>
+          <?php 
+        }
+      } ?>
       </form>
       <script language="javascript">
           document.getElementById("frm1").submit();

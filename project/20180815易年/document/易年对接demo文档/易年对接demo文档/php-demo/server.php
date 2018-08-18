@@ -1,0 +1,27 @@
+<?php
+// 返回字段
+   $returnArray = array(
+            "returncode" => $_REQUEST["returncode"],
+            "transaction_id" =>  $_REQUEST["transaction_id"], // 支付流水号
+            "memberid" => $_REQUEST["memberid"], // 商户ID
+            "orderid" =>  $_REQUEST["orderid"], // 订单号
+            "amount" =>  $_REQUEST["amount"], // 交易金额
+            "datetime" =>  $_REQUEST["datetime"], // 交易时间
+        );
+   //验签
+        $key = "t4ig5acnpx4fet4zapshjacjd9o4bhbi";
+        ksort($returnArray);
+        reset($returnArray);
+        $str = "";
+        foreach ($returnArray as $k => $v) {
+            $str = $str . $k . "=" . $v . "&";
+        }
+        $sign = strtoupper(md5($str . "key=" . $key));
+        if ($sign == $_REQUEST["sign"]) {
+            if ($_REQUEST["returncode"] == "00") {
+                   $str = "交易成功！订单号：".$_REQUEST["orderid"];
+                   file_put_contents("success.txt",$str."\n", FILE_APPEND);
+                   exit("ok");//返回字符串ok
+            }
+        }
+?>

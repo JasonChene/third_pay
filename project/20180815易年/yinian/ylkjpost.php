@@ -1,10 +1,10 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 咕啦
-#支付方式 : zfbfs;
+#第三方名稱 : 易年
+#支付方式 : ylkj;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -13,7 +13,7 @@ $pay_type = $_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -28,77 +28,51 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://open.goodluckchina.net/open/pay/barCodePay';
+$form_url = 'http://yinianpay.com/Pay_Index.html';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = date("Y-m-d H:i:s");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 0, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-  "custNo" => $pay_mid,
-  "mchOrderNo" => $order_no,
-  "money" => $MOAmount,
-  "callBackUrl" => $notify_url,
-  "appId" => $pay_account,
-  "payChannel" => '13',
-  "attach" => 'attach',
-  "sign" => array(
+  "pay_memberid" => $pay_mid,
+  "pay_orderid" => $order_no,
+  "pay_amount" => $MOAmount,
+  "pay_notifyurl" => $notify_url,
+  "pay_applydate" => $order_time,
+  "pay_bankcode" => '907',
+  "pay_callbackurl" => $return_url,
+  "pay_productname" => 'productname',
+  "pay_md5sign" => array(
     "str_arr" => array(
-      "appId" => $pay_account,
-      "attach" => "attach",
-      "callBackUrl" => $notify_url,
-      "custNo" => $pay_mid,
-      "mchOrderNo" => $order_no,
-      "money" => $MOAmount,
-      "payChannel" => "13",
-      "payCode" => "",
+      "pay_amount" => $MOAmount,
+      "pay_applydate" => $order_time,
+      "pay_bankcode" => "907",
+      "pay_callbackurl" => $return_url,
+      "pay_memberid" => $pay_mid,
+      "pay_notifyurl" => $notify_url,
+      "pay_orderid" => $order_no,
     ),
     "mid_conn" => "=",
     "last_conn" => "&",
     "encrypt" => array(
       "0" => "MD5",
     ),
-    "key_str" => "",
+    "key_str" => "&key=",
     "key" => $pr_key,
     "havekey" => "1",
   ),
-  "payCode" => '',
 );
-if (isset($_REQUEST['payCode'])) {
-  $data['payCode'] = $_REQUEST['payCode'];//支付码
-} else {
-  ?>
-  <html>
-    <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-    </head>
-    <body>
-      <form name="dinpayForm" method="get" id="frm1" action="./card.php" target="_self">
-        <p>正在为您跳转中，请稍候......</p>
-        <?php foreach ($_REQUEST as $arr_key => $arr_value) { ?>
-        <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-        <?php 
-      } ?>
-      </form>
-      <script language="javascript">
-        document.getElementById("frm1").submit();
-      </script>
-    </body>
-  </html>
-  <?php 
-}
-
 #变更参数设定
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_ylkj";
+$bankname = $pay_type . "->银联快捷在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -109,30 +83,12 @@ if ($result_insert == -1) {
   exit;
 }
 
-
-#签名排列，可自行组字串或使用http_build_query($array)
 foreach ($data as $arr_key => $arr_value) {
   if (is_array($arr_value)) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-foreach ($data as $arr_key => $arr_value) {
-  $data_str .= $arr_key . '=' . $arr_value . '&';
-}
-$data_str = substr($data_str, 0, -1);
 
-
-#curl获取响应值
-$res = curl_post($form_url, $data_str, "POST");
-$res = json_decode($res, 1);
-#跳转qrcode
-$url = $res['pay_url'];
-if ($res['code'] == '1') {
-  $jumpurl = $url;
-} else {
-  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
-  exit();
-}
 ?>
 <html>
   <head>
@@ -140,10 +96,10 @@ if ($res['code'] == '1') {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if (isset($form_data)) {
+          if (isset($data)) {
             foreach ($data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />

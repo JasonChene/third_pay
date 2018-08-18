@@ -50,7 +50,7 @@ $mymoney = number_format($data['money'], 2, '.', ''); //订单金额
 $success_msg = $data['return_code'];//成功讯息
 $success_code = "SUCCESS";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "”success”";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);

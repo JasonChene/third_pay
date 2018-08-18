@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 咕啦
+#第三方名稱 : 易年
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
@@ -28,41 +28,44 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://open.goodluckchina.net/open/pay/buildPayCode';
+$form_url = 'http://yinianpay.com/Pay_Index.html';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = date("Y-m-d H:i:s");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 0, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-  "custNo" => $pay_mid,
-  "mchOrderNo" => $order_no,
-  "money" => $MOAmount,
-  "callBackUrl" => $notify_url,
-  "appid" => $pay_mkey,
-  "model" => '00',
-  "sign" => array(
+  "pay_memberid" => $pay_mid,
+  "pay_orderid" => $order_no,
+  "pay_amount" => $MOAmount,
+  "pay_notifyurl" => $notify_url,
+  "pay_applydate" => $order_time,
+  "pay_bankcode" => '904',
+  "pay_callbackurl" => $return_url,
+  "pay_productname" => 'productname',
+  "pay_md5sign" => array(
     "str_arr" => array(
-      "appid" => $pay_mkey,
-      "callBackUrl" => $notify_url,
-      "custNo" => $pay_mid,
-      "mchOrderNo" => $order_no,
-      "model" => "00",
-      "money" => $MOAmount,
+      "pay_amount" => $MOAmount,
+      "pay_applydate" => $order_time,
+      "pay_bankcode" => "904",
+      "pay_callbackurl" => $return_url,
+      "pay_memberid" => $pay_mid,
+      "pay_notifyurl" => $notify_url,
+      "pay_orderid" => $order_no,
     ),
     "mid_conn" => "=",
     "last_conn" => "&",
     "encrypt" => array(
       "0" => "MD5",
     ),
-    "key_str" => "",
+    "key_str" => "&key=",
     "key" => $pr_key,
     "havekey" => "1",
   ),
@@ -80,25 +83,10 @@ if ($result_insert == -1) {
   exit;
 }
 
-
-#签名排列，可自行组字串或使用http_build_query($array)
 foreach ($data as $arr_key => $arr_value) {
   if (is_array($arr_value)) {
     $data[$arr_key] = sign_text($arr_value);
   }
-}
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data), "POST");
-$res = json_decode($res, 1);
-
-#跳转qrcode
-$url = $res['pay_url'];
-if ($res['code'] == '1') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-} else {
-  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
-  exit();
 }
 
 ?>
@@ -108,10 +96,10 @@ if ($res['code'] == '1') {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if (isset($form_data)) {
+          if (isset($data)) {
             foreach ($data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />

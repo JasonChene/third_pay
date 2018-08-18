@@ -1,10 +1,11 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 咕啦
+#第三方名稱 : Mypay
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.php");
+// include_once("../../../database/mysql.config.php");//原数据库的连接方式
+include_once("../../../database/mysql.php");//现数据库的连接方式
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -13,7 +14,8 @@ $pay_type = $_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -28,7 +30,8 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://open.goodluckchina.net/open/pay/buildPayCode';
+// $form_url = 'http://testapipay.MyPayla.com/apiOrder/sendOrder.zv';//正式环境：（要实际付款才可回调）
+$form_url = 'http://testapi.MyPayla.com/order/apiOrder/sendOrder.zv';//测试环境：（不需实际付款即可回调）
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -39,34 +42,46 @@ $order_time = date("YmdHis");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 0, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-  "custNo" => $pay_mid,
-  "mchOrderNo" => $order_no,
-  "money" => $MOAmount,
-  "callBackUrl" => $notify_url,
-  "appid" => $pay_mkey,
-  "model" => '00',
+  "merId" => $pay_mid,
+  "merchantNo" => $order_no,
+  "amount" => $MOAmount,
+  "notifyUrl" => $notify_url,
+  "orgId" => $pay_account,
+  "payType" => '10',//京东钱包扫码
+  "terminalClient" => '',
+  "tradeDate" => $order_time,
+  "clientIp" => $client_ip,
+  "signType" => 'MD5',
+  "version" => 'V1.0',
   "sign" => array(
     "str_arr" => array(
-      "appid" => $pay_mkey,
-      "callBackUrl" => $notify_url,
-      "custNo" => $pay_mid,
-      "mchOrderNo" => $order_no,
-      "model" => "00",
-      "money" => $MOAmount,
+      "amount" => $MOAmount,
+      "clientIp" => $client_ip,
+      "merId" => $pay_mid,
+      "merchantNo" => $order_no,
+      "notifyUrl" => $notify_url,
+      "payType" => '10',//京东钱包扫码
+      "terminalClient" => "",
+      "tradeDate" => $order_time,
     ),
     "mid_conn" => "=",
     "last_conn" => "&",
     "encrypt" => array(
       "0" => "MD5",
     ),
-    "key_str" => "",
+    "key_str" => "&key=",
     "key" => $pr_key,
     "havekey" => "1",
   ),
 );
+if (_is_mobile()) {
+  $data["terminalClient"] = 'wap';
+} else {
+  $data["terminalClient"] = 'pc';
+}
 #变更参数设定
 $payType = $pay_type . "_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
@@ -87,20 +102,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data), "POST");
-$res = json_decode($res, 1);
-
-#跳转qrcode
-$url = $res['pay_url'];
-if ($res['code'] == '1') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-} else {
-  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
-  exit();
-}
-
+$form_data = $data;
+$jumpurl = $form_url;
 ?>
 <html>
   <head>
