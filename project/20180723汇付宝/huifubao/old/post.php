@@ -8,34 +8,35 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 
-function payType_bankname($scan,$pay_type){
+function payType_bankname($scan, $pay_type)
+{
   global $payType, $bankname;
-  if($scan == "wy"){
+  if ($scan == "wy") {
     $payType = $pay_type . "_wy";
     $bankname = $pay_type . "->网银在线充值";
-  }elseif($scan == "yl" || $scan == "ylfs"){
+  } elseif ($scan == "yl" || $scan == "ylfs") {
     $payType = $pay_type . "_yl";
     $bankname = $pay_type . "->银联钱包在线充值";
-  }elseif($scan == "qq" || $scan == "qqfs"){
+  } elseif ($scan == "qq" || $scan == "qqfs") {
     $payType = $pay_type . "_qq";
     $bankname = $pay_type . "->QQ钱包在线充值";
-  }elseif($scan == "wx" || $scan == "wxfs"){
+  } elseif ($scan == "wx" || $scan == "wxfs") {
     $payType = $pay_type . "_wx";
     $bankname = $pay_type . "->微信在线充值";
-  }elseif($scan == "zfb" || $scan == "zfbfs"){
+  } elseif ($scan == "zfb" || $scan == "zfbfs") {
     $payType = $pay_type . "_zfb";
     $bankname = $pay_type . "->支付宝在线充值";
-  }elseif($scan == "jd" || $scan == "jdfs"){
+  } elseif ($scan == "jd" || $scan == "jdfs") {
     $payType = $pay_type . "_jd";
     $bankname = $pay_type . "->京东钱包在线充值";
-  }elseif($scan == "ylkj"){
+  } elseif ($scan == "ylkj") {
     $payType = $pay_type . "_ylkj";
     $bankname = $pay_type . "->银联快捷在线充值";
-  }elseif($scan == "bd" || $scan == "bdfs"){
+  } elseif ($scan == "bd" || $scan == "bdfs") {
     $payType = $pay_type . "_bd";
     $bankname = $pay_type . "->百度钱包在线充值";
-  }else {
-    echo('payType_bankname出错啦！');
+  } else {
+    echo ('payType_bankname出错啦！');
     exit;
   }
 }
@@ -51,8 +52,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
-$merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
+$return_url = $row['mer_account'] . $row['wx_returnUrl'];//return跳转地址
+$merchant_url = $row['mer_account'] . $row['wx_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
@@ -84,16 +85,16 @@ if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
   $data['version'] = '1';
   $data['pay_type'] = '64';
-  if(_is_mobile()){
+  if (_is_mobile()) {
     $data['pay_type'] = '19';
   }
-}else {
+} else {
   $scan = 'wy';
-  if(_is_mobile()){
+  if (_is_mobile()) {
     $data['is_phone'] = '1';
   }
 }
-payType_bankname($scan,$pay_type);
+payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -108,21 +109,21 @@ if ($result_insert == -1) {
 $signtext = '';
 $conn = '&';
 $betcon = '=';
-$signtext .= 'version'.$betcon.$data['version'].$conn;
-$signtext .= 'agent_id'.$betcon.$data['agent_id'].$conn;
-$signtext .= 'agent_bill_id'.$betcon.$data['agent_bill_id'].$conn;
-$signtext .= 'agent_bill_time'.$betcon.$data['agent_bill_time'].$conn;
-$signtext .= 'pay_type'.$betcon.$data['pay_type'].$conn;
-$signtext .= 'pay_amt'.$betcon.$data['pay_amt'].$conn;
-$signtext .= 'notify_url'.$betcon.$data['notify_url'].$conn;
-$signtext .= 'return_url'.$betcon.$data['return_url'].$conn;
-$signtext .= 'user_ip'.$betcon.$data['user_ip'].$conn;
-if($scan == 'wy'){
-  $signtext .= 'bank_card_type'.$betcon.$data['bank_card_type'].$conn;
-}else{
+$signtext .= 'version' . $betcon . $data['version'] . $conn;
+$signtext .= 'agent_id' . $betcon . $data['agent_id'] . $conn;
+$signtext .= 'agent_bill_id' . $betcon . $data['agent_bill_id'] . $conn;
+$signtext .= 'agent_bill_time' . $betcon . $data['agent_bill_time'] . $conn;
+$signtext .= 'pay_type' . $betcon . $data['pay_type'] . $conn;
+$signtext .= 'pay_amt' . $betcon . $data['pay_amt'] . $conn;
+$signtext .= 'notify_url' . $betcon . $data['notify_url'] . $conn;
+$signtext .= 'return_url' . $betcon . $data['return_url'] . $conn;
+$signtext .= 'user_ip' . $betcon . $data['user_ip'] . $conn;
+if ($scan == 'wy') {
+  $signtext .= 'bank_card_type' . $betcon . $data['bank_card_type'] . $conn;
+} else {
   unset($data['bank_card_type']);
 }
-$signtext .= 'key'.$betcon.$pay_mkey;
+$signtext .= 'key' . $betcon . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
 #跳轉方法
@@ -134,13 +135,14 @@ $data['sign'] = $sign;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
-        foreach ($data as $arr_key => $arr_value) {
-      ?>
+      foreach ($data as $arr_key => $arr_value) {
+        ?>
       <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php } ?>
+      <?php 
+    } ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
