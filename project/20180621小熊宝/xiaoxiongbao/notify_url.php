@@ -1,6 +1,7 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #接收资料
@@ -20,15 +21,17 @@ $echo_msg = http_response_code();//回调讯息
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
 #获取该订单的支付名称
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
+// write_log("pay_type=".$pay_type);
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -36,6 +39,7 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
+	// write_log("非法提交参数".$pay_mid.'//'.$pay_mkey);
 	exit;
 }
 
@@ -49,7 +53,7 @@ $signtext .= $pay_mkey;
 
 $mysign = md5($signtext);
 // write_log("signtext=".$signtext);
-write_log("mysign=".$mysign);
+// write_log("mysign=".$mysign);
 
 #到账判断
 if ( $mysign == $sign) {
