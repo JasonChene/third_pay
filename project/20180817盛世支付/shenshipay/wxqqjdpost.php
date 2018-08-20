@@ -116,34 +116,44 @@ $data = array(
 
 $form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
 
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   if(_is_mobile()){
-    $scan = 'yl';
-    $data['field003'] = '900025';
-    $data['field031'] = '26040';
+    $scan = 'jd';
+    $data['field003'] = '900035';
+    $data['field031'] = '26090';
   }
   else{
     $scan = 'jd';
-    $data['field003'] = '900029';
-    $data['field031'] = '26060';
+    $data['field003'] = '900031';
+    $data['field031'] = '26070';
   }
   
 } 
-elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['field003'] = '900023';
-  $data['field031'] = '26015';
+elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['field003'] = '900028';
+  $data['field031'] = '26055';
 }
 else {
   if(_is_mobile()){
-    $scan = 'wy';
-    $data['field003'] = '900034';
+    $scan = 'wx';
+    $phone_type = 'other';
+    if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+      $phone_type = 'ios';
+      $data['field011'] = '000002';
+    } 
+    elseif (strpos($agent, 'android')) {
+      $phone_type = 'android';
+      $data['field011'] = '000001';
+    }
+    $data['field036'] = 'https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F';
+    $data['field003'] = '900030';
     $data['field031'] = '26065';
   }
   else{
-    $scan = 'wy';
-    $data['field003'] = '900034';
-    $data['field031'] = '26085';
+    $scan = 'wx';
+    $data['field003'] = '900021';
+    $data['field031'] = '26005';
   }
 }
 payType_bankname($scan, $pay_type);

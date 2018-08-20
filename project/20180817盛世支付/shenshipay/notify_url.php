@@ -30,10 +30,10 @@ write_log($input_data);
 // $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
 // $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
 
-// foreach ($res as $key => $value) {
-// 	$data[$key] = $value;
-// 	write_log($key."=".$value);
-// }
+foreach ($res as $key => $value) {
+	$data[$key] = $value;
+	write_log($key."=".$value);
+}
 ###########################################
 
 
@@ -46,12 +46,12 @@ foreach ($_POST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['order_no']; //订单号
-$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$order_no = $data['field062']; //订单号
+$mymoney = number_format($data['field004'], 2, '.', ''); //订单金额
+$success_msg = $data['field039'];//成功讯息
+$success_code = "00";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -79,34 +79,17 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $noarr = array('sign');//不加入签名的array key值
-ksort($data);
 $signtext = "";
 foreach ($data as $arr_key => $arr_val) {
 	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_key . '=' . $arr_val . '&';
+		$signtext .= $arr_val;
 	}
 }
-$signtext = substr($signtext, 0,-1);//验签字串
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
-
-// #RSA解密方式
-// $signtext = $data['p1_MerId'] . $data['r0_Cmd'] . $data['r1_Code'] . $data['r2_TrxId'] . $data['r3_Amt'] . $data['r4_Cur'] . $data['r5_Pid'] . $data['r6_Order'] . $data['r7_Uid'] . $data['r8_MP'] . $data['r9_BType'] ;//验签字串
-// //write_log("signtext=".$signtext);
-// $mysign = md5($signtext);//签名
-// //write_log("mysign=".$mysign);
-// $platformPublicKey = openssl_get_publickey($pay_account);
-// if(!$platformPublicKey){
-// 	echo "开启公钥失败";
-// 	exit;
-// }
-// $sign = str_replace('*','+',$sign); //此为根据文檔所述进行符号替换再进行解密
-// $sign = str_replace('-','/',$sign);
-// //write_log("sign=".$sign);
-// $signsuccess = (boolean)openssl_verify($signtext,base64_decode($sign),$platformPublicKey);
-// openssl_free_key($platformPublicKey);
-// //write_log("signsuccess",$signsuccess);
+$signtext .= $pay_mkey;//验签字串
+write_log("signtext=".$signtext);
+$mysign = strtoupper(md5($signtext));//签名
+$mysign = substr($signtext, 0,-16);
+write_log("mysign=".$mysign);
 
 #到账判断
 if ($success_msg == $success_code) {

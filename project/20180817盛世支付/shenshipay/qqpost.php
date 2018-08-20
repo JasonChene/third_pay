@@ -116,36 +116,10 @@ $data = array(
 
 $form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
 
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  if(_is_mobile()){
-    $scan = 'yl';
-    $data['field003'] = '900025';
-    $data['field031'] = '26040';
-  }
-  else{
-    $scan = 'jd';
-    $data['field003'] = '900029';
-    $data['field031'] = '26060';
-  }
-  
-} 
-elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['field003'] = '900023';
-  $data['field031'] = '26015';
-}
-else {
-  if(_is_mobile()){
-    $scan = 'wy';
-    $data['field003'] = '900034';
-    $data['field031'] = '26065';
-  }
-  else{
-    $scan = 'wy';
-    $data['field003'] = '900034';
-    $data['field031'] = '26085';
-  }
-}
+$scan = 'qq';
+$data['field003'] = '900028';
+$data['field031'] = '26055';
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

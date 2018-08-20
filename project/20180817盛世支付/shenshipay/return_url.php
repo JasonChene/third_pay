@@ -14,12 +14,12 @@ $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['ordernumber']; //订单号
-	$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-	$success_msg = $data['status'];//成功讯息
-	$success_code = "1";//文档上的成功讯息
+	$order_no = $data['field062']; //订单号
+	$mymoney = number_format($data['field004'], 2, '.', ''); //订单金额
+	$success_msg = $data['field039'];//成功讯息
+	$success_code = "00";//文档上的成功讯息
 	$sign = $data['sign'];//签名
-	$echo_msg = "";//回调讯息
+	$echo_msg = "SUCCESS";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -45,10 +45,18 @@ if(!empty($data)){
 
 	#验签方式
 
-	$signtext="partner=".$data['partner']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&ordernumber=".$data['ordernumber']."&paymoney=".$data['paymoney']."&paytype=".$data['paytype']."&".$pay_mkey;//验签字串
-	$mysign = md5($signtext);//签名
-	write_log("return:signtext=".$signtext);
-	write_log("return:mysign=".$mysign);
+	$noarr = array('sign');//不加入签名的array key值
+	$signtext = "";
+	foreach ($data as $arr_key => $arr_val) {
+		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+			$signtext .= $arr_val;
+		}
+	}
+	$signtext .= $pay_mkey;//验签字串
+	write_log("signtext=".$signtext);
+	$mysign = strtoupper(md5($signtext));//签名
+	$mysign = substr($signtext, 0,-16);
+	write_log("mysign=".$mysign);
 
 
 	#到账判断
