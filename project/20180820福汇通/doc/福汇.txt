@@ -1,0 +1,5 @@
+后台网址： http://ddxpay.com/trans/
+商户号：8660819193526094
+私钥:CBDIBM2IBD01GVE2
+登录名:fhthm123
+初始密码:a123456
