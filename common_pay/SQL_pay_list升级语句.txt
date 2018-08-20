@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('时代支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/shrdaipay/post.php', '/pay/shrdaipay/wxpost.php', '/pay/shrdaipay/zfbpost.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/notify_url.php', '/pay/shrdaipay/notify_url.php', '/pay/shrdaipay/notify_url.php', '1', '1', '/pay/shrdaipay/qqpost.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/notify_url.php');
+ VALUES ('天信支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/tianxin/post.php', '/pay/tianxin/wxpost.php', '/pay/tianxin/zfbpost.php', '/pay/tianxin/return_url.php', '/pay/tianxin/return_url.php', '/pay/tianxin/return_url.php', '/pay/tianxin/notify_url.php', '/pay/tianxin/notify_url.php', '/pay/tianxin/notify_url.php', '1', '1', '/pay/tianxin/qqpost.php', '/pay/tianxin/return_url.php', '/pay/tianxin/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('时代支付', '10952', '166f325a6bdbec33f99e4069540aaddfff5b383a', NULL, 'http://pay7.5566205.com', '时代支付', '1', '1', '1', '时代支付', '1');
+ VALUES ('天信支付', '10006', 'lhd5d6miu1i5n99rfaiast79agn3o3ma', NULL, 'http://pay7.5566205.com', '天信支付', '1', '1', '1', '天信支付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('时代支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/shrdaipay/post.php', '/pay/shrdaipay/wxpost.php', '/pay/shrdaipay/zfbpost.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/notify_url.php', '/pay/shrdaipay/notify_url.php', '/pay/shrdaipay/notify_url.php', '1', '1', '/pay/shrdaipay/qqpost.php', '/pay/shrdaipay/return_url.php', '/pay/shrdaipay/notify_url.php');
+ VALUES ('天信支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/tianxin/post.php', '/pay/tianxin/wxpost.php', '/pay/tianxin/zfbpost.php', '/pay/tianxin/return_url.php', '/pay/tianxin/return_url.php', '/pay/tianxin/return_url.php', '/pay/tianxin/notify_url.php', '/pay/tianxin/notify_url.php', '/pay/tianxin/notify_url.php', '1', '1', '/pay/tianxin/qqpost.php', '/pay/tianxin/return_url.php', '/pay/tianxin/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('时代支付', '10952', '166f325a6bdbec33f99e4069540aaddfff5b383a', NULL, 'http://paytest.7k111.com', '时代支付', '1', '1', '1', '时代支付', '1');
+ VALUES ('天信支付', '10006', 'lhd5d6miu1i5n99rfaiast79agn3o3ma', NULL, 'http://paytest.7k111.com', '天信支付', '1', '1', '1', '天信支付', '1');
