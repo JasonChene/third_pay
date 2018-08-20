@@ -62,7 +62,7 @@ $mysign = md5($signtext);
 // write_log("mysign=".$mysign);
 
 #到账判断
-if ($success_msg == ($success_code || 3)) {
+if ($success_msg == $success_code) {
 	if ($mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
