@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
@@ -36,7 +36,7 @@ function QRcodeUrl($code){
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -62,16 +62,42 @@ $data = array(
   "notifyurl" => $merchant_url,//下行异步通知地址
   // "callbackurl" => $return_url,//下行同步通知地址 若提交值无该参数，用户将停留在汇银接口系统提示支付成功的页面 可不传
   "clientip" => getClientIp(),//支付用户IP
-  // "desc" => 'iphone6S',//备注消息 可不传
+  // "desc" => 'iphone6S',//备注消息  可不传
   "sign" => ''//MD5签名
 );
 #变更参数设置
-$scan = 'zfb';
-$bankname = $pay_type."->支付宝在线充值";
-$payType = $pay_type."_zfb";
-$data['type'] = 'ALIPAY'; //支付宝
-if (_is_mobile()) {
-    $data['type'] = 'ALIPAYH5'; //支付宝H5
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+    $scan = 'jd';
+    $bankname = $pay_type."->京东钱包在线充值";
+    $payType = $pay_type."_jd";
+    $data['type'] = 'JD'; //京东钱包
+    if (_is_mobile()) {
+        $data['type'] = 'JDH5'; //京东钱包H5
+    }
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+    $scan = 'qq';
+    $bankname = $pay_type."->QQ钱包在线充值";
+    $payType = $pay_type."_qq";
+    $data['type'] = 'QQ'; //QQ扫码
+    if (_is_mobile()) {
+        $data['type'] = 'QQH5'; //QQ扫码H5
+    }
+}elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
+    $scan = 'bd';
+    $bankname = $pay_type."->百度钱包在线充值";
+    $payType = $pay_type."_bd";
+    $data['type'] = 'BAIDU'; //百度钱包
+    if (_is_mobile()) {
+        $data['type'] = 'BAIDUH5'; //百度钱包H5
+    }
+}else {
+    $scan = 'wx';
+    $payType = $pay_type."_wx";
+    $bankname = $pay_type . "->微信在线充值";
+    $data['type'] = 'WEIXIN'; //微信支付
+    if (_is_mobile()) {
+        $data['type'] = 'WEIXINH5'; //微信支付H5
+    }
 }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
