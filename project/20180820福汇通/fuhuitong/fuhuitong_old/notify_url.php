@@ -47,8 +47,10 @@ foreach ($_REQUEST as $key => $value) {
 #设定固定参数
 $order_no = $data['tranNo']; //订单号
 $mymoney = number_format($data['tranAmt'], 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
-$success_code = "0";//文档上的成功讯息
+$respCode_msg = $data['respCode'];//响应码
+$respCode_code = "0";//响应码的成功讯息
+$status_msg = $data['status'];//订单状态
+$status_code = "0";//订单状态成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "000000";//回调讯息
 
@@ -92,7 +94,7 @@ $mysign = md5($signtext);//签名
 write_log("mysign=" . $mysign);
 
 #到账判断
-if ($success_msg == $success_code) {
+if ($respCode_msg == $respCode_code && $status_msg == $status_code) {
 	if ($mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
