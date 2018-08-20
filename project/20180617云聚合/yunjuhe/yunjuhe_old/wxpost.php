@@ -98,7 +98,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://111.231.252.91/pay/qr.do';
+$form_url = 'http://103.21.141.192:8080/pay/qr.do';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -144,7 +144,7 @@ $data = array(
 );
 #变更参数设定
 if (strstr($_REQUEST['pay_type'], "微信反扫")) {
-  $form_url = 'http://111.231.252.91/pay/barcode.do';
+  $form_url = 'http://103.21.141.192:8080/pay/barcode.do';
   $scan = 'wxf';
   $data['sign']['str_arr']['payType'] = (int)13;
   $data['payType'] = (int)13;
@@ -156,7 +156,7 @@ elseif (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $data['sign']['str_arr']['payType'] = (int)50;
   $data['payType'] = (int)50;
   if(_is_mobile()){
-    $form_url = 'http://111.231.252.91/pay/h5.do';
+    $form_url = 'http://103.21.141.192:8080/pay/h5.do';
     $data['sign']['str_arr']['payType'] = (int)51;
     $data['payType'] = (int)51;
     $data['sign']['str_arr']['returnUrl'] = $return_url;
@@ -179,7 +179,7 @@ elseif (strstr($_REQUEST['pay_type'], "京东钱包")) {
   $payType = $pay_type."_wx";
   $bankname = $pay_type."->微信在线充值";
   if (_is_mobile()) {
-    $form_url = 'http://111.231.252.91/pay/h5.do';
+    $form_url = 'http://103.21.141.192:8080/pay/h5.do';
     $data['sign']['str_arr']['payType'] = (int)12;
     $data['payType'] = (int)12;
     $data['sign']['str_arr']['returnUrl'] = $return_url;

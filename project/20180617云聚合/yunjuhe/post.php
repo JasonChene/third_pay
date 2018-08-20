@@ -96,7 +96,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://111.231.252.91/pay/ebank.action';
+$form_url = 'http://103.21.141.192:8080/pay/ebank.action';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -115,7 +115,7 @@ $scan = 'wy';
 $payType = $pay_type."_wy";
 $bankname = $pay_type."->网银在线充值";
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  $form_url = 'http://111.231.252.91/pay/qr.do';
+  $form_url = 'http://103.21.141.192:8080/pay/qr.do';
   $scan = 'yl';
   $data = array(
   "sign" => array(
@@ -149,7 +149,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $bankname = $pay_type."->银联钱包在线充值";
   $payType = $pay_type."_yl";
 }elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $form_url = 'http://111.231.252.91/pay/quickpay.action';
+  $form_url = 'http://103.21.141.192:8080/pay/quickpay.action';
   $scan = 'ylkj';
   $data = array(
   "sign" => array(

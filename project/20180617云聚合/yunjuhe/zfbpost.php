@@ -97,7 +97,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://111.231.252.91/pay/qr.do';
+$form_url = 'http://103.21.141.192:8080/pay/qr.do';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -146,7 +146,7 @@ $scan = 'zfb';
 $bankname = $pay_type."->支付宝在线充值";
 $payType = $pay_type."_zfb";
 if (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
-  $form_url = 'http://111.231.252.91/pay/barcode.do';
+  $form_url = 'http://103.21.141.192:8080/pay/barcode.do';
   $scan = 'zfbf';
   $data['sign']['str_arr']['payType'] = (int)23;
   $data['payType'] = (int)23;
@@ -154,7 +154,7 @@ if (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
   $payType = $pay_type."_zfb";
 }else {
   if(_is_mobile()){
-  $form_url = 'http://111.231.252.91/pay/h5.do';
+  $form_url = 'http://103.21.141.192:8080/pay/h5.do';
   $data['sign']['str_arr']['payType'] = (int)22;
   $data['payType'] = (int)22;
   $data['sign']['str_arr']['returnUrl'] = $return_url;
