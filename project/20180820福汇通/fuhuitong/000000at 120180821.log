@@ -1,0 +1,18 @@
+2018-08-21 04:08:06 request方法
+2018-08-21 04:08:06 post方法
+2018-08-21 04:08:06 input方法
+2018-08-21 04:08:06 {"collectWay":"ZFBH5","merCode":"8660819193526094","respCode":"0","respMsg":"交易成功","settleDate":"20180821","sign":"02578d1058d813cede0225bdc3a1e01c","status":"0","tranAmt":"1000","tranNo":"59227120180821040659"}
+2018-08-21 04:08:06 input方法
+2018-08-21 04:08:06 {"collectWay":"ZFBH5","merCode":"8660819193526094","respCode":"0","respMsg":"交易成功","settleDate":"20180821","sign":"02578d1058d813cede0225bdc3a1e01c","status":"0","tranAmt":"1000","tranNo":"59227120180821040659"}
+2018-08-21 04:08:06 collectWay=ZFBH5
+2018-08-21 04:08:06 merCode=8660819193526094
+2018-08-21 04:08:06 respCode=0
+2018-08-21 04:08:06 respMsg=交易成功
+2018-08-21 04:08:06 settleDate=20180821
+2018-08-21 04:08:06 sign=02578d1058d813cede0225bdc3a1e01c
+2018-08-21 04:08:06 status=0
+2018-08-21 04:08:06 tranAmt=1000
+2018-08-21 04:08:06 tranNo=59227120180821040659
+2018-08-21 04:08:06 signtext=collectWay=ZFBH5&merCode=8660819193526094&respCode=0&respMsg=交易成功&settleDate=20180821&status=0&tranAmt=1000&tranNo=59227120180821040659CBDIBM2IBD01GVE2
+2018-08-21 04:08:06 mysign=02578d1058d813cede0225bdc3a1e01c
+2018-08-21 04:08:06 000000at 1
