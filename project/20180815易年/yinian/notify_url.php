@@ -3,24 +3,24 @@
 // include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-#write_log("notify");
+#//write_log("notify");
 
 
 #############################################
 #request方法
-write_log('request方法');
+//write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
-	write_log($key . "=" . $value);
+	//write_log($key . "=" . $value);
 }
 #post方法
-write_log('post方法');
+//write_log('post方法');
 foreach ($_POST as $key => $value) {
-	write_log($key . "=" . $value);
+	//write_log($key . "=" . $value);
 }
 #input方法
-write_log('input方法');
+//write_log('input方法');
 $input_data = file_get_contents("php://input");
-write_log($input_data);
+//write_log($input_data);
 // $res=json_decode($input_data,1);//json回传资料
 
 // $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
@@ -31,7 +31,7 @@ write_log($input_data);
 
 // foreach ($res as $key => $value) {
 // 	$data[$key] = $value;
-// 	write_log($key."=".$value);
+// 	//write_log($key."=".$value);
 // }
 ###########################################
 
@@ -41,7 +41,7 @@ write_log($input_data);
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	//write_log($key . "=" . $value);
 }
 
 #设定固定参数
@@ -73,7 +73,7 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	write_log("非法提交参数");
+	//write_log("非法提交参数");
 	exit;
 }
 
@@ -87,9 +87,9 @@ foreach ($data as $arr_key => $arr_val) {
 	}
 }
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;//验签字串
-write_log("signtext=" . $signtext);
+//write_log("signtext=" . $signtext);
 $mysign = strtoupper(md5($signtext));//签名
-write_log("mysign=" . $mysign);
+//write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -97,28 +97,28 @@ if ($success_msg == $success_code) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
+			//write_log("会员信息不存在，无法入账");
 			exit;
 		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 0');
+			//write_log($echo_msg . 'at 0');
 			exit;
 		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			write_log("数据库操作失败");
+			//write_log("数据库操作失败");
 			exit;
 		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 1');
+			//write_log($echo_msg . 'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
-			write_log("支付失败");
+			//write_log("支付失败");
 			exit;
 		}
 	} else {
 		echo ('签名不正确！');
-		write_log("签名不正确！");
+		//write_log("签名不正确！");
 		exit;
 	}
 } else {
