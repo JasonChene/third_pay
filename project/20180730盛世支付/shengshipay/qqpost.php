@@ -95,20 +95,22 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "field042" => $pay_mid, //商户号
-  "field004" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
-  "field048" => $order_no,//商户流水号
-  "field031" => '',//支付方式
   "txcode" => 'F60002',
   "txdate" => date('Ymd'),
   "txtime" => date('His'),
   "version" => '2.0.0',
   "field003" => '',
+  "field004" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
   "field011" => '000000',
+  "field031" => '',//支付方式
   "field035" => getClientIp(),
-  "field041" => '',//客户号
-  "field125" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
+  "field036" => '',
+  "field041" => $pay_account,//客户号
+  "field042" => $pay_mid, //商户号
+  "field048" => $order_no,//商户流水号
+  "field055" => '',
   "field060" => $merchant_url,
+  "field125" => $pay_mid . rand(100000,999999) . rand(100000,999999),
   "field128" => ''
 );
 
@@ -131,28 +133,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign');
-$signtext = $data['txcode'] . $data['txdate'] . $data['txtime'] . $data['version'] . $data['field003'] . $data['field011'] . $data['field041'] . $data['field042'] . $pay_mkey;
-// echo $signtext;
-// exit;
+$noarr = array('field128');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_val;
+  }
+}
+$signtext .= $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $sign = substr($sign, 0, -16);
-$data['sign'] = $sign; 
+$data['field128'] = $sign; 
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
+$res = curl_post($form_url, json_encode($data,320));
 $tran = mb_convert_encoding($res, "UTF-8", "auto");
 $row = json_decode($tran, 1);
-
-//打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-// exit;
 
 #跳转
 if ($row['field039'] != '00') {
@@ -162,9 +157,9 @@ if ($row['field039'] != '00') {
 } 
 else {
   if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
+    $jumpurl = $row['field055'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
   }
 }
 

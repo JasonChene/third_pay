@@ -95,20 +95,22 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "field042" => $pay_mid, //商户号
-  "field004" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
-  "field048" => $order_no,//商户流水号
-  "field031" => '',//支付方式
   "txcode" => 'F60002',
   "txdate" => date('Ymd'),
   "txtime" => date('His'),
   "version" => '2.0.0',
   "field003" => '',
+  "field004" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
   "field011" => '000000',
+  "field031" => '',//支付方式
   "field035" => getClientIp(),
-  "field041" => $pay_mid,//客户号
-  "field125" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
+  "field036" => '',
+  "field041" => $pay_account,//客户号
+  "field042" => $pay_mid, //商户号
+  "field048" => $order_no,//商户流水号
+  "field055" => '',
   "field060" => $merchant_url,
+  "field125" => $pay_mid . rand(100000,999999) . rand(100000,999999),
   "field128" => ''
 );
 
@@ -127,12 +129,41 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
     $data['field003'] = '900029';
     $data['field031'] = '26060';
   }
-  
 } 
 elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
   $data['field003'] = '900023';
   $data['field031'] = '26015';
+  if (isset($_REQUEST['cardNo']) && isset($_REQUEST['cerdId']) && isset($_REQUEST['acctName'])) {
+    $scan = 'ylkj';
+    unset($data['tranChannel']);
+    $data['cardNo'] = $_REQUEST['cardNo'];//快捷支付银行
+    $data['cerdId'] = $_REQUEST['cerdId'];//快捷支付身份证
+    $data['acctName'] = $_REQUEST['acctName'];//持卡人姓名
+    $data['payMode'] = '00019';//支付方式，00019-银行卡快捷(固定值) 00020-网银(固定值)
+    $bankname = $pay_type."->银联快捷在线充值";
+    $payType = $pay_type."_ylkj";
+  }else {
+      ?>
+        <html>
+          <head>
+            <title>跳转......</title>
+            <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+          </head>
+          <body>
+            <form name="dinpayForm" method="get" id="frm1" action="./card.php" target="_self">
+              <p>正在为您跳转中，请稍候......</p>
+              <?php foreach ($_REQUEST as $arr_key => $arr_value) {?>
+              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+              <?php } ?>
+            </form>
+            <script language="javascript">
+              document.getElementById("frm1").submit();
+            </script>
+          </body>
+        </html>
+      <?php
+  }
 }
 else {
     $scan = 'wy';
@@ -150,45 +181,37 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign');
-$signtext = $data['txcode'] . $data['txdate'] . $data['txtime'] . $data['version'] . $data['field003'] . $data['field011'] . $data['field041'] . $data['field042'] . $pay_mkey;
-// echo $signtext;
-// exit;
+$noarr = array('field128');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_val;
+  }
+}
+$signtext .= $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $sign = substr($sign, 0, -16);
-$data['sign'] = $sign; 
-// #curl获取响应值
-// $res = curl_post($form_url, json_encode($data,1));
-// $tran = mb_convert_encoding($res, "UTF-8", "auto");
-// $row = json_decode($tran, 1);
+$data['field128'] = $sign; 
+#curl获取响应值
+$res = curl_post($form_url, json_encode($data,320));
+$tran = mb_convert_encoding($res, "UTF-8", "auto");
+$row = json_decode($tran, 1); 
 
 #跳转
-// if ($row['field039'] != '00') {
-//   echo '错误代码:' . $row['field039'] . "<br>";
-//   echo '错误讯息:' . $row['field124'] . "<br>";
-//   //打印
-//   echo '<pre>';
-//   echo ('<br> data = <br>');
-//   var_dump($data);
-//   echo ('<br> signtext = <br>');
-//   echo ($signtext);
-//   echo ('<br><br> row = <br>');
-//   var_dump($row);
-//   echo '</pre>';
-//   // exit;
-//   exit;
-// } 
-// else {
-  // if (_is_mobile()) {
-  //   $jumpurl = $data['field055'];
-  // } else {
-  //   $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
-  // }
-// }
+if ($row['field039'] != '00') {
+  echo '错误代码:' . $row['field039'] . "<br>";
+  echo '错误讯息:' . $row['field124'] . "<br>";
+  exit;
+} 
+else {
+  if (_is_mobile()) {
+    $jumpurl = $data['field055'];
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
+  }
+}
 
 #跳轉方法
-$jumpurl = $form_url;
-$form_data = $data;
 ?>
 <html>
   <head>
