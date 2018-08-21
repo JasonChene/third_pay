@@ -10,7 +10,7 @@ if ($data['file'] == 'wx') {
 }elseif ($data['file'] == 'zfb') {
     $file_name = './zfbpost.php';
 }elseif ($data['file'] == 'wxqqjdbd') {
-    $file_name = './wwxqqjdbdpost.php';
+    $file_name = './wxqqjdbdpost.php';
 }
 
 ?>
