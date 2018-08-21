@@ -106,7 +106,7 @@ $data = array(
   "field003" => '',
   "field011" => '000000',
   "field035" => getClientIp(),
-  "field041" => $pay_account,//客户号
+  "field041" => '',//客户号
   "field125" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
   "field060" => $merchant_url,
   "field128" => ''
@@ -114,18 +114,11 @@ $data = array(
 
 #变更参数设置
 
-$form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
+$form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
 
-if(_is_mobile()){
-  $scan = 'zfb';
-  $data['field003'] = '900022';
-  $data['field031'] = '26001';
-}
-else{
-  $scan = 'zfb';
-  $data['field003'] = '900022';
-  $data['field031'] = '26001';
-}
+$scan = 'qq';
+$data['field003'] = '900028';
+$data['field031'] = '26055';
 
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -150,16 +143,16 @@ $res = curl_post($form_url, http_build_query($data));
 $tran = mb_convert_encoding($res, "UTF-8", "auto");
 $row = json_decode($tran, 1);
 
-// 打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
-exit;
+//打印
+// echo '<pre>';
+// echo ('<br> data = <br>');
+// var_dump($data);
+// echo ('<br> signtext = <br>');
+// echo ($signtext);
+// echo ('<br><br> row = <br>');
+// var_dump($row);
+// echo '</pre>';
+// exit;
 
 #跳转
 if ($row['field039'] != '00') {
@@ -176,8 +169,7 @@ else {
 }
 
 #跳轉方法
-$jumpurl = $form_url;
-$form_data = $data;
+
 ?>
 <html>
   <head>

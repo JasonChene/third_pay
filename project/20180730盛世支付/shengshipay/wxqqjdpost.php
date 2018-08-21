@@ -106,7 +106,7 @@ $data = array(
   "field003" => '',
   "field011" => '000000',
   "field035" => getClientIp(),
-  "field041" => $pay_account,//客户号
+  "field041" => $pay_mid,//客户号
   "field125" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
   "field060" => $merchant_url,
   "field128" => ''
@@ -114,19 +114,48 @@ $data = array(
 
 #变更参数设置
 
-$form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
+$form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
 
-if(_is_mobile()){
-  $scan = 'zfb';
-  $data['field003'] = '900022';
-  $data['field031'] = '26001';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  if(_is_mobile()){
+    $scan = 'jd';
+    $data['field003'] = '900035';
+    $data['field031'] = '26090';
+  }
+  else{
+    $scan = 'jd';
+    $data['field003'] = '900031';
+    $data['field031'] = '26070';
+  }
+  
+} 
+elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+  $scan = 'qq';
+  $data['field003'] = '900028';
+  $data['field031'] = '26055';
 }
-else{
-  $scan = 'zfb';
-  $data['field003'] = '900022';
-  $data['field031'] = '26001';
+else {
+  if(_is_mobile()){
+    $scan = 'wx';
+    $phone_type = 'other';
+    if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+      $phone_type = 'ios';
+      $data['field011'] = '000002';
+    } 
+    elseif (strpos($agent, 'android')) {
+      $phone_type = 'android';
+      $data['field011'] = '000001';
+    }
+    $data['field036'] = 'https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F';
+    $data['field003'] = '900030';
+    $data['field031'] = '26065';
+  }
+  else{
+    $scan = 'wx';
+    $data['field003'] = '900021';
+    $data['field031'] = '26005';
+  }
 }
-
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -145,39 +174,41 @@ $signtext = $data['txcode'] . $data['txdate'] . $data['txtime'] . $data['version
 $sign = strtoupper(md5($signtext));
 $sign = substr($sign, 0, -16);
 $data['sign'] = $sign; 
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1);
+// #curl获取响应值
+// $res = curl_post($form_url, http_build_query($data));
+// $tran = mb_convert_encoding($res, "UTF-8", "auto");
+// $row = json_decode($tran, 1);
 
-// 打印
-echo '<pre>';
-echo ('<br> data = <br>');
+// //打印
+// // echo '<pre>';
+// // echo ('<br> data = <br>');
+// // var_dump($data);
+// // echo ('<br> signtext = <br>');
+// // echo ($signtext);
+// // echo ('<br><br> row = <br>');
+// // var_dump($row);
+// // echo '</pre>';
+// // exit;
+
+// #跳转
+// if ($row['field039'] != '00') {
+//   echo '错误代码:' . $row['field039'] . "<br>";
+//   echo '错误讯息:' . $row['field124'] . "<br>";
+//   exit;
+// } 
+// else {
+  // if (_is_mobile()) {
+  //   $jumpurl = $data['field055'];
+  // } else {
+  //   $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
+  // }
+// }
+echo "<pre>";
 var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
-exit;
-
-#跳转
-if ($row['field039'] != '00') {
-  echo '错误代码:' . $row['field039'] . "<br>";
-  echo '错误讯息:' . $row['field124'] . "<br>";
-  exit;
-} 
-else {
-  if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
-  }
-}
-
+// exit;
 #跳轉方法
+$form_data =$data;
 $jumpurl = $form_url;
-$form_data = $data;
 ?>
 <html>
   <head>
@@ -185,7 +216,7 @@ $form_data = $data;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self"><!--self-->
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {
