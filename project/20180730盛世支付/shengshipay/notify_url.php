@@ -5,52 +5,56 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 write_log("notify");
 
-#############################################
-#request方法
-write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	// $data[$key] = $value;
-	write_log($key."=".$value);
-}
-#post方法
-write_log('post方法');
-foreach ($_POST as $key => $value) {
-	// $data[$key] = $value;
-	write_log($key."=".$value);
-}
-#input方法
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-write_log($input_data);
-// $res=json_decode($input_data,1);//json回传资料
+// #############################################
+// #request方法
+// write_log('request方法');
+// foreach ($_REQUEST as $key => $value) {
+// 	// $data[$key] = $value;
+// 	write_log($key."=".$value);
+// }
+// #post方法
+// write_log('post方法');
+// foreach ($_POST as $key => $value) {
+// 	// $data[$key] = $value;
+// 	write_log($key."=".$value);
+// }
+// #input方法
+// write_log('input方法');
+// $input_data=file_get_contents("php://input");
+// write_log($input_data);
+// // $res=json_decode($input_data,1);//json回传资料
 
-// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XML回传资料
+// // $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
+// // $res=json_decode(json_encode($xml),1);//XML回传资料
 
-// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
+// // $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
+// // $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
 
-foreach ($res as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-###########################################
+// foreach ($res as $key => $value) {
+// 	$data[$key] = $value;
+// 	write_log($key."=".$value);
+// }
+// ###########################################
 
 
 #接收资料
-#post方法
-$data = array();
+#input方法
+write_log('input方法');
+$input_data=file_get_contents("php://input");
+$res=json_decode($input_data,1);//json回传资料
+write_log($input_data);
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	write_log($key."=".$value);
 }
 
 #设定固定参数
-$order_no = $data['field062']; //订单号
-$mymoney = number_format($data['field004'], 2, '.', ''); //订单金额
-$success_msg = $data['field039'];//成功讯息
+$array  = explode('|',$data['field055']);
+$order_no = $array[0]; //订单号
+$mymoney = number_format($array[3], 2, '.', ''); //订单金额
+$success_msg = $array[1];//成功讯息
 $success_code = "00";//文档上的成功讯息
-$sign = $data['sign'];//签名
+$sign = $data['field128'];//签名
 $echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
@@ -78,17 +82,12 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$noarr = array('sign');//不加入签名的array key值
-$signtext = "";
-foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-		$signtext .= $arr_val;
-	}
-}
+$noarr = array('field128');//不加入签名的array key值
+$signtext = $data['txcode'] . $data['txdate'] . $data['txtime'] . $data['version'] . $data['field003'] . $data['field041'] . $data['field042'] . $data['field055'] . $data['field062'];
 $signtext .= $pay_mkey;//验签字串
 write_log("signtext=".$signtext);
 $mysign = strtoupper(md5($signtext));//签名
-$mysign = substr($signtext, 0,-16);
+$mysign = substr($mysign, 0,-16);
 write_log("mysign=".$mysign);
 
 #到账判断
