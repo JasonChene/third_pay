@@ -109,17 +109,9 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['payType'] = 'H5-jd';
-} else {
-  $scan = 'wx';
-  $data['payType'] = 'QRCode-wx';
-  if (_is_mobile()) {
-    $data['payType'] = 'H5-wx';
-  }
-}
+$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$scan = 'qq';
+$data['payType'] = 'H5-qqWallet';
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -160,14 +152,14 @@ if ($jumptype == '1') {
     exit;
   } else {
     $qrcodeUrl = $row['data']['payUrl'];
-    if (_is_mobile() || $scan == 'jd') {
+    if (_is_mobile() || $scan == 'qq') {
       $jumpurl = $qrcodeUrl;
     } else {
       $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
     }
   }
 } else {
-  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法

@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");//原数据库的连接方式
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -76,7 +76,7 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -109,16 +109,12 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['payType'] = 'H5-jd';
-} else {
-  $scan = 'wx';
-  $data['payType'] = 'QRCode-wx';
-  if (_is_mobile()) {
-    $data['payType'] = 'H5-wx';
-  }
+$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$scan = 'zfb';
+$data['payType'] = 'QRCode-ali';
+if (_is_mobile()) {
+  $form_url = 'http://114.116.71.237/pay/unifiedorder';
+  $data['payType'] = 'H5-ali';
 }
 payType_bankname($scan, $pay_type);
 
@@ -160,14 +156,14 @@ if ($jumptype == '1') {
     exit;
   } else {
     $qrcodeUrl = $row['data']['payUrl'];
-    if (_is_mobile() || $scan == 'jd') {
+    if (_is_mobile()) {
       $jumpurl = $qrcodeUrl;
     } else {
       $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
     }
   }
 } else {
-  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法

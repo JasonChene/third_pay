@@ -109,7 +109,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
+$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
 if (strstr($pay_type, "银联钱包")) {
   $scan = 'yl';
   $data['payType'] = 'QRCode-up';
@@ -170,7 +170,7 @@ if ($jumptype == '1') {
     }
   }
 } else {
-  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法
