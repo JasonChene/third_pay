@@ -13,7 +13,7 @@
 备注：无  
 
 20180822
-修改档案：（新旧）wxbspost.php,wxh5post.phpwxh5post.php,return_url.php  
-修改微信跳转方式（返回响应值方式手机端无法使用,改成直接跳转方式）  
+修改档案：（新旧）wxbspost.php,wxh5post.php,return_url.php  
+修改微信跳转方式（返回响应值方式手机端无法使用,改成直接跳转方式）,同步通无回调  
 
 测试到账：微信扫码  
