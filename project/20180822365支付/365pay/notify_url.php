@@ -1,23 +1,29 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 // write_log("notify");
 
 $data = array();
 
-#接收资料
-#post方法
-// write_log('POST方法');
-foreach ($_POST as $key => $value) {
+#input方法
+// write_log('input方法');
+$input_data=file_get_contents("php://input");
+// write_log($input_data);
+$res=json_decode($input_data,1);//json回传资料
+
+foreach ($res as $key => $value) {
 	$data[$key] = $value;
-	// write_log($key . "=" . $value);
+	// write_log($key."=".$value);
 }
-
 #设定固定参数
-$order_no = $data['orderNo']; //订单号
-
+$order_no = $data['order_id']; //订单号
+$mymoney = number_format($data['price'], 2, '.', ''); //订单金额
+$success_msg = $data['code'];//成功讯息
+$success_code = "1";//文档上的成功讯息
+$sign = $data['sign'];//签名
+$echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -37,51 +43,24 @@ $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
-$idArray = explode("###", $pay_mkey);
-$md5key = $idArray[0];//md5密钥
-$private_key = $idArray[1];//RSA私钥：
-$pay_account = $row['mer_account'];//RSA支付公钥
+$pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	// write_log('非法提交参数');
 	exit;
 }
-$public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
-$private_pem = chunk_split($private_key, 64, "\r\n");//转换为pem格式的私钥
-$private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
 
-$data = $_POST['data'];
-$pr_key = openssl_get_privatekey($private_pem);
-if ($pr_key == false){
-	echo "打开密钥出错";
-	die;
-}
-$data = base64_decode($data);
-$crypto = '';
-foreach (str_split($data, 128) as $chunk) {
-	openssl_private_decrypt($chunk, $decryptData, $pr_key);
-	$crypto .= $decryptData;
-}
-$array = array();
-$array = json_decode($crypto,1);
-
-$mymoney = number_format($array['amount']/100, 2, '.', ''); //订单金额
-$success_msg = $array['payStateCode'];//成功讯息
-$success_code = "00";//文档上的成功讯息
-$sign = $array['sign'];;//签名
-$echo_msg = "SUCCESS";//回调讯息
-
-ksort($array);
-$sign_array = array();
-foreach ($array as $k => $v) {
-	if ($k !== 'sign'){
-		$sign_array[$k] = $v;
-		// write_log($k . "=" . $v);
+#验签方式
+$noarr = array('sign','messages');//不加入签名的array key值
+ksort($data);
+$signtext = "";
+foreach ($data as $arr_key => $arr_val) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = json_encode($sign_array,320) . $md5key;
-$mysign =  strtoupper(md5($signtext));
+$signtext = substr($signtext, 0, -1)."&key=".$pay_mkey;
+$mysign = strtoupper(md5($signtext));
 
 // write_log("signtext=".$signtext);
 // write_log("mysign=".$mysign);

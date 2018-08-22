@@ -1,7 +1,6 @@
 <?php
 header("Content-type:text/html; charset=UTF-8");
 include_once("../../../database/mysql.php");
-// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 
 #function
@@ -79,22 +78,14 @@ $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
-$idArray = explode("###", $pay_mkey);
-$md5key = $idArray[0];//md5密钥
-$private_key = $idArray[1];//RSA私钥：
-$pay_account = $row['mer_account'];//RSA支付公钥
-$return_url = $row['pay_domain'] . $row['wx_postUrl'];
+$pay_account = $row['mer_account'];
+$return_url = $row['pay_domain'] . $row['wx_returnUrl'];
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];
 $pay_type = $_REQUEST['pay_type'];
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
-#固定参数设置
-$public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
-$private_pem = chunk_split($private_key, 64, "\r\n");//转换为pem格式的私钥
-$private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
 
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
@@ -102,43 +93,27 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "version" => "V3.3.0.0", 
-  "merchNo" => $pay_mid,
-  "payType" => "",
-  "randomNum" => $order_no,
-  "orderNo" => $order_no,
-  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
-  "goodsName" => "pay",
-  "notifyUrl" => $merchant_url,
-  "notifyViewUrl" => $return_url,
-  "charsetCode" => "UTF-8",
+  "return_type" => "html", 
+  "api_code" => $pay_mid,
+  "is_type" => "",
+  "price" => $mymoney,
+  "order_id" => $order_no,
+  "time" => time(),
+  "mark" => "pay",
+  "return_url" => $return_url,
+  "notify_url" => $merchant_url,
+  "sign" => "",
 );
 
 #变更参数设置
-$form_url = "http://netway.xfzfpay.com:90/api/pay";
+$form_url = "http://47.75.72.219:12301/channel/Common/mail_interface";
   
-if(strstr($pay_type, "百度钱包")) {
-  $scan = 'bd';
-  $data['payType'] = "BAIDU";
-}elseif(strstr($pay_type, "微信反扫")) {
-  $scan = 'wxfs';
-  $data['payType'] = "WX_AUTH_CODE";
-  if (_is_mobile()) {
-    $data['payType'] = "WX_AUTH_CODE_WAP";
-  }
-}elseif(strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['payType'] = "JD";
-  if (_is_mobile()) {
-    $data['payType'] = "JD_WAP";
-  }
-}else {
-  $scan = 'wx';
-  $data['payType'] = "WX";
-  if (_is_mobile()) {
-    $data['payType'] = "WX_WAP";
-  }
+$scan = 'wx';
+$data['is_type'] = "wechat";
+if (_is_mobile()) {
+  $data['is_type'] = "wechat_wap";
 }
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -152,70 +127,40 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
 
-$jsondata = json_encode($data,320);
-$data['sign'] = strtoupper(md5($jsondata.$md5key));
-#RSA
-$publickey = openssl_get_publickey($public_pem);
-  if ($publickey == false) {
-    echo "打开公钥出错";
-    exit();
-}
-$json = json_encode($data,320);
-$encryptData = '';
-$crypto = '';
-foreach (str_split($json, 117) as $chunk) {
-  openssl_public_encrypt($chunk, $encryptData, $publickey);
-  $crypto = $crypto . $encryptData;
-}
-
-$crypto = base64_encode($crypto);
-$param = 'data=' . urlencode($crypto) . '&merchNo=' . $data['merchNo'];
-
-
-#curl获取响应值
-$res = curl_post($form_url, $param);
-$array = json_decode($res, 1);
-
-if ($array['stateCode'] == '00') {
-  $sign_string = $array['sign'];
-  ksort($array);
-  $sign_array = array();
-  foreach ($array as $k => $v) {
-    if ($k !== 'sign'){
-      $sign_array[$k] = $v;
-    }
+$noarr = array('sign');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
   }
-  $md5 =  strtoupper(md5(json_encode($sign_array,320) . $md5key));
-  
-  if ($md5 != $sign_string) {
-    echo "返回签名验证失败";
-    exit;
-  } else {
-    if ((_is_mobile() && $scan != 'bd') || $scan == 'wxfs') {
-      $jumpurl = $array['qrcodeUrl'];
-    } else {
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($array['qrcodeUrl']);
-    }
-  }
-} else {
-  echo '错误代码:' . $array['stateCode'] . "<br>";
-  echo '错误讯息:' . $array['msg'] . "<br>";
-  exit;
 }
+$signtext = substr($signtext, 0, -1)."&key=".$pay_mkey;
+$data['sign'] = strtoupper(md5($signtext));
+
+$form_data = $data;
+$jumpurl = $form_url;
 
 #跳轉方法
 ?>
 <html>
-<head>
-  <title>跳转......</title>
-  <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-</head>
-<body>
-  <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-    <p>正在为您跳转中，请稍候......</p>
-  </form>
-  <script language="javascript">
-    document.getElementById("frm1").submit();
-  </script>
-</body>
+  <head>
+    <title>跳转......</title>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+      <?php
+      if (isset($form_data)) {
+        foreach ($form_data as $arr_key => $arr_value) {
+          ?>
+      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+      <?php 
+    }
+  } ?>
+    </form>
+    <script language="javascript">
+      document.getElementById("frm1").submit();
+    </script>
+  </body>
 </html>
