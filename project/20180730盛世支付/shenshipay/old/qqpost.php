@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -75,8 +75,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -116,43 +116,12 @@ $data = array(
 
 #变更参数设置
 
-$form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
+$form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
 
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  if(_is_mobile()){
-    $scan = 'jd';
-    $data['field003'] = '900035';
-    $data['field031'] = '26090';
-  }
-  else{
-    $scan = 'jd';
-    $data['field003'] = '900031';
-    $data['field031'] = '26070';
-  }
-}
-else {
-  if(_is_mobile()){
-    $scan = 'wx';
-    $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-    $phone_type = 'other';
-    if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
-      $phone_type = 'ios';
-      $data['field011'] = '000002';
-    } 
-    elseif (strpos($agent, 'android')) {
-      $phone_type = 'android';
-      $data['field011'] = '000001';
-    }
-    $data['field036'] = 'https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F';
-    $data['field003'] = '900030';
-    $data['field031'] = '26065';
-  }
-  else{
-    $scan = 'wx';
-    $data['field003'] = '900021';
-    $data['field031'] = '26005';
-  }
-}
+$scan = 'qq';
+$data['field003'] = '900028';
+$data['field031'] = '26055';
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);

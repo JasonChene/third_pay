@@ -116,60 +116,52 @@ $data = array(
 
 #变更参数设置
 
-$form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
+$form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
 
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
-  if(_is_mobile()){
-    $scan = 'yl';
-    $data['field003'] = '900025';
-    $data['field031'] = '26040';
+if(_is_mobile()){
+  $scan = 'zfb';
+  $data['field003'] = '900022';
+  $data['field031'] = '26001';
+}
+elseif (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
+  if (!$_POST['authCode']) {
+    $data = array();
+    foreach ($_REQUEST as $key => $value) {
+      $data[$key] = $value;
+    }
+    ?>
+      <html>
+        <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+        </head>
+        <body>
+          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
+            <p>正在为您跳转中，请稍候......</p>
+            <input type="hidden" name="file" value="zfb" />
+            <?php foreach ($data as $arr_key => $arr_value) { ?>
+              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+            <?php } ?>
+          </form>
+          <script language="javascript">
+            document.getElementById("frm2").submit();
+          </script>
+        </body>
+      </html>
+    <?php 
   }
   else{
-    $scan = 'yl';
-    $data['field003'] = '900029';
-    $data['field031'] = '26060';
-  }
-} 
-elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
-  $scan = 'ylkj';
-  $data['field003'] = '900023';
-  $data['field031'] = '26015';
-  if (isset($_REQUEST['cardNo']) && isset($_REQUEST['cerdId']) && isset($_REQUEST['acctName'])) {
-    $scan = 'ylkj';
-    unset($data['tranChannel']);
-    $data['cardNo'] = $_REQUEST['cardNo'];//快捷支付银行
-    $data['cerdId'] = $_REQUEST['cerdId'];//快捷支付身份证
-    $data['acctName'] = $_REQUEST['acctName'];//持卡人姓名
-    $data['payMode'] = '00019';//支付方式，00019-银行卡快捷(固定值) 00020-网银(固定值)
-    $bankname = $pay_type."->银联快捷在线充值";
-    $payType = $pay_type."_ylkj";
-  }else {
-      ?>
-        <html>
-          <head>
-            <title>跳转......</title>
-            <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-          </head>
-          <body>
-            <form name="dinpayForm" method="get" id="frm1" action="./card.php" target="_self">
-              <p>正在为您跳转中，请稍候......</p>
-              <?php foreach ($_REQUEST as $arr_key => $arr_value) {?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-              <?php } ?>
-            </form>
-            <script language="javascript">
-              document.getElementById("frm1").submit();
-            </script>
-          </body>
-        </html>
-      <?php
+    $scan = 'zfb';
+    $data['field003'] = '900036';
+    $data['field031'] = '26095';
   }
 }
-else {
-    $scan = 'wy';
-    $data['field003'] = '900034';
-    $data['field031'] = '26085';
+else{
+  $scan = 'zfb';
+  $data['field003'] = '900027';
+  $data['field031'] = '26050';
 }
+
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -195,7 +187,7 @@ $data['field128'] = $sign;
 #curl获取响应值
 $res = curl_post($form_url, json_encode($data,320));
 $tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1); 
+$row = json_decode($tran, 1);
 
 #跳转
 if ($row['field039'] != '00') {
@@ -205,9 +197,9 @@ if ($row['field039'] != '00') {
 } 
 else {
   if (_is_mobile()) {
-    $jumpurl = $data['field055'];
+    $jumpurl = $row['field055'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
   }
 }
 

@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -75,8 +75,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -116,7 +116,7 @@ $data = array(
 
 #变更参数设置
 
-$form_url = 'http://m.renbangshop.com:11088/webservice/gateOrder';
+$form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
 
 if (strstr($_REQUEST['pay_type'], "京东钱包")) {
   if(_is_mobile()){
@@ -129,16 +129,77 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
     $data['field003'] = '900031';
     $data['field031'] = '26070';
   }
-  
-} 
-elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['field003'] = '900028';
-  $data['field031'] = '26055';
+}
+elseif (strstr($_REQUEST['pay_type'], "京东反扫")) {
+  if (!$_POST['authCode']) {
+    $data = array();
+    foreach ($_REQUEST as $key => $value) {
+      $data[$key] = $value;
+    }
+    ?>
+      <html>
+        <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+        </head>
+        <body>
+          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
+            <p>正在为您跳转中，请稍候......</p>
+            <input type="hidden" name="file" value="jd" />
+            <?php foreach ($data as $arr_key => $arr_value) { ?>
+              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+            <?php } ?>
+          </form>
+          <script language="javascript">
+            document.getElementById("frm2").submit();
+          </script>
+        </body>
+      </html>
+    <?php 
+  }
+  else{
+    $scan = 'jd';
+    $data['field003'] = '900032';
+    $data['field031'] = '26075';
+  }
+}
+elseif (strstr($_REQUEST['pay_type'], "微信反扫")) {
+  if (!$_POST['authCode']) {
+    $data = array();
+    foreach ($_REQUEST as $key => $value) {
+      $data[$key] = $value;
+    }
+    ?>
+      <html>
+        <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+        </head>
+        <body>
+          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
+            <p>正在为您跳转中，请稍候......</p>
+            <input type="hidden" name="file" value="wx" />
+            <?php foreach ($data as $arr_key => $arr_value) { ?>
+              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+            <?php } ?>
+          </form>
+          <script language="javascript">
+            document.getElementById("frm2").submit();
+          </script>
+        </body>
+      </html>
+    <?php 
+  }
+  else{
+    $scan = 'wx';
+    $data['field003'] = '900026';
+    $data['field031'] = '26045';
+  }
 }
 else {
   if(_is_mobile()){
     $scan = 'wx';
+    $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
     $phone_type = 'other';
     if (strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
       $phone_type = 'ios';
@@ -193,15 +254,14 @@ if ($row['field039'] != '00') {
 } 
 else {
   if (_is_mobile()) {
-    $jumpurl = $data['field055'];
+    $jumpurl = $row['field055'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
   }
 }
 
 #跳轉方法
-$form_data =$data;
-$jumpurl = $form_url;
+
 ?>
 <html>
   <head>
@@ -209,7 +269,7 @@ $jumpurl = $form_url;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self"><!--self-->
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {
