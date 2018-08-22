@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -75,8 +75,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -118,50 +118,23 @@ $data = array(
 
 $form_url = 'http://web1.yaobaissr.cc:11088/webservice/order';
 
-if(_is_mobile()){
-  $scan = 'zfb';
-  $data['field003'] = '900022';
-  $data['field031'] = '26001';
-}
-elseif (strstr($_REQUEST['pay_type'], "支付宝反扫")) {
-  if (!$_POST['authCode']) {
-    $data = array();
-    foreach ($_REQUEST as $key => $value) {
-      $data[$key] = $value;
-    }
-    ?>
-      <html>
-        <head>
-          <title>跳转......</title>
-          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-        </head>
-        <body>
-          <form name="dinpayForm" method="post" id="frm2" action="./fscard.php" target="_self">
-            <p>正在为您跳转中，请稍候......</p>
-            <input type="hidden" name="file" value="zfb" />
-            <?php foreach ($data as $arr_key => $arr_value) { ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-            <?php } ?>
-          </form>
-          <script language="javascript">
-            document.getElementById("frm2").submit();
-          </script>
-        </body>
-      </html>
-    <?php 
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  if(_is_mobile()){
+    $scan = 'yl';
+    $data['field003'] = '900025';
+    $data['field031'] = '26040';
   }
   else{
-    $scan = 'zfb';
-    $data['field003'] = '900036';
-    $data['field031'] = '26095';
+    $scan = 'yl';
+    $data['field003'] = '900029';
+    $data['field031'] = '26060';
   }
 }
-else{
-  $scan = 'zfb';
-  $data['field003'] = '900027';
-  $data['field031'] = '26050';
+else {
+    $scan = 'wy';
+    $data['field003'] = '900034';
+    $data['field031'] = '26085';
 }
-
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -187,7 +160,7 @@ $data['field128'] = $sign;
 #curl获取响应值
 $res = curl_post($form_url, json_encode($data,320));
 $tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1);
+$row = json_decode($tran, 1); 
 
 #跳转
 if ($row['field039'] != '00') {
@@ -197,9 +170,9 @@ if ($row['field039'] != '00') {
 } 
 else {
   if (_is_mobile()) {
-    $jumpurl = $row['field055'];
+    $jumpurl = $data['field055'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
   }
 }
 
