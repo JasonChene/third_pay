@@ -109,7 +109,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['payType'] = 'H5-jd';
@@ -147,7 +147,7 @@ $data['sign'] = $sign;
 $data_str = http_build_query($data);
 
 #curl获取响应值
-$jumptype = '2';//跳转方式 1为返回json 2为页面跳转
+$jumptype = '1';//跳转方式 1为返回json 2为页面跳转
 if ($jumptype == '1') {
   $res = curl_post($form_url, $data_str);
   $tran = mb_convert_encoding("$res", "UTF-8");
@@ -167,7 +167,7 @@ if ($jumptype == '1') {
     }
   }
 } else {
-  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法

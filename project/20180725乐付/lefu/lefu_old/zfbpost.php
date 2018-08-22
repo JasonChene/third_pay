@@ -109,11 +109,10 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
 $scan = 'zfb';
 $data['payType'] = 'QRCode-ali';
 if (_is_mobile()) {
-  $form_url = 'http://114.116.71.237/pay/unifiedorder';
   $data['payType'] = 'H5-ali';
 }
 payType_bankname($scan, $pay_type);
@@ -163,7 +162,7 @@ if ($jumptype == '1') {
     }
   }
 } else {
-  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法
