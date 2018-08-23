@@ -1,0 +1,17 @@
+https://www.fengxiepay.com
+hy13633078654
+
+hy13633078654
+
+商户ID：2059918
+商户秘钥：oXworXeDaNmBKUSAjwxdvUcNSGFcdUgU 
+网关地址：https://www.fengxiepay.com/Pay
+
+测试的
+商户id:2027477       商户秘钥：cGndipusdbfVbvBvMeQgPKpintSgTNSl
+风携支付 2018/8/22 下午 02:55:43
+
+
+
+
+微信扫码 ：wxsm  支付宝扫码 ：zfbsm   支付宝H5 ：zfbsm  QQ扫码：qqsm （qq暂时维护）
