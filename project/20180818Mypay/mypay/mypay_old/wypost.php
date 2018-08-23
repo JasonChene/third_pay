@@ -30,7 +30,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$pay_account_arr = explode("|", $pay_account);
+$pay_account_arr = explode("###", $pay_account);
 $form_url = $pay_account_arr[1];//正式接入URL
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
