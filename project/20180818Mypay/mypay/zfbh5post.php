@@ -30,8 +30,8 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-// $form_url = 'http://testapipay.MyPayla.com/apiOrder/sendOrder.zv';//正式环境：（要实际付款才可回调）
-$form_url = 'http://testapi.MyPayla.com/order/apiOrder/sendOrder.zv';//测试环境：（不需实际付款即可回调）
+$pay_account_arr = explode("|", $pay_account);
+$form_url = $pay_account_arr[1];//正式接入URL
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -49,8 +49,8 @@ $data = array(
   "merchantNo" => $order_no,
   "amount" => $MOAmount,
   "notifyUrl" => $notify_url,
-  "orgId" => $pay_account,
-  "payType" => '1',//支付宝扫码
+  "orgId" => $pay_account_arr[0],
+  "payType" => '2',//支付宝app
   "terminalClient" => '',
   "tradeDate" => $order_time,
   "clientIp" => $client_ip,
@@ -63,7 +63,7 @@ $data = array(
       "merId" => $pay_mid,
       "merchantNo" => $order_no,
       "notifyUrl" => $notify_url,
-      "payType" => '1',//支付宝扫码
+      "payType" => '2',//支付宝app
       "terminalClient" => "",
       "tradeDate" => $order_time,
     ),
@@ -79,8 +79,10 @@ $data = array(
 );
 if (_is_mobile()) {
   $data["terminalClient"] = 'wap';
+  $data["sign"]["str_arr"]["terminalClient"] = 'wap';
 } else {
   $data["terminalClient"] = 'pc';
+  $data["sign"]["str_arr"]["terminalClient"] = 'pc';
 }
 #变更参数设定
 $payType = $pay_type . "_zfb";

@@ -1,0 +1,4 @@
+支付网关：http://testapipay.mypayla.com/apiOrder/sendOrder.zv
+商户账号：IID016	
+机构号：IID		
+md5Key：318B242295806E040C0EA662A8B167EA

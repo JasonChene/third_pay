@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : Mypay
-#支付方式 : zfb;
+#支付方式 : yljk;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 // include_once("../../../database/mysql.config.php");//原数据库的连接方式
@@ -30,8 +30,8 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-// $form_url = 'http://testapipay.MyPayla.com/apiOrder/sendOrder.zv';//正式环境：（要实际付款才可回调）
-$form_url = 'http://testapi.MyPayla.com/order/apiOrder/sendOrder.zv';//测试环境：（不需实际付款即可回调）
+$pay_account_arr = explode("|", $pay_account);
+$form_url = $pay_account_arr[1];//正式接入URL
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -49,8 +49,8 @@ $data = array(
   "merchantNo" => $order_no,
   "amount" => $MOAmount,
   "notifyUrl" => $notify_url,
-  "orgId" => $pay_account,
-  "payType" => '11',//京东钱包app
+  "orgId" => $pay_account_arr[0],
+  "payType" => '14',//快捷支付
   "terminalClient" => '',
   "tradeDate" => $order_time,
   "clientIp" => $client_ip,
@@ -63,7 +63,7 @@ $data = array(
       "merId" => $pay_mid,
       "merchantNo" => $order_no,
       "notifyUrl" => $notify_url,
-      "payType" => '11',//京东钱包app
+      "payType" => '14',//快捷支付
       "terminalClient" => "",
       "tradeDate" => $order_time,
     ),
@@ -79,12 +79,14 @@ $data = array(
 );
 if (_is_mobile()) {
   $data["terminalClient"] = 'wap';
+  $data["sign"]["str_arr"]["terminalClient"] = 'wap';
 } else {
   $data["terminalClient"] = 'pc';
+  $data["sign"]["str_arr"]["terminalClient"] = 'pc';
 }
 #变更参数设定
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_ylkj";
+$bankname = $pay_type . "->银联快捷在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
