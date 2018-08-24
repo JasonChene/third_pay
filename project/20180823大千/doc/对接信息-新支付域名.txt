@@ -1,0 +1,23 @@
+注意：新增网关支付，下单参数在文档有标红，demo暂未添加该参数，有需要测试网关可以直接添加测试
+
+RSA包含java和PHP的demo   MD5包含JAVA的demo
+
+接口api地址：
+https://h5.xinghot.com/H5/PayOrder
+
+完整接口下单地址:
+api地址/H5/PayOrder
+完整接口查询地址:
+api地址/H5/PayQuery
+
+
+
+注：
+对接人员可以选择使用RSA加密对接模式 或者MD5加密对接模式 （两种都可以,任选一种对接即可，建议使用MD5模式更简单）
+
+RSA对接使用的秘钥生成工具:secret_key_tools_RSA_win.rar  (必须选择java适用版后选择1024位) 
+（JAVA的开发者）RSA注意项：（上传的公钥私钥为JAVA适用版 1024） （JAVA的程序使用的公钥私钥为JAVA适用版 1024） 
+（非JAVA的开发者）RSA注意项： 非JAVA的开发者 选择Java适用版选择1024后   在后台上传对应的公钥   然后选择工具里的格式转化将生成的用户私钥转为非JAVA适用版 
+（非JAVA的开发者）RSA注意项：（上传的公钥私钥为JAVA适用版 1024） （非JAVA的程序使用的公钥私钥为工具转化后的非JAVA适用版）
+
+若出现通讯异常情况请查看:1.加密是否正确 2.是否添加了加密需要传递的http的header头信息 
