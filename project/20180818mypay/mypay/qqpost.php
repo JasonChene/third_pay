@@ -2,11 +2,11 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "反扫")) {
-  $form_url = './qq/qqfspost.php';
+  $form_url = './qqfspost.php';
 } elseif (_is_mobile()) {
-  $form_url = './qq/qqh5post.php';
+  $form_url = './qqh5post.php';
 } else {
-  $form_url = './qq/qqbspost.php';
+  $form_url = './qqbspost.php';
 }
 
 ?>

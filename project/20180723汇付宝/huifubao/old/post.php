@@ -88,6 +88,10 @@ if (strstr($pay_type, "银联钱包")) {
   if (_is_mobile()) {
     $data['pay_type'] = '19';
   }
+} elseif (strstr($pay_type, "银联快捷")) {
+  $scan = 'ylkj';
+  $data['version'] = '1';
+  $data['pay_type'] = '19';
 } else {
   $scan = 'wy';
   if (_is_mobile()) {

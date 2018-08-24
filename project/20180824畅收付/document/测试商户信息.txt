@@ -1,0 +1,10 @@
+畅收付接口提供了测试的商户密钥，测试商户信息如下：
+商户登录地址：http://www.changshoufu.com/Login.aspx
+测试商户登录用户名：test
+测试商户登录密码：111111
+
+文档给的登录地址是错的
+正确商户登录地址：http://www.changshoufu.com/User/Login
+
+商户 I D：1653
+商户 Key：e8e4bac418d441ab9081e4092dd51544

@@ -1,0 +1,16 @@
+2018-08-23 23:51:28 notify
+2018-08-23 23:51:28 payId=1032837671057186816
+2018-08-23 23:51:28 prdOrdNo=91121820180823235104
+2018-08-23 23:51:28 transType=008
+2018-08-23 23:51:28 orderAmount=2000
+2018-08-23 23:51:28 signType=MD5
+2018-08-23 23:51:28 merId=TM10100312
+2018-08-23 23:51:28 versionId=1.1
+2018-08-23 23:51:28 payTime=20180824115128
+2018-08-23 23:51:28 orderStatus=01
+2018-08-23 23:51:28 synNotifyUrl=http://paytest.7k111.com/pay/kkpay/return_url.php
+2018-08-23 23:51:28 signData=71ACC917E0D538AC9E25CBCEC8BD5C22
+2018-08-23 23:51:28 asynNotifyUrl=http://paytest.7k111.com/pay/kkpay/notify_url.php
+2018-08-23 23:51:28 signtext=asynNotifyUrl=http://paytest.7k111.com/pay/kkpay/notify_url.php&merId=TM10100312&orderAmount=2000&orderStatus=01&payId=1032837671057186816&payTime=20180824115128&prdOrdNo=91121820180823235104&signType=MD5&synNotifyUrl=http://paytest.7k111.com/pay/kkpay/return_url.php&transType=008&versionId=1.1&key=D2GFfVpnaJlU
+2018-08-23 23:51:28 mysign=71ACC917E0D538AC9E25CBCEC8BD5C22
+2018-08-23 23:51:28 SUCCESSat 1

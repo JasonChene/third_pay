@@ -1,0 +1,22 @@
+2018-08-21 23:16:29 notify
+2018-08-21 23:16:29 post方法
+2018-08-21 23:16:29 merchant_code=100000015
+2018-08-21 23:16:29 merchant_order_no=11893420180821225656
+2018-08-21 23:16:29 merchant_goods=pay
+2018-08-21 23:16:29 merchant_amount=0.99
+2018-08-21 23:16:29 merchant_amount_orig=1.00
+2018-08-21 23:16:29 merchant_sign=MGYzMGRkMThmMmUzOTJiZTlhZGFkNTZiMDBiMDUyNTM=
+2018-08-21 23:16:29 signtext=merchant_code=100000015&merchant_order_no=11893420180821225656&merchant_amount=0.99&merchant_amount_orig=1.00&merchant_md5=EBCDA81C6E50305B3E88B19C64C2A2A9
+2018-08-21 23:16:29 mysign=MGYzMGRkMThmMmUzOTJiZTlhZGFkNTZiMDBiMDUyNTM=
+2018-08-21 23:16:29 okat 1
+2018-08-21 23:18:31 notify
+2018-08-21 23:18:31 post方法
+2018-08-21 23:18:31 merchant_code=100000015
+2018-08-21 23:18:31 merchant_order_no=16378520180821231654
+2018-08-21 23:18:31 merchant_goods=pay
+2018-08-21 23:18:31 merchant_amount=0.09
+2018-08-21 23:18:31 merchant_amount_orig=1.00
+2018-08-21 23:18:31 merchant_sign=OWU4MjAwYTRlMmM3MjM4Zjc3ZDZmZjNhMWE0MGQwYjc=
+2018-08-21 23:18:31 signtext=merchant_code=100000015&merchant_order_no=16378520180821231654&merchant_amount=0.09&merchant_amount_orig=1.00&merchant_md5=EBCDA81C6E50305B3E88B19C64C2A2A9
+2018-08-21 23:18:31 mysign=OWU4MjAwYTRlMmM3MjM4Zjc3ZDZmZjNhMWE0MGQwYjc=
+2018-08-21 23:18:31 okat 1

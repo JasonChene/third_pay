@@ -49,7 +49,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 ksort($data);
-$noarr = array('sign');
+$noarr = array('key');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -62,7 +62,6 @@ write_log("signtext=".$signtext);
 write_log("mysign=".$mysign);
 
 #到账判断
-if ($success_msg == ($success_code || 3)) {
 	if ($mysign == $sign) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
@@ -91,10 +90,6 @@ if ($success_msg == ($success_code || 3)) {
 		write_log("签名不正确！");
 		exit;
 	}
-} else {
-	echo ("交易失败");
-	write_log("交易失败");
-	exit;
-}
+
 
 ?>

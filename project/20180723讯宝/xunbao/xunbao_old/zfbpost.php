@@ -55,7 +55,7 @@ if ($result_insert == -1) {
 	exit;
 }
 $parter = $pay_mid;
-$type = "8012";
+$type = (_is_mobile()) ? '931' :"8012" ;
 $value = $value;
 $orderid = $orderno;
 $callback = $notifyurl;

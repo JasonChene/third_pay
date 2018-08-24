@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://ddxpay.com/trans/gateway/webTrans';
+$form_url = 'http://ddxpay.com/trans/gateway/webTrans';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -91,28 +91,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
+
+$get_data = http_build_query($data);
 $jumpurl = $form_url;
+header('Location:' . $jumpurl . '?' . $get_data);
 ?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if (isset($form_data)) {
-            foreach ($data as $arr_key => $arr_value) {
-              ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php 
-        }
-      } ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>

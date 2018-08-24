@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" charset="utf-8"/>
+	<title>接口测试</title>
+</head>
+<style type="text/css">
+	body{
+		padding:0px;
+		margin:0px;
+		background:#F1F1F1;
+		text-align:center;
+	}
+	.box{
+		padding:20px;
+	}
+	.top{
+		padding-top:20px;
+	}
+
+	a {text-decoration:none;}
+	a:link {color:#000000;text-decoration:none;}  
+	a:visited {color:#000000}
+	a:hover {text-decoration:underline}   
+	a:active {color:#000000}
+
+</style>
+<body>
+	<div class="box">
+		<a href="pay.php?rec=pay">提交支付</a>
+		<a href="pay.php?rec=query">查询支付</a>
+		<form class="top" method="POST" action="pay.php?rec=callback">
+		<input type="text" name="data" value="FWnbArKKMOsgeb2a594A8bM3J9rzg3o9xZ11LHhdM85u%2BtnEEsPM%2BXGVAqdka2UTgRGx423pGxgvHwpX885HfdjQxfNnqULf8aj84bC2V7Nwgc%2FQdKfaPuM%2BtUHL2DpKYDDvqPiDMTlt%2B7bEd8uAOcTUezUoY86PoYqfCzuBKx5oJU3iTxwXfRCeiYHttNkqeTiuzbaEBV07Q8xJughNY4%2BABjFYqpaMjSj7354Xd4Q5pRQ7zU0jpOvniFFnz3k4%2FGtQwEeg5IX0a73xDIx2Dn0vcgBgAS4BN7GMEgO3QdJ6MepsbUuRDDR%2FwJlN1dc26wpUa4PUlcYQi8EgEvG12w%3D%3D"/>
+		<input type="submit" value="提交"/>
+	</form>
+	</div>
+
+	<div class="box">
+		<a href="remit.php?rec=remit">提交代付</a>
+		<a href="remit.php?rec=query">查询代付</a>
+		<form method="POST" class="top" action="remit.php?rec=callback">
+		<input type="text" name="data" value="HX3tcKe0frRJS3kcgYdllxaLleeosejp32fA3CRDzpLFAj1GdnYYyrJypQnFmXfSsDZzkfcck4u4sZrIVp8BgGJgiEaoCQid7h%2FvLyMfc3yOTWY2SVwdbMZZD%2BGPFd3Hi1q%2BATiuoDXPOyDXxC2bQXUitvXIeRZUDm0LM8pu%2F4FaPEc5LnwHxMKrf0Ap8JncMtFlTCYIEQzt14L3LAcHjAW2OMTfAhiQEnuNTT%2B%2BSyLnkULudxRUJvulLAB6MdVmW74BpUJtnXCQALb3GV2YkHsp3vmTvZ%2F%2BTRuGnW5pJ0Kgd6ZSk1i7Cxsagu24Oc7C8aOj4U4HBKXPOyZU7IgCkw%3D%3D"/>
+		<input type="submit" value="提交"/>
+	</form>
+	</div>
+	
+</body>
+</html>

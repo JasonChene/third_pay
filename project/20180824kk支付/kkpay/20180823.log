@@ -1,0 +1,32 @@
+2018-08-23 23:38:07 notify
+2018-08-23 23:38:07 payId=1032833669057830912
+2018-08-23 23:38:07 prdOrdNo=66206920180823233510
+2018-08-23 23:38:07 transType=008
+2018-08-23 23:38:07 orderAmount=2000
+2018-08-23 23:38:07 signType=MD5
+2018-08-23 23:38:07 merId=TM10100312
+2018-08-23 23:38:07 versionId=1.1
+2018-08-23 23:38:07 payTime=20180824113547
+2018-08-23 23:38:07 orderStatus=01
+2018-08-23 23:38:07 synNotifyUrl=http://pay7.5566205.com/pay/kkpay/return_url.php
+2018-08-23 23:38:07 signData=E6CC39BAF455111BC7B31A9507D21DD7
+2018-08-23 23:38:07 asynNotifyUrl=http://pay7.5566205.com/pay/kkpay/notify_url.php
+2018-08-23 23:38:07 signtext=asynNotifyUrl=http://pay7.5566205.com/pay/kkpay/notify_url.php&merId=TM10100312&orderAmount=2000&orderStatus=01&payId=1032833669057830912&payTime=20180824113547&prdOrdNo=66206920180823233510&signType=MD5&synNotifyUrl=http://pay7.5566205.com/pay/kkpay/return_url.php&transType=008&versionId=1.1&key=D2GFfVpnaJlU
+2018-08-23 23:38:07 mysign=E6CC39BAF455111BC7B31A9507D21DD7
+2018-08-23 23:38:07 SUCCESSat 1
+2018-08-23 23:40:00 notify
+2018-08-23 23:40:00 payId=1032833669057830912
+2018-08-23 23:40:00 prdOrdNo=66206920180823233510
+2018-08-23 23:40:00 transType=008
+2018-08-23 23:40:00 orderAmount=2000
+2018-08-23 23:40:00 signType=MD5
+2018-08-23 23:40:00 merId=TM10100312
+2018-08-23 23:40:00 versionId=1.1
+2018-08-23 23:40:00 payTime=20180824113547
+2018-08-23 23:40:00 orderStatus=01
+2018-08-23 23:40:00 synNotifyUrl=http://pay7.5566205.com/pay/kkpay/return_url.php
+2018-08-23 23:40:00 signData=E6CC39BAF455111BC7B31A9507D21DD7
+2018-08-23 23:40:00 asynNotifyUrl=http://pay7.5566205.com/pay/kkpay/notify_url.php
+2018-08-23 23:40:00 signtext=asynNotifyUrl=http://pay7.5566205.com/pay/kkpay/notify_url.php&merId=TM10100312&orderAmount=2000&orderStatus=01&payId=1032833669057830912&payTime=20180824113547&prdOrdNo=66206920180823233510&signType=MD5&synNotifyUrl=http://pay7.5566205.com/pay/kkpay/return_url.php&transType=008&versionId=1.1&key=D2GFfVpnaJlU
+2018-08-23 23:40:00 mysign=E6CC39BAF455111BC7B31A9507D21DD7
+2018-08-23 23:40:00 SUCCESSat 0
