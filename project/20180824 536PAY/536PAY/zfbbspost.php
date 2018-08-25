@@ -39,7 +39,7 @@ $order_time = date("YmdHis");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'] * 100, 0, '.', '');
 #第三方传值参数设置
 $data = array(
   "certId" => $pay_mid,
@@ -47,28 +47,30 @@ $data = array(
   "transAmt" => $MOAmount,
   "backUrl" => $notify_url,
   "transType" => '1005',
-  "instCode" => 'instCode',
+  "instCode" => '1',
   "certType" => '0',
   "isType" => '1',
   "goodsDesc" => 'goodsDesc',
+  "orderUid" => 'orderUid',
   "returnUrl" => $return_url,
   "attach" => 'attach',
   "reType" => '2',
   "userIp" => $client_ip,
   "sign" => array(
     "str_arr" => array(
-      "certId" => $pay_mid,
-      "orderNo" => $order_no,
-      "transAmt" => $MOAmount,
-      "backUrl" => $notify_url,
-      "transType" => "1005",
-      "instCode" => "instCode",
-      "certType" => "0",
-      "isType" => "1",
-      "goodsDesc" => "goodsDesc",
-      "returnUrl" => $return_url,
       "attach" => "attach",
+      "backUrl" => $notify_url,
+      "certId" => $pay_mid,
+      "certType" => "0",
+      "goodsDesc" => "goodsDesc",
+      "instCode" => '1',
+      "isType" => "1",
+      "orderNo" => $order_no,
+      "orderUid" => 'orderUid',
       "reType" => "2",
+      "returnUrl" => $return_url,
+      "transAmt" => $MOAmount,
+      "transType" => "1005",
       "userIp" => $client_ip,
     ),
     "mid_conn" => "=",
