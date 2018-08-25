@@ -1,0 +1,9 @@
+登录地址：http://www.ztmmk.com.cn/user_login
+商户号：10019
+用户名：3310439131
+密码：123456（可修改）
+支付密码：123456（可修改）
+
+加密秘钥：cc06fejn2sf2cetqwjp7rgnfleit7cw9
+
+支付网关地址：http://www.ztmmk.com.cn/Pay_Index.html
