@@ -15,7 +15,7 @@ foreach ($_POST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['ddh']; //订单号
+$order_no = $data['name']; //订单号
 $mymoney = number_format($data['money'], 2, '.', ''); //订单金额
 // $success_msg = $data['payFlag'];//成功讯息
 // $success_code = 2;//文档上的成功讯息
@@ -47,18 +47,14 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-#验签方式
-ksort($data);
-$noarr = array('key');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
-}
-$signtext = substr($signtext, 0, -1) ."&appkey=".$pay_mkey;
-$mysign = md5($signtext);
+#验签方式2
+$signtext = "";
+$signtext .= 'ddh=' . $data['ddh'] . '&';
+$signtext .= 'name=' . $data['name'] . '&';
+$signtext .= 'money=' . $data['money'] . '&';
+$signtext .= 'key=' . $pay_mkey;
 write_log("signtext=".$signtext);
+$mysign = md5($signtext);//签名
 write_log("mysign=".$mysign);
 
 #到账判断
