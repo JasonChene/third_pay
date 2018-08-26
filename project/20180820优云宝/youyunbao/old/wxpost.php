@@ -18,13 +18,13 @@ if(strstr($_REQUEST['pay_type'], "京东钱包")){
     $form_url = './bdbspost.php';
   }
 }else{
-  if(strstr($_REQUEST['pay_type'], "反扫")){
-    $form_url = './wxfspost.php';
-  }elseif(_is_mobile()){
-    $form_url = './wxh5post.php';
-  }else{
+  // if(strstr($_REQUEST['pay_type'], "反扫")){
+    // $form_url = './wxfspost.php';
+  // }elseif(_is_mobile()){
+    // $form_url = './wxh5post.php';
+  // }else{
     $form_url = './wxbspost.php';
-  }
+  // }
 }
 
 ?>

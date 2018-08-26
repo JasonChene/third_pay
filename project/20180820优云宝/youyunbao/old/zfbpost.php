@@ -1,13 +1,13 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
-if(strstr($_REQUEST['pay_type'], "反扫")){
-  $form_url = './zfbfspost.php';
-}elseif(_is_mobile()){
-  $form_url = './zfbh5post.php';
-}else{
+// if(strstr($_REQUEST['pay_type'], "反扫")){
+  // $form_url = './zfbfspost.php';
+// }elseif(_is_mobile()){
+  // $form_url = './zfbh5post.php';
+// }else{
   $form_url = './zfbbspost.php';
-}
+// }
 
 ?>
 <html>
