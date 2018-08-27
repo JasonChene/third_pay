@@ -4,8 +4,8 @@ $req = json_decode(file_get_contents('php://input'),1);
 $key = json_decode($req['key'], true);
 $req = json_decode($req['data'], true);
 
-echo 'header("content-Type: text/html; charset=UTF-8");'."\n";
 echo '<?php'."\n";
+echo 'header("content-Type: text/html; charset=UTF-8");'."\n";
 if ($key == 1) {
     echo 'include_once("../../../database/mysql.config.php");'."\n";
 }else {
@@ -64,7 +64,7 @@ if ($req['method'] == 'POST') {
     echo '}'."\n\n";
 }
 
-echo '#设定固定参数'."\n";;
+echo '#设定固定参数'."\n";
 echo '$order_no = $data["'.$req['orderNumber'].'"]; //订单号'."\n";
 if ($req['amount_unit'] == 1) {
     echo '$mymoney = number_format($data["pay_amoumt"], 2, ".", ""); //订单金额'."\n";
@@ -89,6 +89,7 @@ echo '$row = $stmt->fetch();'."\n\n";
 
 echo '#获取该订单的支付名称'."\n";
 echo '$pay_type = substr($row["operator"], 0, strripos($row["operator"], "_"));'."\n";
+echo 'write_log($pay_type);'."\n";
 echo '$params = array(":pay_type" => $pay_type);'."\n";
 echo '$sql = "select * from pay_set where pay_type=:pay_type";'."\n";
 if ($key == 1) {
@@ -103,11 +104,18 @@ echo '$pay_mkey = $payInfo["mer_key"];'."\n";
 echo '$pay_account = $payInfo["mer_account"];'."\n";
 echo 'if ($pay_mid == "" || $pay_mkey == "") {'."\n";
 echo 'echo "非法提交参数";'."\n";
+echo 'write_log("非法提交参数");'."\n";
 echo 'exit;'."\n";
 echo '}'."\n\n\n";
 
 
 #第三方传值参数设置
+function tranjsonstr($code)
+{
+  $code2 = str_replace("\"{", "{", $code);//有&换成aabbcc
+    $code3 = str_replace("}\"", "}", $code2);//有&换成aabbcc
+  return $code3;
+}
 function echo_arr($key_name,$array){
     $text =  '"'.$key_name.'" => array('."\n";
     if ($key_name == 'str_arr') {
@@ -168,49 +176,50 @@ foreach ($req['params'] as $arr_key => $arr_value) {
 }
 echo ');'."\n";
 
-#验签方式2
-$signtext = "";
-$signtext .= 'order_no='.$data['order_no'].'&';
-$signtext .= 'pay_amoumt='.$data['pay_amoumt'].'&';
-$signtext .= 'is_success='.$data['is_success'];
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
+// #验签方式2
+// $signtext = "";
+// $signtext .= 'order_no='.$data['order_no'].'&';
+// $signtext .= 'pay_amoumt='.$data['pay_amoumt'].'&';
+// $signtext .= 'is_success='.$data['is_success'];
+// //write_log("signtext=".$signtext);
+// $mysign = md5($signtext);//签名
+// //write_log("mysign=".$mysign);
 
-#到账判断
-if ($success_msg == $success_code) {
-  if ( $mysign == $sign) {
-		$result_insert = update_online_money($order_no, $mymoney);
-		if ($result_insert == -1) {
-			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
-			exit;
-		}else if($result_insert == 0){
-			echo ($echo_msg);
-			write_log($echo_msg.'at 0');
-			exit;
-		}else if($result_insert == -2){
-			echo ("数据库操作失败");
-			write_log("数据库操作失败");
-			exit;
-		}else if($result_insert == 1){
-			echo ($echo_msg);
-			write_log($echo_msg.'at 1');
-			exit;
-		} else {
-			echo ("支付失败");
-			write_log("支付失败");
-			exit;
-		}
-	}else{
-		echo ('签名不正确！');
-		write_log("签名不正确！");
-		exit;
-	}
-}else{
-	echo ("交易失败");
-	write_log("交易失败");
-	exit;
-}
+// #到账判断
+// if ($success_msg == $success_code) {
+//   if ( $mysign == $sign) {
+// 		$result_insert = update_online_money($order_no, $mymoney);
+// 		if ($result_insert == -1) {
+// 			echo ("会员信息不存在，无法入账");
+// 			write_log("会员信息不存在，无法入账");
+// 			exit;
+// 		}else if($result_insert == 0){
+// 			echo ($echo_msg);
+// 			write_log($echo_msg.'at 0');
+// 			exit;
+// 		}else if($result_insert == -2){
+// 			echo ("数据库操作失败");
+// 			write_log("数据库操作失败");
+// 			exit;
+// 		}else if($result_insert == 1){
+// 			echo ($echo_msg);
+// 			write_log($echo_msg.'at 1');
+// 			exit;
+// 		} else {
+// 			echo ("支付失败");
+// 			write_log("支付失败");
+// 			exit;
+// 		}
+// 	}else{
+// 		echo ('签名不正确！');
+// 		write_log("签名不正确！");
+// 		exit;
+// 	}
+// }else{
+// 	echo ("交易失败");
+// 	write_log("交易失败");
+// 	exit;
+// }
 
+echo '?>'."\n";
 ?>

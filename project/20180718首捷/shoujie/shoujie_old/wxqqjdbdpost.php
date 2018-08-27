@@ -39,7 +39,7 @@ $data = array(
 
 );
 #变更参数设置
-$form_url = 'http://www.shengxinpay.com/payapi';//提交地址
+$form_url = 'http://www.shoujiepay.com/payapi';//提交地址
 $scan = 'wx';
 $payType = $pay_type . "_wx";
 $bankname = $pay_type . "->微信在线充值";
