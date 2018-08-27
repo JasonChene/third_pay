@@ -131,14 +131,16 @@ $data = array(
   "account_id" => $pay_mid, //商户号
   "content_type" => 'text',
   "thoroughfare" => 'service_auto',
-  "type" => '1',//支付类型
+  "type" => '2',//支付类型
   "out_trade_no" => $order_no,//商户流水号
   "robin" => '2',
   "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
-  "success_url" => $merchant_url,//通知地址
+  "success_url" => $return_url,//通知地址
+  "callback_url" => $merchant_url,
+  "error_url" => $return_url
 );
 #变更参数设置
-$scan = 'wx';
+$scan = 'zfb';
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
