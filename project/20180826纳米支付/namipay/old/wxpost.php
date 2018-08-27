@@ -137,7 +137,7 @@ $data = array(
   "amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''),//订单金额：单位/元
   "callback_url" => $merchant_url,//通知地址
   "success_url" => $return_url,
-  "error_url" => $return_url
+  "error_url" => 'https://pay.weixin.qq.com'
 );
 #变更参数设置
 $scan = 'wx';
