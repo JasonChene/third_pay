@@ -4,7 +4,7 @@ header("Content-type:text/html; charset=utf-8");
 #支付方式 : wx;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -13,7 +13,7 @@ $pay_type =$_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -42,34 +42,34 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-  "P_UserID" => $pay_mid,
-  "P_OrderID" => $order_no,
-  "P_FaceValue" => $MOAmount,
-  "P_Result_URL" => $notify_url,
-  "P_ChannelID" => '33',
-  "P_Price" => $MOAmount,
-  "P_Notify_URL" => $return_url,
-  "P_PostKey" => array(
-  "str_arr" => array(
-  "P_UserID" => $pay_mid,
-  "P_OrderID" => $order_no,
-  "P_CardID" => "",
-  "P_CardPass" => "",
-  "P_FaceValue" => $MOAmount,
-  "P_ChannelID" => "33",
-  ),
-  "mid_conn" => "",
-  "last_conn" => "|",
-  "encrypt" => array(
-  "0" => "MD5",
-  ),
-  "key_str" => "|",
-  "key" => $pr_key,
-  "havekey" => "",
-  ),
-  "P_CardID" => '',
-  "P_CardPass" => '',
-  );
+"P_UserID" => $pay_mid,
+"P_OrderID" => $order_no,
+"P_FaceValue" => $MOAmount,
+"P_Result_URL" => $notify_url,
+"P_ChannelID" => '121',
+"P_Price" => $MOAmount,
+"P_Notify_URL" => $return_url,
+"P_PostKey" => array(
+"str_arr" => array(
+"P_UserID" => $pay_mid,
+"P_OrderID" => $order_no,
+"P_CardID" => "",
+"P_CardPass" => "",
+"P_FaceValue" => $MOAmount,
+"P_ChannelID" => "121",
+),
+"mid_conn" => "",
+"last_conn" => "|",
+"encrypt" => array(
+"0" => "MD5",
+),
+"key_str" => "|",
+"key" => $pr_key,
+"havekey" => "",
+),
+"P_CardID" => '',
+"P_CardPass" => '',
+);
 #变更参数设定
 $payType = $pay_type."_wx";
 $bankname = $pay_type."->微信在线充值";

@@ -92,7 +92,7 @@ $jumpurl = $form_url;
 <html>
   <head>
       <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+      <meta http-equiv="content-Type" content="text/html; charset=GB2312" />
   </head>
   <body>
       <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">

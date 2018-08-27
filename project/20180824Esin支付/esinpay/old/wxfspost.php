@@ -42,34 +42,34 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-  "P_UserID" => $pay_mid,
-  "P_OrderID" => $order_no,
-  "P_FaceValue" => $MOAmount,
-  "P_Result_URL" => $notify_url,
-  "P_ChannelID" => '33',
-  "P_Price" => $MOAmount,
-  "P_Notify_URL" => $return_url,
-  "P_PostKey" => array(
-  "str_arr" => array(
-  "P_UserID" => $pay_mid,
-  "P_OrderID" => $order_no,
-  "P_CardID" => "",
-  "P_CardPass" => "",
-  "P_FaceValue" => $MOAmount,
-  "P_ChannelID" => "33",
-  ),
-  "mid_conn" => "",
-  "last_conn" => "|",
-  "encrypt" => array(
-  "0" => "MD5",
-  ),
-  "key_str" => "|",
-  "key" => $pr_key,
-  "havekey" => "",
-  ),
-  "P_CardID" => '',
-  "P_CardPass" => '',
-  );
+"P_UserID" => $pay_mid,
+"P_OrderID" => $order_no,
+"P_FaceValue" => $MOAmount,
+"P_Result_URL" => $notify_url,
+"P_ChannelID" => '121',
+"P_Price" => $MOAmount,
+"P_Notify_URL" => $return_url,
+"P_PostKey" => array(
+"str_arr" => array(
+"P_UserID" => $pay_mid,
+"P_OrderID" => $order_no,
+"P_CardID" => "",
+"P_CardPass" => "",
+"P_FaceValue" => $MOAmount,
+"P_ChannelID" => "121",
+),
+"mid_conn" => "",
+"last_conn" => "|",
+"encrypt" => array(
+"0" => "MD5",
+),
+"key_str" => "|",
+"key" => $pr_key,
+"havekey" => "",
+),
+"P_CardID" => '',
+"P_CardPass" => '',
+);
 #变更参数设定
 $payType = $pay_type."_wx";
 $bankname = $pay_type."->微信在线充值";
