@@ -1,0 +1,14 @@
+商户号：15222178vCA00447
+商户密钥：de31762479eb280b00e34f06dc6
+
+生产地址：www.xyb789.com
+（说明：将接口文档中的请求地址的{host}替换成该地址，例如：将https://{host}/payGateway/payment/qrCode/v2的{host}替换成www.xyb789.com）
+
+商户后台地址：https://xyb888.net/pymchnt/merchant/access/login
+
+
+商户后台地址：https://xyb888.net/pymchnt/merchant/access/login
+
+登录账号：18682142749
+登录密码：888888
+提现密码：666666

@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 掌訊支付
-#支付方式 : wx;
+#第三方名稱 : 鑫亿宝
+#支付方式 : qq;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.leleec.com:8086/mpcctp/cashier/pay.ac';
+$form_url = 'https://www.xyb789.com/payGateway/payment/qrCode/v2';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -36,46 +36,54 @@ $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
 $order_time = date("YmdHis");
-
+$orderExpireTime = date("YmdHis", strtotime("+10 minute"));
+$ts = $order_time . substr((string)(rand(000, 999) + 1000), 1);
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'] * 100, 0, '.', '');
 #第三方传值参数设置
 $data = array(
-  "custId" => $pay_mid,
-  "custOrderNo" => $order_no,
-  "payAmt" => $MOAmount,
-  "backUrl" => $notify_url,
-  "version" => '2.1',
-  "orgNo" => $pu_key,
-  "tranType" => '0406',
-  "qxsbld" => $S_Name,
-  "goodsName" => 'pay',
+  "mchntCode" => $pay_mid,
+  "mchntOrderNo" => $order_no,
+  "orderAmount" => $MOAmount,
+  "notifyUrl" => $notify_url,
+  "channelCode" => 'qq_wallet_qr',//qq钱包扫码
+  "ts" => $ts,
+  "clientIp" => $client_ip,
+  "subject" => 'subject',
+  "body" => 'body',
+  "pageUrl" => $return_url,
+  "orderTime" => $order_time,
+  "orderExpireTime" => $orderExpireTime,
   "sign" => array(
     "str_arr" => array(
-      "backUrl" => $notify_url,
-      "custId" => $pay_mid,
-      "custOrderNo" => $order_no,
-      "goodsName" => "pay",
-      "orgNo" => $pu_key,
-      "payAmt" => $MOAmount,
-      "qxsbld" => $S_Name,
-      "tranType" => "0406",
-      "version" => "2.1",
+      "body" => "body",
+      "channelCode" => 'qq_wallet_qr',//qq钱包扫码
+      "clientIp" => $client_ip,
+      "mchntCode" => $pay_mid,
+      "mchntOrderNo" => $order_no,
+      "notifyUrl" => $notify_url,
+      "orderAmount" => $MOAmount,
+      "orderExpireTime" => $orderExpireTime,
+      "orderTime" => $order_time,
+      "pageUrl" => $return_url,
+      "subject" => "subject",
+      "ts" => $ts,
     ),
     "mid_conn" => "=",
     "last_conn" => "&",
     "encrypt" => array(
       "0" => "MD5",
+      "1" => "upper",
     ),
-    "key_str" => "&key=",
+    "key_str" => "",
     "key" => $pr_key,
     "havekey" => "1",
   ),
 );
 #变更参数设定
-$payType = $pay_type . "_wx";
-$bankname = $pay_type . "->微信在线充值";
+$payType = $pay_type . "_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -93,21 +101,24 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-foreach ($data as $arr_key => $arr_value) {
-  $data_str .= $arr_key . '=' . $arr_value . '&';
-}
-$data_str = substr($data_str, 0, -1);
-
-
 #curl获取响应值
-$res = curl_post($form_url, $data_str, "POST");
+$res = curl_post($form_url, json_encode($data, JSON_UNESCAPED_SLASHES), "JSON-POST");
 $res = json_decode($res, 1);
 #跳转qrcode
-$url = $res['busContent'];
-if ($res['code'] == '000000') {
-  $jumpurl = $url;
+if ($res['retCode'] == '0000') {
+  if (!empty($res['codeUrl'])) {
+    //将该地址制作成二维码图片
+    $qrurl = QRcodeUrl($res['codeUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+  } else if (!empty($res['imgSrc'])) {
+    //已经生成好的二维码图片 直接展示出供客户扫码
+    $jumpurl = $res['imgSrc'];
+  } else {
+    //二维码收银界面 直接跳转
+    $jumpurl = $res['payUrl'];
+  }
 } else {
-  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
+  echo "错误码：" . $res['retCode'] . "错误讯息：" . $res['retMsg'];
   exit();
 }
 ?>
