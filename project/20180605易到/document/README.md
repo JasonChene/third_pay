@@ -21,3 +21,7 @@
 
 初始密码：123456  
 登录密码：123456  
+
+http://admin.easypay188.com/merChannel/login/toLogin
+登录名：MM_10201433485701283840
+密码：ff357268
