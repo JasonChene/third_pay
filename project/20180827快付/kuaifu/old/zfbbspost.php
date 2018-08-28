@@ -98,6 +98,7 @@ foreach ($data as $arr_key => $arr_value) {
 $data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
 #curl获取响应值
 $res = curl_post($form_url,$data_json,"JSON-POST");
+echo $res;
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['ret_msg'];

@@ -53,15 +53,15 @@ $data = array(
 "productCode" => '1302',
 "sign" => array(
 "str_arr" => array(
-"timestamp" => $timestamp,
-"amount" => $MOAmount,
-"client_ip" => $client_ip,
-"merchantNo" => $pay_mid,
-"nonceStr" => $nonceStr,
-"notifyUrl" => $notify_url,
-"outOrderNo" => $order_no,
-"productCode" => "1302",
-"startTime" => $order_time,
+  "amount" => $MOAmount,
+  "client_ip" => $client_ip,
+  "merchantNo" => $pay_mid,
+  "nonceStr" => $nonceStr,
+  "notifyUrl" => $notify_url,
+  "outOrderNo" => $order_no,
+  "productCode" => "1302",
+  "startTime" => $order_time,   
+  "timestamp" => $timestamp,
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
@@ -86,7 +86,6 @@ if ($result_insert == -1){
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
-
 
 #签名排列，可自行组字串或使用http_build_query($array)
 foreach ($data as $arr_key => $arr_value) {
