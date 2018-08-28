@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 #function
@@ -9,14 +9,14 @@ include_once("../moneyfunc.php");
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
-$merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
+$return_url = $row['pay_domain'] . $row['wy_returnUrl'];//return跳转地址
+$merchant_url = $row['pay_domain'] . $row['wy_synUrl'];//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
@@ -32,21 +32,31 @@ $data = array(
   "partner" => $pay_mid,//商户号
   "paymoney" => $mymoney,//订单金额：单位/元//支付方式
   "ordernumber" => $order_no,//商户流水号
-  "paytype" => 'qq',//通道
+  "paytype" => 'bank',//通道
   "bankcode" => $_REQUEST['bank_code'],//银行
   "notifyurl" => $merchant_url,//异步
   "returnurl" => $return_url,//同步
 
 );
 #变更参数设置
-$form_url = 'http://www.shengxinpay.com/payapi';//提交地址
-$scan = 'qq';
-$payType = $pay_type . "_qq";
-$bankname = $pay_type . "->QQ钱包在线充值";
-if(_is_mobile()){
-  $data['paytype'] = 'qqwap';
+$form_url = 'http://www.shoujiepay.com/payapi';//提交地址
+$scan = 'wy';
+$payType = $pay_type . "_wy";
+$bankname = $pay_type . "->网银在线充值";
+if (strstr($pay_type, "银联钱包")) {
+  $scan = 'yl';
+  $data['paytype'] = 'union';
+$payType = $pay_type . "_yl";
+$bankname = $pay_type . "->银联钱包在线充值";
+}elseif (strstr($pay_type, "银联快捷")) {
+  $scan = 'ylkj';
+  $data['paytype'] = 'kuaijie';
+$payType = $pay_type . "_ylkj";
+$bankname = $pay_type . "->银联快捷在线充值";
 }
-
+if($scan != 'wy'){
+  unset($data['bankcode']);
+}
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {

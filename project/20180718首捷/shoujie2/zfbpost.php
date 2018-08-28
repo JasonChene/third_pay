@@ -32,21 +32,20 @@ $data = array(
   "partner" => $pay_mid,//商户号
   "paymoney" => $mymoney,//订单金额：单位/元//支付方式
   "ordernumber" => $order_no,//商户流水号
-  "paytype" => 'qq',//通道
+  "paytype" => 'alipay',//通道
   "bankcode" => $_REQUEST['bank_code'],//银行
   "notifyurl" => $merchant_url,//异步
   "returnurl" => $return_url,//同步
 
 );
 #变更参数设置
-$form_url = 'http://www.shengxinpay.com/payapi';//提交地址
-$scan = 'qq';
-$payType = $pay_type . "_qq";
-$bankname = $pay_type . "->QQ钱包在线充值";
+$form_url = 'http://www.shoujiepay.com/payapi';//提交地址
+$scan = 'zfb';
+$payType = $pay_type . "_zfb";
+$bankname = $pay_type . "->支付宝在线充值";
 if(_is_mobile()){
-  $data['paytype'] = 'qqwap';
+  $data['paytype'] = 'alipaywap';
 }
-
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
