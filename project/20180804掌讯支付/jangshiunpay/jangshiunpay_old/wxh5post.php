@@ -49,6 +49,7 @@ $data = array(
   "version" => '2.1',
   "orgNo" => $pu_key,
   "tranType" => '0406',
+  "qxsbld" => $S_Name,
   "goodsName" => 'pay',
   "sign" => array(
     "str_arr" => array(
@@ -58,6 +59,7 @@ $data = array(
       "goodsName" => "pay",
       "orgNo" => $pu_key,
       "payAmt" => $MOAmount,
+      "qxsbld" => $S_Name,
       "tranType" => "0406",
       "version" => "2.1",
     ),
