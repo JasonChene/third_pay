@@ -1,0 +1,11 @@
+登入网：https://www.goiflink.com/member/api
+
+登入账号：77056	
+
+密码：xiaoxin8
+
+商户号：10909
+
+密匙：6a4fd971f0b4fa62ac30cf3d7279449b06797648   
+
+http://demo.goiflink.com/docfile.html

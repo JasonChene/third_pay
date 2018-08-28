@@ -1,0 +1,117 @@
+时间:2018-05-28 22:14:32来源ip:::1内容:stdClass::__set_state(array(
+   'sign' => '765b6ed10284a715eee538f65a5b2ce4',
+   'orderStatus' => '0',
+   'ret_msg' => 'http://www.youpingogo.cn:2502/zpay/quickPay/formLink/20180528105078',
+   'ret_code' => '0000',
+   'tranSerno' => '20180528105078',
+   'goPay' => '1',
+))
+时间:2018-05-28 22:27:12来源ip:::1内容:stdClass::__set_state(array(
+   'ret_msg' => '未找到该笔订单',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 22:27:56来源ip:::1内容:stdClass::__set_state(array(
+   'ret_msg' => '待确认订单查询失败[返回报文处理异常]',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 22:29:45来源ip:::1内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:31:43来源ip:::1内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:33:14来源ip:::1内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:33:53来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:38:32来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:38:36来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 22:38:46来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 22:39:47来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '待确认订单查询失败[返回报文处理异常]',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 22:44:35来源ip:192.168.0.103内容:'Could not resolve host: SCAVENGING'
+时间:2018-05-28 22:44:35来源ip:192.168.0.103内容:NULL
+时间:2018-05-28 22:45:29来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 22:45:48来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'sign' => 'c571d918a76cd38d7a94b26515657168',
+   'ret_msg' => '交易金额超限(最低单笔交易金额:2元)',
+   'ret_code' => '1100',
+   'tranSerno' => '20180528105099',
+))
+时间:2018-05-28 22:46:00来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 22:46:06来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'sign' => 'c461cb7312c765118fcc3700e90c30fe',
+   'orderStatus' => '0',
+   'ret_msg' => 'https://qr.95516.com/00010000/62241374766184907659272538629463',
+   'ret_code' => '0000',
+   'tranSerno' => '20180528105100',
+   'goPay' => '1',
+))
+时间:2018-05-28 22:46:20来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '待确认订单查询失败[返回报文处理异常]',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 22:48:32来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '待确认订单查询失败[返回报文处理异常]',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 22:58:55来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 22:59:09来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '待确认订单查询失败[查无此交易]',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 23:28:53来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '无可用交易通道!',
+   'ret_code' => '110',
+))
+时间:2018-05-28 23:36:16来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 23:36:25来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '结算账号数据不合法!',
+   'ret_code' => '1100',
+   'tranSerno' => '',
+))
+时间:2018-05-28 23:39:07来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'ret_msg' => '订单号重复',
+   'ret_code' => '0211',
+))
+时间:2018-05-28 23:39:21来源ip:192.168.0.103内容:stdClass::__set_state(array(
+   'sign' => '412b8d84774c18a6f4b925c3abd34857',
+   'ret_msg' => '交易不在受理时间范围内(交易时间:02:30:00-22:40:00)',
+   'ret_code' => '1100',
+   'tranSerno' => '20180528105110',
+))

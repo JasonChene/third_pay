@@ -26,4 +26,10 @@
 第三方名称：首捷 
 档案位置：php@60.245.62.221/shoujie
 修改档案：全部post  
-备注：改网关地址  
+备注：网关是http://www.shengxinpay.com/payapi  
+
+20180828
+第三方名称：首捷2 
+档案位置：php@60.245.62.221/shoujie2
+修改档案：全部post  
+备注：网关是http://www.shoujiepay.com/payapi  

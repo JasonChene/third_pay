@@ -53,7 +53,7 @@ $data = array(
 "productCode" => '1601',
 "sign" => array(
 "str_arr" => array(
-"timestamp" => $timestamp,
+
 "amount" => $MOAmount,
 "bankCode" => $bank_code,
 "client_ip" => $client_ip,
@@ -62,7 +62,7 @@ $data = array(
 "notifyUrl" => $notify_url,
 "outOrderNo" => $order_no,
 "productCode" => "1601",
-"startTime" => $order_time,
+"startTime" => $order_time,   "timestamp" => $timestamp,
 ),
 "mid_conn" => "=",
 "last_conn" => "&",

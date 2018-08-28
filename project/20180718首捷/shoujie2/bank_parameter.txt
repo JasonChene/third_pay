@@ -1,0 +1,16 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','工商银行','ICBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','农业银行','ABC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','中国银行','BOCSH');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','建设银行','CCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','招商银行','CMB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','浦发银行','SPDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','广发银行','GDB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','交通银行','BOCOM');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','邮政储蓄银行','PSBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','中信银行','CNCB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','民生银行','CMBC');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','华夏银行','HXB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','兴业银行','CIB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','上海银行','BOS');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','平安银行','PAB');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('首捷2','北京银行','BCCB');
