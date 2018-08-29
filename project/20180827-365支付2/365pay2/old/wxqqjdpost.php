@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.config.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -44,15 +44,12 @@ function payType_bankname($scan, $pay_type)
 
 
 #function
-function curl_post($url, $data)
-{ #POST访问
+function curl_post($url,$data){ #POST访问
   $ch = curl_init();
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('apikey: zhangpeiyuan'));
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
@@ -88,38 +85,37 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://www.goiflink.com/apisubmit';
+$form_url = 'http://api.3650.net.cn:3651/pay1.0/';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
-$data = array(
-  "version" => "1.0",
-  "customerid" => $pay_mid,
-  "paytype" => "",
-  "total_fee" => $mymoney,
-  "sdorderno" => $order_no,
-  "returnurl" => $return_url,
-  "notifyurl" => $merchant_url,
-  "sign" => "",
+$data =array(
+  'Fs' => "",
+  'MerchantNo' => $pay_mid,//商户号   (商户号换成机构号参与签名)
+  'OrderNo' => $order_no,
+  'Amount' => $mymoney,
+  'NotifyUrl' => $merchant_url,
+  'ReturnUrl' => $return_url,
+  'Ip' => getClientIp(),
+  'Sign' => "",
 );
 #变更参数设置
-if (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['Fs'] = 'jd';//京东扫码
+}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
-  $data['paytype'] = 'qqrcode';
+  $data['Fs'] = 'qq';//qq掃碼
   if (_is_mobile()) {
-    $data['paytype'] = 'qqwap';
-  }else {
-    $data['is_qrcode'] = "1";
+    $data['Fs'] = 'qq_h5';
   }
 }else {
   $scan = 'wx';
-  $data['paytype'] = 'wxcode';
+  $data['Fs'] = 'weixin';//微信掃碼
   if (_is_mobile()) {
-    $data['paytype'] = 'wxh5';
-  }else {
-    $data['is_qrcode'] = "1";
+    $data['Fs'] = 'weixin_h5';
   }
 }
 payType_bankname($scan, $pay_type);
@@ -133,16 +129,32 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = "customerid=".$data['cunstomerid']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&sdorderno=".$data['sdorderno']."&total_fee=".$data['total_fee']."&paytype=".$data['paytype']."&".$pay_mkey;
+$signtext = $data['Fs'].$pay_account.$data['OrderNo'].$data['Amount'].$data['NotifyUrl'].$pay_mkey;
+$data['Sign'] = md5($signtext);
+$data_json = json_encode($data,320);
 
-$sign = (md5($signtext));
-$data['sign'] = $sign;
+#curl获取响应值
+$res = curl_post($form_url,$data_json);
+$row = json_decode($res,1);
 
-#跳转
-$jumpurl = $form_url;
-$form_data = $data;
 #跳轉方法
+$sign_res=md5($pay_account.$row['OrderNo'].$row['Amount'].$row['CodeUrl'].$row['Status'].$pay_mkey);
 
+if ($row['Status'] != '100') {
+  echo  '错误编码:' . $row['Status']."<br>";
+  echo  '错误讯息:' . $row['CodeMsg']."<br>";
+	exit;           
+}else {
+  if ($row['Sign'] != $sign_res) {
+    echo "签名不正确";
+    exit;
+  }
+  if (_is_mobile()) {
+    $jumpurl = $row['CodeUrl'];
+  }else {
+    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['CodeUrl']);
+  }
+}
 ?>
 <html>
   <head>
@@ -150,20 +162,17 @@ $form_data = $data;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
-      if (isset($form_data)) {
+      if(isset($form_data)){
         foreach ($form_data as $arr_key => $arr_value) {
-          ?>
+      ?>
       <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php 
-    }
-  } ?>
+      <?php }} ?>
     </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
   </body>
 </html>
-
