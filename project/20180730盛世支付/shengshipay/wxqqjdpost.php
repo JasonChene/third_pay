@@ -265,8 +265,6 @@ else {
 }
 
 #跳轉方法
-$form_data =$data;
-$jumpurl = $form_url;
 ?>
 <html>
   <head>

@@ -170,9 +170,9 @@ if ($row['field039'] != '00') {
 } 
 else {
   if (_is_mobile()) {
-    $jumpurl = $data['field055'];
+    $jumpurl = $row['field055'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($data['field055']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
   }
 }
 
