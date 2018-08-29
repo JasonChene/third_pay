@@ -8,15 +8,16 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	// write_log("return:".$key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$array  = explode('|',$data['field055']);
+	$field055 = substr($data['field055'],0,-1);
+	$array = explode("|",$field055);
 	$order_no = $array[0]; //订单号
-	$mymoney = number_format($array[3], 2, '.', ''); //订单金额
+	$mymoney = number_format($array[3]/100, 2, '.', ''); //订单金额
 	$success_msg = $array[1];//成功讯息
 	$success_code = "00";//文档上的成功讯息
 	$sign = $data['field128'];//签名
@@ -49,10 +50,10 @@ if(!empty($data)){
 	$noarr = array('field128');//不加入签名的array key值
 	$signtext = $data['txcode'] . $data['txdate'] . $data['txtime'] . $data['version'] . $data['field003'] . $data['field041'] . $data['field042'] . $data['field055'] . $data['field062'];
 	$signtext .= $pay_mkey;//验签字串
-	write_log("signtext=".$signtext);
+	// write_log("signtext=".$signtext);
 	$mysign = strtoupper(md5($signtext));//签名
 	$mysign = substr($mysign, 0,-16);
-	write_log("mysign=".$mysign);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
