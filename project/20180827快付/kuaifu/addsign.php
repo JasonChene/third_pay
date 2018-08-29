@@ -32,7 +32,6 @@ function sign_text($array){
 
 function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     //判断编码类型:md5、sha、base64、RSA、urlencode、upper、lower
-    echo $signtext;
     $sign='';
     if($encrypt == 'MD5'){
       $sign = md5($signtext);

@@ -35,7 +35,7 @@ $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = date("Ymd");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -98,7 +98,6 @@ foreach ($data as $arr_key => $arr_value) {
 $data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
 #curl获取响应值
 $res = curl_post($form_url,$data_json,"JSON-POST");
-echo $res;
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['ret_msg'];
