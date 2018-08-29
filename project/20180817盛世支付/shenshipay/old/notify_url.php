@@ -9,17 +9,14 @@ include_once("../moneyfunc.php");
 #input方法
 // write_log('input方法');
 $input_data=file_get_contents("php://input");
-$res=json_decode($input_data,1);//json回传资料
+$data=json_decode($input_data,1);//json回传资料
 // write_log($input_data);
-foreach ($_POST as $key => $value) {
-	$data[$key] = $value;
-	// write_log($key."=".$value);
-}
 
 #设定固定参数
-$array  = explode('|',$data['field055']);
+$field055 = substr($data['field055'],0,-1);
+$array = explode("|",$field055);
 $order_no = $array[0]; //订单号
-$mymoney = number_format($array[3], 2, '.', ''); //订单金额
+$mymoney = number_format($array[3]/100, 2, '.', ''); //订单金额
 $success_msg = $array[1];//成功讯息
 $success_code = "00";//文档上的成功讯息
 $sign = $data['field128'];//签名
