@@ -46,12 +46,11 @@ function payType_bankname($scan, $pay_type)
 #function
 function curl_post($url,$data){ #POST访问
   $ch = curl_init();
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('apikey: zhangpeiyuan'));
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -86,7 +85,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://103.80.27.113:3651/pay1.0';
+$form_url = 'http://api.3650.net.cn:3651/pay1.0/';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -122,28 +121,24 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = $data['Fs'].$pay_account.$data['OrderNo'].$data['Amount'].$data['NotifyUrl'].$pay_mkey;
 $data['Sign'] = md5($signtext);
-// $data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
-$data_str = "";
-foreach ($data as $key => $value) {
-  $data_str .= $key . '=' . $value . '&';
-}
-$getdata = $form_url."?".$data_str;
+$data_json = json_encode($data,320);
+
 #curl获取响应值
-$res = curl_post($form_url,$getdata);
-echo $res;exit;
+$res = curl_post($form_url,$data_json);
 $row = json_decode($res,1);
 
 #跳轉方法
-$sign_res=md5($row['MerchantNo'].$row['OrderNo'].$row['Amount'].$row['CodeUrl '].$row['Status'].$pay_mkey);
-if ($row['Sign'] != $sign_res) {
-  echo "签名不正确";
-  exit;
-}
+$sign_res=md5($pay_account.$row['OrderNo'].$row['Amount'].$row['CodeUrl'].$row['Status'].$pay_mkey);
+
 if ($row['Status'] != '100') {
   echo  '错误编码:' . $row['Status']."<br>";
   echo  '错误讯息:' . $row['CodeMsg']."<br>";
 	exit;           
 }else {
+  if ($row['Sign'] != $sign_res) {
+    echo "签名不正确";
+    exit;
+  }
   if (_is_mobile()) {
     $jumpurl = $row['CodeUrl'];
   }else {
