@@ -142,7 +142,7 @@ if ($row['Status'] != '100') {
     echo "签名不正确";
     exit;
   }
-  if (_is_mobile()) {
+  if (_is_mobile() && $scan != 'jd') {
     $jumpurl = $row['CodeUrl'];
   }else {
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['CodeUrl']);
