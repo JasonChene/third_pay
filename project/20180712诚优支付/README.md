@@ -27,6 +27,8 @@
 变动档案：wxpost.php,wxqqjdpost.php  
 
 20180830   
+第三方名称：诚优支付 
+档案位置：php@60.245.62.221\chengyoupay  
 修改档案：post.php,qqpost.php,wxpost.php,wxqqjdpost.php,zfbpost.php  
 
 测试到账：微信扫码  
