@@ -93,7 +93,7 @@ $data = array(
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额
   "pay_md5sign" => '', //MD5签名结果
   "pay_attach" => '', //商户自定义信息
-  "pay_productname" => '', //商品名称
+  "pay_productname" => 'productname', //商品名称
   "pay_productid" => '', //商品id
 );
 
@@ -126,7 +126,7 @@ if ($result_insert == -1) {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign');//不加入签名的array key值
+$noarr = array('pay_md5sign', "pay_productname");//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -143,10 +143,15 @@ $data_str = http_build_query($data);
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
-
+  
 #跳转
 if ($row['pay_code'] != 'HL0000') {
-  echo '订单错误' . "\n";
+  if (isset($row['pay_code'])) {
+    echo '错误代码:' . $row['pay_code'] . "\n";
+    echo '错误讯息:' . $row['pay_msg'] . "\n";
+  } else {
+    echo '订单错误' . "\n";
+  }
   exit;
 } else {
   $qrcodeUrl = $row['pay_url'];
@@ -175,7 +180,6 @@ if ($row['pay_code'] != 'HL0000') {
   <body>
   <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-
      <?php if (0) { ?>
        <?php foreach ($data as $arr_key => $arr_value) { ?>
          <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
@@ -183,7 +187,6 @@ if ($row['pay_code'] != 'HL0000') {
     } ?>
      <?php 
   } ?>
-  
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

@@ -25,3 +25,12 @@
 20180722  
 客户不要H5,WAP接口(京东H5,微信WAP)  
 变动档案：wxpost.php,wxqqjdpost.php  
+
+20180830   
+修改档案：post.php,qqpost.php,wxpost.php,wxqqjdpost.php,zfbpost.php  
+
+测试到账：微信扫码  
+
+备注：
+第三方上游修改要传产品名称参数  
+微信wap是T2结算的,客户说那就不用了,改成电脑跟PC端都接微信扫码  

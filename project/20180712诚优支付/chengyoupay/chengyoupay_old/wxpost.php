@@ -93,7 +93,7 @@ $data = array(
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额
   "pay_md5sign" => '', //MD5签名结果
   "pay_attach" => '', //商户自定义信息
-  "pay_productname" => '', //商品名称
+  "pay_productname" => 'productname', //商品名称
   "pay_productid" => '', //商品id
 );
 
@@ -108,9 +108,9 @@ if (strstr($pay_type, "京东钱包")) {
 } else {
   $scan = 'wx';
   $data['pay_bankcode'] = '938';
-    // if (_is_mobile()) {
-    //   $data['pay_bankcode'] = '967';
-    // }
+  // if (_is_mobile()) {
+  //   $data['pay_bankcode'] = '967';
+  // }
 }
 payType_bankname($scan, $pay_type);
 
@@ -126,7 +126,7 @@ if ($result_insert == -1) {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign');//不加入签名的array key值
+$noarr = array('pay_md5sign', "pay_productname");//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -146,7 +146,12 @@ $row = json_decode($tran, 1);
 
 #跳转
 if ($row['pay_code'] != 'HL0000') {
-  echo '订单错误' . "\n";
+  if (isset($row['pay_code'])) {
+    echo '错误代码:' . $row['pay_code'] . "\n";
+    echo '错误讯息:' . $row['pay_msg'] . "\n";
+  } else {
+    echo '订单错误' . "\n";
+  }
   exit;
 } else {
   $qrcodeUrl = $row['pay_url'];
@@ -175,7 +180,6 @@ if ($row['pay_code'] != 'HL0000') {
   <body>
   <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
-
      <?php if (0) { ?>
        <?php foreach ($data as $arr_key => $arr_value) { ?>
          <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
@@ -183,7 +187,6 @@ if ($row['pay_code'] != 'HL0000') {
     } ?>
      <?php 
   } ?>
-  
    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();

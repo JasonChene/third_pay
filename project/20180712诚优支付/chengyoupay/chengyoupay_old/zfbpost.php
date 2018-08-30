@@ -93,7 +93,7 @@ $data = array(
   "pay_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //订单金额
   "pay_md5sign" => '', //MD5签名结果
   "pay_attach" => '', //商户自定义信息
-  "pay_productname" => '', //商品名称
+  "pay_productname" => 'productname', //商品名称
   "pay_productid" => '', //商品id
 );
 
@@ -118,7 +118,7 @@ if ($result_insert == -1) {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign');//不加入签名的array key值
+$noarr = array('pay_md5sign', "pay_productname");//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -132,27 +132,32 @@ $data_str = http_build_query($data);
 
 #curl获取响应值
 // if (!_is_mobile()) {
-  $res = curl_post($form_url, $data_str);
-  $tran = mb_convert_encoding("$res", "UTF-8");
-  $row = json_decode($tran, 1);
+$res = curl_post($form_url, $data_str);
+$tran = mb_convert_encoding("$res", "UTF-8");
+$row = json_decode($tran, 1);
 
 #跳转
-  if ($row['pay_code'] != 'HL0000') {
-    echo '订单错误' . "\n";
-    exit;
+if ($row['pay_code'] != 'HL0000') {
+  if (isset($row['pay_code'])) {
+    echo '错误代码:' . $row['pay_code'] . "\n";
+    echo '错误讯息:' . $row['pay_msg'] . "\n";
   } else {
-    $qrcodeUrl = $row['pay_url'];
+    echo '订单错误' . "\n";
+  }
+  exit;
+} else {
+  $qrcodeUrl = $row['pay_url'];
     // if (!_is_mobile()) {
-      if (strstr($qrcodeUrl, "&")) {
-        $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
-      } else {
-        $code = $qrcodeUrl;
-      }
-      $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
+  if (strstr($qrcodeUrl, "&")) {
+    $code = str_replace("&", "aabbcc", $qrcodeUrl);//有&换成aabbcc
+  } else {
+    $code = $qrcodeUrl;
+  }
+  $jumpurl = ('../qrcode/qrcode.php?type=' . $scan . '&code=' . $code);
     // } else {
     //   $jumpurl = $qrcodeUrl;
     // }
-  }
+}
 // } else {
 //   $jumpurl = $form_url;
 // }
