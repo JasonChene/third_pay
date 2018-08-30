@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 金日付
+#第三方名稱 : 全日付
 #支付方式 : bdbs;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
