@@ -204,6 +204,10 @@ if (!strstr($_REQUEST['pay_type'], "支付宝反扫")){
     }
   }
 }
+else{
+  $jumpurl = $form_url;
+  $form_data = $data;
+}
 
 #跳轉方法
 ?>

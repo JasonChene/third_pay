@@ -184,23 +184,29 @@ $signtext .= $pay_mkey;
 $sign = strtoupper(md5($signtext));
 $sign = substr($sign, 0, -16);
 $data['field128'] = $sign; 
-#curl获取响应值
-$res = curl_post($form_url, json_encode($data,320));
-$tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1);
+if (!strstr($_REQUEST['pay_type'], "支付宝反扫")){
+  #curl获取响应值
+  $res = curl_post($form_url, json_encode($data,320));
+  $tran = mb_convert_encoding($res, "UTF-8", "auto");
+  $row = json_decode($tran, 1);
 
-#跳转
-if ($row['field039'] != '00') {
-  echo '错误代码:' . $row['field039'] . "<br>";
-  echo '错误讯息:' . $row['field124'] . "<br>";
-  exit;
-} 
-else {
-  if (_is_mobile()) {
-    $jumpurl = $row['field055'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
+  #跳转
+  if ($row['field039'] != '00') {
+    echo '错误代码:' . $row['field039'] . "<br>";
+    echo '错误讯息:' . $row['field124'] . "<br>";
+    exit;
+  } 
+  else {
+    if (_is_mobile()) {
+      $jumpurl = $row['field055'];
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['field055']);
+    }
   }
+}
+else{
+  $jumpurl = $form_url;
+  $form_data = $data;
 }
 
 #跳轉方法

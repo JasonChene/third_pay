@@ -261,6 +261,10 @@ if(!strstr($_REQUEST['pay_type'], "微信反扫") && !strstr($_REQUEST['pay_type
     }
   }
 }
+else{
+  $jumpurl = $form_url;
+  $form_data = $data;
+}
 
 #跳轉方法
 
