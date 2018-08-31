@@ -1,0 +1,7 @@
+商家登陆：https://merchants.shinespay.com/addMerchantContract.action
+
+您的商户号为  999000111009
+
+您的用户名为  admin520
+
+您的用户密码   qwe123456

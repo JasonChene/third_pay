@@ -1,0 +1,32 @@
+﻿<?php
+
+//merchant_private_key,商户私钥
+$merchant_private_key= '-----BEGIN PRIVATE KEY-----
+MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM1kayU03wSU+Tu
+YDv0A3G99MMjUnzhqBE0HUi8xSKviBuB2Gv/ZfrHeK8mdvhn7WwTQzNHBS/2hzJ
+jQkkVkzL+EDeI+1OGIfcWTtlm1wCGoyhjE35Eff01HGgwTWmO144W4mqjmCzOao
+bl0qmHHUYQTKXFPV6mRWJ7CaFf3v7y/AgMBAAECgYBkXOVeUO+JNaJz1GG+j2Un
+tWzZNcx3rJZdbW5jURnJo7Dojc2zp3uZPo72/fWejIx1VfI/rMyNKzrmkURoVFE
+XguWqr6xRlZFqn2RaweHbsKfbp8BL1iUw8Z//nCUn3M6lmCkldKXJ2iwYppsLRV
+3pdt1OHV6tVNLvhPnmlj8nQQJBAP/dsd7/ab3GpbedESHVmP3awf48T+le/BlGG
+HNCEvDf2o2zx49EvSoc/Lo54nd9GvXR+dHsseSxHbowcoIZ7G0CQQDNf/TbNI33
+12swVO7+vjwId+fzPqEm5b6L5NM7hjeOigM9M8UGng6U7HHh/wgJupVUzERvT2H
+vSkqLsT+x2DpbAkBy/yHldugAilqK1sYPbd/QIFTWPicwXSdy+IUesFCw//tLes
+SzSJK4bcTMsh1t1MWcPB5K0lX10gDpYMLmZF5VAkEAgk0XIgMx3avPAIdqP0a6Z
+Bg7j+XvYu2cI7IFKiIRiiUCpsTzsh14W3+NOmJuY1TWqT0YS4gHLiZqHCdYntjf
+LwJBANbxHhlQMXgHOxh+zX0BkDIjk3FQW8Z0Rm1kiK9SbZVqEILlotdJltqWnZx
+1cEKj+2Zdyx4IfQu30CgOuIBcla0=
+-----END PRIVATE KEY-----';
+
+
+//debaozhifu_public_key,公钥
+$debaozhifu_public_key = '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCc7Lq3TKE0JHunYkzN4yu
+FKxDU24zDRf76Fhr/dAldQac0yIb+NfhAHn3+M/waJZrjd5ARlI+hnPK/SB
+ejL2GH+lduu7ZEzfAXPjhaUWClT/Wqn4BRta94sYAcNvqgVLBzxQUhkGFTG
+4u73ZapB3rCoZBa0OK5zRFSc2juaYPukQIDAQAB
+-----END PUBLIC KEY-----'; 
+
+
+
+?>

@@ -1,0 +1,15 @@
+2018-08-31 05:23:39 order_no=90673420180831172304
+2018-08-31 05:23:39 notify_type=offline_notify
+2018-08-31 05:23:39 merchant_code=999000111009
+2018-08-31 05:23:39 trade_time=2018-08-31 17:23:05
+2018-08-31 05:23:39 order_amount=10
+2018-08-31 05:23:39 trade_status=SUCCESS
+2018-08-31 05:23:39 sign=HtxXKiVaKu5TJ1rgax+gBwx0GXbT5XcqorVr+x0WevbyvsiLtgWMKF3tHQ1nsq6a62HOofScQ/4NP4+RrtxNGds41V90CXJ5T7dV/o46asG+sGqImNd6OfAlDrFTRQV6s99bt+ZqTABk3pMTMQgnjt26IMk89UdN3LN/qWT5qWY=
+2018-08-31 05:23:39 trade_no=YG191O1000127801
+2018-08-31 05:23:39 interface_version=V3.0
+2018-08-31 05:23:39 order_time=2018-08-31 17:23:04
+2018-08-31 05:23:39 sign_type=RSA-S
+2018-08-31 05:23:39 notify_id=000b8d61671242ceae93651779a26905
+2018-08-31 05:23:39 signtext=interface_version=V3.0&merchant_code=999000111009&notify_id=000b8d61671242ceae93651779a26905&notify_type=offline_notify&order_amount=10&order_no=90673420180831172304&order_time=2018-08-31 17:23:04&trade_no=YG191O1000127801&trade_status=SUCCESS&trade_time=2018-08-31 17:23:05
+2018-08-31 05:23:39 flag=1
+2018-08-31 05:23:39 SUCCESSat 1
