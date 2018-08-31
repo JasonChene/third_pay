@@ -1,0 +1,16 @@
+测试商户号：
+VW88882018041310001119
+支付key：
+e8ae44d98c4b43aeab9d96b4b1824834
+支付密钥：
+e9d26909ecdb4040a181cdefa25df580
+
+
+
+
+测试商户请提交IP进行报备，IP报备后才能进行测试。
+
+茉莉
+http://www.vchancepay.com/tapi/pay/receipt/receiptPay/
+茉莉 2018/8/30 上午 11:13:00
+这个是测试地址@aChang 
