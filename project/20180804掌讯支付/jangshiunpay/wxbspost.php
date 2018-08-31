@@ -102,16 +102,6 @@ $data_str = substr($data_str,0,-1);
 $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
 
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> data_str = <br>');
-echo ($data_str);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
-exit;
 #跳转qrcode
 $url = $res['busContent'];
 if ($res['code'] == '000000') {
