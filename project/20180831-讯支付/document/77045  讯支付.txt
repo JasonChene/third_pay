@@ -1,0 +1,5 @@
+cpid:nfsq01
+ºóÌ¨µØÖ·£ºhttp://117.50.15.62:8080/XSPayManage/
+ÕËºÅ£ºnfsq01
+ÃÜÂë£ºnfsq01123
+ÃÜ³×£º8b2de685acc4efnfsq3f147eaded49bd
