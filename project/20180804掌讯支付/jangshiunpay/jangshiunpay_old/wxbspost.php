@@ -49,7 +49,7 @@ $data = array(
 "version" => '2.1',
 "orgNo" => $pu_key,
 "tranType" => '0402',
-"qxsbld" => $S_Name,
+"qxsbId" => $S_Name,
 "goodsName" => 'iPhone6S',
 "sign" => array(
 "str_arr" => array(
@@ -59,7 +59,7 @@ $data = array(
 "goodsName" => "iPhone6S",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
-"qxsbld" => $S_Name,
+"qxsbId" => $S_Name,
 "tranType" => "0402",
 "version" => "2.1",
 ),

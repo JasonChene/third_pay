@@ -49,7 +49,7 @@ $data = array(
 "version" => '2.1',
 "orgNo" => $pu_key,
 "tranType" => '0402',
-"qxsbld" => $S_Name,
+"qxsbId" => $S_Name,
 "goodsName" => 'iPhone6S',
 "sign" => array(
 "str_arr" => array(
@@ -59,7 +59,7 @@ $data = array(
 "goodsName" => "iPhone6S",
 "orgNo" => $pu_key,
 "payAmt" => $MOAmount,
-"qxsbld" => $S_Name,
+"qxsbId" => $S_Name,
 "tranType" => "0402",
 "version" => "2.1",
 ),
@@ -101,6 +101,17 @@ $data_str = substr($data_str,0,-1);
 #curl获取响应值
 $res = curl_post($form_url,$data_str,"POST");
 $res = json_decode($res,1);
+
+//打印
+echo '<pre>';
+echo ('<br> data = <br>');
+var_dump($data);
+echo ('<br> data_str = <br>');
+echo ($data_str);
+echo ('<br><br> row = <br>');
+var_dump($row);
+echo '</pre>';
+exit;
 #跳转qrcode
 $url = $res['busContent'];
 if ($res['code'] == '000000') {
