@@ -5,7 +5,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(strstr($_REQUEST['pay_type'], "反扫")){
     $form_url = './ylfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './ylh5post.php';
+    $form_url = './ylbspost.php';
   }else{
     $form_url = './ylbspost.php';
   }
