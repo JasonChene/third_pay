@@ -2,5 +2,4 @@
 档案位置：php@60.245.62.221\gaotongpay  
 修改档案：wxredirect,qqredirect,zfbredirect
 新增档案：wxqqjdpost
- 
-备注：都有成功跳转
+測試到帳: QQ扫码

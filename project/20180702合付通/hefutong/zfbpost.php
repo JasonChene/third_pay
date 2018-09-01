@@ -48,7 +48,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://www.jianfengtech.com/cashier/Home';//交易请求地址
+$form_url = 'http://116.62.97.93/cashier/Home';//交易请求地址
 $scan = 'zfb';
 $data['service'] = 'al';
 $bankname = $pay_type . "->支付宝在线充值";
