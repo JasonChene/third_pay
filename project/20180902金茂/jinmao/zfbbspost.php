@@ -58,7 +58,7 @@ $data = array(
 "partnerid" => $pay_mid,
 "payamount" => $MOAmount,
 "payip" => $client_ip,
-"paytype" => "wcScan",
+"paytype" => "alScan",
 "remark" => "iphone6S",
 "returnurl" => $return_url,
 "version" => "1.0",
@@ -102,7 +102,7 @@ $jumpurl = $form_url;
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_blank">
           <p>正在为您跳转中，请稍候......</p>
           <?php
           if(isset($form_data)){
