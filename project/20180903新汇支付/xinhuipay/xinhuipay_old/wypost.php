@@ -35,7 +35,7 @@ $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = time();
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -47,12 +47,12 @@ $data = array(
 "order_amount" => $MOAmount,
 "notify_url" => $notify_url,
 "pay_type" => 'WY',
-"bank_code" => $bank_code,
+"bank_code" => 'UNDEFINED',
 "order_time" => $order_time,
 "customer_ip" => $client_ip,
 "sign" => array(
 "str_arr" => array(
-"bank_code" => $bank_code,
+"bank_code" => 'UNDEFINED',
 "customer_ip" => $client_ip,
 "merchant_code" => $pay_mid,
 "notify_url" => $notify_url,
