@@ -35,7 +35,7 @@ $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = time();
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -57,7 +57,7 @@ $data = array(
 "sign" => array(
 "str_arr" => array(
 "amount" => $MOAmount,
-"bankCode" => $bank_code,
+
 "body" => "CannedTuna",
 "date" => $order_time,
 "frontUrl" => $return_url,
@@ -80,7 +80,7 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"bankCode" => $bank_code,
+
 );
 #变更参数设定
 $payType = $pay_type."_zfb";

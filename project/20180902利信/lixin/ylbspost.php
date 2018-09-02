@@ -35,7 +35,7 @@ $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = time();
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -106,8 +106,8 @@ $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['payCode'];
 if ($res['code'] == '100') {
-    $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
+  header('Location:'.$url);
+  exit;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();
