@@ -301,7 +301,13 @@ echo '      <title>跳转......</title>'."\n";
 echo '      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />'."\n";
 echo '  </head>'."\n";
 echo '  <body>'."\n";
-echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+if (strstr($req['postmethod'],"HEADER") && strstr($req['postmethod'],"GET")){
+  echo '      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+}elseif (strstr($req['postmethod'],"HEADER") && strstr($req['postmethod'],"POST")) {
+  echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+}else {
+  echo '      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">'."\n";
+}
 echo '          <p>正在为您跳转中，请稍候......</p>'."\n";
 echo '          <?php'."\n";
 echo '          if(isset($form_data)){'."\n";
