@@ -120,7 +120,7 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">备注</td>
+			<td style="width: 120px; text-align: right;">备注：</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>

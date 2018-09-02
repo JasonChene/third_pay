@@ -16,8 +16,8 @@ if(!empty($data)){
 	#设定固定参数
 	$order_no = $data['partnerorderid']; //订单号
 	$mymoney = number_format($data['payamount']/100, 2, '.', ''); //订单金额
-	$success_msg = $data['orderstatus'];//成功讯息
-	$success_code = "1";//文档上的成功讯息
+	$success_msg = $data['message'];//成功讯息
+	$success_code = "0";//文档上的成功讯息
 	$sign = $data['sign'];//签名
 	$echo_msg = "success";//回调讯息
 
