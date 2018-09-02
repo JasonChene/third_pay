@@ -3,9 +3,9 @@ header("Content-type:text/html; charset=utf-8");
 include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(strstr($_REQUEST['pay_type'], "反扫")){
-    $form_url = './ylfspost.php';
+    $form_url = './ylbspost.php';
   }elseif(_is_mobile()){
-    $form_url = './ylh5post.php';
+    $form_url = './ylbspost.php';
   }else{
     $form_url = './ylbspost.php';
   }
@@ -17,7 +17,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")){
   }
 }else{
   if(_is_mobile()){
-    $form_url = './wyh5post.php';
+    $form_url = './wypost.php';
   }else{
     $form_url = './wypost.php';
   }
