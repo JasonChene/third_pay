@@ -1,12 +1,12 @@
 <?php
 header("Content-type:text/html; charset=UTF8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+
 
 $top_uid = $_REQUEST['top_uid'];
 
 date_default_timezone_set('PRC');
-
 
 if (function_exists("date_default_timezone_set")) {
 	date_default_timezone_set("Asia/Shanghai");
@@ -16,7 +16,7 @@ if (function_exists("date_default_timezone_set")) {
 //獲取第三方的资料
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -30,33 +30,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }
+
+
 //參數設定
 $merchant_code = $pay_mid;//商戶id
+$bankname = $pay_type . "->支付宝在线充值";
+$payT = $pay_type . "_zfb";
 
-$scan = 'wx';
-$bankname = $pay_type . "->微信在线充值";
-$payT = $pay_type . "_wx";
 if (_is_mobile()) {
-	$service_type = "weixin_h5api";//微信手機掃碼
+	$service_type = "alipay_h5api";
 } else {
-	$service_type = "weixin_scan";//微信掃碼
+	$service_type = "alipay_scan";
 }
-
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-	$scan = 'jd';
-	$bankname = $pay_type . "->京东钱包在线充值";
-	$payT = $pay_type . "_jd";
-	$service_type = "jdpay_scan";//京東錢包掃碼
-} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-	$scan = 'qq';
-	$bankname = $pay_type . "->QQ钱包在线充值";
-	$payT = $pay_type . "_qq";
-	$service_type = "tenpay_scan";//QQ錢包掃碼
-	if (_is_mobile()) {
-		$service_type = "qq_h5api";//QQ手機錢包掃碼
-	}
-}
-
 
 $notify_url = $merchant_url;
 $interface_version = "V3.1";
@@ -83,6 +68,7 @@ if ($result_insert == -1) {
 	echo "订单号已存在，请返回支付页面重新支付";
 	exit;
 }
+
 
 /////////////////////////////   参数组装  /////////////////////////////////
 /**
@@ -146,7 +132,7 @@ $sign = base64_encode($sign_info);
 /////////////////////////  提交参数到得宝扫码支付网关  ////////////////////////
 
 /**
-curl方法提交支付参数到得宝扫码网关https://api.yuanruic.com/gateway/api/h5apipay，并且获取返回值
+curl方法提交支付参数到得宝扫码网关https://api.debaozhifu.com/gateway/api/h5apipay，并且获取返回值
  */
 
 $postdata = array(
@@ -168,9 +154,8 @@ $postdata = array(
 	'product_name' => $product_name
 );
 
-
 $ch = curl_init();
-if (_is_mobile() && $scan != 'jd') {
+if (_is_mobile()) {
 	curl_setopt($ch, CURLOPT_URL, "https://api.yuanruic.com/gateway/api/h5apipay");
 } else {
 	curl_setopt($ch, CURLOPT_URL, "https://api.yuanruic.com/gateway/api/scanpay");
@@ -200,7 +185,7 @@ if ($array["response"]['resp_code'] != 'SUCCESS') {
 		$array['response']['payURL'] = urldecode($array['response']['payURL']);
 		header("location:" . $array['response']['payURL']);
 	} else {
-		header("location:" . '../qrcode/qrcode.php?type=' . $scan . '&code=' . $array['response']['qrcode']);
+		header("location:" . '../qrcode/qrcode.php?type=' . 'zfb' . '&code=' . $array['response']['qrcode']);
 	}
 }
 ?>

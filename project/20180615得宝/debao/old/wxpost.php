@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=UTF8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 $top_uid = $_REQUEST['top_uid'];
@@ -16,7 +16,7 @@ if (function_exists("date_default_timezone_set")) {
 //獲取第三方的资料
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -47,15 +47,8 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
 	$bankname = $pay_type . "->京东钱包在线充值";
 	$payT = $pay_type . "_jd";
 	$service_type = "jdpay_scan";//京東錢包掃碼
-} elseif (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-	$scan = 'qq';
-	$bankname = $pay_type . "->QQ钱包在线充值";
-	$payT = $pay_type . "_qq";
-	$service_type = "tenpay_scan";//QQ錢包掃碼
-	if (_is_mobile()) {
-		$service_type = "qq_h5api";//QQ手機錢包掃碼
-	}
 }
+
 
 
 $notify_url = $merchant_url;
@@ -167,7 +160,6 @@ $postdata = array(
 	'order_amount' => $order_amount,
 	'product_name' => $product_name
 );
-
 
 $ch = curl_init();
 if (_is_mobile() && $scan != 'jd') {
