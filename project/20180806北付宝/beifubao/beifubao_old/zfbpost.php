@@ -208,13 +208,7 @@ if ($array['success'] == true && $array['message']['code'] == 200) {
     echo "签名验证失败！";
     exit;
   } else {
-    if (_is_mobile()) {
-      $jumpurl = $return_businessContext['content'];
-      header("location:". $jumpurl);
-      exit;
-    } else {
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($return_businessContext['content']);
-    }
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($return_businessContext['content']);
   }
 } else {
   echo '错误代码:' . $array['message']['code'] . "<br>";

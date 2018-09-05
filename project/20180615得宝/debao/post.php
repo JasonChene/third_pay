@@ -1,6 +1,7 @@
 <?php
 header("Content-type:text/html; charset=UTF8");
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 $top_uid = $_REQUEST['top_uid'];
@@ -15,7 +16,8 @@ if (function_exists("date_default_timezone_set")) {
 //獲取第三方的资料
 $params = array(':pay_type' => $_REQUEST['pay_type']);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -40,11 +42,12 @@ $service_type = "direct_pay";
 $scan = 'wy';
 $interface_version = "V3.0";
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+	$bank_code = "WAP_UNION";
 	$bankname = $pay_type . "->银联钱包在线充值";
 	$payT = $pay_type . "_yl";
-	$service_type = "ylpay_scan";
+	$service_type = "direct_pay";
 	$scan = 'yl';
-	$interface_version = "V3.1";
+	$interface_version = "V3.0";
 }
 
 $notify_url = $merchant_url;
@@ -73,7 +76,9 @@ if ($result_insert == -1) {
 $return_url = "";
 
 $pay_type = "";
-
+if ($scan == 'yl') {
+	$pay_type = "b2cwap";
+}
 $redo_flag = "";
 
 $product_code = "";
@@ -182,41 +187,8 @@ $postdata = array(
 	'show_url' => $show_url,
 	'redo_flag' => $redo_flag
 );
+
 ?>
-<?php if ($scan == 'yl') {
-
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "https://api.yuanruic.com/gateway/api/scanpay");
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_HEADER, false);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$response = curl_exec($ch);
-	curl_close($ch);
-
-	$xml = (array)simplexml_load_string($response) or die("Error: Cannot create object");
-	$array = json_decode(json_encode($xml), 1);
-
-	if ($array["response"]['resp_code'] != 'SUCCESS') {
-		echo '处理码:' . $array["response"]['resp_code'] . "<br>";
-		echo '处理描述信息:' . $array["response"]['resp_desc'] . "<br>";
-		exit;
-	} else if ($array["response"]['result_code'] != '0') {
-		echo '业务结果:' . $array["response"]['result_code'] . "<br>";
-		echo '错误码定义:' . $array["response"]['error_code'] . "<br>";
-		echo '交易说明:' . $array["response"]['result_desc'] . "<br>";
-		exit;
-	} else {
-		if (_is_mobile()) {
-			header("location:" . $array['response']['qrcode']);
-		} else {
-			header("location:" . '../qrcode/qrcode.php?type=' . $scan . '&code=' . $array['response']['qrcode']);
-		}
-	}
-} ?>
-<?php if ($scan == 'wy') { ?>
 	<html>
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -245,9 +217,7 @@ $postdata = array(
 				<input Type="hidden" Name="return_url"    value="<?php echo $return_url ?>"/>
 				<input Type="hidden" Name="show_url"      value="<?php echo $show_url ?>"/>
 				<input Type="hidden" Name="redo_flag"     value="<?php echo $redo_flag ?>"/>
+				<input Type="submit" Name="Submit" value="提交"/>
 			</form>
 		</body>
 	</html>
-
-<?php 
-} ?>
