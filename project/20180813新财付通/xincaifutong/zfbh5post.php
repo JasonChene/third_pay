@@ -102,7 +102,6 @@ $data_str = substr($data_str, 0, -1);
 #curl获取响应值
 $res = curl_post($form_url, $data_str, "POST");
 $res = json_decode($res, 1);
-
 #跳转qrcode
 $url = $res['payurl'];
 if ($res['messages']["returncode"] == 'SUCCESS') {
