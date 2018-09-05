@@ -94,7 +94,7 @@ $res = json_decode($res,1);
 $url = $res['payUrl'];
 if ($res['code'] == '00000') {
     
-    $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
+    $jumpurl = $url;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['message'];
   exit();
