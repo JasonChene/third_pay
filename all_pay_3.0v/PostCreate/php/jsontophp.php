@@ -260,23 +260,23 @@ if (strstr($req['postmethod'],"HEADER")){
       echo '$res = curl_post($form_url,http_build_query($data),"'.$req["postmethod"].'");'."\n";
     }
     if($req['res_structure']=="JSON"){
-        echo '$res = json_decode($res,1);'."\n";
+        echo '$row = json_decode($res,1);'."\n";
     }elseif($req['res_structure']=="XML"){
         echo '$xml=(array)simplexml_load_string($data) or die("Error: Cannot create object");'."\n";
-        echo '$res=json_decode(json_encode($xml),1);//XML回传资料'."\n";
+        echo '$row=json_decode(json_encode($xml),1);//XML回传资料'."\n";
     }elseif($req['res_structure']=="xmlCDATA"){
         echo '$xml=(array)simplexml_load_string($data,\'SimpleXMLElement\',LIBXML_NOCDATA) or die("Error: Cannot create object");'."\n";
-        echo '$res=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
+        echo '$row=json_decode(json_encode($xml),1);//XMLCDATA回传资料'."\n";
     }
     #跳转qrcode
     echo '#跳转qrcode'."\n";
-    $response_key = '$url = $res';
+    $response_key = '$url = $row';
     for ($i=0; $i < intval($req['response_key'][0]); $i++) {
       $response_key .= '[\''.$req['response_key'][1+$i].'\']';
     }
     $response_key .= ';';
     echo $response_key."\n";
-    echo 'if ($res[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
+    echo 'if ($row[\''.$req['Success_key'].'\'] == \''.$req['Success_value'].'\') {'."\n";
     if (strstr($req['payment'],"bs")) {
       echo '    $qrurl = QRcodeUrl($url);'."\n";
       echo '    $jumpurl = \'../qrcode/qrcode.php?type='.$payment['type'].'&code=\' . $qrurl;'."\n";
@@ -284,7 +284,7 @@ if (strstr($req['postmethod'],"HEADER")){
       echo '    $jumpurl = $url;'."\n";
     }
     echo '}else{'."\n";
-    echo '  echo "错误码：".$res[\''.$req['Error_No'].'\']."错误讯息：".$res[\''.$req['Error_Msg'].'\'];'."\n";
+    echo '  echo "错误码：".$row[\''.$req['Error_No'].'\']."错误讯息：".$row[\''.$req['Error_Msg'].'\'];'."\n";
     echo '  exit();'."\n";
     echo '}'."\n";
 }
