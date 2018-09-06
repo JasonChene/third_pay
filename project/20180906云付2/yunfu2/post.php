@@ -13,7 +13,7 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")){
   if(_is_mobile()){
     $form_url = './ylkjh5post.php';
   }else{
-    $form_url = './ylkjpost.php';
+    $form_url = './ylkjh5post.php';
   }
 }else{
   if(_is_mobile()){
