@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('金茂', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/jinmao/post.php', '/pay/jinmao/wxpost.php', '/pay/jinmao/zfbpost.php', '/pay/jinmao/return_url.php', '/pay/jinmao/return_url.php', '/pay/jinmao/return_url.php', '/pay/jinmao/notify_url.php', '/pay/jinmao/notify_url.php', '/pay/jinmao/notify_url.php', '1', '1', '/pay/jinmao/qqpost.php', '/pay/jinmao/return_url.php', '/pay/jinmao/notify_url.php');
+ VALUES ('K付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/kpay/post.php', '/pay/kpay/wxpost.php', '/pay/kpay/zfbpost.php', '/pay/kpay/return_url.php', '/pay/kpay/return_url.php', '/pay/kpay/return_url.php', '/pay/kpay/notify_url.php', '/pay/kpay/notify_url.php', '/pay/kpay/notify_url.php', '1', '1', '/pay/kpay/qqpost.php', '/pay/kpay/return_url.php', '/pay/kpay/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('金茂', '7c9bm373', '3e08e81e3ceb1e14', null, 'http://pay7.5566205.com', '金茂', '1', '1', '1', '金茂', '1');
+ VALUES ('K付', '10001352', 'd17fde9360e64e22ad1efa6799c369fc', 'fa369c4af0994a84b489ea7d96990ff5', 'http://pay7.5566205.com', 'K付', '1', '1', '1', 'K付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('金茂', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/jinmao/post.php', '/pay/jinmao/wxpost.php', '/pay/jinmao/zfbpost.php', '/pay/jinmao/return_url.php', '/pay/jinmao/return_url.php', '/pay/jinmao/return_url.php', '/pay/jinmao/notify_url.php', '/pay/jinmao/notify_url.php', '/pay/jinmao/notify_url.php', '1', '1', '/pay/jinmao/qqpost.php', '/pay/jinmao/return_url.php', '/pay/jinmao/notify_url.php');
+ VALUES ('K付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/kpay/post.php', '/pay/kpay/wxpost.php', '/pay/kpay/zfbpost.php', '/pay/kpay/return_url.php', '/pay/kpay/return_url.php', '/pay/kpay/return_url.php', '/pay/kpay/notify_url.php', '/pay/kpay/notify_url.php', '/pay/kpay/notify_url.php', '1', '1', '/pay/kpay/qqpost.php', '/pay/kpay/return_url.php', '/pay/kpay/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('金茂', '7c9bm373', '3e08e81e3ceb1e14', null, 'http://paytest.7k111.com', '金茂', '1', '1', '1', '金茂', '1');
+ VALUES ('K付', '10001352', 'd17fde9360e64e22ad1efa6799c369fc', 'fa369c4af0994a84b489ea7d96990ff5', 'http://paytest.7k111.com', 'K付', '1', '1', '1', 'K付', '1');
