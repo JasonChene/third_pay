@@ -74,6 +74,8 @@ $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_doma
 $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
+echo "<pre>";
+var_dump($row);
 //$pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_mid = $row['mer_account'];//商戶號
@@ -146,6 +148,7 @@ $data['sign'] = $sign;
 $data_json = json_encode($data,JSON_UNESCAPED_SLASHES);
 #curl获取响应值
 $res = curl_post($form_url,$data_json);
+echo $res;
 $row = json_decode($res,1);
 #跳转
 if ($row['return_code'] != true) {
