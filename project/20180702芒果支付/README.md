@@ -22,3 +22,15 @@ post.php新增银联h5渠道
 修改档案：zfbpost
 测试到账：
 备注：新增支付宝h5,金额201-5000
+
+20180906
+第三方名称：芒果支付(改限制金额十位与个位数不能为0)
+档案位置：php@60.245.221.62\magopay 
+
+修改档案:post,qqpost,wxpost,wxqqjdpost,zfbpost
+
+20180907
+第三方名称：芒果支付(改限制金额个位数不能为0)
+档案位置：php@60.245.221.62\magopay 
+
+修改档案:post,qqpost,wxpost,wxqqjdpost,zfbpost

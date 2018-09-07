@@ -133,7 +133,11 @@ if ($result_insert == -1) {
 }
 
 
-
+$money =  substr($_REQUEST['MOAmount'],-1,1);
+if ($money == "0") {
+  echo "金额个位数不能为0";
+  exit;
+}
 
 
 //調用curl

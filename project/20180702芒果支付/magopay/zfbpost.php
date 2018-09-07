@@ -135,7 +135,11 @@ if ($result_insert == -1) {
   exit;
 }
 
-
+$money =  substr($_REQUEST['MOAmount'],-1,1);
+if ($money == "0") {
+  echo "金额个位数不能为0";
+  exit;
+}
 //調用curl
 $return = wx_post($form_url,$data);
 $row = json_decode($return, true); //将返回json数据转换为数组
