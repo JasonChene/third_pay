@@ -74,8 +74,7 @@ $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_doma
 $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
-echo "<pre>";
-var_dump($row);
+
 //$pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_mid = $row['mer_account'];//商戶號

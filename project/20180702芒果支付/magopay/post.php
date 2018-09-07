@@ -143,9 +143,8 @@ if ($result_insert == -1) {
 
 
 $money =  substr($_REQUEST['MOAmount'],-1,1);
-$money2 =  substr($_REQUEST['MOAmount'],-2,1);
-if ($money == "0" || $money2 == "0") {
-  echo "金额个位或十位数不能为0";
+if ($money == "0") {
+  echo "金额个位数不能为0";
   exit;
 }
 
