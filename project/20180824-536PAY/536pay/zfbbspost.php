@@ -113,7 +113,6 @@ $url = $res['data']['qrcode'];
 if ($res['code'] == '0') {
   $qrurl = QRcodeUrl($url);
   $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-  echo $url;
 } else {
   echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
   exit();
