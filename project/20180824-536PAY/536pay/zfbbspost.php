@@ -54,7 +54,7 @@ $data = array(
   "orderUid" => 'orderUid',
   "returnUrl" => $return_url,
   "attach" => 'attach',
-  "reType" => '2',
+  "reType" => '1',
   "userIp" => $client_ip,
   "sign" => array(
     "str_arr" => array(
@@ -67,7 +67,7 @@ $data = array(
       "isType" => "1",
       "orderNo" => $order_no,
       "orderUid" => 'orderUid',
-      "reType" => "2",
+      "reType" => "1",
       "returnUrl" => $return_url,
       "transAmt" => $MOAmount,
       "transType" => "1005",
@@ -104,8 +104,21 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data), "POST");
+$res = json_decode($res, 1);
+
+#跳转qrcode
+$url = $res['data']['qrcode'];
+if ($res['code'] == '0') {
+  $qrurl = QRcodeUrl($url);
+  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+  echo $url;
+} else {
+  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
+  exit();
+}
+
 ?>
 <html>
   <head>

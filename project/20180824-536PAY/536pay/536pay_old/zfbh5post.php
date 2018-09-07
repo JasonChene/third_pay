@@ -54,7 +54,7 @@ $data = array(
   "orderUid" => 'orderUid',
   "returnUrl" => $return_url,
   "attach" => 'attach',
-  "reType" => '2',
+  "reType" => '1',
   "userIp" => $client_ip,
   "sign" => array(
     "str_arr" => array(
@@ -67,7 +67,7 @@ $data = array(
       "isType" => "1",
       "orderNo" => $order_no,
       "orderUid" => 'orderUid',
-      "reType" => "2",
+      "reType" => "1",
       "returnUrl" => $return_url,
       "transAmt" => $MOAmount,
       "transType" => "1005",
@@ -104,28 +104,21 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data), "POST");
+$res = json_decode($res, 1);
+
+#跳转qrcode
+$url = $res['data']['qrcode'];
+$url = 'alipayqr://platformapi/startapp?saId=10000007&qrcode=' . urlencode($url);
+if ($res['code'] == '0') {
+  $jumpurl = $url;
+} else {
+  echo "错误码：" . $res['code'] . "错误讯息：" . $res['msg'];
+  exit();
+}
+
+echo '正在为您跳转中，请稍候......';
+header('Location:' . $jumpurl);
+exit();
 ?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if (isset($form_data)) {
-            foreach ($data as $arr_key => $arr_value) {
-              ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php 
-        }
-      } ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>
