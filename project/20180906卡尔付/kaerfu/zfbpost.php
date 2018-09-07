@@ -39,6 +39,10 @@ function curl_post($url, $data, $str)
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     // $post_url=fix_postdata_url($url, $data);
     curl_setopt($ch, CURLOPT_URL, $url . '?' . $data);
+
+    echo '<pre>';
+    echo $url . '?' . $data;
+    echo '</pre>';
   }
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -93,7 +97,7 @@ function QRcodeUrl($code)
 }
 
 function toXml($arr)
-{ #拼装Xml
+{
   $xml = "<xml>";
   foreach ($arr as $key => $val) {
     if (is_numeric($val)) {
@@ -141,7 +145,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://www.yljdgl.cn/api/sig/v1/alipay/wap';//支付宝wap提交地址
+$form_url = 'http://api.yljdgl.cn/api/sig/v1/alipay/wap/ingpay';//支付宝wap提交地址
 $scan = 'zfb';
 payType_bankname($scan, $pay_type);
 
@@ -175,29 +179,28 @@ $token_data = array(
   "random" => mt_rand(), //随机字符串
   "sign" => '', //签名
 );
-$token_url = 'http://www.yljdgl.cn/api/auth/access-token';//获取token提交地址
+$token_url = 'http://api.yljdgl.cn/api/auth/access-token';//获取token提交地址
 $token_signtext = $token_data['appid'] . $pay_mkey . $token_data['random'];
-$token_sign = md5($token_signtext);
+$token_sign = strtoupper(md5($token_signtext));
 $token_data['sign'] = $token_sign;
 $res = curl_post($token_url, http_build_query($token_data), "GET");
-$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+$xml = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
 $row = json_decode(json_encode($xml), 1);//XML回传资料
 
 echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
+echo ('<br> token_data = <br>');
+var_dump($token_data);
 echo ('<br><br> row = <br>');
 var_dump($row);
+echo ('<br><br> token = <br>');
+var_dump($row['token']);
 
-echo '------';
-
+echo ('<br>--------------------');
 echo '</pre>';
 
 #curl获取响应值
-$res = curl_post($form_url . '?' . $row['token'], $data_str, "POST");
-$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+$res = curl_post($form_url . '?token=' . $row['token'], $data_str, "POST");
+$xml = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
 $row = json_decode(json_encode($xml), 1);//XML回传资料
 
 //打印
@@ -208,6 +211,8 @@ echo ('<br> signtext = <br>');
 echo ($signtext);
 echo ('<br><br> row = <br>');
 var_dump($row);
+echo ('<br><br> data_str = <br>');
+var_dump($data_str);
 echo '</pre>';
 
 exit;
