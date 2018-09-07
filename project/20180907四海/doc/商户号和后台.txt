@@ -1,0 +1,9 @@
+后台登录地址：
+http://pay.inengjiang.com/index
+
+登录账号：gongji
+密码：123456
+
+
+支付商户号：1536213452335
+支付秘钥：612b869c728d1c9349724c21a647ecbd
