@@ -88,7 +88,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = '';
+$form_url = 'http://gateway.huihuangd.cn/paygateway/kfupay/order/v1';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');

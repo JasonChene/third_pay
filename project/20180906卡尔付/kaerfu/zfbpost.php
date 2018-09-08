@@ -10,7 +10,7 @@ if (function_exists("date_default_timezone_set")) {
 }
 
 #function
-function curl_post($url, $data, $str)
+function curl_post($url, $data, $str,$token=null)
 { #curl请求设定
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -23,6 +23,11 @@ function curl_post($url, $data, $str)
       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
         'Content-Length: ' . strlen($data)
+      ));
+    }elseif(strstr($str,"XML")){
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/xml',
+        'Authorization: Bearer '.$token
       ));
     }
     curl_setopt($ch, CURLOPT_POST, true);
@@ -145,7 +150,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://api.yljdgl.cn/api/sig/v1/alipay/wap/ingpay';//支付宝wap提交地址
+$form_url = 'http://api.yljdgl.cn/api/sig/v1/alipay/wap';//支付宝wap提交地址
 $scan = 'zfb';
 payType_bankname($scan, $pay_type);
 
@@ -187,43 +192,23 @@ $res = curl_post($token_url, http_build_query($token_data), "GET");
 $xml = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
 $row = json_decode(json_encode($xml), 1);//XML回传资料
 
-echo '<pre>';
-echo ('<br> token_data = <br>');
-var_dump($token_data);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo ('<br><br> token = <br>');
-var_dump($row['token']);
-
-echo ('<br>--------------------');
-echo '</pre>';
-
 #curl获取响应值
-$res = curl_post($form_url . '?token=' . $row['token'], $data_str, "POST");
+$res = curl_post($form_url . '?token=' . $row['token'], $data_str, "POST-XML",$row['token']);
 $xml = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
 $row = json_decode(json_encode($xml), 1);//XML回传资料
-
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
+echo "<pre>";
 var_dump($row);
-echo ('<br><br> data_str = <br>');
-var_dump($data_str);
-echo '</pre>';
-
-exit;
-
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "\n";
-  echo '错误讯息:' . $row['respInfo'] . "\n";
+if ($row['status'] != '0') {
+  echo '错误代码:' . $row['status'] . "\n";
+  echo '错误讯息:' . $row['message'] . "\n";
   exit;
 } else {
-  $qrcodeUrl = $row['qrcodeUrl'];
+  if ($row['result_code'] != '0') {
+    echo '错误代码:' . $row['result_code'] . "\n";
+    exit;
+  }
+  $qrcodeUrl = $row['code_url'];
   if (_is_mobile()) {
     $jumpurl = $qrcodeUrl;
   } else {

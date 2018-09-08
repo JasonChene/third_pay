@@ -1,0 +1,11 @@
+小熊支付：
+
+登录后台：http://cm.bearpay.net/#/login
+
+商户账号：xiaoxiong888
+
+登录密码：zxcv5588
+
+商户秘钥：424E54EBC6739FE698B05C2CF224EA86
+
+开发文档：http://www.bearpay.net/index.php/api-doc/

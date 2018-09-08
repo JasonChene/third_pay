@@ -48,7 +48,7 @@ $data = array(
 "notifyUrl" => $notify_url,
 "subject" => 'weixin',
 "body" => 'CannedTuna',
-"paymentType" => 'ALIPAY_H5',
+"paymentType" => 'WEIXIN_QRCODE',
 "frontUrl" => $return_url,
 "spbillCreateIp" => $client_ip,
 "operationCode" => 'order.createOrder',
@@ -64,7 +64,7 @@ $data = array(
 "merchantNo" => $pay_mid,
 "notifyUrl" => $notify_url,
 "operationCode" => "order.createOrder",
-"paymentType" => "ALIPAY_H5",
+"paymentType" => "WEIXIN_QRCODE",
 "spbillCreateIp" => $client_ip,
 "subject" => "weixin",
 "tradeNo" => $order_no,
@@ -105,10 +105,12 @@ foreach ($data as $arr_key => $arr_value) {
 #curl获取响应值
 $res = curl_post($form_url,http_build_query($data),"POST");
 $res = json_decode($res,1);
+
 #跳转qrcode
-$url = $res['payCode'];
+$url = trim(strrchr($res['payCode'], 'http://qr.liantu.com/api.php?&w=280&text='),'http://qr.liantu.com/api.php?&w=280&text=');  
 if ($res['code'] == '100') {
-    $jumpurl = $url;
+  header('Location:'.$url);
+  exit;
 }else{
   echo "错误码：".$res['code']."错误讯息：".$res['msg'];
   exit();
