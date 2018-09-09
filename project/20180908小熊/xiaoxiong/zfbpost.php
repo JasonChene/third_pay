@@ -106,7 +106,7 @@ $data = array(
 #变更参数设置
 
 $scan = 'zfb';
-$data['pay_bankcode'] = '103';
+$data['payWay'] = '103';
 
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -124,20 +124,11 @@ $sign = (md5($signtext));
 $data['token'] = $sign;
 
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
+// $res = curl_post($form_url, http_build_query($data));
+// $row = json_decode($res, 1);
 #跳转     //還沒測
-if ($row['?'] != '') {
-  echo '错误代码:' . $row['respCode'] . "<br>";
-  echo '错误讯息:' . $row['respInfo'] . "<br>";
-  exit;
-} else {
-  if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
-  }
-}
+$jumpurl = $form_url;
+$form_data = $data;
 #跳轉方法
 
 ?>
