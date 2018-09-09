@@ -94,7 +94,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'https://qfgames.com/gateway';
+$form_url = 'https://wx.hwjps.com/gateway';
 $scan = '';
 $payType = '';
 $bankname = '';
