@@ -9,7 +9,7 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	// write_log("return:".$key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -56,9 +56,9 @@ if(!empty($data)){
 		}
 	}
 	$signtext = substr($signtext, 0,-1) . '&key=' . $pay_mkey;//验签字串
-	write_log("signtext=".$signtext);
+	// write_log("signtext=".$signtext);
 	$mysign = strtoupper(md5($signtext));//签名
-	write_log("mysign=".$mysign);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断

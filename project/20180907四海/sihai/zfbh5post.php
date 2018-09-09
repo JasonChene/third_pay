@@ -35,7 +35,7 @@ $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$nonceStr = rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999);
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -49,7 +49,7 @@ $data = array(
 "payType" => 'ali_wap',
 "body" => 'buy',
 "userIp" => $client_ip,
-"nonceStr" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
+"nonceStr" => $nonceStr,
 "attach" => 'lisheng',
 "callbackUrl" => $return_url,
 "sign" => array(
@@ -59,7 +59,7 @@ $data = array(
 "body" => "buy",
 "callbackUrl" => $return_url,
 "mchId" => $pay_mid,
-"nonceStr" => rand(100000,999999)."".date("YmdHis").rand(100000,999999).rand(100000,999999),
+"nonceStr" => $nonceStr,
 "notifyUrl" => $notify_url,
 "orderNo" => $order_no,
 "payType" => "ali_wap",
@@ -100,21 +100,12 @@ foreach ($data as $arr_key => $arr_value) {
 $res = curl_post($form_url,http_build_query($data),"POST");
 $row = json_decode($res,1);
 
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> res = <br>');
-echo ($res);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
-// exit;
 
 #跳转qrcode
 $url = $row['payInfo'];
 if ($row['status'] == '0') {
-    $jumpurl = $url;
+    header('Location:'.$url);
+    exit;
 }else{
   echo "错误码：".$row['status']."错误讯息：".$row['msg'];
   exit();

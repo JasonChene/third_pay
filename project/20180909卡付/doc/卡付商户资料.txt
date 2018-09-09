@@ -1,0 +1,7 @@
+卡付的
+网站 www.kammapay.com
+账号 1991133416@qq.com
+密码 xiaoxin8
+商户ID：2125
+密钥(KEY)：80fa2bcd15f24a2fa0801091af403774
+开发文档在商户后台
