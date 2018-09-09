@@ -2,13 +2,13 @@
 <?php
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("return");
+// write_log("return");
 #接收资料
 #post方法
 $data = array();
 foreach ($_GET as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	// write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -42,15 +42,15 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log('非法提交参数');
+		// write_log('非法提交参数');
 		exit;
 	}
 
 	#验签方式
-	$signtext = $data["shopId"].$data["out_trade_no"].$data["money"].$pay_mkey.$data["return_code"];
-	write_log("signtext=".$signtext);
-	$mysign = strtoupper(md5($signtext));//签名
-	write_log("mysign=".$mysign);
+	$signtext = $pay_mid.$data["out_trade_no"].$data["money"].$pay_mkey.$data["return_code"];
+	// write_log("signtext=".$signtext);
+	$mysign = md5($signtext);//签名
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
