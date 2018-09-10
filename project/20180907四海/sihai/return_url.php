@@ -18,8 +18,8 @@ if(!empty($data)){
 	$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
 	$success_msg = $data['status'];//成功讯息
 	$success_code = "2";//文档上的成功讯息
-	$sign = $data['sign'];//签名
-	$echo_msg = "ok";//回调讯息
+	// $sign = $data['sign'];//签名
+	// $echo_msg = "ok";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -43,24 +43,11 @@ if(!empty($data)){
 		exit;
 	}
 
-	#验签方式
-	$noarr = array('sign');//不加入签名的array key值
-	ksort($data);
-	$signtext = "";
-	foreach ($data as $arr_key => $arr_val) {
-		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
-			$signtext .= $arr_key . '=' . $arr_val . '&';
-		}
-	}
-	$signtext = substr($signtext, 0,-1) . '&key=' . $pay_mkey;//验签字串
-	// write_log("signtext=".$signtext);
-	$mysign = strtoupper(md5($signtext));//签名
-	// write_log("mysign=".$mysign);
-
+	
 
 	#到账判断
 	if ($success_msg == $success_code) {
-	if ( $mysign == $sign) {
+	// if ( $mysign == $sign) {
 			$result_insert = update_online_money($order_no, $mymoney);
 			if ($result_insert == -1) {
 				$message = ("会员信息不存在，无法入账");
@@ -73,9 +60,9 @@ if(!empty($data)){
 			} else {
 				$message = ("支付失败");
 			}
-		}else{
-			$message = ('签名不正确！');
-		}
+		// }else{
+		// 	$message = ('签名不正确！');
+		// }
 	}else{
 		$message = ("交易失败");
 	}
@@ -127,7 +114,7 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">备注</td>
+			<td style="width: 120px; text-align: right;">备注：</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>
