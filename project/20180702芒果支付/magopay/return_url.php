@@ -30,7 +30,7 @@ foreach ($_REQUEST as $key => $value) {
 #########$params = array(':m_order' => 訂單號);###########
 $params = array(':m_order' => $down_sn);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -39,7 +39,7 @@ $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
