@@ -11,7 +11,7 @@ if(function_exists("date_default_timezone_set"))
 //获取订单资料
 $params = array(':m_id'=>$_REQUEST['m_id'],':m_order'=>$_REQUEST['m_order']);
 $sql = "select m_id,uid,m_order,totalvaildbet,m_value,pay_card,pay_num,pay_address,pay_name from k_money where m_id=:m_id and m_order=:m_order and type='2' and (df_disanfang is null or df_disanfang = '')";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $m_id = $row['m_id'];
@@ -26,14 +26,14 @@ $uid = $row['uid'];
 //获取提款用户的层级资料
 $params = array(':uid'=>$uid);
 $sql = "select id,name,level_df,df_money from k_group where id in(select gid from k_user where uid=:uid)";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_id = $row['level_df'];
 //获取第三方的资料
 $params = array(':id'=>$pay_id);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.id=:id and is_df='1'";
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];

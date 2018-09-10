@@ -17,7 +17,7 @@ foreach ($_POST as $key => $value) {
 $params = array(':pay_name' => '易路通');
 $sql = "select * from pay_set where pay_name=:pay_name";
 $stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+//$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];

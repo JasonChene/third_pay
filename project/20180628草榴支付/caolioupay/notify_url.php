@@ -25,7 +25,7 @@ $echo_msg = "success";//回调讯息
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -35,7 +35,7 @@ $params = array(':pay_type' => $pay_type);
 // $sql = "select * from pay_set where pay_type=:pay_type";
 $sql = "select * from pay_set where pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("write1")->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
