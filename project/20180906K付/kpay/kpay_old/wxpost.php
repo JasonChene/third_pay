@@ -1,8 +1,9 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
+include_once("./aes7.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
@@ -74,8 +75,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -99,7 +100,7 @@ $data = array(
   "merNo" => $pay_mid,
   "orderId" => $order_no,
   "time" => (int)time(),
-  "amount" => (int)$order_no,
+  "amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''),
   "productType" => "01",
   "product" => "pay",
   "userType" => (int)0,
@@ -109,12 +110,18 @@ $data = array(
   "notifyUrl" => $merchant_url,
   "sign" => ""
 );
+
+$post_data = array(
+  'merAccount' => $pay_account,//商户标识
+  'data' => '',
+);
+
 #变更参数设置
-$scan = 'qq';
-$data['payWay'] = 'QQPAY';
-$data['payType'] = 'SCANPAY_QQ';
+$scan = 'wx';
+$data['payWay'] = 'WEIXIN';
+$data['payType'] = 'SCANPAY_WEIXIN';
 if (_is_mobile()) {
-  $data['payType'] = 'H5_QQ';
+  $data['payType'] = 'H5_WEIXIN';
 }
 
 payType_bankname($scan, $pay_type);
@@ -141,20 +148,22 @@ $signtext .= $pay_mkey;
 $sign = sha1($signtext);
 $data['sign'] = $sign;
 
+$json_data = json_encode($data);
+$aes = new OpenSSLAES($pay_mkey);
+$encrypted = $aes->encrypt($json_data);
+$post_data['data'] = $encrypted;
+
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
+$res = curl_post($form_url, http_build_query($post_data));
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['code'] != '000000') {
   echo '错误代码:' . $row['code'] . "<br>";
   echo '错误讯息:' . $row['msg'] . "<br>";
   exit;
-}else {
-  if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
-  }
+} else {
+  $jumpurl = $row['data']['qrCode'];
 }
 #跳轉方法
 
