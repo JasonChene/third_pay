@@ -1,3 +1,10 @@
 登陆账户：15010503659   登陆密码 :123456  
 
 登陆链接：http://m.huihuangd.cn/paybiz/logout
+
+商戶编号
+10001352
+商户标识
+fa369c4af0994a84b489ea7d96990ff5
+支付密钥
+d17fde9360e64e22ad1efa6799c369fc
