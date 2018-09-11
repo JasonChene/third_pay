@@ -1,0 +1,25 @@
+ http://user.hengxinpost.com/
+账号 密码
+jinshapay hengbang
+
+接口：
+http://post.hengxinpost.com/Pay/index
+ID：
+100013
+密钥：
+7ca07e137d62bd0e8a5598459e2b7e1a
+
+
+接口：
+http://post.hengxinpost.com/Pay/index
+
+下游登入：
+http://user.hengxinpost.com/
+账号 密码（后台自行修改密码）
+jinshapay hengbang
+
+ID：
+100013
+
+密钥：
+7ca07e137d62bd0e8a5598459e2b7e1a

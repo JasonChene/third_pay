@@ -5,7 +5,7 @@ if(strstr($_REQUEST['pay_type'], "京东钱包")){
   if(strstr($_REQUEST['pay_type'], "反扫")){
     $form_url = './jdfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './jdh5post.php';
+    $form_url = './jdbspost.php';
   }else{
     $form_url = './jdbspost.php';
   }
@@ -21,7 +21,7 @@ if(strstr($_REQUEST['pay_type'], "京东钱包")){
   if(strstr($_REQUEST['pay_type'], "反扫")){
     $form_url = './wxfspost.php';
   }elseif(_is_mobile()){
-    $form_url = './wxh5post.php';
+    $form_url = './wxbspost.php';
   }else{
     $form_url = './wxbspost.php';
   }
