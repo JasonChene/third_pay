@@ -1,0 +1,10 @@
+https://www.newonepay.com/xinyi/merchant/backed
+登录名  weinisi001  密码 123456789a
+
+您的商户ID：1015684
+
+商户密钥：jwQofCwstmVXhraaQzgxlvSspWCEKLiO  
+
+网关地址：https://www.newonepay.com/pay
+
+结算周期：D+0
