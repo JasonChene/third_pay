@@ -1,0 +1,10 @@
+[ 2018-07-26T23:23:50+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post: Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"weixin:\/\/wxpay\/bizpayurl?pr=4M57PEY","qrcode":"weixin:\/\/wxpay\/bizpayurl?pr=4M57PEY"},"code":1}
+[ 2018-07-26T23:24:17+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post: Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"https:\/\/qr.alipay.com\/bax06228sk8oxtduta7p2003","qrcode":"https:\/\/qr.alipay.com\/bax06228sk8oxtduta7p2003"},"code":1}
+[ 2018-07-26T23:25:21+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post:{"uid":55,"istype":2,"orderuid":"o1234i","goodsname":2010,"orderid":1532618718,"notify_url":"www.baidu.com","need_qrcode":1,"cashier_account":"","key":"49b8a2a8bc920d8efc201e0c750aa9dd"} Result:
+[ 2018-07-26T23:26:20+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post:{"uid":55,"istype":2,"orderuid":"o1234i","goodsname":2010,"orderid":1532618778,"notify_url":"www.baidu.com","need_qrcode":1,"cashier_account":"","key":"5aae120cae039b3e2b32c77594dde599"} Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"https:\/\/qr.alipay.com\/bax01718tolwgzyr1kq7005b","qrcode":"https:\/\/qr.alipay.com\/bax01718tolwgzyr1kq7005b"},"code":1}
+[ 2018-07-26T23:37:55+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post:{"uid":55,"istype":1,"orderuid":"o1234i","goodsname":1,"orderid":1532619473,"notify_url":"www.baidu.com","need_qrcode":1,"cashier_account":"","key":"ecc519427d301b826e9469a8adefe24b"} Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"weixin:\/\/wxpay\/bizpayurl?pr=0G6hQCj","qrcode":"weixin:\/\/wxpay\/bizpayurl?pr=0G6hQCj"},"code":1}

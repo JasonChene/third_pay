@@ -1,0 +1,4 @@
+[ 2018-07-27T00:04:32+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post:{"uid":55,"istype":1,"orderuid":"o1234i","goodsname":0.01,"orderid":1532627221,"notify_url":"www.baidu.com","need_qrcode":1,"cashier_account":"","key":"7373fe8a268c4b624134ce950b018679"} Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"weixin:\/\/wxpay\/bizpayurl?pr=KRwUxY8","qrcode":"weixin:\/\/wxpay\/bizpayurl?pr=KRwUxY8"},"code":1}
+[ 2018-07-27T00:12:12+08:00 ] 127.0.0.1 /index.php/Home/Index/doPostTest.html
+INFO: 日志！post:{"uid":55,"istype":1,"orderuid":"o1234i","goodsname":0.01,"orderid":"15326215292375","notify_url":"www.baidu.com","need_qrcode":1,"cashier_account":"","key":"03110f6ad7838c7ff5ffe1b88b34f521"} Result:{"msg":"\u6210\u529f\u9884\u5145\u503c","data":{"pay_url":"","pay_img_url":"weixin:\/\/wxpay\/bizpayurl?pr=HgBl7jc","qrcode":"weixin:\/\/wxpay\/bizpayurl?pr=HgBl7jc"},"code":1}
