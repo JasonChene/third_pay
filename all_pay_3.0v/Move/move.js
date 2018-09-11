@@ -37,10 +37,10 @@ async function move(conf) {
     if (!exists) fs.mkdir(conf.move_path + 'old')
     console.log('old目录已存在')
     await asyncForEach(conf.file_name, async function (file, index) {
-        await renameAsync(conf.file_path + file, conf.move_path + file, file);
-        await renameAsync(conf.file_path + conf.old_file_name[index], conf.move_path + 'old/' + file, conf.old_file_name[index]);
+        await renameAsync(conf.file_path + '/' + file, conf.move_path + '/' + file, file);
+        await renameAsync(conf.file_path + '/' + conf.old_file_name[index], conf.move_path + '/old/' + file, conf.old_file_name[index]);
     })
-    console.log('搬移成功');
+    console.log('done');
     console.log(conf.message.err)
     console.log(JSON.stringify(err_file))
     console.log(conf.message.success)
