@@ -51,19 +51,19 @@ $data = array(
 "fx_sign" => array(
 "str_arr" => array(
 "fx_merchant_id" => $pay_mid,
-"fx_notify_url" => $notify_url,
-"fx_order_amount" => $MOAmount,
 "fx_order_id" => $order_no,
+"fx_order_amount" => $MOAmount,
+"fx_notify_url" => $notify_url,
 ),
-"mid_conn" => "=",
-"last_conn" => "&",
+"mid_conn" => "",
+"last_conn" => "",
 "encrypt" => array(
 "0" => "MD5",
 "1" => "MD5",
 ),
-"key_str" => "&key=",
+"key_str" => "",
 "key" => $pr_key,
-"havekey" => "1",
+"havekey" => "",
 ),
 );
 #变更参数设定
