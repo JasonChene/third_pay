@@ -48,27 +48,9 @@ if(!empty($data)){
 
 
 
-	#到账判断
-	if ($success_msg == $success_code) {
-	// if ( $mysign == $sign) {
-			$result_insert = update_online_money($order_no, $mymoney);
-			if ($result_insert == -1) {
-				$message = ("会员信息不存在，无法入账");
-			}else if($result_insert == 0){
-				$message = ("支付成功");
-			}else if($result_insert == -2){
-				$message = ("数据库操作失败");
-			}else if($result_insert == 1){
-				$message = ("支付成功");
-			} else {
-				$message = ("支付失败");
-			}
-		// }else{
-		// 	$message = ('签名不正确！');
-		// }
-	}else{
-		$message = ("交易失败");
-	}
+
+	$message = ("支付成功");
+	
 }else{
 	$message = ("支付成功");
 }

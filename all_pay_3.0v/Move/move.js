@@ -11,33 +11,33 @@ async function asyncForEach(array, callback) {
     }
 }
 
+function existsAsync(path) {
+    return new Promise(function (resolve) {
+        fs.exists(path, resolve)
+    });
+}
+
+function renameAsync(path, oldpath) {
+    return new Promise(function (resolve) {
+        fs.rename(path, oldpath, function (err) {
+            (err) ? err_file.push(file) : success_file.push(file);
+        });
+    });
+}
+
 
 async function mkdir_old(conf) {
     //创建old资料夹
-    let exists = await fs.exists(conf.move_path + 'old')
-
-    if (await !exists) fs.mkdir(conf.move_path + 'old')
-    console.log(exists);
-    return ('old目录已存在')
-
-    //     if (!exists) fs.mkdir(conf.move_path + 'old')
-    //     return ('old建立成功')
-    //     // if (!exists) {
-    //     //     fs.mkdir(conf.move_path + 'old', function (err) {
-    //     //         callback(conf.move_path + 'old' + '创建目录成功');
-    //     //     })
-    //     // } else {
-    //     //     callback(conf.move_path + 'old' + '目录已存在');
-    //     // }
-    // });
+    exists = await existsAsync(conf.move_path + 'old')
+    if (!exists) fs.mkdir(conf.move_path + 'old')
+    console.log('old目录已存在')
 }
 
 async function move(conf) {
     console.log('开始搬移档案')
     console.log('原档案位置：' + conf.file_path)
     console.log('后档案位置：' + conf.move_path)
-    // let mkdir = await mkdir_old(conf);
-    // console.log(mkdir);
+    await mkdir_old(conf);
     await asyncForEach(conf.file_name, function (file, index) {
         //搬移新系统档案
         fs.rename(conf.file_path + file, conf.move_path + file, function (err) {
