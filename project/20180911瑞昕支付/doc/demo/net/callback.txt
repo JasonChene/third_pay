@@ -1,0 +1,36 @@
+ /// <summary>
+        /// 支付宝H5
+        /// </summary>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
+        public string AliPayBack()
+        {
+            try
+            {
+                System.IO.Stream s = Request.InputStream;
+                int count = 0;
+                byte[] buffer = new byte[1024];
+                StringBuilder builder = new StringBuilder();
+                while ((count = s.Read(buffer, 0, 1024)) > 0)
+                {
+                    builder.Append(Encoding.UTF8.GetString(buffer, 0, count));
+                }
+                s.Flush();
+                s.Close();
+                s.Dispose();
+                FileLog.WriteLog("AliPayBack支付宝H5回调:" + builder.ToString());
+                
+               //builder为返回的json 对json进行解析，然后处理自己的业务逻辑
+
+
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("回调异常：" + ex);
+                return string.Empty;
+            }
+
+
+
+        }

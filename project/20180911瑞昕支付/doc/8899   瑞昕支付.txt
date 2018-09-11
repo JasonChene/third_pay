@@ -1,0 +1,6 @@
+商户账号：zhuce8989@gmail.com
+商户密码：3030746228
+后台登录：http://user.bpescp.cn/Login.aspx
+对接秘钥：在商户号的接入信息里
+商户号：8014
+MD5密钥：E1roZsX6wQfFx1Xw7l2WlFAPzdrdvnhd
