@@ -102,6 +102,10 @@ if ($row['status'] == '1') {
   echo "错误码：".$row['status']."错误讯息：".$row['msg'];
   exit();
 }
+echo '正在为您跳转中，请稍候......';
+header('Location:' . $jumpurl);
+exit();
+
 ?>
 <html>
   <head>
