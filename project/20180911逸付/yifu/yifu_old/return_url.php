@@ -3,14 +3,12 @@
 include_once("../../../database/mysql.config.php");//原数据库的连接方式
 // include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("-----return");
 
 #接收资料
 #request方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value . "-----return");
 }
 
 #设定固定参数
@@ -55,9 +53,7 @@ foreach ($data as $arr_key => $arr_val) {
 	}
 }
 $signtext = substr($signtext, 0, -1) . '&paySecret=' . $pay_mkey;//验签字串
-write_log("signtext=" . $signtext);
 $mysign = strtoupper(md5($signtext));//签名
-write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
