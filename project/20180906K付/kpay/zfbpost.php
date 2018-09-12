@@ -3,6 +3,7 @@ header("Content-type:text/html; charset=utf-8");
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
+include_once("./aes7.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
@@ -99,7 +100,7 @@ $data = array(
   "merNo" => $pay_mid,
   "orderId" => $order_no,
   "time" => (int)time(),
-  "amount" => (int)$order_no,
+  "amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''),
   "productType" => "01",
   "product" => "pay",
   "userType" => (int)0,
@@ -109,8 +110,14 @@ $data = array(
   "notifyUrl" => $merchant_url,
   "sign" => ""
 );
+
+$post_data = array(
+  'merAccount' => $pay_account,//商户标识
+  'data' => '',
+);
+
 #变更参数设置
-$scan = 'wx';
+$scan = 'zfb';
 $data['payWay'] = 'ALIPAY';
 $data['payType'] = 'SCANPAY_ALIPAY';
 if (_is_mobile()) {
@@ -141,20 +148,22 @@ $signtext .= $pay_mkey;
 $sign = sha1($signtext);
 $data['sign'] = $sign;
 
+$json_data = json_encode($data);
+$aes = new OpenSSLAES($pay_mkey);
+$encrypted = $aes->encrypt($json_data);
+$post_data['data'] = $encrypted;
+
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
+$res = curl_post($form_url, http_build_query($post_data));
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['code'] != '000000') {
   echo '错误代码:' . $row['code'] . "<br>";
   echo '错误讯息:' . $row['msg'] . "<br>";
   exit;
-}else {
-  if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
-  }
+} else {
+  $jumpurl = $row['data']['qrCode'];
 }
 #跳轉方法
 
