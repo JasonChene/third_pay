@@ -48,7 +48,7 @@ $data = array(
   "outTradeNo" => $order_no,
   "orderPrice" => $MOAmount,
   "notifyUrl" => $notify_url,
-  "productType" => '50000103',
+  "productType" => '50000101',//B2C T0:50000103,B2C T1:50000101
   "orderTime" => $order_time,
   "productName" => 'productName',
   "orderIp" => $client_ip,
@@ -66,7 +66,7 @@ $data = array(
       "outTradeNo" => $order_no,
       "payKey" => $pay_account,
       "productName" => "productName",
-      "productType" => "50000103",
+      "productType" => "50000101",
       "returnUrl" => $return_url,
     ),
     "mid_conn" => "=",
@@ -100,16 +100,6 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-// #curl获取响应值
-// $res = curl_post($form_url, http_build_query($data), "POST");
-// #跳转qrcode
-// $url = $row;
-// if ($row[''] == '') {
-//   $jumpurl = $url;
-// } else {
-//   echo "错误码：" . $row[''] . "错误讯息：" . $row[''];
-//   exit();
-// }
 ?>
 <html>
   <head>

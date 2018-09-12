@@ -103,9 +103,9 @@ $row = json_decode($res, 1);
 $url = $row['payMessage'];
 if ($row['resultCode'] == '0000') {
   $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
 } else {
-  echo "错误码：" . $row['resultCode'] . "错误讯息：" . $row['errMsg'];
+  echo "错误码：" . $row['resultCode'] . "<br>错误讯息：" . $row['errMsg'] . $row['payMessage'];
   exit();
 }
 ?>

@@ -102,10 +102,14 @@ $row = json_decode($res, 1);
 #跳转qrcode
 $url = $row['payMessage'];
 if ($row['resultCode'] == '0000') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+  if (_is_mobile()) {
+    $jumpurl = $url;
+  } else {
+    $qrurl = QRcodeUrl($url);
+    $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
+  }
 } else {
-  echo "错误码：" . $row['resultCode'] . "错误讯息：" . $row['errMsg'];
+  echo "错误码：" . $row['resultCode'] . "<br>错误讯息：" . $row['errMsg'] . $row['payMessage'];
   exit();
 }
 ?>
