@@ -96,7 +96,7 @@ $sign = md5($md5);
     <link rel="stylesheet" type="text/css" href="css/index.css" media="all">
 </head>
 <body onLoad="document.ddbill.submit();">
-	<form name="ddbill" id="ddbill" method="post" action="<?php echo $payUrl ?>">
+	<form name="ddbill" id="ddbill" method="get" action="<?php echo $payUrl ?>">
 			<input type="hidden" name="parter"		  value="<?php echo $parter ?>" />
 			<input type="hidden" name="type"		  value="<?php echo $type ?>" />
 			<input type="hidden" name="value"		  value="<?php echo $value ?>" />
