@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('点付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/dianfu/post.php', '/pay/dianfu/wxpost.php', '/pay/dianfu/zfbpost.php', '/pay/dianfu/return_url.php', '/pay/dianfu/return_url.php', '/pay/dianfu/return_url.php', '/pay/dianfu/notify_url.php', '/pay/dianfu/notify_url.php', '/pay/dianfu/notify_url.php', '1', '1', '/pay/dianfu/qqpost.php', '/pay/dianfu/return_url.php', '/pay/dianfu/notify_url.php');
+ VALUES ('卡付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/kafu/post.php', '/pay/kafu/wxpost.php', '/pay/kafu/zfbpost.php', '/pay/kafu/return_url.php', '/pay/kafu/return_url.php', '/pay/kafu/return_url.php', '/pay/kafu/notify_url.php', '/pay/kafu/notify_url.php', '/pay/kafu/notify_url.php', '1', '1', '/pay/kafu/qqpost.php', '/pay/kafu/return_url.php', '/pay/kafu/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('点付', '3061691902554406', 'G3LC7qPhy8KE4LzdVFE91IlOnjxf0nq7', 'NULL', 'http://pay7.5566205.com', '点付', '1', '1', '1', '点付', '1');
+ VALUES ('卡付', '2125', '80fa2bcd15f24a2fa0801091af403774', 'fa369c4af0994a84b489ea7d96990ff5', 'http://pay7.5566205.com', '卡付', '1', '1', '1', '卡付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('点付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/dianfu/post.php', '/pay/dianfu/wxpost.php', '/pay/dianfu/zfbpost.php', '/pay/dianfu/return_url.php', '/pay/dianfu/return_url.php', '/pay/dianfu/return_url.php', '/pay/dianfu/notify_url.php', '/pay/dianfu/notify_url.php', '/pay/dianfu/notify_url.php', '1', '1', '/pay/dianfu/qqpost.php', '/pay/dianfu/return_url.php', '/pay/dianfu/notify_url.php');
+ VALUES ('卡付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/kafu/post.php', '/pay/kafu/wxpost.php', '/pay/kafu/zfbpost.php', '/pay/kafu/return_url.php', '/pay/kafu/return_url.php', '/pay/kafu/return_url.php', '/pay/kafu/notify_url.php', '/pay/kafu/notify_url.php', '/pay/kafu/notify_url.php', '1', '1', '/pay/kafu/qqpost.php', '/pay/kafu/return_url.php', '/pay/kafu/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('点付', '3061691902554406', 'G3LC7qPhy8KE4LzdVFE91IlOnjxf0nq7', 'NULL', 'http://paytest.7k111.com', '点付', '1', '1', '1', '点付', '1');
+ VALUES ('卡付', '2125', '80fa2bcd15f24a2fa0801091af403774', 'fa369c4af0994a84b489ea7d96990ff5', 'http://paytest.7k111.com', '卡付', '1', '1', '1', '卡付', '1');

@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -70,12 +70,25 @@ function QRcodeUrl($code)
   }
   return $code2;
 }
+function encrypt_rsa($data, $pu_key){
+  $split = str_split($data, 100);// 1024bit && OPENSSL_PKCS1_PADDING  不大于117即可
+  $encode_data = '';
+  foreach ($split as $part) {
+    $isOkay = openssl_public_encrypt($part, $en_data, $pu_key);
+    if(!$isOkay){
+          return false;
+    }
+    // echo strlen($en_data),'<br/>';
+    $encode_data .= base64_encode($en_data);
+  }
+  return $encode_data;
+}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -88,30 +101,25 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://www.xinasset.com/Pay_Index.html';
+$form_url = 'http://www.openpays.cn/api/order/pay';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
+$user_key = $pay_account;//用户key
+$rand = rand(10,99);
 $data = array(
-  "pay_memberid" => $pay_mid,
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date('Y-m-d H:i:s'),
-  "pay_bankcode" => '',
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => '',
-  "pay_productname" => "pay"
+  "key" => md5($rand.$user_key),
+  "member_id" => $pay_mid,
+  "rand" => $rand,
+  "order_id" => $order_no,
+  "user_name" => $_REQUEST['S_Name'],
+  "order_money" => number_format($_REQUEST['MOAmount'], 0, '.', ''),
+  "istype" => "2",
 );
 #变更参数设置
-$scan = 'qq';
-$data['pay_bankcode'] = '908';
-if (_is_mobile()) {
-  $data['pay_bankcode'] = '905';
-}
-
+$scan = 'wx';
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
@@ -123,23 +131,25 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
+$pu_key = openssl_pkey_get_public($pay_mkey);
+if ($pu_key == false) {
+  echo "打开公钥出错";
+  exit;
 }
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
+$data = json_encode($data,320);
+$encrypted = encrypt_rsa($data,$pu_key);//公钥加密
 
 #curl获取响应值
+$res = curl_post($form_url, ['info'=>$encrypted]);
+$row = json_decode($res, 1);
 #跳转
-$jumpurl = $form_url;
-$form_data = $data;
+if ($row['error'] != '100') {
+  echo '错误代码:' . $row['error'] . "<br>";
+  echo '错误讯息:' . $row['msg'] . "<br>";
+  exit;
+} else {
+    $jumpurl = $row['qrcode'];
+}
 #跳轉方法
 
 ?>
