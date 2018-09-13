@@ -1,0 +1,9 @@
+public string sign(string content, string privateKey)
+        {
+            byte[] Data = Encoding.UTF8.GetBytes(content);
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(privateKey);
+            byte[] signatureBytes = rsa.SignData(Encoding.UTF8.GetBytes(content), new SHA1CryptoServiceProvider());
+            string sign = Convert.ToBase64String(signatureBytes);
+            return sign;
+        }

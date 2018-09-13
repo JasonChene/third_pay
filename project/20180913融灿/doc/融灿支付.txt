@@ -1,0 +1,34 @@
+登入网址   merchant.rcpays.com   商户ID M880124   15010503659    123456
+用谷歌打开后台，鼠标右键，点击中文版，键盘按T  点一次人头 翻译一个页面
+
+
+生成公钥  私钥网址 http://web.chacuo.net/netrsakeypair
+
+
+公钥
+
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0d5Ct/TT8Qgnl3iVpBbDsa8yA
+/xYD9uSpVN1EVOPeeAY+g96v8j2z1l8vzf1rxIa2//MFuH1JvvcAmqrb4rf2ym8J
+BEIQrWWEhhIEqfu7gjecySPQxihIGnXZR6ArQ6ROvuHRTdir6rRoA04/PjmllfmS
+YPwpenqlUjxx/4yMmQIDAQAB
+-----END PUBLIC KEY-----
+
+
+私钥
+-----BEGIN PRIVATE KEY-----
+MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBALR3kK39NPxCCeXe
+JWkFsOxrzID/FgP25KlU3URU4954Bj6D3q/yPbPWXy/N/WvEhrb/8wW4fUm+9wCa
+qtvit/bKbwkEQhCtZYSGEgSp+7uCN5zJI9DGKEgaddlHoCtDpE6+4dFN2KvqtGgD
+Tj8+OaWV+ZJg/Cl6eqVSPHH/jIyZAgMBAAECgYEAsSHiakRr62XOXUdMJOcnHwc3
+9S1rKHz/N41KmTVRbB0W0+mPe9ci5Q924m8nXM3LBHf4yxaoMugzfO5S4fyIXxdV
+kTgKqr6oMgldUud2MdMkCkAxu2wEE21dW14zrDJQcV9/S1cZsByVRKbDN9BUqpNr
+ivgoQ5Tw3qD9izMvlOECQQDfW8i4Ph4vzHHR0NTWh79+hCw9x2qPWBkguq1Gc1ZZ
+350hG6upKdi+h7G9U43Ne7nDHma+gcikXY4QkNkLzNtdAkEAztcjnt2ou6dx8NYr
+vVpt8Nh0GfBRwFi/AQz79ouMMhPT9itI1qPsb06jZLYUj7G9Vw/uoGtqX/5WU+uv
+rnNebQJBAKRr+JJIiAg/w/nkdQmH3JvRyI+h4PusqrLBORUHiqWWSyE4MWHSAFAh
+q+HnRBfj4JeWJaRP/dehVxcyydQ59bECQQCfJuUOqWnaslW2xWS0dy9fAX4cM1EE
+GoUljtMU+n0uTxlqMhYCqfEUGEMbDAs4IcAZjHXFU8FvCWlte00bg0PlAkEAi34i
+d612Q2grhdp6+2jw+Pxbng3vuuEybrWImqDDkT5psBSN01tRaQyjkNDu2IMrQp/D
+n29LeUHLzMMwv39/3g==
+-----END PRIVATE KEY-----
