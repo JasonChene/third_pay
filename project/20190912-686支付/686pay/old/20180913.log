@@ -1,0 +1,20 @@
+2018-09-13 05:47:45 notify
+2018-09-13 05:47:45 request方法
+2018-09-13 05:47:45 {"shopCode":"686cz1223","outOrderNo":"21436920180913054715","goodsClauses":"goodsClauses","tradeAmount":"10_00","code":"0","nonStr":"6GQ0NweejwaanwCq","msg":"SUCCESS","sign":"c740dc8fa2eae0a4253a4a98a5db39ad"}=
+2018-09-13 05:47:45 post方法
+2018-09-13 05:47:45 {"shopCode":"686cz1223","outOrderNo":"21436920180913054715","goodsClauses":"goodsClauses","tradeAmount":"10_00","code":"0","nonStr":"6GQ0NweejwaanwCq","msg":"SUCCESS","sign":"c740dc8fa2eae0a4253a4a98a5db39ad"}=
+2018-09-13 05:47:45 input方法
+2018-09-13 05:47:45 {"shopCode":"686cz1223","outOrderNo":"21436920180913054715","goodsClauses":"goodsClauses","tradeAmount":"10.00","code":"0","nonStr":"6GQ0NweejwaanwCq","msg":"SUCCESS","sign":"c740dc8fa2eae0a4253a4a98a5db39ad"}
+2018-09-13 05:47:45 input方法
+2018-09-13 05:47:45 {"shopCode":"686cz1223","outOrderNo":"21436920180913054715","goodsClauses":"goodsClauses","tradeAmount":"10.00","code":"0","nonStr":"6GQ0NweejwaanwCq","msg":"SUCCESS","sign":"c740dc8fa2eae0a4253a4a98a5db39ad"}
+2018-09-13 05:47:45 shopCode=686cz1223
+2018-09-13 05:47:45 outOrderNo=21436920180913054715
+2018-09-13 05:47:45 goodsClauses=goodsClauses
+2018-09-13 05:47:45 tradeAmount=10.00
+2018-09-13 05:47:45 code=0
+2018-09-13 05:47:45 nonStr=6GQ0NweejwaanwCq
+2018-09-13 05:47:45 msg=SUCCESS
+2018-09-13 05:47:45 sign=c740dc8fa2eae0a4253a4a98a5db39ad
+2018-09-13 05:47:45 signtext=code=0&goodsClauses=goodsClauses&msg=SUCCESS&nonStr=6GQ0NweejwaanwCq&outOrderNo=21436920180913054715&shopCode=686cz1223&tradeAmount=10.00&key=qFY8OltTZJdGtr0SyYRiCwUtCv4r2huT
+2018-09-13 05:47:45 mysign=c740dc8fa2eae0a4253a4a98a5db39ad
+2018-09-13 05:47:45 SUCCESSat 1
