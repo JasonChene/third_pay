@@ -1,30 +1,34 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
+// write_log("return");
+
+$data = array();
 
 #接收资料
-#REQUEST方法
-$data = array();
-foreach ($_REQUEST as $key => $value) {
+#post方法
+// write_log('POST方法');
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	// write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
 	$order_no = $data['orderNo']; //订单号
-	$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
-	$success_msg = $data['orderStatus'];//成功讯息
-	$success_code = "Success";//文档上的成功讯息
-	$sign = $data['sign'];//签名
-	$echo_msg = "SUCCESS";//回调讯息
+	$mymoney = number_format($data['orderAmount']/100, 2, '.', ''); //订单金额
+	$success_msg = $data['payResult'];//成功讯息
+	$success_code = "1";//文档上的成功讯息
+	$sign = $data['signMsg'];//签名
+	$echo_msg = "success";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	// $stmt = $mydata1_db->prepare($sql);
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -32,7 +36,8 @@ if(!empty($data)){
 	$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	// $stmt = $mydata1_db->prepare($sql);
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
@@ -40,29 +45,38 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
+		// write_log('非法提交参数');
 		exit;
 	}
+	$public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公钥
+	$public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
+	$private_pem = chunk_split($pay_mkey, 64, "\r\n");//转换为pem格式的私钥
+	$private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
 
-#RSA解密方式
-$signtext = "merchantCode=".$data['merchantCode']."&orderNo=".$data['orderNo']."&amount=".$data['amount']."&successAmt=".$data['successAmt']."&payOrderNo=".$data['payOrderNo']."&orderStatus=".$data['orderStatus']."&extraReturnParam=".$data['extraReturnParam'];
-write_log('signtext = ' . $signtext);
-$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-write_log("public_pem=".$public_pem);
-$platformPublicKey = openssl_get_publickey($public_pem);
-if(!$platformPublicKey){
-	echo "开启公钥失败";
-	exit;
-}
-write_log("sign=".base64_decode($sign));
-$signsuccess = openssl_verify($signtext,base64_decode($sign),$platformPublicKey,OPENSSL_ALGO_SHA1);
-openssl_free_key($platformPublicKey);
-write_log("signsuccess=".$signsuccess);
+	#验签方式
+	$noarr = array('signMsg','signType');//不加入签名的array key值
+	ksort($data);
+	$signtext = "";
+	foreach ($data as $arr_key => $arr_val) {
+		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+			$signtext .= $arr_key . '=' . $arr_val . '&';
+		}
+	}
+	$signtext = substr($signtext, 0, -1);//验签字串
+	$publickey = openssl_get_publickey($public_pem);
+	if ($publickey == false) {
+		echo "打开公钥出错";
+		exit();
+	}
+	$result = openssl_verify($signtext, $sign, $publickey,OPENSSL_ALGO_SHA1);
+	openssl_free_key($publickey);
+	// write_log("signtext=".$signtext);
+	// write_log("result=".$result);
 
 
 	#到账判断
 	if ($success_msg == $success_code) {
-	if ($signsuccess) {
+	if ($result == 1) {
 			$result_insert = update_online_money($order_no, $mymoney);
 			if ($result_insert == -1) {
 				$message = ("会员信息不存在，无法入账");
