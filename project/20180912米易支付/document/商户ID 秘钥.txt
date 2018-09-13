@@ -1,0 +1,7 @@
+接入编号ID:10003  密钥：d1b178a98429fb979f4fde57cf0bf67032c530af
+
+
+后台登入地址:http://miyipay.com/login
+
+用户：uuu111
+密码：112233
