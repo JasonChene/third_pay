@@ -5,37 +5,6 @@ include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 write_log("notify");
 
-#############################################
-#request方法
-write_log('request方法');
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-#post方法
-write_log('post方法');
-foreach ($_POST as $key => $value) {
-	$data[$key] = $value;
-	write_log($key."=".$value);
-}
-#input方法
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-write_log($input_data);
-// $res=json_decode($input_data,1);//json回传资料
-
-// $xml=(array)simplexml_load_string($input_data) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XML回传资料
-
-// $xml=(array)simplexml_load_string($input_data,'SimpleXMLElement',LIBXML_NOCDATA) or die("Error: Cannot create object");
-// $res=json_decode(json_encode($xml),1);//XMLCDATA回传资料
-
-// foreach ($res as $key => $value) {
-// 	$data[$key] = $value;
-// 	write_log($key."=".$value);
-// }
-###########################################
-
 
 #接收资料
 #post方法
@@ -80,15 +49,18 @@ if ($pay_mid == "" || $pay_mkey == "") {
 #RSA解密方式
 $signtext = "merchantCode=".$data['merchantCode']."&orderNo=".$data['orderNo']."&amount=".$data['amount']."&successAmt=".$data['successAmt']."&payOrderNo=".$data['payOrderNo']."&orderStatus=".$data['orderStatus']."&extraReturnParam=".$data['extraReturnParam'];
 write_log('signtext = ' . $signtext);
-$platformPublicKey = openssl_get_publickey($pay_account);
+$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
+$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
+write_log("public_pem=".$public_pem);
+$platformPublicKey = openssl_get_publickey($public_pem);
 if(!$platformPublicKey){
 	echo "开启公钥失败";
 	exit;
 }
-write_log("sign=".$sign);
+write_log("sign=".base64_decode($sign));
 $signsuccess = openssl_verify($signtext,base64_decode($sign),$platformPublicKey,OPENSSL_ALGO_SHA1);
 openssl_free_key($platformPublicKey);
-write_log("signsuccess=",$signsuccess);
+write_log("signsuccess=".$signsuccess);
 
 #到账判断
 if ($success_msg == $success_code) {
