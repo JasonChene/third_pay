@@ -130,7 +130,6 @@ if (strstr($pay_type, "京东钱包")) {
   }
 }
 payType_bankname($scan, $pay_type);
-// ksort($content);
 $data['content'] = json_encode($content);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
