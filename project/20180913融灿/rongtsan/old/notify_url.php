@@ -3,7 +3,7 @@
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-write_log("notify");
+// write_log("notify");
 
 
 #接收资料
@@ -11,12 +11,12 @@ write_log("notify");
 $data = array();
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
 
 #设定固定参数
 $order_no = $data['orderNo']; //订单号
-$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
+$mymoney = number_format($data['amount'] / 100, 2, '.', ''); //订单金额
 $success_msg = $data['orderStatus'];//成功讯息
 $success_code = "Success";//文档上的成功讯息
 $sign = $data['sign'];//签名
@@ -47,54 +47,54 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #RSA解密方式
-$signtext = "merchantCode=".$data['merchantCode']."&orderNo=".$data['orderNo']."&amount=".$data['amount']."&successAmt=".$data['successAmt']."&payOrderNo=".$data['payOrderNo']."&orderStatus=".$data['orderStatus']."&extraReturnParam=".$data['extraReturnParam'];
-write_log('signtext = ' . $signtext);
-$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
-$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
-write_log("public_pem=".$public_pem);
+$signtext = "merchantCode=" . $data['merchantCode'] . "&orderNo=" . $data['orderNo'] . "&amount=" . $data['amount'] . "&successAmt=" . $data['successAmt'] . "&payOrderNo=" . $data['payOrderNo'] . "&orderStatus=" . $data['orderStatus'] . "&extraReturnParam=" . $data['extraReturnParam'];
+// write_log('signtext = ' . $signtext);
+$public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公钥
+$public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
+// write_log("public_pem=".$public_pem);
 $platformPublicKey = openssl_get_publickey($public_pem);
-if(!$platformPublicKey){
+if (!$platformPublicKey) {
 	echo "开启公钥失败";
 	exit;
 }
-write_log("sign=".base64_decode($sign));
-$signsuccess = openssl_verify($signtext,base64_decode($sign),$platformPublicKey,OPENSSL_ALGO_SHA1);
+// write_log("sign=".base64_decode($sign));
+$signsuccess = openssl_verify($signtext, base64_decode($sign), $platformPublicKey, OPENSSL_ALGO_SHA1);
 openssl_free_key($platformPublicKey);
-write_log("signsuccess=".$signsuccess);
+// write_log("signsuccess=".$signsuccess);
 
 #到账判断
 if ($success_msg == $success_code) {
-  if ($signsuccess) {
+	if ($signsuccess) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
+			// write_log("会员信息不存在，无法入账");
 			exit;
-		}else if($result_insert == 0){
+		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			write_log($echo_msg.'at 0');
+			// write_log($echo_msg.'at 0');
 			exit;
-		}else if($result_insert == -2){
+		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			write_log("数据库操作失败");
+			// write_log("数据库操作失败");
 			exit;
-		}else if($result_insert == 1){
+		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			write_log($echo_msg.'at 1');
+			// write_log($echo_msg.'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
-			write_log("支付失败");
+			// write_log("支付失败");
 			exit;
 		}
-	}else{
+	} else {
 		echo ('签名不正确！');
-		write_log("签名不正确！");
+		// write_log("签名不正确！");
 		exit;
 	}
-}else{
+} else {
 	echo ("交易失败");
-	write_log("交易失败");
+	// write_log("交易失败");
 	exit;
 }
 
