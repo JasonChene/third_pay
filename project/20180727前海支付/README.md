@@ -23,4 +23,4 @@
 档案位置：php@60.245.62.221/chianhaipay
 
 修改档案：post,qqpost,wxpost,wxqqjdpost,zfbpost
-备注：修改网关
+备注：修改网关http://www.kanuoyishu.com:9091
