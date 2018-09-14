@@ -111,7 +111,7 @@ $data = array(
 $scan = 'zfb';
 $form_url = 'http://api.b4pay.hk/pay/aliSPay.do';//扫码提交地址
 if (_is_mobile()) {
-  $form_url = 'http://api.b4pay.hk/pay/aliH5Pay.do';//H5提交地址
+  $form_url = 'http://api.b4pay.hk/pay/aliSPay.do';//H5提交地址
 }
 payType_bankname($scan, $pay_type);
 
@@ -144,13 +144,12 @@ $data_str = http_build_query($data);
 $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
-
 if ($row['code'] != 1) {
   echo '错误代码:' . $row['code'] . "\n";
   echo '错误讯息:' . $row['msg'] . "\n";
   exit;
 } else if (_is_mobile()) {
-  $qrcodeUrl = $row['data']['qrCode'];
+  $qrcodeUrl = $row['data']['qr_code'];
   $jumpurl = $qrcodeUrl;
   echo '正在为您跳转中，请稍候......';
   header('Location:' . $jumpurl);
