@@ -35,7 +35,6 @@ function addsign($encrypt,$signtext,$key=null){ //AES還沒加
     
     $sign='';
     if($encrypt == 'MD5'){
-      echo($signtext);
       $sign = md5($signtext);
     }elseif ($encrypt == 'SHA') {
       $sign = sha1($signtext);
