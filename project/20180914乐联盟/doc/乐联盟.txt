@@ -1,0 +1,7 @@
+后台地址：http://member.lepayunion.com/index/index.html
+账号:1667341779@qq.com 密码:qqww1122
+MD5密钥：f9c8aea5aaef991b449e5b636e927308
+商户号：6
+对接文档：http://doc.lepayunion.com/profession.html
+使用 高级接入 自动上分。
+技术QQ：2475806128
