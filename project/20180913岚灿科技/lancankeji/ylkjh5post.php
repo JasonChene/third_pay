@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 岚灿科技
-#支付方式 : zfb;
+#支付方式 : yl;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 // include_once("../../../database/mysql.config.php");//原数据库的连接方式
@@ -48,7 +48,7 @@ $data = array(
   "orderNo" => $order_no,
   "payAmt" => $MOAmount,
   "notifyUrl" => $notify_url,
-  "tradeType" => '12',//支付宝WAP
+  "tradeType" => '51',//银联WAP
   "goodsName" => 'goodsName',
   "returnUrl" => $return_url,
   "sign" => array(
@@ -57,7 +57,7 @@ $data = array(
       "orderNo" => $order_no,
       "payAmt" => $MOAmount,
       "returnUrl" => $return_url,
-      "tradeType" => '12',//支付宝WAP
+      "tradeType" => '51',//银联WAP
       "userId" => $pay_mid,
     ),
     "mid_conn" => "=",
@@ -71,8 +71,8 @@ $data = array(
   ),
 );
 #变更参数设定
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_ylkj";
+$bankname = $pay_type . "->银联快捷在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {

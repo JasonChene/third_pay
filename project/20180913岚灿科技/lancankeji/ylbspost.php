@@ -30,7 +30,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://47.75.172.118/ordermd5.do';
+$form_url = 'http://lancan2018.com/orderpay.do';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -71,8 +71,8 @@ $data = array(
   ),
 );
 #变更参数设定
-$payType = $pay_type . "_ylkj";
-$bankname = $pay_type . "->银联快捷在线充值";
+$payType = $pay_type . "_yl";
+$bankname = $pay_type . "->银联钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -96,10 +96,9 @@ $row = json_decode($res, 1);
 #跳转qrcode
 $url = $row['payUrl'];
 if ($row['retCode'] == '0') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=yl&code=' . $qrurl;
+  $jumpurl = $url;
 } else {
-  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['etMsg'];
+  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['retMsg'];
   exit();
 }
 ?>

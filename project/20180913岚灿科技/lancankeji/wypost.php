@@ -30,7 +30,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://47.75.172.118/ordermd5.do';
+$form_url = 'http://lancan2018.com/orderpay.do';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -96,32 +96,10 @@ $row = json_decode($res, 1);
 #跳转qrcode
 $url = $row['payUrl'];
 if ($row['retCode'] == '0') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=wy&code=' . $qrurl;
+  echo $url;
+  exit;
 } else {
-  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['etMsg'];
+  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['retMsg'];
   exit();
 }
 ?>
-<html>
-  <head>
-      <title>跳转......</title>
-      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-          <p>正在为您跳转中，请稍候......</p>
-          <?php
-          if (isset($form_data)) {
-            foreach ($data as $arr_key => $arr_value) {
-              ?>
-              <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php 
-        }
-      } ?>
-      </form>
-      <script language="javascript">
-          document.getElementById("frm1").submit();
-      </script>
-   </body>
-</html>

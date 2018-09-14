@@ -30,7 +30,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://47.75.172.118/ordermd5.do';
+$form_url = 'http://lancan2018.com/orderpay.do';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -99,7 +99,7 @@ if ($row['retCode'] == '0') {
   $qrurl = QRcodeUrl($url);
   $jumpurl = '../qrcode/qrcode.php?type=jd&code=' . $qrurl;
 } else {
-  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['etMsg'];
+  echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['retMsg'];
   exit();
 }
 ?>
