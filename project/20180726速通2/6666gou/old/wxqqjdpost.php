@@ -153,9 +153,13 @@ if ($row['code'] != '0') {
   echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
-  if(_is_mobile()){
+  if(_is_mobile() && $scan != 'wx'){
     $jumpurl = $row['data']['payUrl'];
-  }else{
+  }elseif ($scan == 'wx') {
+    $jumpurl = $row['data']['payUrl'];
+    header('Location:'.$jumpurl);
+    exit;
+  } else{
     $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['payUrl']);
   }
 }

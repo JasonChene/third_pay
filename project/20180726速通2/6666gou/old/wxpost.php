@@ -147,11 +147,9 @@ if ($row['code'] != '0') {
   echo  '错误讯息:' . $row['msg']."<br>";
   exit;
 }else {
-  if(_is_mobile()){
-    $jumpurl = $row['data']['payUrl'];
-  }else{
-    $jumpurl = '../qrcode/qrcode.php?type='.$scan.'&code=' .QRcodeUrl($row['data']['payUrl']);
-  }
+  $jumpurl = $row['data']['payUrl'];
+  header('Location:'.$jumpurl);
+  exit;
 }
 #跳轉方法
 
