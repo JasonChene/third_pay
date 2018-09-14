@@ -4,7 +4,7 @@ include_once("../moneyfunc.php");
 if (strstr($_REQUEST['pay_type'], "反扫")) {
   $form_url = './qqfspost.php';
 } elseif (_is_mobile()) {
-  $form_url = './qqh5post.php';
+  $form_url = './qqbspost.php';
 } else {
   $form_url = './qqbspost.php';
 }
