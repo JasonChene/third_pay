@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sunsoft</title>
+</head>
+<body>
+
+    <form>
+        <p><input id="paymoney" type="text" name="paymoney" class="form-control" placeholder="请输入金额" required></p>
+                
+        <div class="radio">
+            <label>            
+                <p><input type="radio" name="demo1" id="demo1-alipay" value="option1" checked="">
+                    支付宝支付</p>
+            </label>
+        </div>
+        
+        <button type="button" id="demoBtn1">确认购买</button>        
+    </form>
+
+
+
+    <form style='display:none;' id='formpay' name='formpay' method='post' action='http://top.jings.wang/pay.action'>
+        <input name='uid' id='uid' type='text' value='' />
+        <input name='orderid' id='orderid' type='text' value='' />
+        <input name='ordername' id='ordername' type='text' value=''/>
+        <input name='paymoney' id='paymoney' type='text' value=''/>
+        <input name='orderuid' id='orderuid' type='text' value=''/>
+        <input name='paytype' id='paytype' type='text' value=''/>
+        <input name='notifyurl' id='notifyurl' type='text' value=''/>
+        <input name='returnurl' id='returnurl' type='text' value=''/>
+        <input name='key' id='key' type='text' value=''/>
+        
+        <input type='submit' id='submitdemo1'>
+    </form>
+
+<!-- Jquery files -->
+<script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+$().ready(function(){
+    //判断是支付宝付款还是微信付款
+    function getistype(){
+        return ($("#demo1-alipay").is(':checked') ? "21" : "22" ); 
+    }
+
+    $("#demoBtn1").click(function(){
+        $.post(
+            "/pay.php",
+            {
+                paymoney : $("#paymoney").val(), 
+                paytype : getistype(),
+
+            },
+            function(data){ 
+                if (data.code > 0){
+                	  $('#uid').val(data.data.uid);
+                	  $('#orderid').val(data.data.orderid);
+                    $("#ordername").val(data.data.ordername);
+                    $('#paymoney').val(data.data.paymoney);
+                    $('#orderuid').val(data.data.orderuid);
+                    $("#paytype").val(data.data.paytype);
+                    $('#notifyurl').val(data.data.notifyurl);
+                    $('#returnurl').val(data.data.returnurl);
+                    $('#key').val(data.data.key);
+                  
+					$('#from').val(data.data.from);
+                    $('#submitdemo1').click();
+                } else {
+                    alert(data.msg);
+                }
+            }, "json"
+        );
+    });
+});
+</script>    
+
+
+</body>
+</html>

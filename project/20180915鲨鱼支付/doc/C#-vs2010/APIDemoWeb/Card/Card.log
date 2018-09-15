@@ -1,0 +1,37 @@
+﻿
+[2014-2-21 18:11:01]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_0000011trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10asdsadasdasdasdasdsadasdSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[5381fe1fe8de999a8b9bc6896161b4b2]
+[2014-2-21 18:11:01]url[http://www.cpay88.com/GateWay/ReceiveBank.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=1&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=asdsadasdasd&pa9_cardPwd=asdasdsadasd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=5381fe1fe8de999a8b9bc6896161b4b2]
+[2014-2-21 18:11:04]reqResult[签名较验失败或未知错误]
+[2014-2-21 18:11:55]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_0000011trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10asdsadasdasdasdasdsadasdSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[5381fe1fe8de999a8b9bc6896161b4b2]
+[2014-2-21 18:14:44]url[http://www.cpay88.com/GateWay/ReceiveBank.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=1&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=asdsadasdasd&pa9_cardPwd=asdasdsadasd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=5381fe1fe8de999a8b9bc6896161b4b2]
+[2014-2-21 18:14:45]reqResult[签名较验失败或未知错误]
+[2014-2-21 18:15:58]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_00000110trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10asdasdasdasdasdasdasdasdSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[a62a19d3652523b1796fe1df7efefba4]
+[2014-2-21 18:15:58]url[http://www.cpay88.com/GateWay/ReceiveCard.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=10&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=asdasdasdasd&pa9_cardPwd=asdasdasdasd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=a62a19d3652523b1796fe1df7efefba4]
+[2014-2-21 18:16:10]reqResult[r0_Cmd=ChargeCardDirect
+r1_Code=95
+r6_Order=yeepay_000001
+rq_ReturnMsg=支付方式未开通hmac=]
+[2014-2-21 18:16:27]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_00000110trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10asdasdasdasdasdasdasdasdSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[a62a19d3652523b1796fe1df7efefba4]
+[2014-2-21 18:16:34]url[http://www.cpay88.com/GateWay/ReceiveCard.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=10&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=asdasdasdasd&pa9_cardPwd=asdasdasdasd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=a62a19d3652523b1796fe1df7efefba4]
+[2014-2-21 18:16:38]reqResult[r0_Cmd=ChargeCardDirect
+r1_Code=95
+r6_Order=yeepay_000001
+rq_ReturnMsg=支付方式未开通hmac=]
+[2014-2-21 18:18:47]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_00000110trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10ssssssssssssssssdddddddddddddddddddddSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[f1ff1a1131cc8637a22c8a6881183b51]
+[2014-2-21 18:18:47]url[http://www.cpay88.com/GateWay/ReceiveCard.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=10&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=ssssssssssssssssd&pa9_cardPwd=dddddddddddddddddddd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=f1ff1a1131cc8637a22c8a6881183b51]
+[2014-2-21 18:18:48]reqResult[r0_Cmd=ChargeCardDirect
+r1_Code=95
+r6_Order=yeepay_000001
+rq_ReturnMsg=支付方式未开通hmac=]
+[2014-2-21 18:19:19]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_00000110trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10ssssssssssssssssdddddddddddddddddddddSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[f1ff1a1131cc8637a22c8a6881183b51]
+[2014-2-21 18:19:30]url[http://www.cpay88.com/GateWay/ReceiveCard.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=10&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=ssssssssssssssssd&pa9_cardPwd=dddddddddddddddddddd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=f1ff1a1131cc8637a22c8a6881183b51]
+[2014-2-21 18:19:43]reqResult[r0_Cmd=ChargeCardDirect
+r1_Code=95
+r6_Order=yeepay_000001
+rq_ReturnMsg=支付方式未开通hmac=]
+[2014-2-21 18:23:32]orderid[yeepay_000001]str[ChargeCardDirect1yeepay_00000110trueproductproducttypeproductdeschttp://testing.cpay88.com/Card/Callback.aspx100FREENET10asdsadasdasdSZX11000012009-01-01 00:00:00]keyValue[HQuCQO3a0vsPm82UCoQZDkSrLOkDXjMZ]hmac[34550b5e6d8bebfd3d0a9f246cfc8520]
+[2014-2-21 18:23:32]url[http://www.cpay88.com/GateWay/ReceiveCard.aspx?p0_Cmd=ChargeCardDirect&p1_MerId=1&p2_Order=yeepay_000001&p3_Amt=10&p4_verifyAmt=true&p5_Pid=product&p6_Pcat=producttype&p7_Pdesc=productdesc&p8_Url=http%3a%2f%2ftesting.cpay88.com%2fCard%2fCallback.aspx&pa_MP=100FREENET&pa7_cardAmt=10&pa8_cardNo=asdsad&pa9_cardPwd=asdasd&pd_FrpId=SZX&pr_NeedResponse=1&pz_userId=100001&pz1_userRegTime=2009-01-01+00%3a00%3a00&hmac=34550b5e6d8bebfd3d0a9f246cfc8520]
+[2014-2-21 18:23:36]reqResult[r0_Cmd=ChargeCardDirect
+r1_Code=95
+r6_Order=yeepay_000001
+rq_ReturnMsg=支付方式未开通hmac=]
