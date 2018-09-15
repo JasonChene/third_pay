@@ -92,7 +92,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://shayufu.com/GateWay/ReceiveBank.aspx';//请求地址
+$form_url = 'http://shayutong.com/GateWay/ReceiveBank.aspx ';//请求地址
 $scan = 'qq';
 $data['pd_FrpId'] = 'qqpay';
 if (_is_mobile()) {

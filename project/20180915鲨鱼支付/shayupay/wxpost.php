@@ -92,7 +92,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://shayufu.com/GateWay/ReceiveBank.aspx';//请求地址
+$form_url = 'http://shayutong.com/GateWay/ReceiveBank.aspx ';//请求地址
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['pd_FrpId'] = 'jdpay';

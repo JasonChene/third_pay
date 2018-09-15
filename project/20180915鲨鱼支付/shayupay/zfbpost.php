@@ -92,7 +92,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://shayufu.com/GateWay/ReceiveBank.aspx';//请求地址
+$form_url = 'http://shayutong.com/GateWay/ReceiveBank.aspx ';//请求地址
 if (strstr($pay_type, "支付宝反扫")) {
   $scan = 'zfbfs';
   $data['pd_FrpId'] = 'aliqr';
@@ -138,8 +138,7 @@ $k_ipad = $key ^ $ipad;
 $k_opad = $key ^ $opad;
 $sign = md5($k_opad . pack("H*", md5($k_ipad . $data_signtext)));
 $data['hmac'] = $sign;
-echo "<pre>";
-echo http_build_query($data);
+
 #跳轉方法
 ?>
 <html>
@@ -148,7 +147,7 @@ echo http_build_query($data);
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_blank">
+  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
      <p>正在为您跳转中，请稍候......</p>
        <?php foreach ($data as $arr_key => $arr_value) { ?>
          <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
