@@ -134,8 +134,7 @@ if ($result_insert == -1) {
 $res = curl_post($form_url,$data,20);
 $row = json_decode($res);
 if ($row->REP_BODY->orderState == '00') {
-    header("location:" .'../qrcode/qrcode.php?type=qq&code=' .$row->REP_BODY->codeUrl);
-    exit;
+  header("location:" . $row->REP_BODY->codeUrl);
 }else {
   echo  'rspcode:' . $row->REP_BODY->rspcode.'rspmsg:' . $row->REP_BODY->rspmsg;
 }

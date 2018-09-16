@@ -141,7 +141,7 @@ if ($row->REP_BODY->orderState == '00') {
     header("location:" . $row->REP_BODY->codeUrl);
     exit;
   }else {
-    header("location:" .'../qrcode/qrcode.php?type=wx&code=' .$row->REP_BODY->codeUrl);
+    header("location:" . $row->REP_BODY->codeUrl);
     exit;
   }
 }else {

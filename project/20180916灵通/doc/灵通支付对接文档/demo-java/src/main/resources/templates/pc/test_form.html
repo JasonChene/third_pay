@@ -1,0 +1,11 @@
+<form action="https://api.561581.com/api/receive?type=form" method="post" id="postForm">
+	<input type="hidden" name="merchantId" th:value="${merchantId}"/>
+	<input type="hidden" name="timestamp" th:value="${timestamp}"/>
+	<input type="hidden" name="money" th:value="${money}"/>
+	<input type="hidden" name="notifyURL" th:value="${notifyURL}"/>
+	<input type="hidden" name="returnURL" th:value="${returnURL}"/>
+	<input type="hidden" name="goodsName" th:value="${goodsName}"/>
+    <input type="hidden" name="paytype" th:value="${paytype}"/>
+	<input type="hidden" name="merchantOrderId" th:value="${merchantOrderId}"/>
+	<input type="hidden" name="sign" th:value="${sign}"/>
+</form>

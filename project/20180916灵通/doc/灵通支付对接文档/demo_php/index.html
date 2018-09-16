@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>小财神支付测试页面</title>
+</head>
+
+<form id="form" method='post' action='pay.php' target="_blank">
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">支付金额</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text"  placeholder="请输入支付金额" name="money" value="1"/>
+        </div>
+    </div>
+
+
+    <div class="weui_cell weui_cell_select weui_select_after">
+        <div class="weui_cell_hd">
+            <label for="" class="weui_label">通道选择</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <select class="weui_select" name="paytype">
+                <option value="WX">微信</option>
+                <option value="QQ">QQ</option>
+                <option value="ALIPAY">支付宝</option>
+            </select>
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <input type="submit" class="weui_btn weui_btn_primary"/>
+    </div>
+</form>
+
+</body>
+</html>
