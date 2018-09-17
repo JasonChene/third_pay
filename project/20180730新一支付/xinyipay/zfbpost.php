@@ -97,7 +97,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $data = array(
   "version" => '1.0', //版本号
   "mch_id" => $pay_mid, //商户号
-  "pay_type" => '106', //支付类型
+  "pay_type" => '101', //支付类型
   "fee_type" => 'CNY', //货币类型
   "total_amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //订单金额
   "out_trade_no" => $order_no, //商户订单号
@@ -113,6 +113,9 @@ $data = array(
 
 
 $form_url = 'http://pay.qishidai.cn/gateway/zpay';//WAP下单提交地址
+if(_is_mobile()){
+  $data['pay_type'] = '106';
+}
 $scan = 'zfb';
 payType_bankname($scan, $pay_type);
 

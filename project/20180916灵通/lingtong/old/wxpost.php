@@ -75,40 +75,21 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "p0_Cmd" => 'Buy', //业务类型
-  "p1_MerId" => $pay_mid, //商户编号
-  "p2_Order" => $order_no, //商户订单号
-  "p3_Amt" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //支付金额
-  "p4_Cur" => 'CNY', //交易币种
-  "p5_Pid" => 'Pid', //商品名称
-  "p6_Pcat" => 'Pcat', //商品种类
-  "p7_Pdesc" => 'Pdesc', //商品描述
-  "p8_Url" => $merchant_url, //商户接收支付成功数据的地址
-  "p9_SAF" => '0', //送货地址
-  "pa_MP" => 'MP', //商户扩展信息
-  "pd_FrpId" => '', //支付通道编码
-  "pr_NeedResponse" => '1', //应答机制
-  "hmac" => '', //签名数据
+  "type" => 'form', 
+  "merchantId" => $pay_mid, 
+  "money" => $mymoney, 
+  "timestamp" => time()*1000, 
+  "notifyURL" => $merchant_url, 
+  "returnURL" => $return_url, 
+  "merchantOrderId" => $order_no,
+  "sign" => '',
+  "paytype" => 'PXX_H5_WX'
 );
 
 #变更参数设置
-$form_url = 'http://shayutong.com/GateWay/ReceiveBank.aspx ';//请求地址
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $data['pd_FrpId'] = 'jdpay';
-  if (_is_mobile()) {
-    $data['pd_FrpId'] = 'jdwap';
-  }
-} elseif (strstr($pay_type, "微信反扫")) {
-  $scan = 'wxfs';
-  $data['pd_FrpId'] = 'wxqr';
-} else {
-  $scan = 'wx';
-  $data['pd_FrpId'] = 'wxcode';
-  if (_is_mobile()) {
-    $data['pd_FrpId'] = 'wxwap';
-  }
-}
+$form_url = 'https://api.561581.com/api/receive?type=form';//请求地址
+$scan = 'wx';
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -122,28 +103,16 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('hmac');//不加入签名的array key值
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr)) {
-    $signtext .= $arr_val;
-  }
-}
-$key = $pay_mkey;
-$data_signtext = $signtext;
-$key = iconv("GB2312", "UTF-8", $key);
-$data_signtext = iconv("GB2312", "UTF-8", $data_signtext);
-$b = 64; // byte length for md5
-if (strlen($key) > $b) {
-  $key = pack("H*", md5($key));
-}
-$key = str_pad($key, $b, chr(0x00));
-$ipad = str_pad('', $b, chr(0x36));
-$opad = str_pad('', $b, chr(0x5c));
-$k_ipad = $key ^ $ipad;
-$k_opad = $key ^ $opad;
-$sign = md5($k_opad . pack("H*", md5($k_ipad . $data_signtext)));
-$data['hmac'] = $sign;
+$signtext = "";
+$signtext .= $data['money'];
+$signtext .= '&'.$data['merchantId'];
+$signtext .= '&'.$data['notifyURL'];
+$signtext .= '&'.$data['returnURL'];
+$signtext .= '&'.$data['merchantOrderId'];
+$signtext .= '&'.$data['timestamp'];
+$signtext .= '&'.$pay_mkey;
+$data['sign'] = md5($signtext);
+
 
 #跳轉方法
 ?>
