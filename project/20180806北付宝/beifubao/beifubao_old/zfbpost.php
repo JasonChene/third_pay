@@ -143,7 +143,7 @@ $businessContext = array(
 );
 
 #变更参数设置
-$form_url = "http://bfb.fzqxdc.top/api/payment/unifiedPay";
+$form_url = "http://789game.wang/api/payment/unifiedPay";
 $scan = 'zfb';
 $businessContext['defrayalType'] = "ALI_JSAPI";
 
