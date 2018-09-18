@@ -90,9 +90,6 @@ foreach ($data as $arr_key => $arr_value) {
 #curl获取响应值
 $res = curl_post($form_url,http_build_query($data),"POST");
 $row = json_decode($res,1);
-echo '<pre>';
-var_dump($data);
-var_dump($res);
 #跳转qrcode
 $url = $row['data']['qrcode'];
 if (!empty($url)) {
