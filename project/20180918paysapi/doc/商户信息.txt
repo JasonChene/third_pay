@@ -1,0 +1,6 @@
+https://paysapi.com/
+
+用户:zhanzhang999@qq.com   密码：aa200100...
+
+Uid（商户号）adc06d4f5cb1ccc528acb298
+Token（秘钥）66e93d7f76b896593da8df4f74d45df5
