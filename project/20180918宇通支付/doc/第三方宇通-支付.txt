@@ -1,0 +1,8 @@
+商户名称：河南省飞磕制造有限公司
+商户简称：飞磕制造-支付宝
+账号：10005095
+密码：thxmpfmt4n
+mch_id：10005095
+mch_key：86a40ef3c4fa458eadf5a943a7b1937e
+登录地址：https://bs.10000-pay.com/index/login/mch/
+以上信息请妥善保管
