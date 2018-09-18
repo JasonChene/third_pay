@@ -96,8 +96,8 @@ $row = json_decode($res, 1);
 #跳转qrcode
 $url = $row['payUrl'];
 if ($row['retCode'] == '0') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . $qrurl;
+  $jumpurl = $url;
+  $form_data = $data;
 } else {
   echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['retMsg'];
   exit();
