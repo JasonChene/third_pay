@@ -8,7 +8,7 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	// write_log("return:".$key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -18,7 +18,7 @@ if(!empty($data)){
 	// $success_msg = $data['is_success'];//成功讯息
 	// $success_code = "1";//文档上的成功讯息
 	$sign = $data['key'];//签名
-	$echo_msg = "";//回调讯息
+	$echo_msg = "success";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -45,9 +45,9 @@ if(!empty($data)){
 	#验签方式2
 	$signtext = "";
 	$signtext .= $data['orderid'] . $data['orderuid'] . $data['paysapi_id'] . $data['price'] . $data['realprice'] . $pay_mkey;
-	write_log("signtext=".$signtext);
+	// write_log("signtext=".$signtext);
 	$mysign = md5($signtext);//签名
-	write_log("mysign=".$mysign);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
