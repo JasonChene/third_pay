@@ -1,0 +1,9 @@
+keyAlias: key0
+keyPassword: asd666
+storePassword: asd666
+
+
+KKKS7
+package: com.nnnzjaha.eeaasa
+MD5: AF:F9:CD:77:3D:97:10:8E:B1:EA:AA:40:89:50:E1:EA
+sign:aff9cd773d97108eb1eaaa408950e1ea
