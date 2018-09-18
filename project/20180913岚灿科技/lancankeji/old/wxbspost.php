@@ -48,7 +48,7 @@ $data = array(
   "orderNo" => $order_no,
   "payAmt" => $MOAmount,
   "notifyUrl" => $notify_url,
-  "tradeType" => '02',//微信H5
+  "tradeType" => '01',
   "goodsName" => 'goodsName',
   "returnUrl" => $return_url,
   "sign" => array(
@@ -57,7 +57,7 @@ $data = array(
       "orderNo" => $order_no,
       "payAmt" => $MOAmount,
       "returnUrl" => $return_url,
-      "tradeType" => '02',//微信H5
+      "tradeType" => '01',
       "userId" => $pay_mid,
     ),
     "mid_conn" => "=",
