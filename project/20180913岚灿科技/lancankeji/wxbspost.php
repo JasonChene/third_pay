@@ -97,7 +97,6 @@ $row = json_decode($res, 1);
 $url = $row['payUrl'];
 if ($row['retCode'] == '0') {
   $jumpurl = $url;
-  $form_data = $data;
 } else {
   echo "错误码：" . $row['retCode'] . "错误讯息：" . $row['retMsg'];
   exit();
