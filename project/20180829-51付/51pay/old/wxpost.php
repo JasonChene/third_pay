@@ -20,28 +20,29 @@ function curl_post($url, $data, $timeout = 30)
   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);					// 在发起连接前等待的时间，如果设置为0，则无限等待
   curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);							// 设置cURL允许执行的最长秒数
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);// 返回原生的（Raw）输出
-  curl_setopt($curl, CURLOPT_ENCODING, FALSE);							// HTTP请求头中"Accept-Encoding: "的值。支持的编码有"identity"，"deflate"和"gzip"。如果为空字符串""，请求头会发送所有支持的编码类型。
+  curl_setopt($curl, CURLOPT_ENCODING, false);							// HTTP请求头中"Accept-Encoding: "的值。支持的编码有"identity"，"deflate"和"gzip"。如果为空字符串""，请求头会发送所有支持的编码类型。
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POST, true);
   $jsonStr = json_encode($data);
   curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-  'Content-Type: application/json; charset=utf-8',
-  'Content-Length: ' . strlen($jsonStr),
+    'Content-Type: application/json; charset=utf-8',
+    'Content-Length: ' . strlen($jsonStr),
   ));
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$jsonStr);
-	curl_setopt($ch,CURLOPT_URL,$url);
-  curl_setopt($curl, CURLINFO_HEADER_OUT, TRUE);
-	$response=curl_exec($ch);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonStr);
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+  $response = curl_exec($ch);
   curl_close($ch);
   if (curl_errno($ch)) {
-    return curl_error($ch).'and'.curl_errno($ch);
+    return curl_error($ch) . 'and' . curl_errno($ch);
   }
   return $response;
 }
 
-function encrypt_sign($md5Sign,$priKey){
-  $priKey = "-----BEGIN RSA PRIVATE KEY-----\n" .wordwrap($priKey, 64, "\n", true) ."\n-----END RSA PRIVATE KEY-----";
+function encrypt_sign($md5Sign, $priKey)
+{
+  $priKey = "-----BEGIN RSA PRIVATE KEY-----\n" . wordwrap($priKey, 64, "\n", true) . "\n-----END RSA PRIVATE KEY-----";
   $priKey = openssl_get_privatekey($priKey);
   openssl_sign($md5Sign, $sign, $priKey, 'SHA256');
   $encrypt_sign = base64_encode($sign);
@@ -60,8 +61,8 @@ $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $idTemp = $row['mer_account'];
 $idArray = explode("###", $idTemp);
-$md5key =$idArray[0];
-$agtId =$idArray[1];//商户机构号
+$md5key = $idArray[0];
+$agtId = $idArray[1];//商户机构号
 $public_key = $idArray[2];//商户公钥
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
@@ -72,21 +73,21 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 $form_url = 'http://pay.d1qp.cn:18098/webwt/pay/gateway.do';  //提交地址
-$tranCode ='1101';//交易码
+$tranCode = '1101';//交易码
 $agtId = $agtId;//机构号
 $merId = $pay_mid;  //商戶号
-$orderAmt = number_format($_REQUEST['MOAmount']*100, 0, '', ''); //订单金额 单位分
+$orderAmt = number_format($_REQUEST['MOAmount'] * 100, 0, '', ''); //订单金额 单位分
 $orderId = getOrderNo();  //随机生成商户订单编号
 $goodsName = "1234567890";//商品描述
 $notifyUrl = $merchant_url;  //异步
 $nonceStr = '1234567890';//随机字符串
 $stlType = 'T1';//结算类型 支付宝，微信是T1  银联扫码和QQT0
 $termIp = getClientIp();
-if(_is_mobile()){
-  $payChannel = 'WXWAPPAY'; //微信H5
-}else{
-  $payChannel = 'WXPAY'; //微信支付
-}
+// if(_is_mobile()){
+//   $payChannel = 'WXWAPPAY'; //微信H5
+// }else{
+$payChannel = 'WXPAY'; //微信支付
+// }
 
 $parms = array(
   "tranCode" => $tranCode,
@@ -103,25 +104,25 @@ $parms = array(
   "uId" => $_REQUEST['S_Name']
 );
 ksort($parms);
-$noarr =array('sign');
+$noarr = array('sign');
 $signText = '';
 $data = '';
 foreach ($parms as $arr_key => $arr_val) {
-  if ( !in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0') ) {
-		$signText .= $arr_key.'='.$arr_val.'&';
-	}
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signText .= $arr_key . '=' . $arr_val . '&';
+  }
 }
 
-$signText = $signText.'key='.$md5key;
+$signText = $signText . 'key=' . $md5key;
 $md5Sign = strtoupper(md5($signText));
-$sign = encrypt_sign($md5Sign,$pay_mkey);
+$sign = encrypt_sign($md5Sign, $pay_mkey);
 $data = array(
-    'REQ_HEAD' => array('sign'=>$sign),
-    'REQ_BODY' => $parms
+  'REQ_HEAD' => array('sign' => $sign),
+  'REQ_BODY' => $parms
 );
 
 
-$payType = $pay_type."_wx";
+$payType = $pay_type . "_wx";
 $bankname = $pay_type . "->微信在线充值";
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 //確認訂單有無重複， function在 moneyfunc.php 裡
@@ -134,12 +135,12 @@ if ($result_insert == -1) {
   exit;
 }
 
-$res = curl_post($form_url,$data,20);
+$res = curl_post($form_url, $data, 20);
 $row = json_decode($res);
 if ($row->REP_BODY->orderState == '00') {
   header("location:" . $row->REP_BODY->codeUrl);
-}else {
-  echo  'rspcode:' . $row->REP_BODY->rspcode.'rspmsg:' . $row->REP_BODY->rspmsg;
+} else {
+  echo 'rspcode:' . $row->REP_BODY->rspcode . 'rspmsg:' . $row->REP_BODY->rspmsg;
 }
 
 ?>
