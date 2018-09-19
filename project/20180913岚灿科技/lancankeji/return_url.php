@@ -1,24 +1,4 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
-<?php
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
-include_once("../../../database/mysql.php");//现数据库的连接方式
-include_once("../moneyfunc.php");
-// write_log("-----return");
-
-#############################################
-$data = array();
-#post方法
-// write_log('post方法');
-foreach ($_POST as $key => $value) {
-	$data[$key] = $value;
-	// write_log($key . "=" . $value);
-}
-
-#############################################
-$mymoney = number_format($data['order_amount'], 2, '.', ''); //订单金额
-$message = ("支付成功");
-
-?>
 
 <!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
 <!DOCTYPE html>
@@ -39,15 +19,9 @@ $message = ("支付成功");
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">充值金额：</td>
-			<td style="padding-left: 10px;">
-				<label id="lbpayamount"><?php echo $mymoney; ?></label>
-			</td>
-		</tr>
-		<tr>
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
-				<label id="lbmessage"><?php echo $message; ?></label>
+				<label id="lbmessage"><?php echo "支付成功"; ?></label>
 			</td>
 		</tr>
 		<tr>
