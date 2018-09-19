@@ -8,13 +8,15 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 #function
-function createNoncestr($length) {
+function createNoncestr($length)
+{
   $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   $res = '';
   for ($i = 0; $i < $length; $i++) {
 
-      $random = mt_rand(0, strlen($chars)-1);
-      $res .= $chars{$random};
+    $random = mt_rand(0, strlen($chars) - 1);
+    $res .= $chars {
+      $random};
   }
   return $res;
 }
@@ -56,9 +58,9 @@ $form_url = 'https://ctn.open.dabaizf.net/pay/receiptapi/open.html';//提交地�
 $scan = 'zfb';
 $payType = $pay_type . "_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
-if (_is_mobile()){
-  $data['pay_scene'] = 'h5';
-}
+// if (_is_mobile()){
+//   $data['pay_scene'] = 'h5';
+// }
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -72,18 +74,18 @@ if ($result_insert == -1) {
 $kevacon = '=';
 $mark = '&';
 $signtext = '';
-$signtext .= 'pay_version'.$kevacon.$data['pay_version'];
-$signtext .= $mark.'pay_amount'.$kevacon.$data['pay_amount'];
-$signtext .= $mark.'pay_bankcode'.$kevacon.$data['pay_bankcode'];
-$signtext .= $mark.'pay_scene'.$kevacon.$data['pay_scene'];
-$signtext .= $mark.'pay_memberid'.$kevacon.$data['pay_memberid'];
-$signtext .= $mark.'pay_orderid'.$kevacon.$data['pay_orderid'];
-$signtext .= $mark.'pay_notifyurl'.$kevacon.$data['pay_notifyurl'];
-$signtext .= $mark.'pay_callbackurl'.$kevacon.$data['pay_callbackurl'];
-$signtext .= $mark.'pay_rand'.$kevacon.$data['pay_rand'];
-$signtext .= $mark.'pay_key'.$kevacon.$pay_mkey;
+$signtext .= 'pay_version' . $kevacon . $data['pay_version'];
+$signtext .= $mark . 'pay_amount' . $kevacon . $data['pay_amount'];
+$signtext .= $mark . 'pay_bankcode' . $kevacon . $data['pay_bankcode'];
+$signtext .= $mark . 'pay_scene' . $kevacon . $data['pay_scene'];
+$signtext .= $mark . 'pay_memberid' . $kevacon . $data['pay_memberid'];
+$signtext .= $mark . 'pay_orderid' . $kevacon . $data['pay_orderid'];
+$signtext .= $mark . 'pay_notifyurl' . $kevacon . $data['pay_notifyurl'];
+$signtext .= $mark . 'pay_callbackurl' . $kevacon . $data['pay_callbackurl'];
+$signtext .= $mark . 'pay_rand' . $kevacon . $data['pay_rand'];
+$signtext .= $mark . 'pay_key' . $kevacon . $pay_mkey;
 $sign = md5(md5($signtext));
-$data['pay_sign'] = $sign; 
+$data['pay_sign'] = $sign;
 
 $postdata = base64_encode(json_encode($data));
 
@@ -94,7 +96,7 @@ $postdata = base64_encode(json_encode($data));
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>   
       <input type="hidden" name="body" value="<?php echo $postdata; ?>" />
     </form>
