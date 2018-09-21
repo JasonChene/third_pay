@@ -117,7 +117,7 @@ $bizContent = array(
 );
 
 #变更参数设置
-$form_url = 'https://rpi.10000-pay.com/unifiedorder';//提交地址
+$form_url = 'https://rpi.tongyu-pay.com/unifiedorder';//提交地址
 $scan = 'zfb';
 $bizContent['pay_platform'] = 'ALIPAY';
 $bizContent['pay_type'] = 'MWEB';

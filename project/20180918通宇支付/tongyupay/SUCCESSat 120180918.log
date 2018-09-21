@@ -1,0 +1,19 @@
+2018-09-18 05:52:56 request方法
+2018-09-18 05:52:56 {"ret_code":"0","ret_msg":"交易成功","signature":"E5CC29C5ADED93DE421CB63C72579E41","biz_content":{"create_time":"2018-09-18_17:52:14","mch_id":"10005095","order_no":"81020180918175214052371648000502","out_order_no":"94179920180918175213","pay_platform":"ALIPAY","pay_time":"2018-09-18_17:52:56","pay_type":"MWEB","payment_fee":"1000","transaction_id":""}}=
+2018-09-18 05:52:56 post方法
+2018-09-18 05:52:56 {"ret_code":"0","ret_msg":"交易成功","signature":"E5CC29C5ADED93DE421CB63C72579E41","biz_content":{"create_time":"2018-09-18_17:52:14","mch_id":"10005095","order_no":"81020180918175214052371648000502","out_order_no":"94179920180918175213","pay_platform":"ALIPAY","pay_time":"2018-09-18_17:52:56","pay_type":"MWEB","payment_fee":"1000","transaction_id":""}}=
+2018-09-18 05:52:56 input方法
+2018-09-18 05:52:56 {"ret_code":"0","ret_msg":"交易成功","signature":"E5CC29C5ADED93DE421CB63C72579E41","biz_content":{"create_time":"2018-09-18 17:52:14","mch_id":"10005095","order_no":"81020180918175214052371648000502","out_order_no":"94179920180918175213","pay_platform":"ALIPAY","pay_time":"2018-09-18 17:52:56","pay_type":"MWEB","payment_fee":"1000","transaction_id":""}}
+2018-09-18 05:52:56 {"ret_code":"0","ret_msg":"交易成功","signature":"E5CC29C5ADED93DE421CB63C72579E41","biz_content":{"create_time":"2018-09-18 17:52:14","mch_id":"10005095","order_no":"81020180918175214052371648000502","out_order_no":"94179920180918175213","pay_platform":"ALIPAY","pay_time":"2018-09-18 17:52:56","pay_type":"MWEB","payment_fee":"1000","transaction_id":""}}
+2018-09-18 05:52:56 create_time=2018-09-18 17:52:14
+2018-09-18 05:52:56 mch_id=10005095
+2018-09-18 05:52:56 order_no=81020180918175214052371648000502
+2018-09-18 05:52:56 out_order_no=94179920180918175213
+2018-09-18 05:52:56 pay_platform=ALIPAY
+2018-09-18 05:52:56 pay_time=2018-09-18 17:52:56
+2018-09-18 05:52:56 pay_type=MWEB
+2018-09-18 05:52:56 payment_fee=1000
+2018-09-18 05:52:56 transaction_id=
+2018-09-18 05:52:56 signtext=biz_content={"create_time":"2018-09-18 17:52:14","mch_id":"10005095","order_no":"81020180918175214052371648000502","out_order_no":"94179920180918175213","pay_platform":"ALIPAY","pay_time":"2018-09-18 17:52:56","pay_type":"MWEB","payment_fee":"1000","transaction_id":""}&key=86a40ef3c4fa458eadf5a943a7b1937e
+2018-09-18 05:52:56 mysign=E5CC29C5ADED93DE421CB63C72579E41
+2018-09-18 05:52:56 SUCCESSat 1
