@@ -50,9 +50,10 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
 if ($ylscan == true) {
   $type = '7011';//银联錢包扫码
 } else if ($ylkjscan == true) {
-  $type = '2000';//银联快捷
+  $type = 'QuickPay';//银联快捷
 } else {
-  $type = $_REQUEST['bank_code'];//银行编码
+  // $type = $_REQUEST['bank_code'];//银行编码
+  $type = 'EBankPay';//银行编码
 }
 
 $parms = array(

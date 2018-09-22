@@ -1,3 +1,13 @@
 第三方登录地址:www.xunbaopay9.com
 商户号信息:用户名：o125ne8@163.com登陆密码：baidu2018
 第三方客服QQ：1280662011
+
+
+20180922
+xunbao6.com  域名
+xbadmin056    登录名
+123456             密码
+
+商户ID	X8120157
+登录账号	xbadmin056
+商户密钥	1a3006c4df00401c8907323d0daebf99
