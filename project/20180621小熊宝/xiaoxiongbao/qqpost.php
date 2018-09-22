@@ -69,17 +69,11 @@ $data = array(
 );
 
 #变更参数设置
-if (strstr($pay_type, "京东钱包")) {
-  $scan = 'jd';
-  $payType = $pay_type . "_jd";
-  $bankname = $pay_type . "->京东钱包在线充值";
-  $data['paytype'] = 'JD';//京东
-} else {
-  $scan = 'wx';
-  $payType = $pay_type . "_wx";
-  $bankname = $pay_type . "->微信在线充值";
-  $data['paytype'] = "WX";//微信掃碼
-}
+$scan = 'qq';
+$payType = $pay_type . "_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
+$data['paytype'] = "QQ";//qq掃碼
+
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 

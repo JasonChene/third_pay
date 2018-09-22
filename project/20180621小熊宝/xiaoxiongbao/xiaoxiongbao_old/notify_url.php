@@ -41,10 +41,10 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $signtext = '';
-$signtext .= $data['orderNo'].'&';
-$signtext .= $data['merchantOrderNo'].'&';
-$signtext .= $data['money'].'&';
-$signtext .= $data['payAmount'].'&';
+$signtext .= $data['orderNo'] . '&';
+$signtext .= $data['merchantOrderNo'] . '&';
+$signtext .= $data['money'] . '&';
+$signtext .= $data['payAmount'] . '&';
 $signtext .= $pay_mkey;
 
 $mysign = md5($signtext);
@@ -52,21 +52,21 @@ $mysign = md5($signtext);
 // write_log("mysign=".$mysign);
 
 #到账判断
-if ( $mysign == $sign) {
+if ($mysign == $sign) {
 	$result_insert = update_online_money($order_no, $mymoney);
 	if ($result_insert == -1) {
 		echo ("会员信息不存在，无法入账");
 		// write_log("会员信息不存在，无法入账");
 		exit;
-	}else if($result_insert == 0){
+	} else if ($result_insert == 0) {
 		echo ($echo_msg);
 		// write_log($echo_msg.'at 0');
 		exit;
-	}else if($result_insert == -2){
+	} else if ($result_insert == -2) {
 		echo ("数据库操作失败");
 		// write_log("数据库操作失败");
 		exit;
-	}else if($result_insert == 1){
+	} else if ($result_insert == 1) {
 		echo ($echo_msg);
 		// write_log($echo_msg.'at 1');
 		exit;
@@ -75,7 +75,7 @@ if ( $mysign == $sign) {
 		// write_log("支付失败");
 		exit;
 	}
-}else{
+} else {
 	echo ('签名不正确！');
 	// write_log("签名不正确！");
 	exit;

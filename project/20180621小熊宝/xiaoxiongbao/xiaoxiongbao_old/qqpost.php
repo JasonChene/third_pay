@@ -4,12 +4,13 @@ include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 date_default_timezone_set('PRC');
 #function
-function curl_post($url,$data){ #POST访问
+function curl_post($url, $data)
+{ #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
@@ -21,11 +22,12 @@ function curl_post($url,$data){ #POST访问
   }
   return $tmpInfo;
 }
-function QRcodeUrl($code){
-  if(strstr($code,"&")){
-    $code2=str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  }else{
-    $code2=$code;
+function QRcodeUrl($code)
+{
+  if (strstr($code, "&")) {
+    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
+  } else {
+    $code2 = $code;
   }
   return $code2;
 }
@@ -50,9 +52,9 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url ='https://api.shaimeixiong.com/api/receive?type=form';
+$form_url = 'https://api.shaimeixiong.com/api/receive?type=form';
 #第三方参数设置
-$data =array(
+$data = array(
   'type' => "form",//接口调用方式
   'merchantId' => $pay_mid,//商户uid
   'money' => number_format($_REQUEST['MOAmount'], 0, '.', ''),//订单金额
@@ -66,7 +68,7 @@ $data =array(
 
 #变更参数设置
 $scan = 'qq';
-$payType = $pay_type."_qq";
+$payType = $pay_type . "_qq";
 $bankname = $pay_type . "->QQ钱包在线充值";
 $data['paytype'] = "QQ";//qq掃碼
 
@@ -84,12 +86,12 @@ if ($result_insert == -1) {
 #签名排列，可自行组字串或使用http_build_query($array)
 
 $signtext = '';
-$signtext .= $data['money'].'&';
-$signtext .= $data['merchantId'].'&';
-$signtext .= $data['notifyURL'].'&';
-$signtext .= $data['returnURL'].'&';
-$signtext .= $data['merchantOrderId'].'&';
-$signtext .= $data['timestamp'].'&';
+$signtext .= $data['money'] . '&';
+$signtext .= $data['merchantId'] . '&';
+$signtext .= $data['notifyURL'] . '&';
+$signtext .= $data['returnURL'] . '&';
+$signtext .= $data['merchantOrderId'] . '&';
+$signtext .= $data['timestamp'] . '&';
 $signtext .= $pay_mkey;
 
 $data['sign'] = md5($signtext);
@@ -104,14 +106,16 @@ $jumpurl = $form_url;
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if(isset($form_data)){
-              foreach ($form_data as $arr_key => $arr_value) {
-          ?>
+          if (isset($form_data)) {
+            foreach ($form_data as $arr_key => $arr_value) {
+              ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php }} ?>
+          <?php 
+        }
+      } ?>
       </form>
       <script language="javascript">
           document.getElementById("frm1").submit();
