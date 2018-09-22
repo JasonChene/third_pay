@@ -1,0 +1,16 @@
+商汇通资料发给你们一下
+网址：http://www.woyopay.com
+账户15900546278     密码888888
+
+
+接入编号
+2331
+
+接入密钥
+677a844bea1a436ab7c7b58eed1408b9
+
+提交地址
+http://agentpay.woyopay.com/pay.aspx 
+
+文档下载
+http://www.woyopay.com/document.htm
