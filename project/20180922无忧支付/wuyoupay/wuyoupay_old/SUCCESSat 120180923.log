@@ -1,0 +1,14 @@
+2018-09-23 00:28:45 input方法
+2018-09-23 00:28:45 {"user_account":"10509","out_trade_no":"16594220180923002828","payment_type":"alipay","trade_no":"1826531719","total_fee":"1.00","notify_time":"2018-09-23 12:28:44","body":"pay","status":"SUCCESS","sign":"EB5D7EF926115B0D914AE01F5A3B855D"}
+2018-09-23 00:28:45 user_account=10509
+2018-09-23 00:28:45 out_trade_no=16594220180923002828
+2018-09-23 00:28:45 payment_type=alipay
+2018-09-23 00:28:45 trade_no=1826531719
+2018-09-23 00:28:45 total_fee=1.00
+2018-09-23 00:28:45 notify_time=2018-09-23 12:28:44
+2018-09-23 00:28:45 body=pay
+2018-09-23 00:28:45 status=SUCCESS
+2018-09-23 00:28:45 sign=EB5D7EF926115B0D914AE01F5A3B855D
+2018-09-23 00:28:45 signtext=body=pay&notify_time=2018-09-23 12:28:44&out_trade_no=16594220180923002828&payment_type=alipay&status=SUCCESS&total_fee=1.00&trade_no=1826531719&user_account=10509&key=Hl72s7tXSsmp6bxmDxbvEC8uTaqrfWkM
+2018-09-23 00:28:45 mysign=EB5D7EF926115B0D914AE01F5A3B855D
+2018-09-23 00:28:45 SUCCESSat 1

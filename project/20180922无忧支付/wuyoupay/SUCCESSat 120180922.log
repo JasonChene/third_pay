@@ -1,0 +1,20 @@
+2018-09-22 23:26:11 request方法
+2018-09-22 23:26:11 {"user_account":"10509","out_trade_no":"81276520180922232555","payment_type":"wxpay","trade_no":"1826562639","total_fee":"1_00","notify_time":"2018-09-23_11:26:10","body":"pay","status":"SUCCESS","sign":"FCE52F25158F76B3B4E1589F2ABBC0C1"}=
+2018-09-22 23:26:11 post方法
+2018-09-22 23:26:11 {"user_account":"10509","out_trade_no":"81276520180922232555","payment_type":"wxpay","trade_no":"1826562639","total_fee":"1_00","notify_time":"2018-09-23_11:26:10","body":"pay","status":"SUCCESS","sign":"FCE52F25158F76B3B4E1589F2ABBC0C1"}=
+2018-09-22 23:26:11 input方法
+2018-09-22 23:26:11 {"user_account":"10509","out_trade_no":"81276520180922232555","payment_type":"wxpay","trade_no":"1826562639","total_fee":"1.00","notify_time":"2018-09-23 11:26:10","body":"pay","status":"SUCCESS","sign":"FCE52F25158F76B3B4E1589F2ABBC0C1"}
+2018-09-22 23:26:11 input方法
+2018-09-22 23:26:11 {"user_account":"10509","out_trade_no":"81276520180922232555","payment_type":"wxpay","trade_no":"1826562639","total_fee":"1.00","notify_time":"2018-09-23 11:26:10","body":"pay","status":"SUCCESS","sign":"FCE52F25158F76B3B4E1589F2ABBC0C1"}
+2018-09-22 23:26:11 user_account=10509
+2018-09-22 23:26:11 out_trade_no=81276520180922232555
+2018-09-22 23:26:11 payment_type=wxpay
+2018-09-22 23:26:11 trade_no=1826562639
+2018-09-22 23:26:11 total_fee=1.00
+2018-09-22 23:26:11 notify_time=2018-09-23 11:26:10
+2018-09-22 23:26:11 body=pay
+2018-09-22 23:26:11 status=SUCCESS
+2018-09-22 23:26:11 sign=FCE52F25158F76B3B4E1589F2ABBC0C1
+2018-09-22 23:26:11 signtext=body=pay&notify_time=2018-09-23 11:26:10&out_trade_no=81276520180922232555&payment_type=wxpay&status=SUCCESS&total_fee=1.00&trade_no=1826562639&user_account=10509&key=Hl72s7tXSsmp6bxmDxbvEC8uTaqrfWkM
+2018-09-22 23:26:11 mysign=FCE52F25158F76B3B4E1589F2ABBC0C1
+2018-09-22 23:26:11 SUCCESSat 1

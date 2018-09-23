@@ -2,3 +2,6 @@
 支付域名：https://www.wuyoupay.cn/pay.php
 商户ID：10509
 密码：123456
+
+商户号	10509	 
+商户秘钥	Hl72s7tXSsmp6bxmDxbvEC8uTaqrfWkM
