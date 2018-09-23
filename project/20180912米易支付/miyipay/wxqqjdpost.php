@@ -131,9 +131,9 @@ if (strstr($pay_type, "京东钱包")) {
 } else {
   $scan = 'wx';
   $data['method'] = 'weixin';
-  if (_is_mobile()) {
-    $data['method'] = 'wxh5';
-  }
+  // if (_is_mobile()) {
+  //   $data['method'] = 'wxh5';
+  // }
 }
 payType_bankname($scan, $pay_type);
 $data['content'] = json_encode($content);
