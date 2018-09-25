@@ -45,7 +45,7 @@ if(md5($curdata[0].$pay_mid.$curdata[1]) != $curdata[2])
 
 $signText = 'partner=' . $partner  . '&ordernumber=' . $ordernumber . '&orderstatus=' . $orderstatus . '&paymoney='  . $paymoney .$pay_mkey;
 
-$signValue = strtolower(md5($signText));
+$signValue = (md5($signText));
 
 
 if ($signValue == $sign)
