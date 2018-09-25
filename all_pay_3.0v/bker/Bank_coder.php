@@ -204,12 +204,12 @@ BRCB
 						</p>
 					</font>
 
-						<form action="./Bank_coder_log.php" method="post">
-							<textarea type="text" style="display: none;" id="SQL" name="SQL" value="" /></textarea>
-							<textarea type="text" style="display: none;" id="sand_file_name" name="file_name" value="" /></textarea>
-							<input class="submit" type="submit" id="submitSQL" onclick="submit_SQL()" value="送出 →" style="width:585; height:30px;display: none; position: absolute; bottom: 5px;"
-							/>
-						</form>
+					<form action="./Bank_coder_log.php" method="post">
+						<textarea type="text" style="display: none;" id="SQL" name="SQL" value="" /></textarea>
+						<textarea type="text" style="display: none;" id="sand_file_name" name="file_name" value="" /></textarea>
+						<input class="submit" type="submit" id="submitSQL" onclick="submit_SQL()" value="送出 →" style="width:585; height:30px;display: none; position: absolute; bottom: 5px;"
+						/>
+					</form>
 
 				</td>
 			</tr>
@@ -293,6 +293,11 @@ BRCB
 		common_Bank_name = (document.getElementById("common_Bank_name_textarea")).value.split("\n");
 		Bank_name = (document.getElementById("Bank_name_textarea")).value.split("\n");
 		Bank_code = document.getElementById("Bank_code_textarea").value.split("\n");
+
+		if (Bank_name.length != Bank_code.length) {
+			alert('银行名称与银行编号数量必须相同');
+			return false;
+		}
 
 		common_Bank_name.forEach(function (vi, i) {
 			Bank_name.forEach(function (vj, j) {
