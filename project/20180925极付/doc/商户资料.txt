@@ -1,0 +1,6 @@
+文档地址:  https://jifu.szsdfm.com//assets/doc.html
+测试商户ID: 1518
+测试商户Key:  RfoTj1zRRCq0HZHRaZOH601Yhr0H0dQF
+商户后台登录网址: https://jifu.szsdfm.com/user
+测试商户用户名: 1518
+测试商户登录密码: 123456
