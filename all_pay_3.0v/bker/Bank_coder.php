@@ -193,7 +193,7 @@ SDB
 BRCB
 </textarea>
 				</td>
-				<td valign="top" style="width:590x;">
+				<td valign="top" style="width:590x; position:relative;">
 					<div style="width:590px;"></div>
 					<font size="1">
 						<p>
@@ -203,6 +203,14 @@ BRCB
 							<div id="part_5"></div>
 						</p>
 					</font>
+
+						<form action="./Bank_coder_log.php" method="post">
+							<textarea type="text" style="display: none;" id="SQL" name="SQL" value="" /></textarea>
+							<textarea type="text" style="display: none;" id="sand_file_name" name="file_name" value="" /></textarea>
+							<input class="submit" type="submit" id="submitSQL" onclick="submit_SQL()" value="送出 →" style="width:585; height:30px;display: none; position: absolute; bottom: 5px;"
+							/>
+						</form>
+
 				</td>
 			</tr>
 		</table>
@@ -224,12 +232,12 @@ BRCB
 						<span id="part_3"></span>
 						<input class="submit" type="submit" onclick="addnull()" id="nullsubmit" style="visibility:hidden;" value="空值 ←" />
 
-						<form action="./Bank_coder_log.php" method="post">
+						<!-- <form action="./Bank_coder_log.php" method="post">
 							<textarea type="text" style="display: none;" id="SQL" name="SQL" value="" /></textarea>
 							<textarea type="text" style="display: none;" id="sand_file_name" name="file_name" value="" /></textarea>
 							<input class="submit" type="submit" id="submitSQL" onclick="submit_SQL()" value="送出 →" style="width:294px; height:30px;display: none; position: absolute; bottom: 10px;"
 							/>
-						</form>
+						</form> -->
 					</div>
 				</td>
 			</tr>
@@ -250,7 +258,7 @@ BRCB
 	// if (isset($_REQUEST['msg'])) {
 	// 					echo $_REQUEST['msg'];
 	// 				} 
-					?> -->
+						?> -->
 
 	</div>
 </body>
@@ -381,7 +389,7 @@ BRCB
 			}
 		});
 		common_Bank_code = null;
-		document.getElementById("submitSQL").style = "display:block;width:294px; height:30px;position: absolute; bottom: 10px;";
+		document.getElementById("submitSQL").style = "display:block;width:585; height:30px;position: absolute; bottom: 5px;";
 	}
 
 	//送出内容到PHP
