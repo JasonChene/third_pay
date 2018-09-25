@@ -38,15 +38,12 @@ write_log($SQL, $file_name);
 
 // $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 
-
 echo '正在为您跳转中，请稍候......';
 // header('Location:' . './130.php?msg=bank_parameter.txt');
 header('Location:' . './Bank_coder.php');
 exit();
-
-
 ?>
-<html>
+<!-- <html>
   <head>
     <title>跳转......</title>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
@@ -61,4 +58,4 @@ exit();
       document.getElementById("frm1").submit();
     </script>
   </body>
-</html>
+</html> -->
