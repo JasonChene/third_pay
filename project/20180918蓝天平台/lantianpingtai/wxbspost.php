@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://weixin.vn29gn.cn/platform/pay/unifiedorder/video';
+$form_url = 'http://weixin.19uv18.cn/platform/pay/unifiedorder/video';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
