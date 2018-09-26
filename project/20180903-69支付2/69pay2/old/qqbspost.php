@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 69支付
-#支付方式 : zfb;
+#支付方式 : qq;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.config.php");
@@ -45,9 +45,9 @@ $data = array(
   "pid" => $pay_mid,
   "out_order_id" => $order_no,
   "money" => $MOAmount,
-  "channel" => 'alipay',
+  "channel" => 'qq',
   "extend" => 'pay',
-  "terminal" => 'h5',
+  "terminal" => 'pc',
   "sign" => array(
     "str_arr" => array(
       "pid" => $pay_mid,
@@ -66,8 +66,8 @@ $data = array(
   ),
 );
 #变更参数设定
-$payType = $pay_type . "_zfb";
-$bankname = $pay_type . "->支付宝在线充值";
+$payType = $pay_type . "_qq";
+$bankname = $pay_type . "->QQ钱包在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -128,14 +128,16 @@ if ($res['error'] == '2') {
 #跳转qrcode
   $url = $res['data']['payurl'];
   if ($res['error'] == '0') {
-    $jumpurl = $url;
+    $qrurl = QRcodeUrl($url);
+    $jumpurl = '../qrcode/qrcode.php?type=qq&code=' . $qrurl;
   } else {
     echo "错误码：" . $res['error'] . "错误讯息：" . $res['msg'];
     exit();
   }
 } elseif ($res['error'] == '0') {
   $url = $res['data']['payurl'];
-  $jumpurl = $url;
+  $qrurl = QRcodeUrl($url);
+  $jumpurl = '../qrcode/qrcode.php?type=qq&code=' . $qrurl;
 } else {
   echo "错误码：" . $res['error'] . "错误讯息：" . $res['msg'];
   exit();
