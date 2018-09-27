@@ -1,7 +1,11 @@
 <html>
 
 <head>
-	<title>Bank_coder_1.0</title>
+	<title>Bank_coder_1.1</title>
+	<!--
+20180925 Bank_coder_1.0 
+20180927 Bank_coder_1.1 新增功能；滚到目标位置，使用记录log 
+	-->
 	<style>
 		body {
 			color: #555555;
@@ -76,11 +80,21 @@
 		body::-webkit-scrollbar {
 			display: none;
 		}
+
+		.relative2 {
+			position: relative;
+			margin: 40 auto;
+			background-color: rgb(197, 197, 197);
+			width: 500px;
+		}
 	</style>
 </head>
 
-<body>
+<body id='body'>
 	<div id="main">
+		<div id="part_0" style="text-align:center;">
+			<p style="visibility: hidden;">错误提示区域</p>
+		</div>
 		<table style="width:884px;">
 			<tr>
 				<td>
@@ -207,6 +221,7 @@ BRCB
 					<form action="./Bank_coder_log.php" method="post">
 						<textarea type="text" style="display: none;" id="SQL" name="SQL" value="" /></textarea>
 						<textarea type="text" style="display: none;" id="sand_file_name" name="file_name" value="" /></textarea>
+						<textarea type="text" style="display: none;" id="sand_pay_name" name="pay_name" value="" /></textarea>
 						<input class="submit" type="submit" id="submitSQL" onclick="submit_SQL()" value="送出 →" style="width:585; height:30px;display: none; position: absolute; bottom: 5px;"
 						/>
 					</form>
@@ -246,12 +261,11 @@ BRCB
 		<p>
 			<div>
 				<p>说明</p>
-				<p> * 资料夹名称为空或不存在时，档案会生成再此路径-bker资料夹中，若档案已存在则会直接覆盖上去</p>
-				<p> * 银行名称和银行编号以换行切割不同银行，不能有空格</p>
-				<p> * 点选 " 产生 ↓ " 下方手动选取相同银行，反白寻找有相同文字的银行，勾选checkbox加入银行或点选 " 空值 ← " 跳过</p>
-				<p> * 点选 " 加入 ↑ " 输出SQL区块为最终结果，确认无误后点选 " 送出 → " 后即生成至ftp资料夹中</p>
-				<p> * 目前不会直接汇入到db，还是要手动添加
-				</p>
+				<p id="p_1"> * 第三方名称必填，资料夹名称为空或不存在时，档案会生成再此路径的bker资料夹中，若档案已存在则会直接覆盖上去</p>
+				<p id="p_2"> * 银行名称和银行编号以换行切割不同银行，且数量必须相等</p>
+				<p id="p_3"> * 点选 " 产生 ↓ " 下方手动选取相同银行，反白可寻找有相同文字的银行，勾选checkbox加入银行或点选 " 空值 ← " 跳过</p>
+				<p id="p_4"> * 点选 " 加入 ↑ " 输出SQL区块为最终结果，确认无误后点选 " 送出 → " 后即生成至ftp资料夹中</p>
+				<p id="p_5"> * 目前不会直接汇入到db，还是要手动添加</p>
 			</div>
 		</p>
 		<!-- <?php 
@@ -265,9 +279,11 @@ BRCB
 
 <script>
 	common_Bank_code = Array();
+
+	//自动产生完全吻合银行
 	function split() {
 		if (document.getElementById("pay_name").value == '') {
-			alert('第三方名称不能为空');
+			document.getElementById("part_0").innerHTML = '<p style="color: #ffffff; background-color: #d10000;">第三方名称不能为空</p>';
 			return false;
 		}
 		document.getElementById("ok").style = "visibility: hidden;";
@@ -294,8 +310,11 @@ BRCB
 		Bank_name = (document.getElementById("Bank_name_textarea")).value.split("\n");
 		Bank_code = document.getElementById("Bank_code_textarea").value.split("\n");
 
+		document.getElementById('ok').disabled = false;
+		document.getElementById('nullsubmit').disabled = false;
+
 		if (Bank_name.length != Bank_code.length) {
-			alert('银行名称与银行编号数量必须相同');
+			document.getElementById("part_0").innerHTML = '<p style="color: #ffffff; background-color: #d10000;">银行名称与银行编号数量必须相同</p>';
 			return false;
 		}
 
@@ -331,8 +350,14 @@ BRCB
 				document.getElementById("t2").innerHTML = arr3.join('');
 			}
 		});
+		now_scrollTop = document.body.scrollTop;
+		window.scrollTo(0, document.body.scrollHeight);
+		tog_scrollTop = document.body.scrollTop;
+		window.scrollTo(0, now_scrollTop);
+		toTop(tog_scrollTop);
 	}
 
+	//加入到选取银行
 	function jumpin(i) {
 		if (document.getElementById('checkbox_' + i).checked && arr1.length < arr5.length) {
 			arr3.splice(arr4.indexOf(i), 1);
@@ -351,6 +376,7 @@ BRCB
 		}
 	}
 
+	//移除从选取银行
 	// function jumpin_back(i) {
 	// 	if (document.getElementById('checkbox2_' + i).checked) {
 	// 		if (i < 10000) {
@@ -367,6 +393,7 @@ BRCB
 	// 	}
 	// }
 
+	//加入没有银行
 	function addnull() {
 		if (arr1.length < arr5.length) {
 			i = (new Date()).valueOf();
@@ -379,7 +406,13 @@ BRCB
 		}
 	}
 
+	//加入手动比对到SQL区块
 	function ok() {
+		toTop('0');
+		document.getElementById("ok").style = "width:294px; height:30px; visibility:visible; opacity:0.5; cursor:not-allowed;";
+		document.getElementById('ok').disabled = true;
+		document.getElementById("nullsubmit").style = "width:294px; height:30px; visibility:visible; opacity:0.5; cursor:not-allowed;";
+		document.getElementById('nullsubmit').disabled = true;
 		j = 0;
 		if (arr1.length == 0) {
 			document.getElementById("part_5").innerHTML = null;
@@ -397,13 +430,14 @@ BRCB
 		document.getElementById("submitSQL").style = "display:block;width:585; height:30px;position: absolute; bottom: 5px;";
 	}
 
-	//送出内容到PHP
+	//送出内容到PHP档生成
 	function submit_SQL() {
 		document.getElementById("SQL").value = document.getElementById("part_1").innerHTML + document.getElementById("part_5").innerHTML;
 		document.getElementById("sand_file_name").value = document.getElementById("file_name").value;
+		document.getElementById("sand_pay_name").value = document.getElementById("pay_name").value;
 	}
 
-	// 萤光笔 左
+	// 萤光笔 查左标右
 	function getselecttext() {
 		var t = '';
 		if (window.getSelection) { t = window.getSelection(); }
@@ -425,7 +459,7 @@ BRCB
 		});
 	}
 
-	// 萤光笔 右
+	// 萤光笔 查右标左
 	function getselecttext_2() {
 		var u = '';
 		if (window.getSelection) { u = window.getSelection(); }
@@ -446,7 +480,42 @@ BRCB
 			}
 		});
 	}
+	//滚动到目标
+	function toTop(tog_h) {
+		gotoTop = function () {
+			now_h = document.body.scrollTop;
+			if (Math.abs(now_h - tog_h) * 0.05 > 0) {
+				window.scrollTo(0, now_h + (tog_h - now_h) * 0.05 + Math.sign(tog_h - now_h));
+			} else {
+				window.scrollTo(0, tog_h);
+				clearInterval(timer);
+				timer = null;
+			}
+		}
+		timer = setInterval(gotoTop, 10);
+	}
 
+	// function getInfo() {
+	// 	var s = "";
+	// 	s += " 网页可见区域宽：" + document.body.clientWidth;
+	// 	s += " 网页可见区域高：" + document.body.clientHeight;
+	// 	s += " 网页可见区域宽：" + document.body.offsetWidth + " (包括边线和滚动条的宽)";
+	// 	s += " 网页可见区域高：" + document.body.offsetHeight + " (包括边线的宽)";
+	// 	s += " 网页正文全文宽：" + document.body.scrollWidth;
+	// 	s += " 网页正文全文高：" + document.body.scrollHeight;
+	// 	s += " 网页被卷去的高(ff)：" + document.body.scrollTop;
+	// 	s += " 网页被卷去的高(ie)：" + document.documentElement.scrollTop;
+	// 	s += " 网页被卷去的左：" + document.body.scrollLeft;
+	// 	s += " 网页正文部分上：" + window.screenTop;
+	// 	s += " 网页正文部分左：" + window.screenLeft;
+	// 	s += " 屏幕分辨率的高：" + window.screen.height;
+	// 	s += " 屏幕分辨率的宽：" + window.screen.width;
+	// 	s += " 屏幕可用工作区高度：" + window.screen.availHeight;
+	// 	s += " 屏幕可用工作区宽度：" + window.screen.availWidth;
+	// 	s += " 你的屏幕设置是 " + window.screen.colorDepth + " 位彩色";
+	// 	s += " 你的屏幕设置 " + window.screen.deviceXDPI + " 像素/英寸";
+	// 	alert(s);
+	// }
 </script>
 
 </html>
