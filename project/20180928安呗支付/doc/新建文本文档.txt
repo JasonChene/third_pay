@@ -1,0 +1,10 @@
+新IP:www.paghy.top:8080
+
+接口url:http://www.paghy.top:8080/pay/CXFServlet/PaySmService?wsdl
+
+回调地址ip:47.52.162.151
+
+后台新地址:http://www.paghy.top:8080/pay/
+账号：1018  密码：111111
+
+秘钥：2f76c133-187a-4ec0-976d-51933b393c41
