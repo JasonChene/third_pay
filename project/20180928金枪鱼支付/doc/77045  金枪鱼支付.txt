@@ -1,0 +1,13 @@
+金枪鱼支付
+
+金枪鱼聚合支付 用户名 nfsq  登录密码 123456 支付密码 123456
+商户号：10108
+网关地址：http://39.104.157.247:8083/Pay_Index.html
+APIKEY: r6s9u4q1aoznkiujfhxl3dazw8ynb9gj
+商户登录网址http://39.104.157.247:8083/agent_Login_index.html
+
+
+http://39.104.157.247:8083/demo.html
+对接文档
+
+3526671784
