@@ -112,15 +112,8 @@ $data = array(
 #变更参数设置
 
 $form_url = 'http://www.paghy.top:8080/pay/CXFServlet/PaySmService?wsdl';
-
-if (_is_mobile()) {
-  $scan = 'qq';
-  $data['type'] = 'QQwap';
-}
-else{
-  $scan = 'qq';
-  $data['type'] = 'QQwallet';
-}
+$scan = 'yl';
+$data['type'] = 'union_sm';
 
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

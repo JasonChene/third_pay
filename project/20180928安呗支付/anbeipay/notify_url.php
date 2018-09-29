@@ -46,9 +46,9 @@ foreach ($_POST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['order_no']; //订单号
-$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
+$order_no = $data['orderNo']; //订单号
+$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
+$success_msg = $data['code'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "";//回调讯息
@@ -74,6 +74,7 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
+	write_log("非法提交参数");
 	exit;
 }
 
@@ -86,27 +87,13 @@ foreach ($data as $arr_key => $arr_val) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
-$signtext = substr($signtext, 0,-1);//验签字串
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
-
-// #RSA解密方式
-// $signtext = $data['p1_MerId'] . $data['r0_Cmd'] . $data['r1_Code'] . $data['r2_TrxId'] . $data['r3_Amt'] . $data['r4_Cur'] . $data['r5_Pid'] . $data['r6_Order'] . $data['r7_Uid'] . $data['r8_MP'] . $data['r9_BType'] ;//验签字串
-// //write_log("signtext=".$signtext);
-// $mysign = md5($signtext);//签名
-// //write_log("mysign=".$mysign);
-// $platformPublicKey = openssl_get_publickey($pay_account);
-// if(!$platformPublicKey){
-// 	echo "开启公钥失败";
-// 	exit;
-// }
-// $sign = str_replace('*','+',$sign); //此为根据文檔所述进行符号替换再进行解密
-// $sign = str_replace('-','/',$sign);
-// //write_log("sign=".$sign);
-// $signsuccess = (boolean)openssl_verify($signtext,base64_decode($sign),$platformPublicKey);
-// openssl_free_key($platformPublicKey);
-// //write_log("signsuccess" . $signsuccess);
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+write_log("signtext=".$signtext);
+function des_ecb_encrypt($data, $key){
+	return openssl_encrypt ($data, 'des-ecb', $key);
+  }
+$mysign = des_ecb_encrypt($pay_mid,$signtext);
+write_log("mysign=".$mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
