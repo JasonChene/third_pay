@@ -1,0 +1,21 @@
+table
+{
+    border-collapse: collapse;
+    width: 900px;
+    border: #999 1px solid;
+}
+table td
+{
+    padding: 5px;
+    border: #999 1px solid;
+}
+input{
+    width:228px
+}
+span{
+    color: Red;
+}
+h1{
+    text-align: center; 
+    margin: 15px 0 5px 0;
+}
