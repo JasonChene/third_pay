@@ -84,7 +84,7 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "parter" => $pay_mid, 
+  "parter" => $pay_mid,
   "type" => "",
   "value" => $mymoney,
   "orderid" => $order_no,
@@ -100,13 +100,13 @@ $bankname = '';
 if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $data['type'] = '1001';
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+} elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
-  $data['type'] = '1010';
-}else {
+  $data['type'] = '1008';
+} else {
   $scan = 'wy';
-  $data['type'] = '967';
-  
+  $data['type'] = $_REQUEST['bank_code'];
+
 }
 payType_bankname($scan, $pay_type);
 
