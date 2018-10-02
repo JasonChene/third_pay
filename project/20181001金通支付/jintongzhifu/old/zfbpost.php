@@ -147,8 +147,12 @@ if ($row['retCode'] != '0') {
   '&tradeType='.$row['tradeType'].'&transNo='.$row['transNo'].'&userId='.$row['userId'].'&key='.$pay_mkey;
   $sign2 = md5($signtext2);
   if ($row['sign'] == $sign2) {
+    if(_is_mobile()){
       echo $row['payUrl'];
       exit;
+    }else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+    }
   }else{
       echo ('签名不正确！');
       exit;
