@@ -1,0 +1,16 @@
+http://merchant.zhonghaipay.com
+’À∫≈£∫18272309951 
+√‹¬Î£∫cxdz112233
+
+Id
+1
+
+name zhonghaipay	
+
+return_url http://pay7.5566205.com/pay/zhonghaipay/return_url.php
+
+appid LJBGDRFK
+
+appsecret 9abf3925806c2703e979a926350e6cfc
+
+create_time 2018-10-02 14:56:54
