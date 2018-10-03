@@ -1,6 +1,6 @@
 module.exports.setting = {
   file_path: "D:/job/Downloads",
-  move_path: "D:/job/third_pay2/project/20180925极付/jifupay",
+  move_path: "D:/job/third_pay2/project/20181003百信/baixin",
   message: {
     err: "搬移失败档案",
     success: "搬移成功档案"
