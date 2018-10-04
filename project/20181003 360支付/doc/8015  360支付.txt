@@ -1,0 +1,5 @@
+商户编号:360888890000144
+商户秘钥:13496d0126edc7f48e3e717feca3c200
+管理后台地址:https://mng.ntmbg.cn/manageSys
+商户主操作员:VIV3do
+操作员原密码:kFoH8PTK

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="cleartype" content="on">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下单测试</title>
+    <link type="text/css" href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+
+<h3 align="center">下单</h3>
+
+<br />
+
+<form action="PayOrderSubmit.php" method="post">
+    <table align="center">
+        <tr>
+            <td>商户编号</td>
+            <td><input type="text" name="merId" value="200000090000100">merId</td>
+        </tr>
+        <tr>
+            <td>接口版本</td>
+            <td><input type="text" name="version" value="1.0.0">version</td>
+        </tr>
+
+        <tr>
+            <td>订单编号</td>
+            <td><input type="text" name="orderNo" id="orderNo" value="">orderNo</td>
+        </tr>
+
+        <tr>
+            <td>订单金额(以元为单位)</td>
+            <td><input type="text" name="orderAmt" value="1">orderAmt</td>
+        </tr>
+
+        <tr>
+            <td>支付通道 alipay:支付宝 wxpay:微信</td>
+            <td>
+            <select name="thirdChannel">
+                <option value="alipay">支付宝</option>
+                <option value="wxpay">微信支付</option>
+            </select>
+            thirdChannel
+            </td>
+        </tr>
+        <tr>
+                <td>请选择支付产品</td>
+                <td>
+                   <select name="payprod">
+                      <option value="11">11-扫码支付</option>
+                      <option value="10">10-WAP支付(只在手机端才能调起支付宝)</option>
+                   </select>
+                </td>
+            </tr>
+        <tr>
+            <td>备用字段1</td>
+            <td><input type="text" name="remark1" value="remark">remark1</td>
+        </tr>
+        <tr>
+            <td>备用字段2</td>
+            <td><input type="text" name="remark2" value="remark1">remark2</td>
+        </tr>
+
+        <tr>
+            <td>商户后台通知url, 请在程序配置文件中配置</td>
+            <td><input type="text" name="notifyUrl" value="https://test.mlscale.com/codePay/wehfowefhmon.do" style="width: 350px;">notifyUrl</td>
+        </tr>
+        <tr>
+            <td>商户前台页面跳转url, 请在程序配置文件中配置</td>
+            <td><input type="text" name="callbackUrl" value="https://test.mlscale.com/codePay/wehfowefhmon.do" style="width: 350px;">callbackUrl</td>
+        </tr>
+        <tr>
+            <td>商户MD5签名Key</td>
+            <td><textarea name="mercKey" rows="1" cols="60" disabled>在程序中配置,请勿传输</textarea></td>
+        </tr>
+        <tr>
+            <td>请求URL</td>
+            <td><textarea name="postUrl" rows="1" cols="60">https://test.mlscale.com/codePay/payOrder.do</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b><button type="submit" name="submit">提交</button></b></td>
+        </tr>
+    </table>
+</form>
+
+<script type="text/javascript">
+$(function() {
+    $('#orderNo').val(new Date().getTime());
+});
+</script>
+</body>
+</html>
