@@ -3,14 +3,12 @@
 // include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("-----return");
 
 #接收资料
 #request方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value . "-----return");
 }
 
 #设定固定参数
@@ -47,9 +45,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 #验签方式
 $signtext = "amount=" . $data['amount'] . "&appid=" . $data['appid'] . "&currency_type=" . $data['currency_type'] . "&goods_name=" . $data['goods_name'] . "&out_trade_no=" . $data['out_trade_no'] . "&pay_id=" . $data['pay_id'] . "&pay_no=" . $data['pay_no'] . "&payment=" . $data['payment'] . "&resp_code=" . $data['resp_code'] . "&resp_desc=" . $data['resp_desc'] . "&sign_type=" . $data['sign_type'] . "&tran_amount=" . $data['tran_amount'] . "&version=" . $data['version'] . $pay_mkey;//验签字串
-write_log("signtext=" . $signtext);
 $mysign = md5($signtext);//签名
-write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
