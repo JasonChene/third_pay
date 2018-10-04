@@ -41,24 +41,6 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
-function curl_post($url, $data)
-{ #POST访问
-  echo $data."<br>";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
-  }
-  return $tmpInfo;
-}
 function QRcodeUrl($code)
 { #替换QRcodeUrl中&符号
   if (strstr($code, "&")) {
@@ -93,12 +75,12 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
+  "notifyUrl" => $merchant_url,
   "mchId" => $pay_mid, 
   "type" => "1",//1=公开版,用户自己提供收款账号 2=服务版,由平台提供收款账号
   "channelId" => "alipay", 
   "order" => $order_no,
-  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''), 
-  "notifyUrl" => $merchant_url, 
+  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),  
   "successUrl" => $return_url, 
   "errorUrl" => $error_url, 
   "extra" => "pay", 
@@ -106,7 +88,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'www.ep567.com/api/order/createOrder';//请求地址
+$form_url = 'http://www.ep567.com/api/order/createOrder';//请求地址
 $scan = 'zfb';
 
 payType_bankname($scan, $pay_type);
@@ -125,16 +107,7 @@ if ($result_insert == -1) {
 $signtext = $pay_mkey.$data["mchId"].$data["order"].$data["amount"];
 $sign = hash('sha256',$signtext);
 $data['sign'] = $sign;
-$postdata = "";
-foreach ($data as $arr_key => $arr_val) {
-    $postdata .= $arr_key . '=' . $arr_val . '&';
-}
-$postdata = urlencode(substr($postdata, 0, -1));
-echo "<pre>";
-var_dump($postdata);
-$res = curl_post($form_url, ($postdata));
-echo $res;
-exit;
+
 #跳轉方法
 ?>
 <html>

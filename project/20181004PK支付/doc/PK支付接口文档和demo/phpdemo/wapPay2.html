@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="cleartype" content="on">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAP支付2</title>
+    <link type="text/css" href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+
+<h3 align="center">WAP支付2</h3>
+
+<br />
+
+<form action="wapPaySubmit2.php" method="post">
+    <input type="hidden" name="version" value="1.0.0">
+    <input type="hidden" name="merOrderNo" id="merOrderNo" value="">
+    <input type="hidden" name="orderTitle" value="支付测试demo">
+    <input type="hidden" name="orderDesc" value="描述">
+    <input type="hidden" name="payPlat" value="alipay">
+    <table align="center" style="width: 300px">
+        <tr>
+            <td>请选择金额</td>
+            <td>
+                <select name="orderAmt">
+                    <option value="1">1元</option>
+                    <option value="2">2元</option>
+                    <option value="3">3元</option>
+                    <option value="4">4元</option>
+                    <option value="5">5元</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b><button type="submit" name="submit">提交</button></b></td>
+        </tr>
+    </table>
+</form>
+
+<script type="text/javascript">
+$(function() {
+    $('#merOrderNo').val(new Date().getTime());
+});
+</script>
+</body>
+</html>
