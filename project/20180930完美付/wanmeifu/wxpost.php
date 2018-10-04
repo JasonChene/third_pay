@@ -68,27 +68,26 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$error_url = str_replace("return_url","error_url",$return_url); //支付失敗頁面
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
+  "notifyUrl" => $merchant_url, 
   "mchId" => $pay_mid, 
   "type" => "1",//1=公开版,用户自己提供收款账号 2=服务版,由平台提供收款账号
   "channelId" => "wechat", 
   "order" => $order_no,
-  "amount" => $mymoney, 
-  "notifyUrl" => $merchant_url, 
+  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''), 
   "successUrl" => $return_url, 
-  "errorUrl" => $error_url, 
+  "errorUrl" => $return_url, 
   "extra" => "pay", 
   "sign" => "",
 );
 
 #变更参数设置
-$form_url = 'www.ep567.com/api/order/createOrder';//请求地址
+$form_url = 'http://www.ep567.com/api/order/createOrder';//请求地址
 $scan = 'wx';
 
 payType_bankname($scan, $pay_type);
@@ -107,9 +106,7 @@ if ($result_insert == -1) {
 $signtext = $pay_mkey.$data["mchId"].$data["order"].$data["amount"];
 $sign = hash('sha256',$signtext);;
 $data['sign'] = $sign;
-$res = curl_post($form_url, http_build_query($data));
-echo $res;
-exit;
+
 #跳轉方法
 ?>
 <html>

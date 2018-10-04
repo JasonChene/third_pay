@@ -41,7 +41,6 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
-
 function QRcodeUrl($code)
 { #替换QRcodeUrl中&符号
   if (strstr($code, "&")) {
@@ -56,7 +55,7 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -69,40 +68,29 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
+$error_url = str_replace("return_url","error_url",$return_url); //支付失敗頁面
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "p0_Cmd" => 'Buy', //业务类型
-  "p1_MerId" => $pay_mid, //商户编号
-  "p2_Order" => $order_no, //商户订单号
-  "p3_Amt" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //支付金额
-  "p4_Cur" => 'CNY', //交易币种
-  "p5_Pid" => 'Pid', //商品名称
-  "p6_Pcat" => 'Pcat', //商品种类
-  "p7_Pdesc" => 'Pdesc', //商品描述
-  "p8_Url" => $merchant_url, //商户接收支付成功数据的地址
-  "p9_SAF" => '0', //送货地址
-  "pa_MP" => 'MP', //商户扩展信息
-  "pd_FrpId" => '', //支付通道编码
-  "pr_NeedResponse" => '1', //应答机制
-  "hmac" => '', //签名数据
+  "notifyUrl" => $merchant_url,
+  "mchId" => $pay_mid, 
+  "type" => "1",//1=公开版,用户自己提供收款账号 2=服务版,由平台提供收款账号
+  "channelId" => "alipay", 
+  "order" => $order_no,
+  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),  
+  "successUrl" => $return_url, 
+  "errorUrl" => $error_url, 
+  "extra" => "pay", 
+  "sign" => "",
 );
 
 #变更参数设置
-$form_url = 'http://shayutong.com/GateWay/ReceiveBank.aspx ';//请求地址
-if (strstr($pay_type, "支付宝反扫")) {
-  $scan = 'zfbfs';
-  $data['pd_FrpId'] = 'aliqr';
-} else {
-  $scan = 'zfb';
-  $data['pd_FrpId'] = 'alipay';
-  if (_is_mobile()) {
-    $data['pd_FrpId'] = 'alipaywap';
-  }
-}
+$form_url = 'http://www.ep567.com/api/order/createOrder';//请求地址
+$scan = 'zfb';
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -116,28 +104,9 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('hmac');//不加入签名的array key值
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr)) {
-    $signtext .= $arr_val;
-  }
-}
-$key = $pay_mkey;
-$data_signtext = $signtext;
-$key = iconv("GB2312", "UTF-8", $key);
-$data_signtext = iconv("GB2312", "UTF-8", $data_signtext);
-$b = 64; // byte length for md5
-if (strlen($key) > $b) {
-  $key = pack("H*", md5($key));
-}
-$key = str_pad($key, $b, chr(0x00));
-$ipad = str_pad('', $b, chr(0x36));
-$opad = str_pad('', $b, chr(0x5c));
-$k_ipad = $key ^ $ipad;
-$k_opad = $key ^ $opad;
-$sign = md5($k_opad . pack("H*", md5($k_ipad . $data_signtext)));
-$data['hmac'] = $sign;
+$signtext = $pay_mkey.$data["mchId"].$data["order"].$data["amount"];
+$sign = hash('sha256',$signtext);
+$data['sign'] = $sign;
 
 #跳轉方法
 ?>
