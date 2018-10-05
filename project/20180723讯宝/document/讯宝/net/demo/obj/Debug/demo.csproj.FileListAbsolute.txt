@@ -1,0 +1,10 @@
+C:\Users\Administrator\Desktop\demo\demo\bin\demo.dll
+C:\Users\Administrator\Desktop\demo\demo\bin\demo.pdb
+C:\Users\Administrator\Desktop\demo\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\demo\demo\obj\Debug\demo.dll
+C:\Users\Administrator\Desktop\demo\demo\obj\Debug\demo.pdb
+D:\ZDD\项目\接口文档\讯宝\demo\bin\demo.dll
+D:\ZDD\项目\接口文档\讯宝\demo\bin\demo.pdb
+D:\ZDD\项目\接口文档\讯宝\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+D:\ZDD\项目\接口文档\讯宝\demo\obj\Debug\demo.dll
+D:\ZDD\项目\接口文档\讯宝\demo\obj\Debug\demo.pdb

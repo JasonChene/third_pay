@@ -107,6 +107,9 @@ $data = array(
 $scan = 'zfb';
 $data['payType'] = '1';
 $form_url = 'http://api.wachou.top/passivePay';//二维码支付提交地址
+if (_is_mobile()) {
+  $form_url ="http://api.wachou.top/wapPay";
+}
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
