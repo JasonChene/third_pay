@@ -21,3 +21,9 @@
 修改档案：qqbspost,qqh5post,zfbbspost,zfbh5post,wxbspost,wxh5post
 测试到账：支付宝扫码
 备注：修改提交地址
+
+20181006
+第三方名称：风携支付  
+档案位置：php@60.245.62.221\fengxiepay
+修改档案：qqbspost,qqh5post,zfbbspost,zfbh5post,wxbspost,wxh5post
+备注：修改网关地址
