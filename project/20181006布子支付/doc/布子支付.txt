@@ -1,0 +1,7 @@
+布子支付
+用户名 13048599118  登录密码 123456  支付密码 123456
+登录网址 http://www.coolsk.cn/agent_Login_index.html
+手机 13048599118  邮箱  738145298@qq.com
+商户号：10040
+网关地址：http://www.coolsk.cn/Pay_Index.html
+APIKEY: n9cqftl27omjz8g05d7s4ws0dnsfg3g6
