@@ -71,8 +71,6 @@ $data = array(
     "havekey" => "1",
   ),
 );
-
-
 #变更参数设定
 $payType = $pay_type . "_zfb";
 $bankname = $pay_type . "->支付宝在线充值";
@@ -85,6 +83,8 @@ if ($result_insert == -1) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
+
+
 #签名排列，可自行组字串或使用http_build_query($array)
 foreach ($data as $arr_key => $arr_value) {
   if (is_array($arr_value)) {
