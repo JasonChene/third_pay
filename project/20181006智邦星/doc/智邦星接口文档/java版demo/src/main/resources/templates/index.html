@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>java - 支付对接实例</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-fixed-top navbar-inverse">
+		<div class="container">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/index.html">接口示例(JAVA)</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container">
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#pay" aria-controls="pay" role="tab" data-toggle="tab">支付</a></li>
+			<li role="presentation"><a href="#query" aria-controls="query" role="tab" data-toggle="tab">查询</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="pay">
+				<form name="form" action="/pay.html" method="post">
+					<div class="form-group">
+						<label for="merchant">商 户 号<small>&nbsp;(<b>merchant</b>)
+						</small></label> <input type="text" class="form-control" id="merchant" name="merchant" placeholder="商 户 号" th:value="${merchantCode}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="key">商户密钥<small>&nbsp;(<b>key</b>)
+						</small></label> <input type="text" class="form-control" id="key" name="key" placeholder="商户密钥" th:value="${merchantKey}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="payUrl ">支付地址<small>&nbsp;(<b>payUrl</b>)
+						</small></label> <input type="text" class="form-control" id="payUrl" name="payUrl" placeholder="支付地址" th:value="${payUrl}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="amount">充值金额<small>&nbsp;(<b>amount</b>)
+						</small></label> <input type="text" class="form-control" id="amount" name="amount" placeholder="充值金额" value="10.00">
+					</div>
+					<div class="form-group">
+						<label for="orderNo">订单号<small>&nbsp;(<b>orderNo</b>)
+						</small></label> <input type="text" class="form-control" id="orderNo" name="orderNo" placeholder="订单号">
+					</div>
+					<div class="form-group">
+						<label for="payType">支付类型<small>&nbsp;(<b>payType</b>)
+						</small></label> <select class="form-control" name="payType" id="payType">
+							<option value="wxpay">微信支付</option>
+							<option value="alipay" selected>支付宝支付</option>
+							<option value="qqpay">QQ钱包</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="remark">备注信息<small>&nbsp;(<b>remark</b>)
+						</small></label> <input type="text" class="form-control" id="remark" name="remark" placeholder="备注信息">
+					</div>
+					<div class="form-group">
+						<label for="currentTime">当前时间<small>&nbsp;(<b>currentTime</b>)
+						</small></label> <input type="text" class="form-control" id="currentTime" name="currentTime" placeholder="当前时间">
+					</div>
+					<div class="form-group">
+						<label for="returnUrl">同步回调<small>&nbsp;(<b>returnUrl</b>)
+						</small></label> <input type="text" class="form-control" id="returnUrl" name="returnUrl" placeholder="同步回调">
+					</div>
+					<div class="form-group">
+						<label for="notifyUrl ">异步回调<small>&nbsp;(<b>notifyUrl</b>)
+						</small></label> <input type="text" class="form-control" id="notifyUrl" name="notifyUrl" placeholder="异步回调">
+					</div>
+					<button type="submit" class="btn btn-danger">去支付</button>
+				</form>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="query">
+				<form name="queryForm" action="/query.html" method="post">
+					<div class="form-group">
+						<label for="merchant">商 户 号<small>&nbsp;(<b>merchant</b>)
+						</small></label> <input type="text" class="form-control" name="merchant" placeholder="商 户 号" th:value="${merchantCode}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="key">商户密钥<small>&nbsp;(<b>key</b>)
+						</small></label> <input type="text" class="form-control" name="key" placeholder="商户密钥" th:value="${merchantKey}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="payUrl ">查询地址<small>&nbsp;(<b>queryUrl</b>)
+						</small></label> <input type="text" class="form-control" name="queryUrl" placeholder="查询地址" th:value="${queryUrl}" readonly="readonly" />
+					</div>
+					<div class="form-group">
+						<label for="orderNo">订单号<small>&nbsp;(<b>orderNo</b>)
+						</small></label> <input type="text" class="form-control" name="orderNo" placeholder="订单号">
+					</div>
+					<div class="form-group">
+						<label for="currentTime">当前时间<small>&nbsp;(<b>currentTime</b>)
+						</small></label> <input type="text" class="form-control"  name="currentTime" placeholder="当前时间">
+					</div>
+					<div class="form-group">
+						<label for="createTime">订单发起时间<small>&nbsp;(<b>createTime</b>)
+						</small></label> <input type="text" class="form-control"  name="createTime" placeholder="订单发起时间">
+					</div>
+					<button type="submit" class="btn btn-danger">去查询</button>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			function _f(val) {
+				return Number(Math.round(val * 100) / 100);
+			}
+			function _d(date, fmt) {
+				if (!!!date) {
+					return '';
+				}
+				if (typeof (date) == 'number') {
+					date = new Date(date);
+				} else if (typeof (date) == 'string') {
+					date = new Date(Number(date));
+				}
+				var o = {
+					'M+' : date.getMonth() + 1, // 月份
+					'd+' : date.getDate(), // 日
+					'h+' : date.getHours(), // 小时
+					'H+' : date.getHours(), // 小时
+					'm+' : date.getMinutes(), // 分
+					's+' : date.getSeconds(), // 秒
+					'S' : date.getMilliseconds()
+				// 毫秒
+				};
+				if (/(y+)/.test(fmt)) {
+					fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+				}
+				for ( var k in o) {
+					if (new RegExp('(' + k + ')').test(fmt)) {
+						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+					}
+				}
+				return fmt;
+			}
+
+			var url = location.protocol + '//' + location.host;
+			$('#returnUrl').val(url + '/call.html');
+			$('#notifyUrl').val(url + '/back.html');
+			$('input[name="currentTime"]').val(_d(new Date(), 'yyyyMMddHHmmss'));
+			$('input[name="createTime"]').val(_d(new Date(), 'yyyyMMddHHmmss'));
+			$('input[name="orderNo"]').val('T' + _d(new Date(), 'yyyyMMddHHmmssSSS'));
+		});
+	</script>
+</body>
+</html>
