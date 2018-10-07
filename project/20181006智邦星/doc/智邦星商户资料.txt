@@ -4,5 +4,3 @@
 商户密匙：53021e2cae854d2e8fd32e2e89e5ec1c
 技术联系：877533941
 
-include_once("../../../database/mysql.config.php");
-$stmt = $mydata1_db->prepare($sql);
