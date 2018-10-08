@@ -165,7 +165,7 @@ $data = array(
   "callBackViewUrl" => $return_url,
 );
 #变更参数设置
-$form_url = 'http://120.79.87.165:8070/api/pay.action';//提交地址
+$form_url = 'http://api.jiayipay.cn/api/pay.action';//提交地址
 $scan = 'wy';
 
 payType_bankname($scan,$pay_type);

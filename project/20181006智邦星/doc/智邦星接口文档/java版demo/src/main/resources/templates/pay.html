@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>java - 去支付</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container">
+		<form name="form" th:action="${payUrl}" method="post">
+			<input type="hidden" name="amount" th:value="${amount}">
+			<input type="hidden" name="merchant" th:value="${merchant}">
+			<input type="hidden" name="notifyUrl" th:value="${notifyUrl}">
+			<input type="hidden" name="orderNo" th:value="${orderNo}">
+			<input type="hidden" name="payType" th:value="${payType}">
+			<input type="hidden" name="remark" th:value="${remark}">
+			<input type="hidden" name="returnUrl" th:value="${returnUrl}">
+			<input type="hidden" name="currentTime" th:value="${currentTime}">
+			<input type="hidden" name="sign" th:value="${sign}">
+		</form>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('form[name="form"]').submit();
+		});
+	</script>
+</body>
+</html>
