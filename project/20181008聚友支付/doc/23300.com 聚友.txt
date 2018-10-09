@@ -1,0 +1,7 @@
+下来了
+网关接口地址：https://wx.926bm.com/gateway
+商户后台地址：https://kacha-wxpay.com/merchants
+商户号：80182 默认密码：a123456
+商户秘钥：adf1a5576c78bc0dbb1bc8f67f2dad8b
+接口支持：微信扫码  微信H5
+户好了 

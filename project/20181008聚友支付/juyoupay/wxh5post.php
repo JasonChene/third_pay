@@ -48,14 +48,14 @@ $data = array(
   "oid" => $order_no,
   "amt" => $MOAmount,
   "notify" => $notify_url,
-  "way" => '2',
+  "way" => '3',
   "back" => $return_url,
   "sign" => array(
     "str_arr" => array(
       "mid" => $pay_mid,
       "oid" => $order_no,
       "amt" => $MOAmount,
-      "way" => "2",
+      "way" => "3",
       "back" => $return_url,
       "notify" => $notify_url,
     ),
