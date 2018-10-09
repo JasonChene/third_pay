@@ -43,32 +43,34 @@ function payType_bankname($scan, $pay_type)
 }
 
 #判断 php版本 编译成 json字符串
-function jsonEncode($value){
-	if (version_compare(PHP_VERSION,'5.4.0','<')){
-		$str = json_encode($value);
-		$str = preg_replace_callback("#\\\u([0-9a-f]{4})#i","replace_unicode_escape_sequence",$str);
-		$str = stripslashes($str);
-		return $str;
-	}else{
-		return json_encode($value,320);
-	}
+function jsonEncode($value)
+{
+  if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+    $str = json_encode($value);
+    $str = preg_replace_callback("#\\\u([0-9a-f]{4})#i", "replace_unicode_escape_sequence", $str);
+    $str = stripslashes($str);
+    return $str;
+  } else {
+    return json_encode($value, 320);
+  }
 }
 
 //加密
-function encodePay($data,$pay_public_key){#加密//		
-	$pu_key =  openssl_pkey_get_public($pay_public_key);
-	if ($pu_key == false){
-		echo "打开密钥出错";
-		die;
-	}
-	$encryptData = '';
-	$crypto = '';
-	foreach (str_split($data, 117) as $chunk) {            
-        openssl_public_encrypt($chunk, $encryptData, $pu_key);  
-        $crypto = $crypto . $encryptData;
-    }
-	$crypto = base64_encode($crypto);
-	return $crypto;
+function encodePay($data, $pay_public_key)
+{#加密//		
+  $pu_key = openssl_pkey_get_public($pay_public_key);
+  if ($pu_key == false) {
+    echo "打开密钥出错";
+    die;
+  }
+  $encryptData = '';
+  $crypto = '';
+  foreach (str_split($data, 117) as $chunk) {
+    openssl_public_encrypt($chunk, $encryptData, $pu_key);
+    $crypto = $crypto . $encryptData;
+  }
+  $crypto = base64_encode($crypto);
+  return $crypto;
 }
 
 #function
@@ -110,7 +112,7 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
-$accountexp = explode('###',$pay_account);
+$accountexp = explode('###', $pay_account);
 $pay_md5key = $accountexp[0];
 $pay_account = $accountexp[1];//商户公钥
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
@@ -121,10 +123,10 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 #公钥加头尾
 $public_key = "-----BEGIN PUBLIC KEY-----\r\n";
-foreach (str_split($pay_account,64) as $str){
-	$public_key .= $str . "\r\n";
+foreach (str_split($pay_account, 64) as $str) {
+  $public_key .= $str . "\r\n";
 }
-$public_key .="-----END PUBLIC KEY-----";
+$public_key .= "-----END PUBLIC KEY-----";
 #固定参数设置
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
@@ -133,7 +135,7 @@ $merNo = $pay_mid; //商户号
 
 #第三方参数设置
 $data = array(
-  "amount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),//订单金额：单位/元
+  "amount" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''),//订单金额：单位/元
   "channelCode" => '',//支付方式
   "goodsName" => 'Buy',//商品名称
   "orderNum" => $order_no,//商户流水号
@@ -144,10 +146,10 @@ $data = array(
 #变更参数设置
 
 $form_url = 'http://api.65011688.com/api/ScanCodePay';
-if(_is_mobile()) {
+if (_is_mobile()) {
   $scan = 'zfb';
-  $data['channelCode'] = 'ZFBH5';
-}else{
+  $data['channelCode'] = 'ZFBWAP';
+} else {
   $scan = 'zfb';
   $data['channelCode'] = 'ZFB';
 }
@@ -167,27 +169,32 @@ $sign = strtoupper(md5(jsonEncode($data) . $pay_md5key));
 //生成 json字符串
 $json = jsonEncode($data);
 //加密
-$dataStr =encodePay($json,$public_key);
-$reqParam["data"]=$dataStr;
-$reqParam["merNo"]=$merNo;
-$reqParam["sign"]=$sign;
+$dataStr = encodePay($json, $public_key);
+$reqParam["data"] = $dataStr;
+$reqParam["merNo"] = $merNo;
+$reqParam["sign"] = $sign;
 
+if (!_is_mobile()) {
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($reqParam));
-$tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1);
+  $res = curl_post($form_url, http_build_query($reqParam));
+  $tran = mb_convert_encoding($res, "UTF-8", "auto");
+  $row = json_decode($tran, 1);
 
 #跳转
-if ($row['status'] != '200') {
-  echo '错误代码:' . $row['status'] . "<br>";
-  echo '错误讯息:' . $row['message'] . "<br>";
-  exit;
-} else {
-  if (_is_mobile()) {
-    $jumpurl = $row['data'];
+  if ($row['status'] != '200') {
+    echo '错误代码:' . $row['status'] . "<br>";
+    echo '错误讯息:' . $row['message'] . "<br>";
+    exit;
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['data']);
+    if (_is_mobile()) {
+      $jumpurl = $row['data'];
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['data']);
+    }
   }
+} else {
+  $form_data = $reqParam;
+  $jumpurl = $form_url;
 }
 
 #跳轉方法
