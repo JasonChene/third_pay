@@ -172,22 +172,27 @@ $reqParam["data"]=$dataStr;
 $reqParam["merNo"]=$merNo;
 $reqParam["sign"]=$sign;
 
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($reqParam));
-$tran = mb_convert_encoding($res, "UTF-8", "auto");
-$row = json_decode($tran, 1);
+if (!_is_mobile()) {
+  #curl获取响应值
+  $res = curl_post($form_url, http_build_query($reqParam));
+  $tran = mb_convert_encoding($res, "UTF-8", "auto");
+  $row = json_decode($tran, 1);
 
-#跳转
-if ($row['status'] != '200') {
-  echo '错误代码:' . $row['status'] . "<br>";
-  echo '错误讯息:' . $row['message'] . "<br>";
-  exit;
-} else {
-  if (_is_mobile()) {
-    $jumpurl = $row['data'];
+  #跳转
+  if ($row['status'] != '200') {
+    echo '错误代码:' . $row['status'] . "<br>";
+    echo '错误讯息:' . $row['message'] . "<br>";
+    exit;
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['data']);
+    if (_is_mobile()) {
+      $jumpurl = $row['data'];
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['data']);
+    }
   }
+} else {
+  $form_data = $reqParam;
+  $jumpurl = $form_url;
 }
 
 #跳轉方法
