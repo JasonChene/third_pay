@@ -53,7 +53,7 @@ if(!empty($data)){
 	}
 	}
 	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-	$mysign = md5($signtext);
+	$mysign = strtoupper(md5($signtext));
 	write_log("signtext=" . $signtext);
 	write_log("mysign=" . $mysign);
 
