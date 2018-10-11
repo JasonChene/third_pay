@@ -1,10 +1,10 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 瑞银信
+#第三方名稱 : 永付
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -13,7 +13,7 @@ $pay_type =$_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.siruitepay.com/API/Bank/';
+$form_url = 'https://pay.yongzf.net/load';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -39,34 +39,36 @@ $order_time = date("YmdHis");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount'], 0, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $data = array(
-"ForUserId" => $pay_mid,
-"LinkID" => $order_no,
-"Moneys" => $MOAmount,
-"NotifyUrl" => $notify_url,
-"Channelid" => '2221',
-"ReturnUrl" => $return_url,
-"Sign" => array(
+"pay_memberid" => $pay_mid,
+"pay_orderid" => $order_no,
+"pay_amount" => $MOAmount,
+"pay_notifyurl" => $notify_url,
+"pay_applydate" => $order_time,
+"pay_channelCode" => 'ALIPAY',
+"pay_bankcode" => 'QRCODE',
+"pay_md5sign" => array(
 "str_arr" => array(
-"LinkID" => $order_no,
-"ForUserId" => $pay_mid,
-"Channelid" => "2221",
-"Moneys" => $MOAmount,
-"AssistStr" => "",
-"ReturnUrl" => $return_url,
+"pay_memberid" => $pay_mid,
+"pay_orderid" => $order_no,
+"pay_amount" => $MOAmount,
+"pay_applydate" => $order_time,
+"pay_channelCode" => "ALIPAY",
+"pay_bankcode" => "QRCODE",
+"pay_notifyurl" => $notify_url,
 ),
-"mid_conn" => "=",
+"mid_conn" => "^",
 "last_conn" => "&",
 "encrypt" => array(
 "0" => "MD5",
+"1" => "upper",
 ),
-"key_str" => "&Key=",
+"key_str" => "&key=",
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"AssistStr" => '',
 );
 #变更参数设定
 $payType = $pay_type."_zfb";
@@ -88,8 +90,17 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url,http_build_query($data),"POST");
+$row = json_decode($res,1);
+#跳转qrcode
+$url = $row['qrcode'];
+if ($row['code'] == '0') {
+    $jumpurl = $url;
+}else{
+  echo "错误码：".$row['code']."错误讯息：".$row['code'];
+  exit();
+}
 ?>
 <html>
   <head>

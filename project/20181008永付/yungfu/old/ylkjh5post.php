@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 永富支付
-#支付方式 : yl;
+#第三方名稱 : 永付
+#支付方式 : ylkj;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.config.php");
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://okfunpay.com/Pay_Index.html';
+$form_url = 'https://pay.yongzf.net/load';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -47,19 +47,19 @@ $data = array(
 "pay_amount" => $MOAmount,
 "pay_notifyurl" => $notify_url,
 "pay_applydate" => $order_time,
-"pay_bankcode" => '910',
-"pay_callbackurl" => $return_url,
+"pay_channelCode" => 'YL_EXPRESS',
+"pay_bankcode" => $bank_code,
 "pay_md5sign" => array(
 "str_arr" => array(
+"pay_memberid" => $pay_mid,
+"pay_orderid" => $order_no,
 "pay_amount" => $MOAmount,
 "pay_applydate" => $order_time,
-"pay_bankcode" => "910",
-"pay_callbackurl" => $return_url,
-"pay_memberid" => $pay_mid,
+"pay_channelCode" => "YL_EXPRESS",
+"pay_bankcode" => $bank_code,
 "pay_notifyurl" => $notify_url,
-"pay_orderid" => $order_no,
 ),
-"mid_conn" => "=",
+"mid_conn" => "^",
 "last_conn" => "&",
 "encrypt" => array(
 "0" => "MD5",
@@ -71,8 +71,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_yl";
-$bankname = $pay_type."->银联钱包在线充值";
+$payType = $pay_type."_ylkj";
+$bankname = $pay_type."->银联快捷在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -90,8 +90,17 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url,http_build_query($data),"POST");
+$row = json_decode($res,1);
+#跳转qrcode
+$url = $row['qrcode'];
+if ($row['code'] == '0') {
+    $jumpurl = $url;
+}else{
+  echo "错误码：".$row['code']."错误讯息：".$row['code'];
+  exit();
+}
 ?>
 <html>
   <head>
