@@ -91,20 +91,31 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "amount" => $mymoney,
-  "currentTime" => date("YmdHis"),
-  "merchant" => $pay_mid, 
-  "notifyUrl" => $merchant_url, 
-  "orderNo" => $order_no,
-  "payType" => "",
-  "returnUrl" => $return_url,
-  "sign" => "",
+  "versionId" => "1.1",
+  "orderAmount" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "orderDate" => date("YmdHis"), 
+  "currency" => "RMB", 
+  "transType" => "0008",
+  "asynNotifyUrl" => $merchant_url,
+  "synNotifyUrl" => $return_url,
+  "signType" => "MD5",
+  "merId" => $pay_mid,
+  "prdOrdNo" => $order_no,
+  "payMode" => "",
+  "receivableType" => "D00",
+  "prdAmt" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
+  "prdName" => "pay",
+  "signData" => "",
 );
 
 #变更参数设置
-$form_url = 'http://www.zbxpay.com/pay';//请求地址
+$form_url = 'http://106.14.1.78:8070/payment/ScanPayApply.do';
 $scan = 'zfb';
-$data['payType'] = 'alipay';
+$data['payMode'] = '00021';
+if (_is_mobile()){
+  $form_url = "http://106.14.1.78:8070/payment/PayUnApply.do";
+  $data['payMode'] = '00028';
+}
 
 payType_bankname($scan, $pay_type);
 
@@ -120,21 +131,49 @@ if ($result_insert == -1) {
 
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('sign');
+$noarr = array('signData');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
-$signtext = substr($signtext, 0, -1) . '#' . $pay_mkey;
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 $sign = md5($signtext);
-$data['sign'] = $sign; 
-
+$data['signData'] = $sign; 
 #跳轉方法
 
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data));
+$row = json_decode($res, 1);
+#跳转
+if ($row['retCode'] != '1') {
+  echo '错误代码:' . $row['retCode'] . "<br>";
+  echo '错误讯息:' . $row['retMsg'] . "<br>";
+  exit;
+} else {
+  ksort($row);
+  $noarr = array('signData');
+  $signtext = '';
+  foreach ($row as $arr_key => $arr_val) {
+    if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+      $signtext .= $arr_key . '=' . $arr_val . '&';
+    }
+  }
+  $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+  $sign = strtoupper(md5($signtext));
+  if ($sign == $row['signData']) {
+    if (_is_mobile()) {
+      echo $row['htmlText'];
+      exit;
+    } else {
+      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
+    }
+  }else{
+    echo ('签名不正确！');
+    exit;
+  }
+}
 ?>
 <html>
   <head>

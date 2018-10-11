@@ -2,23 +2,23 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-
+write_log("return");
 #接收资料
 $data = array();
-foreach ($_POST as $key => $value) {
+foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	// write_log($key . "=" . $value);
+	write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['orderNo']; //订单号
-	$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
-	$success_msg = $data['payFlag'];//成功讯息
-	$success_code = "2";//文档上的成功讯息
-	$sign = $data['sign'];//签名
-	$echo_msg = "success";//回调讯息
+	$order_no = $data['prdOrdNo']; //订单号
+	$mymoney = number_format($data['orderAmount']/100, 2, '.', ''); //订单金额
+	$success_msg = $data['orderStatus'];//成功讯息
+	$success_code = 01;//文档上的成功讯息
+	$sign = $data['signData'];//签名
+	$echo_msg = "SUCCESS";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -39,24 +39,23 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		// write_log("非法提交参数");
+		write_log("非法提交参数");
 		exit;
 	}
 
 	#验签方式
 	ksort($data);
-	$noarr = array('sign');
+	$noarr = array('signData');
 	$signtext = '';
 	foreach ($data as $arr_key => $arr_val) {
 	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 	}
-	$signtext = substr($signtext, 0, -1) . '#' . $pay_mkey;
+	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 	$mysign = md5($signtext);
-	// write_log("signtext=" . $signtext);
-	// write_log("mysign=" . $mysign);
-
+	write_log("signtext=" . $signtext);
+	write_log("mysign=" . $mysign);
 
 	#到账判断
 	if ($success_msg == $success_code) {
