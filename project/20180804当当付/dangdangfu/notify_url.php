@@ -17,9 +17,9 @@ foreach ($_POST as $key => $value) {
 $order_no = $data['traceno']; //订单号
 $mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
 $success_msg = $data['status'];//成功讯息
-if (!$data['payType']) {
+if (!isset($data['payType'])) {
 	$success_code = "2";//文档上的成功讯息
-}else {
+} else {
 	$success_code = "1";//文档上的成功讯息
 }
 $sign = $data['signature'];//签名
@@ -52,14 +52,14 @@ $noarr = array('signature');//不加入签名的array key值
 ksort($data);
 $signtext = "";
 foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0') && $arr_val != 'null') {
 		$signtext .= $arr_key . '=' . $arr_val . '&';
 	}
 }
 $signtext = substr($signtext, 0, -1) . "&" . $pay_mkey;//验签字串
-// write_log("signtext=" . $signtext);
+//write_log("signtext=" . $signtext);
 $mysign = strtoupper(md5($signtext));//签名
-// write_log("mysign=" . $mysign);
+//write_log("mysign=" . $mysign);
 
 
 #到账判断
