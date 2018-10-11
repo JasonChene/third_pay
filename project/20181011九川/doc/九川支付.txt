@@ -1,0 +1,5 @@
+http://www.9cds.cn/
+ÓÃ»§£ºblr1966
+ÃÜÂë£º12q5519
+include_once("../../../database/mysql.config.php");
+$stmt = $mydata1_db->prepare($sql);
