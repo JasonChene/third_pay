@@ -2,12 +2,12 @@
 <?php
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("return");
+// write_log("return");
 #接收资料
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	// write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -39,7 +39,7 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log("非法提交参数");
+		// write_log("非法提交参数");
 		exit;
 	}
 
@@ -54,8 +54,8 @@ if(!empty($data)){
 	}
 	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 	$mysign = strtoupper(md5($signtext));
-	write_log("signtext=" . $signtext);
-	write_log("mysign=" . $mysign);
+	// write_log("signtext=" . $signtext);
+	// write_log("mysign=" . $mysign);
 
 	#到账判断
 	if ($success_msg == $success_code) {

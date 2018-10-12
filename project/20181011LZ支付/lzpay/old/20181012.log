@@ -1,0 +1,16 @@
+2018-10-12 00:54:21 notify
+2018-10-12 00:54:21 payId=1050610275092361216
+2018-10-12 00:54:21 prdOrdNo=22808220181012125303
+2018-10-12 00:54:21 transType=008
+2018-10-12 00:54:21 orderAmount=2000
+2018-10-12 00:54:21 signType=MD5
+2018-10-12 00:54:21 merId=YF10100114
+2018-10-12 00:54:21 versionId=1.1
+2018-10-12 00:54:21 payTime=20181012125421
+2018-10-12 00:54:21 orderStatus=01
+2018-10-12 00:54:21 synNotifyUrl=http://paytest.7k111.com/pay/lzpay/return_url.php
+2018-10-12 00:54:21 signData=2CAB0922EC3113151A96E252EFA525F0
+2018-10-12 00:54:21 asynNotifyUrl=http://paytest.7k111.com/pay/lzpay/notify_url.php
+2018-10-12 00:54:21 signtext=asynNotifyUrl=http://paytest.7k111.com/pay/lzpay/notify_url.php&merId=YF10100114&orderAmount=2000&orderStatus=01&payId=1050610275092361216&payTime=20181012125421&prdOrdNo=22808220181012125303&signType=MD5&synNotifyUrl=http://paytest.7k111.com/pay/lzpay/return_url.php&transType=008&versionId=1.1&key=9P9SIMbwGZn6
+2018-10-12 00:54:21 mysign=2CAB0922EC3113151A96E252EFA525F0
+2018-10-12 00:54:21 SUCCESSat 1
