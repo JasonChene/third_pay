@@ -1,0 +1,11 @@
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','北京银行','1313');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','工商银行','1102');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','光大银行','1311');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','华夏银行','1304');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','建设银行','1105');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','交通银行','1301');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','民生银行','1305');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','农业银行','1103');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','上海银行','1310');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','邮政储蓄银行','1312');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('奥邦','招商银行','1308');
