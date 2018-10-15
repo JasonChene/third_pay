@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('南瓜支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/nanguapay/post.php', '/pay/nanguapay/wxpost.php', '/pay/nanguapay/zfbpost.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/notify_url.php', '/pay/nanguapay/notify_url.php', '/pay/nanguapay/notify_url.php', '1', '1', '/pay/nanguapay/qqpost.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/notify_url.php');
+ VALUES ('瞬廷支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/shunting/post.php', '/pay/shunting/wxpost.php', '/pay/shunting/zfbpost.php', '/pay/shunting/return_url.php', '/pay/shunting/return_url.php', '/pay/shunting/return_url.php', '/pay/shunting/notify_url.php', '/pay/shunting/notify_url.php', '/pay/shunting/notify_url.php', '1', '1', '/pay/shunting/qqpost.php', '/pay/shunting/return_url.php', '/pay/shunting/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('南瓜支付', '852387', '4bfd58245ed04f4bb70203b21d892c2d', NULL, 'http://pay7.5566205.com', '南瓜支付', '1', '1', '1', '南瓜支付', '1');
+ VALUES ('瞬廷支付', '2191', '159970e865bc4fd9a9484fca854785d1', NULL, 'http://pay7.5566205.com', '瞬廷支付', '1', '1', '1', '瞬廷支付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('南瓜支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/nanguapay/post.php', '/pay/nanguapay/wxpost.php', '/pay/nanguapay/zfbpost.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/notify_url.php', '/pay/nanguapay/notify_url.php', '/pay/nanguapay/notify_url.php', '1', '1', '/pay/nanguapay/qqpost.php', '/pay/nanguapay/return_url.php', '/pay/nanguapay/notify_url.php');
+ VALUES ('瞬廷支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/shunting/post.php', '/pay/shunting/wxpost.php', '/pay/shunting/zfbpost.php', '/pay/shunting/return_url.php', '/pay/shunting/return_url.php', '/pay/shunting/return_url.php', '/pay/shunting/notify_url.php', '/pay/shunting/notify_url.php', '/pay/shunting/notify_url.php', '1', '1', '/pay/shunting/qqpost.php', '/pay/shunting/return_url.php', '/pay/shunting/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('南瓜支付', '852387', '4bfd58245ed04f4bb70203b21d892c2d', NULL, 'http://paytest.7k111.com', '南瓜支付', '1', '1', '1', '南瓜支付', '1');
+ VALUES ('瞬廷支付', '2191', '159970e865bc4fd9a9484fca854785d1', NULL, 'http://paytest.7k111.com', '瞬廷支付', '1', '1', '1', '瞬廷支付', '1');
