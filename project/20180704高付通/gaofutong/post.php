@@ -112,10 +112,33 @@ if (strstr($pay_type, "银联钱包")) {
   $bankname = $pay_type . "->银联钱包在线充值";
   $payType = $pay_type . "_yl";
 } elseif (strstr($pay_type, "银联快捷")) {
-  $scan = 'ylkj';
-  $data['payType'] = '5';//WAP快捷
-  $bankname = $pay_type . "->银联快捷在线充值";
-  $payType = $pay_type . "_ylkj";
+  if (isset($_REQUEST['accountNo'])) {
+    $scan = 'ylkj';
+    $data['accountNo'] = $_REQUEST['accountNo'];//持卡人姓名
+    $data['payType'] = '6';//WAP快捷
+    $bankname = $pay_type."->银联快捷在线充值";
+    $payType = $pay_type."_ylkj";
+  }else {
+      ?>
+      <html>
+        <head>
+          <title>跳转......</title>
+          <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+        </head>
+        <body>
+          <form name="dinpayForm" method="get" id="frm1" action="./card.php" target="_self">
+            <p>正在为您跳转中，请稍候......</p>
+            <?php foreach ($_REQUEST as $arr_key => $arr_value) {?>
+            <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
+            <?php } ?>
+          </form>
+          <script language="javascript">
+            document.getElementById("frm1").submit();
+          </script>
+        </body>
+      </html>
+      <?php
+  }
 } else {
   $scan = 'wy';
   $bankname = $pay_type . "->网银在线充值";
