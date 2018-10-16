@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('LZ支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/lzpay/post.php', '/pay/lzpay/wxpost.php', '/pay/lzpay/zfbpost.php', '/pay/lzpay/return_url.php', '/pay/lzpay/return_url.php', '/pay/lzpay/return_url.php', '/pay/lzpay/notify_url.php', '/pay/lzpay/notify_url.php', '/pay/lzpay/notify_url.php', '1', '1', '/pay/lzpay/qqpost.php', '/pay/lzpay/return_url.php', '/pay/lzpay/notify_url.php');
+ VALUES ('爱尚支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/aishang/post.php', '/pay/aishang/wxpost.php', '/pay/aishang/zfbpost.php', '/pay/aishang/return_url.php', '/pay/aishang/return_url.php', '/pay/aishang/return_url.php', '/pay/aishang/notify_url.php', '/pay/aishang/notify_url.php', '/pay/aishang/notify_url.php', '1', '1', '/pay/aishang/qqpost.php', '/pay/aishang/return_url.php', '/pay/aishang/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('LZ支付', 'YF10100114', '9P9SIMbwGZn6', NULL, 'http://pay7.5566205.com', 'LZ支付', '1', '1', '1', 'LZ支付', '1');
+ VALUES ('爱尚支付', '10006', 'oumfz29ptxv9oz975yps58ggt6srotpj', NULL, 'http://pay7.5566205.com', '爱尚支付', '1', '1', '1', '爱尚支付', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('LZ支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/lzpay/post.php', '/pay/lzpay/wxpost.php', '/pay/lzpay/zfbpost.php', '/pay/lzpay/return_url.php', '/pay/lzpay/return_url.php', '/pay/lzpay/return_url.php', '/pay/lzpay/notify_url.php', '/pay/lzpay/notify_url.php', '/pay/lzpay/notify_url.php', '1', '1', '/pay/lzpay/qqpost.php', '/pay/lzpay/return_url.php', '/pay/lzpay/notify_url.php');
+ VALUES ('爱尚支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/aishang/post.php', '/pay/aishang/wxpost.php', '/pay/aishang/zfbpost.php', '/pay/aishang/return_url.php', '/pay/aishang/return_url.php', '/pay/aishang/return_url.php', '/pay/aishang/notify_url.php', '/pay/aishang/notify_url.php', '/pay/aishang/notify_url.php', '1', '1', '/pay/aishang/qqpost.php', '/pay/aishang/return_url.php', '/pay/aishang/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('LZ支付', 'YF10100114', '9P9SIMbwGZn6', NULL, 'http://paytest.7k111.com', 'LZ支付', '1', '1', '1', 'LZ支付', '1');
+ VALUES ('爱尚支付', '10006', 'oumfz29ptxv9oz975yps58ggt6srotpj', NULL, 'http://paytest.7k111.com', '爱尚支付', '1', '1', '1', '爱尚支付', '1');

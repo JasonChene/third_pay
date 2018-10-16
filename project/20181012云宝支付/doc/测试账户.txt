@@ -1,0 +1,9 @@
+支付宝个码收款，
+测试商戶test@qq.com
+密码123456
+登入地址：http://zfb.ttzdj.cn/
+开发文档：zfb.ttzdj.cn/Home/App/docpay.html
+开发demo：zfb.ttzdj.cn/PHPDemo.zip
+对方技术QQ：1105524131
+商户号：100017
+MD5密钥：4ebe2237ce200abe80142b7b9d7c19696c46c0f9

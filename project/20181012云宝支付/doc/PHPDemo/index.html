@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>支付测试</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<form>
+    <br/>
+    价格：<input type="text" name="price" value="0.1" id="inputprice"><br/><br/>
+    支付类型：<input type="radio" name="pp"  value="1" checked> 微信 <input type="radio" name="pp"  id="alipay" value="2"> 支付宝
+    <br/><br/>
+    <input type="button" id="demoBtn1" value="确认支付">
+</form>
+
+<form action="http://我们的域名/Home/Pay/payFor" method="post" style='display:none;' >
+    <br/>
+    <input type="hidden" id="type" name="type" value="">
+    <input type="hidden" id="order_name" name="order_name" value="">
+    <input type="hidden" id="return_url" name="return_url" value="">
+    <input type="hidden" id="notify_url" name="notify_url" value="">
+    <input type="hidden" id="order_id" name="order_id" value="">
+    <input type="hidden" id="order_uid" name="order_uid" value="">
+    <input name='price' id='price' type='text' value=''/>
+    <input type="hidden" id="key" name="key" value="">
+    <input type="hidden" id="uid" name="uid" value="">
+    <br/><br/>
+    <input type="button" id="submitdemo1" value="确认支付">
+</form>
+
+</body>
+</html>
+
+<script>
+    $().ready(function(){
+        function getistype(){
+            return ($("#alipay").is(':checked') ? "2" : "1" );
+        }
+
+        $("#demoBtn1").click(function(){
+            $.post(
+				//可将此url换成您自己的地址
+				"./pay.php",
+                {
+                    price : $("#inputprice").val(),
+                    type : getistype()
+
+                },
+                function(data){
+                    if (data.status > 0){
+                        $("#order_name").val(data.data.order_name);
+                        $("#type").val(data.data.type);
+                        $('#key').val(data.data.key);
+                        $('#notify_url').val(data.data.notify_url);
+                        $('#order_id').val(data.data.order_id);
+                        $('#order_uid').val(data.data.order_uid);
+                        $('#price').val(data.data.price);
+                        $('#return_url').val(data.data.return_url);
+                        $('#uid').val(data.data.uid);
+                        $('#submitdemo1').attr('type','submit');
+                        $('#submitdemo1').click();
+
+                    } else {
+                        alert(data.msg);
+                    }
+                }, "json"
+            );
+        });
+    });
+
+</script>
