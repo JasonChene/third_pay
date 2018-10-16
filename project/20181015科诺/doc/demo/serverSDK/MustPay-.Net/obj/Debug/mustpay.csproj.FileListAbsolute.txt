@@ -1,0 +1,5 @@
+E:\项目\电科院\mustpay\mustpay\bin\mustpay.dll
+E:\项目\电科院\mustpay\mustpay\bin\mustpay.pdb
+E:\项目\电科院\mustpay\mustpay\obj\Debug\ResolveAssemblyReference.cache
+E:\项目\电科院\mustpay\mustpay\obj\Debug\mustpay.dll
+E:\项目\电科院\mustpay\mustpay\obj\Debug\mustpay.pdb
