@@ -54,6 +54,8 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")){
   $scan = 'jd';
 }elseif (strstr($_REQUEST['pay_type'], "百度钱包")) {
   $scan = 'bd';
+}elseif(strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")){
+  $scan = 'qq';
 }
 #固定参数设置
 $order_no = getOrderNo();
@@ -81,6 +83,11 @@ if ($scan == 'wx') {
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
   $parms['isApp'] = 'app';
+}elseif ($scan == 'qq') {
+  $parms['defaultbank'] = 'QQPAY';
+  $parms['isApp'] = 'app';
+  $bankname = $pay_type."->QQ钱包在线充值";
+  $payType = $pay_type."_qq";
 }elseif ($scan == 'jd') {
   $parms['defaultbank'] = 'JDPAY';
   $bankname = $pay_type."->京东钱包在线充值";
@@ -92,6 +99,8 @@ if ($scan == 'wx') {
   $payType = $pay_type."_bd";
   $parms['isApp'] = 'app';
 }
+
+
 ksort($parms);
 $noarr =array('signType');
 $signText = '';
