@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.budwell.cn/Pay_Alipay_pay.html';
+$form_url = 'http://zf.qdchss.cn/Pay_Alipay_pay.html';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -91,6 +91,11 @@ foreach ($data as $arr_key => $arr_value) {
 }
 $form_data = $data;
 $jumpurl = $form_url;
+
+echo '正在为您跳转中，请稍候......';
+header('Location:' . $jumpurl . '?' . http_build_query($form_data));
+exit();
+
 ?>
 <html>
   <head>

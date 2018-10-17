@@ -109,12 +109,9 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.115.136.13/pay/unifiedorder';//返回json请求URL
+$form_url = 'http://114.116.71.237/pay/unifiedorder';//返回json请求URL
 $scan = 'zfb';
-$data['payType'] = 'QRCode-ali';
-if (_is_mobile()) {
-  $data['payType'] = 'H5-ali';
-}
+$data['payType'] = 'H5-ali';
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -147,8 +144,7 @@ if ($jumptype == '1') {
   $res = curl_post($form_url, $data_str);
   $tran = mb_convert_encoding("$res", "UTF-8");
   $row = json_decode($tran, 1);
-
-#跳转
+  #跳转
   if ($row['success'] != 'true') {
     echo '错误代码:' . $row['returnCode'] . "\n";
     echo '错误讯息:' . $row['message'] . "\n";
@@ -162,7 +158,7 @@ if ($jumptype == '1') {
     }
   }
 } else {
-  $jumpurl = 'http://114.115.136.13/pay/redirect/unifiedorder';//页面跳转请求URL
+  $jumpurl = 'http://114.116.71.237/pay/redirect/unifiedorder';//页面跳转请求URL
 }
 
 #跳轉方法
