@@ -4,7 +4,7 @@ header("Content-type:text/html; charset=utf-8");
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.config.php");;
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://vip.dddyn.com/cashier/Home';
+$form_url = 'http://47.101.19.181/cashier/Home';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -50,7 +50,7 @@ $data = array(
   "callback_url" => $return_url,
   "service" => 'al',
   "way" => 'wap',
-  "format" => 'xml',
+  "format" => 'json',
   "mch_create_ip" => $client_ip,
   "sign" => array(
     "str_arr" => array(
@@ -61,7 +61,7 @@ $data = array(
       "total_fee" => $MOAmount,
       "service" => "al",
       "way" => "wap",
-      "format" => "xml",
+      "format" => "json",
     ),
     "mid_conn" => "",
     "last_conn" => "",
@@ -93,10 +93,18 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-$form_data = http_build_query($data);
-$jumpurl = $form_url;
-header('Location:' . $jumpurl . '?' . $form_data);
-exit();
+
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data), "GET");
+$row = json_decode($res, 1);
+#跳转qrcode
+$url = $row['pay_info'];
+if ($row['success'] == 'true') {
+  $jumpurl = $url;
+} else {
+  echo "错误码：" . $row['success'] . "错误讯息：" . $row['msg'];
+  exit();
+}
 ?>
 <html>
   <head>
@@ -104,7 +112,7 @@ exit();
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
           if (isset($form_data)) {

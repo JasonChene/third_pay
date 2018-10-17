@@ -134,6 +134,10 @@ function curl_post($url, $data ,$str){
         'Content-Type: application/json',
         'Content-Length: ' . strlen($data))
     );
+    }elseif(strstr($str,"XML")){
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/xml',
+    ));
     }
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -148,7 +152,7 @@ function curl_post($url, $data ,$str){
     }
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     // $post_url=fix_postdata_url($url, $data);
-    curl_setopt($ch, CURLOPT_URL, $data);
+    curl_setopt($ch, CURLOPT_URL, $url.'?'.$data);
   }
   $tmpInfo = curl_exec($ch);
   if (curl_errno($ch)) {

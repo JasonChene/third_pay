@@ -11,3 +11,10 @@
 测试到账：支付宝扫码已测试到帐
  
 备注：目前微信扫码及微信手机暂时无法使用,等待对方技术排查问题
+
+20181017  
+修改档案：addsign,jdbspost,jdh5post,qqbspost,qqh5post,wxbspost,wxh5post,wyh5post,wypost,ylbspost,ylh5post,ylkjh5post,ylkjpost,zfbbspost,zfbh5post  
+
+测试到账：微信手机  
+
+备注：第三方修改网关和跳转方式  
