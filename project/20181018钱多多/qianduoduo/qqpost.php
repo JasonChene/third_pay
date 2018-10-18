@@ -84,23 +84,29 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid, 
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
+  "pay_fs" => "",
+  "pay_MerchantNo" => $pay_mid, 
+  "pay_orderNo" => $order_no,
+  "pay_Amount" => $mymoney,
+  "pay_NotifyUrl" => $merchant_url,
+  "pay_ewm" => "No",
+  "tranType" => "2",
+  "pay_ip" => getClientIp(),
+  "pay_returnUrl" => $return_url,
+  "sign" => "",
 );
 
 #变更参数设置
-$form_url = 'https://www.688pay.cn/Pay_Index.html';
+$form_url = 'http://api.qdd99.cn:8091/pay1.0/';
 $scan = '';
 $payType = '';
 $bankname = '';
 $scan = 'qq';
-$data['pay_bankcode'] = '908';
+$data['pay_fs'] = 'qq';
+if (_is_mobile()) {
+  $data['pay_fs'] = 'qq_h5';  
+}
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -113,22 +119,25 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr = array('pay_md5sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
+$signtext = $data['pay_fs'].$pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_NotifyUrl'].$data['pay_ewm'].$pay_mkey;
+$sign = md5($signtext);
+$data['sign'] = $sign;
+
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data));
+$row = json_decode($res, 1);
+#跳转
+if ($row['pay_Status'] != '100') {
+	echo '错误代码:' . $row['pay_Status'] . "<br>";
+	echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
+	exit;
+}else{
+	if (_is_mobile()) {
+		$jumpurl = $row['pay_Code'];
+	}else {
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
+	}
 }
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
-
-#跳轉方法
-$form_data = $data;
-$jumpurl = $form_url;
 ?>
 <html>
   <head>

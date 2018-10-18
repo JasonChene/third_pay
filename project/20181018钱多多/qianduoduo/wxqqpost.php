@@ -130,7 +130,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 $signtext = $data['pay_fs'].$pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_NotifyUrl'].$data['pay_ewm'].$pay_mkey;
-$sign = strtoupper(md5($signtext));
+$sign = md5($signtext);
 $data['sign'] = $sign;
 
 #curl获取响应值
@@ -141,17 +141,11 @@ if ($row['pay_Status'] != '100') {
 	echo '错误代码:' . $row['pay_Status'] . "<br>";
 	echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
 	exit;
-}else {
-	$signtext2 = $pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_Code'].$pay_mkey;
-	$sign2 = strtoupper(md5($signtext2));
-	if ($res['sign'] == $sign2) {
-		if (_is_mobile()) {
-			$jumpurl = $row['pay_Code'];
-		}else {
-			$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
-		}
+}else{
+	if (_is_mobile()) {
+		$jumpurl = $row['pay_Code'];
 	}else {
-		echo "签名不正确！";
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
 	}
 }
 ?>
