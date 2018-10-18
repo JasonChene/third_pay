@@ -80,22 +80,18 @@ if ($scan == 'wx') {
   $parms['defaultbank'] = 'WXPAY';
   $payType = $pay_type."_wx";
   $bankname = $pay_type . "->微信在线充值";
+  $parms['isApp'] = 'app';
 }elseif ($scan == 'jd') {
   $parms['defaultbank'] = 'JDPAY';
   $bankname = $pay_type."->京东钱包在线充值";
   $payType = $pay_type."_jd";
+  $parms['isApp'] = 'app';
 }elseif ($scan == 'bd') {
   $parms['defaultbank'] = 'BDPAY';
   $bankname = $pay_type."->百度钱包在线充值";
   $payType = $pay_type."_bd";
-}
-if (_is_mobile() && $scan == 'jd') {
-  $parms['isApp'] = 'h5';
-}else {
   $parms['isApp'] = 'app';
 }
-
-
 ksort($parms);
 $noarr =array('signType');
 $signText = '';
@@ -123,33 +119,13 @@ if ($result_insert == -1) {
   exit;
 }
 
-if (!_is_mobile()) {
-  $res = curl_post($form_url,$data);
-  $row = json_decode($res,1);
-  if ($row['respCode'] == 'S0001') {
-    header("location:" .'../qrcode/qrcode.php?type='.$scan.'&code=' .$row['codeUrl']);
-    exit;
-  }else {
-    echo  '错误代码:' . $row['respCode'].'<br>';
-    echo  '错误讯息:' . $row['respMessage'].'<br>';
-  }
-}else {
+$res = curl_post($form_url,$data);
+$row = json_decode($res,1);
+if ($row['respCode'] == 'S0001') {
+  header("location:" .'../qrcode/qrcode.php?type='.$scan.'&code=' .$row['codeUrl']);
+  exit;
+} else {
+  echo  '错误代码:' . $row['respCode'].'<br>';
+  echo  '错误讯息:' . $row['respMessage'].'<br>';
+}
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url?>" target="_self">
-    <p>正在为您跳转中，请稍候......</p>
-    <?php foreach ($parms as $arr_key => $arr_value) {?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-    <?php } ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-   </body>
- </html>
-<?php } ?>
