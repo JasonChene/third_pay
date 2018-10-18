@@ -1,0 +1,16 @@
+商户登录地址：http://paqp.wang/login
+
+启通宝商户号：A02001377002054
+
+密码：mk125998
+
+商户登录地址：http://paqp.wang/login
+
+启通宝商户号：A02001377002054
+
+密码：123456
+
+启通宝公钥
+
+
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7PPk5VJeAfn4PznsXEr9G1eO1iWF9PQs7aRGRQa2kgqHrpkLDlCvrzMeg3av9AyK+gtoiZ8TjzccBXOvetwo5nAM+0uDGDWhFtzXHKzoXk+t4Oa5jUNOPC44FPEeQPzOhePDfkeR8TiGATUF+cmXiHyG9 AsDY8dts9U2Yk9FTmQIDAQAB
