@@ -1,0 +1,12 @@
+帮我开发这个第三方         名称：知付贰贰壹
+登录网址：http://www.nnjcd.cn 
+
+商户号：3049
+
+商户秘钥：ET8RV3lsaUqQwgNhn3wcan05wDD0Wj
+
+登录账号：aa206719861@qq.com
+
+密码 12345678
+
+http://www.nnjcd.cn/docdemo   接口文档下载
