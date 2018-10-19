@@ -27,7 +27,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #固定参数设置
-$form_url = 'http://www2.syecg.com/pay/createorder';
+$form_url = 'http://22w.91wLny.com.cn/pay/createorder';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -88,7 +88,7 @@ foreach ($data as $arr_key => $arr_value) {
 $res = curl_post($form_url, http_build_query($data), "POST");
 $res = json_decode($res, 1);
 if ($res['error'] == '2') {
-  $form_url = 'http://www2.syecg.com/pay/Queryorder';
+  $form_url = 'http://22w.91wLny.com.cn/pay/Queryorder';
 #第三方传值参数设置
   $data = array(
     "pid" => $pay_mid,

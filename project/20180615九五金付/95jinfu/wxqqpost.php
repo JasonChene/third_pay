@@ -76,13 +76,13 @@ $scan = 'wx';
 $payType = $pay_type."_wx";
 $bankname = $pay_type . "->微信在线充值";
 $data['payMode'] = '00022';//00021-支付宝扫码 00022-微信扫码00024-QQ扫码
-if (_is_mobile()) {
+//if (_is_mobile()) {
     $form_url ='http://106.14.211.216:51243/payment/PayUnApply.do';//h5网关
     unset($data['prdAmt']);
-    $data['payMode'] = '00016';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
+    $data['payMode'] = '10022';//00028-支付宝H5 00016-微信H5 文档上没有的新通道支付宝h5 10029
     $data['pnum'] = '1';//商品数量
     $data['prdDesc'] = 'iphone';//商品描述
-}
+//}
 if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
     $form_url ='http://106.14.211.216:51243/payment/ScanPayApply.do';//扫码网关
     $scan = 'qq';
@@ -133,7 +133,9 @@ if ($row['retCode'] != '1') {
     echo $row['htmlText'];
     exit;
   }else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
+    echo $row['htmlText'];
+    exit;
+    //$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['qrcode']);
   }
 }
 
