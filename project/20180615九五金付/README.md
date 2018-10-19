@@ -18,3 +18,10 @@
 
 修改档案：wxpost.php,zfbpost.php,wxqqpost
 修改响应參數，网关
+
+20181019
+第三方名称：九五金服
+档案位置：php@60.245.31.1/95jinfu
+
+修改档案：wxpost,wxqqpost
+修改payMode,跳轉方式
