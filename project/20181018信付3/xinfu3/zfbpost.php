@@ -2,7 +2,11 @@
 header("Content-type:text/html; charset=utf-8");
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
-
+#预设时间在上海
+date_default_timezone_set('PRC');
+if (function_exists("date_default_timezone_set")) {
+  date_default_timezone_set("Asia/Shanghai");
+}
 #function
 function curl_post($url, $data)
 { #POST访问
@@ -85,7 +89,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "merchantId" => $pay_mid,
-  "timestamp" => time(), 
+  "timestamp" => time()."000", 
   "tradeNo" => $order_no,
   "notifyUrl" => $merchant_url,
   "totalAmount" => $mymoney,
@@ -123,9 +127,12 @@ foreach ($data as $arr_key => $arr_val) {
 }
 $signtext = substr($signtext, 0, -1);
 $data['signature'] = hash_hmac("sha1",urlencode($signtext),$pay_mkey);
-
+echo "<pre>";
+echo date("H:i:s")."<br>";
+var_dump($data);
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
+echo $res;
 $row = json_decode($res, 1);
 #跳转
 if ($row['code'] != 'SUCCESS') {

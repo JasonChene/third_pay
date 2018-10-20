@@ -1,0 +1,5 @@
+商户ID： 35353837
+商户KEY： 8cf2fa7a80ab0b588156d692314e4b30
+商户后台地址：https://www.quanfupayment.com/guest
+后台用户名： 7k
+后台密码： 123456
