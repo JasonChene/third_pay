@@ -1,0 +1,16 @@
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\bin\CSharp.dll
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\bin\CSharp.pdb
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\obj\Debug\CSharp.dll
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\obj\Debug\CSharp.pdb
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\bin\log4net.dll
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd\Desktop\微信支付\Wxpay\WxPay\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\bin\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\bin\CSharp.pdb
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\bin\log4net.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\bin\ItrusDotNetCertAPI 1.3.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\bin\Novell.Directory.Ldap.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\obj\Debug\CSharp.dll
+C:\Users\wd-t083\Desktop\桌面\微信支付\Wxpay\WxPay\obj\Debug\CSharp.pdb

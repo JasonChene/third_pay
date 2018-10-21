@@ -86,10 +86,13 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+
+list($t1, $t2) = explode(' ', microtime()); 
+$time = (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
 #第三方参数设置
 $data = array(
   "merchantId" => $pay_mid,
-  "timestamp" => time()."000", 
+  "timestamp" => "$time", 
   "tradeNo" => $order_no,
   "notifyUrl" => $merchant_url,
   "totalAmount" => $mymoney,
@@ -122,28 +125,23 @@ $noarr = array('signature');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
+    $signtext .= $arr_key . '=' . urlencode($arr_val) . '&';
   }
 }
 $signtext = substr($signtext, 0, -1);
-$data['signature'] = hash_hmac("sha1",urlencode($signtext),$pay_mkey);
-echo "<pre>";
-echo date("H:i:s")."<br>";
-var_dump($data);
+$data['signature'] = hash_hmac("sha1",$signtext,$pay_mkey);
+
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
-echo $res;
 $row = json_decode($res, 1);
 #跳转
-if ($row['code'] != 'SUCCESS') {
+if ($row['code'] != '1') {
 	echo '错误代码:' . $row['code'] . "<br>";
   echo '错误讯息:' . $row['msg'] . "<br>";
 	exit;
 }elseif($row['data']['code'] != '10000'){
   echo '错误代码:' . $row['data']['code'] . "<br>";
   echo '错误讯息:' . $row['data']['msg'] . "<br>";
-  echo '错误代码:' . $row['data']['sub_code'] . "<br>";
-  echo '错误讯息:' . $row['data']['sub_msg'] . "<br>";
   exit;
 }else{
 	if (_is_mobile()) {

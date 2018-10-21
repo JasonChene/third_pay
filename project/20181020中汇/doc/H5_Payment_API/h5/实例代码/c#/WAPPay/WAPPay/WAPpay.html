@@ -1,0 +1,28 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<form method="post" action="WAPpay.aspx" target="_blank">
+——————————————必传参数————————————————————————<br/>
+	接口版本（Interface Version）：<input type="text" name="interface_version" value="V3.1"/><br/>
+    服务类型（Service Type）：<input type="text" name="service_type" value="alipay_h5api"/><br/>
+    签名类型（Sign Type）：<input type="text" name="sign_type" value="RSA-S"/><br/>
+	商户号（Merchant ID）：<input type="text" name="merchant_code" value="801601001008"/><br/>
+	订单号（Order No.）：<input type="text" name="order_no" value="1234567cc"/><br/>
+	订单时间（Order Time）：<input type="text" name="order_time" value="2018-08-3 14:51:51"/><br/>
+	订单金额（Order Amount）：<input type="text" name="order_amount" value="1"/><br/>
+	商品名称（Product Name）：<input type="text" name="product_name" value="book"/><br/>
+    异步通知地址（Notify URL）：<input type="text" name="notify_url" value="http://www.vsdpay.com/Notify_Url.jsp"/><br/>
+    客户端IP（Client IP）：<input type="text" name="client_ip" value="120.237.123.242"/><br/>
+——————————————非必传参数————————————————————————<br/>
+	产品编号（Product Code）：<input type="text" name="product_code" value=""/><br/>
+    产品数量（Product Num）：<input type="text" name="product_num" value=""/><br/>
+    产品描述（Product Desc）：<input type="text" name="product_desc" value=""/><br/>
+    公用回传参数（Extra Return Param）：<input type="text" name="extra_return_param" value=""/><br/>
+    公用业务扩展参数（Extend Param）：<input type="text" name="extend_param" value=""/><br/>
+    
+	<br/><input type="submit" name="submit" value="WSTwappay"/>
+</form>
+</body>
+</html>

@@ -1,20 +1,22 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
 if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
+
 #function
 function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -24,7 +26,9 @@ function curl_post($url, $data)
     return curl_error($ch);
   }
   return $tmpInfo;
+  curl_close($ch);
 }
+
 function payType_bankname($scan, $pay_type)
 {
   global $payType, $bankname;
@@ -57,8 +61,9 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
+
 function QRcodeUrl($code)
-{
+{ #替换QRcodeUrl中&符号
   if (strstr($code, "&")) {
     $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
   } else {
@@ -66,14 +71,15 @@ function QRcodeUrl($code)
   }
   return $code2;
 }
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//appid
+$pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
@@ -82,33 +88,43 @@ if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
+
+$public_pem = chunk_split($pay_account,64,"\r\n");//转换为pem格式的公钥
+$public_pem = "-----BEGIN PUBLIC KEY-----\r\n".$public_pem."-----END PUBLIC KEY-----\r\n";
+$private_pem = chunk_split($pay_mkey,64,"\r\n");//转换为pem格式的私钥
+$private_pem = "-----BEGIN PRIVATE KEY-----\r\n".$private_pem."-----END PRIVATE KEY-----\r\n";
+
 #固定参数设置
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+
 #第三方参数设置
 $data = array(
-  "return_type" => "json",
-  "api_code" => $pay_mid, 
-  "is_type" => "",
-  "price" => $mymoney,
-  "order_id" => $order_no,
-  "time" => time(),
-  "mark" => "pay",
-  "return_url" => $return_url,
-  "notify_url" => $merchant_url,
-  "sign" => "",
+  //基本参数
+  "merchant_code" => $pay_mid, //商家号
+  "service_type" => '', //业务类型
+  "notify_url" => $merchant_url, //服务器异步通知地址
+  "interface_version" => 'V3.1', //接口版本
+  "client_ip" => getClientIp(), //客户端IP
+  "sign_type" => 'RSA-S', //签名方式
+  "sign" => '', //签名
+
+  //业务参数
+  "order_no" => $order_no, //商户网站唯一订单号
+  "order_time" => date("Y-m-d H:i:s"), //商户订单时间
+  "order_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //商户订单总金额
+  "product_name" => 'product_name', //商品名称
 );
 
 #变更参数设置
-$form_url = 'https://www.quanfupayment.com/channel/Common/mail_interface';
-$scan = '';
-$payType = '';
-$bankname = '';
-$scan = 'wx';
-$data['is_type'] = 'wechat';
-
-
+$scan = 'zfb';
+$data['service_type'] = 'alipay_scan';
+$form_url = 'https://api.vsdpay.com/gateway/api/scanpay';//扫码提交地址
+if (_is_mobile()) {
+  $data['service_type'] = 'alipay_h5api';
+  $form_url = 'https://api.vsdpay.com/gateway/api/h5apipay';//H5提交地址
+}
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -120,58 +136,52 @@ if ($result_insert == -1) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
+
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('sign');
+$noarr = array('sign', 'sign_type');//不加入签名的array key值
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
 }
+$signtext = substr($signtext, 0, -1);
 
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['sign'] = $sign; 
+$merchant_private_key = openssl_get_privatekey($private_pem);
+if (!$merchant_private_key) {
+  echo '打开私钥失败';
+  exit;
+}
+openssl_sign($signtext, $sign_info, $merchant_private_key, OPENSSL_ALGO_MD5);
+$sign = base64_encode($sign_info);
+
+$data['sign'] = $sign;
+$data_str = http_build_query($data);
 
 #curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
+$res = curl_post($form_url, $data_str);
+$xml = (array)simplexml_load_string($res) or die("Error: Cannot create object");
+$row = json_decode(json_encode($xml), 1);
+
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "<br>";
-  echo '错误讯息:' . $row['respInfo'] . "<br>";
+if ($row["response"]['resp_code'] != 'SUCCESS') {
+  echo '处理码:' . $row["response"]['resp_code'] . "<br>";
+  echo '处理描述信息:' . $row["response"]['resp_desc'] . "<br>";
+  exit;
+} else if ($row["response"]['result_code'] != '0') {
+  echo '业务结果:' . $row["response"]['result_code'] . "<br>";
+  echo '错误码定义:' . $row["response"]['error_code'] . "<br>";
+  echo '交易说明:' . $row["response"]['result_desc'] . "<br>";
   exit;
 } else {
   if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
+    $jumpurl = urldecode($row['response']['payURL']);
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['response']['qrcode']);
   }
 }
+
 #跳轉方法
-
+header("location:" . $jumpurl);
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
-      <p>正在为您跳转中，请稍候......</p>
-      <?php
-      if (isset($form_data)) {
-        foreach ($form_data as $arr_key => $arr_value) {
-          ?>
-      <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-      <?php 
-    }
-  } ?>
-    </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-

@@ -1,0 +1,10 @@
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\bin\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\bin\order.pdb
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\order.dll
+C:\Users\wd\Desktop\B2C通用接口文档\demo\Query\C#\query\obj\Debug\order.pdb
+C:\Users\wd\Desktop\点卡（C#）\查询\query\bin\order.dll
+C:\Users\wd\Desktop\点卡（C#）\查询\query\bin\order.pdb
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\order.dll
+C:\Users\wd\Desktop\点卡（C#）\查询\query\obj\Debug\order.pdb

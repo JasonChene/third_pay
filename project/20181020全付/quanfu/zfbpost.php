@@ -138,18 +138,17 @@ $data['sign'] = $sign;
 
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
-echo "<pre>".$res;
 $row = json_decode($res, 1);
 #跳转
-if ($row['respCode'] != '0000') {
-  echo '错误代码:' . $row['respCode'] . "<br>";
-  echo '错误讯息:' . $row['respInfo'] . "<br>";
+if ($row['return_code'] == 'FAIL') {
+  echo '错误代码:' . $row['return_code'] . "<br>";
+  echo '错误讯息:' . $row['return_msg'] . "<br>";
   exit;
 } else {
   if (_is_mobile()) {
-    $jumpurl = $row['payUrl'];
+    $jumpurl = $row['payurl'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payurl']);
   }
 }
 #跳轉方法

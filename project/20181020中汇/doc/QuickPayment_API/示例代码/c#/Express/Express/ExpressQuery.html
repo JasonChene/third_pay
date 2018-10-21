@@ -1,0 +1,23 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style rel="stylesheet" type="text/css">
+#changecolor{color:red;}
+</style>
+</head>
+<body>
+<form method="post" action="ExpressQuery.aspx" target="_blank">
+	<br/>接口版本（Interface Version）：<input type="text" name="interface_version" value="V3.0"/><span id="changecolor">*</span>
+    <br/>编码字符集（Input Charset）：<input type="text" name="input_charset" value="UTF-8"/><span id="changecolor">*</span>
+	<br/>服务类型（Service Type）：<input type="text" name="service_type" value="sign_query"/><span id="changecolor">*</span>
+    <br/>签名方式（Sign Type）：<input type="text" name="sign_type" value="RSA-S"/><span id="changecolor">*</span>
+	<br/>商 家 号（Merchant ID）：<input type="text" name="merchant_code" value="108008008666"/><span id="changecolor">*</span>
+	<br/>银行代码（Bank Code）：<input type="text" name="bank_code" value="ICBC"/><span id="changecolor">*</span>
+	<br/>银行卡类型（Card Type）：<input type="text" name="card_type" value="0"/><span id="changecolor">*</span>
+	<br/>手机号（Mobile）：<input type="text" name="mobile" value=""/><span id="changecolor">*</span>
+    <br/>银行卡号（Card no）：<input type="text" name="card_no" value=""/>
+	<br/>签约号（Merchant Sign ID）：<input type="text" name="merchant_sign_id" value=""/><span id="changecolor">
+	<br/><input Type="submit" Name="submit" value="在线支付"/>
+</form>
+</body>
+</html>
