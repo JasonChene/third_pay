@@ -17,7 +17,7 @@ $data=json_decode($input_data,1);//json回传资料
 $order_no = $data['order_id']; //订单号
 $mymoney = number_format($data['price'], 2, '.', ''); //订单金额
 $success_msg = $data['code'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$success_code = 1;//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "SUCCESS";//回调讯息
 
@@ -45,9 +45,17 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	write_log("非法提交参数");
 	exit;
 }
+ksort($data);
+$noarr = array('sign','messages');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
+  }
+}
 
-$signtext = $pay_account.$data['pay_OrderNo'].$data['pay_Amount'].$pay_mkey;
-$mysign = md5($signtext);
+$signtext = 'api_code=' . $pay_mid . '&' . substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$mysign = strtoupper(md5($signtext));
 write_log("signtext=".$signtext);
 write_log("mysign=".$mysign);
 
