@@ -1,0 +1,477 @@
+/*reset start*/
+html {
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+  padding: 0;
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+fieldset, img {
+  border: 0;
+}
+
+address, caption, cite, code, dfn, em, strong, th, var {
+  font-weight: normal;
+  font-style: normal;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+caption, th {
+  text-align: left;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  font-size: 100%;
+}
+
+q:before, q:after {
+  content: "";
+}
+
+abbr, acronym {
+  border: 0;
+}
+
+input, textarea, select, button {
+  font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+textarea:active, a:active, select:active, option:active, input:active, textarea:focus, a:focus, select:focus, option:focus, input:focus {
+  outline: 0;
+}
+/*reset end*/
+body {
+  width: 100%;
+  font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: url('../images/bg.jpg') #000 repeat center top;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+.clearfix {
+  zoom: 1;
+}
+
+.clearfix:after {
+  content: ".";
+  height: 0;
+  display: block;
+  visibility: hidden;
+  clear: both;
+  font-size: 0;
+}
+
+.g-f-left {
+  float: left;
+}
+
+.g-f-right {
+  float: right;
+}
+
+.js-ds-none {
+  display: none;
+}
+.header {
+  width: 1000px;
+  height: 150px;
+  /* background: url('../images/topbg.png') no-repeat 50% 0; */
+  margin: 0px auto;
+}
+.header .logo {
+	width: 700px;
+  float: left;
+}
+.header .online-service {
+  width: 300px;
+  float: right;
+}
+.content {
+  position: relative;
+  width: 
+}
+.content a.service {
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 30px;
+  z-index: 100;
+  top: -60px;
+ 
+}
+.content a.service {
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 30px;
+  z-index: 100;
+  top: -60px;
+  right: 68px;
+  text-indent: -9999px;
+}
+.content h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  line-height: 38px;
+}
+.content p {
+  font-size: 14px;
+  line-height: 30px;
+}
+.content-table {
+  width: 100%;
+  margin: 20px auto;
+  font-size: 14px;
+  color: #333333;
+  border-width: 1px;
+  border-color: #666666;
+  border-collapse: collapse;
+}
+.content-table td {
+  width: 30%;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  color: #000;
+}
+.content-table td.title {
+  width: 23%;
+  background-color: #f6f6f6;
+  font-weight: bold;
+  color: #333;
+}
+.content-table td.inputtd {
+  width: 60%;
+}
+.table-input {
+  width: 95%;
+  padding: 5px 10px;
+  line-height: 30px;
+  font-size: 14px;
+  color: #000;
+  border: 1px solid #ccc;
+}
+.pay-label {
+  display: block;
+  float: left;
+  /*margin-right: 10px;*/
+ width: 33%;
+  padding: 10px 0px;
+}
+.pay-label img {
+  width: 50%;
+  vertical-align: middle;
+}
+.form-btn a {
+  display: block;
+  width: 220px;
+  height: 50px;
+  background-color:#453c3c;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 50px;
+  color: #ffffff;
+  font-size: 24px;
+  margin: 10px auto;
+}
+.tips {
+  font-size: 12px;
+  text-align: center;
+  padding: 10px 0px;
+}
+.copyright {
+  padding: 20px 0px 40px;
+  text-align: center;
+  color: #a89d9d;
+  font-size: 12px;
+}
+
+.regular-radio {
+    display: none;
+}
+.regular-radio + label {
+	/*padding-top: 10px;*/
+    float: left;
+    /*margin: 10px 20% 0 0;*/
+    margin: 10px;
+    -webkit-appearance: none;
+    background-color: #fafafa;
+    border: 1px solid #f9496f;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+    padding: 9px;
+    border-radius: 50px;
+    display: inline-block;
+    position: relative;
+}
+.regular-radio:checked + label {
+    background-color: #fff;
+    color: #f9496f;
+    border: 1px solid #f9496f;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1), inset 0px 0px 10px rgba(0,0,0,0.1);
+}
+.regular-radio:checked + label:after {
+    content: ' ';
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    position: absolute;
+    top: 3px;
+    background: #f9496f;
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.3);
+    text-shadow: 0px;
+    left: 3px;
+    font-size: 32px;
+}
+.content .mod-menus {
+    *zoom: 1
+}
+.content .mod-menus:before,
+.content .mod-menus:after {
+    content: "";
+    display: table
+}
+.content .mod-menus:after {
+    clear: both
+}
+.content .mod-menus .hd {
+    *zoom: 1;
+    margin: 0 0 10px 0
+}
+.content .mod-menus .hd:before,
+.content .mod-menus .hd:after {
+    content: "";
+    display: table
+}
+.content .mod-menus .hd:after {
+    clear: both
+}
+.content .mod-menus .hd .title {
+    float: left;
+    width: 180px;
+    height: 35px;
+    line-height: 35px;
+    background: url(../images/hd.png);
+    color: #fff;
+    text-align: center;
+    font-size: 14px
+}
+.content .mod-menus .hd .txt {
+    float: right;
+    line-height: 35px;
+    color: #634622
+}
+.content .mod-menus .bd {
+    background: #ebebea;
+    padding: 10px 0 0 10px
+}
+.content .mod-menus .ul-list {
+    *zoom: 1
+}
+.content .mod-menus .ul-list:before,
+.content .mod-menus .ul-list:after {
+    content: "";
+    display: table
+}
+.content .mod-menus .ul-list:after {
+    clear: both
+}
+.content .mod-menus .ul-list li {
+    float: left;
+    margin: 0 10px 10px 0;
+    position: relative
+}
+.content .mod-menus .ul-list li img {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+    margin-right: 5px
+}
+.content .mod-menus .ul-list li a {
+    width: 148px;
+    height: 42px;
+    box-sizing: border-box;
+    display: block;
+    background: #fff;
+    border: solid 2px #d2c5b5;
+    line-height: 42px;
+    text-align: center;
+    color: #3e3e3e
+}
+.content .mod-menus .ul-list li a:hover {
+    color: #322522;
+    border-color: #fe8900
+}
+.content .mod-menus .ul-list li .hot-1 {
+    position: absolute;
+    z-index: 10;
+    width: 26px;
+    height: 16px;
+    right: 4px;
+    top: 0;
+    background: url(../images/hot-1.gif)
+}
+.content .mod-menus .ul-list li .hot-2 {
+    position: absolute;
+    z-index: 10;
+    width: 21px;
+    height: 16px;
+    right: 5px;
+    top: 3px;
+    background: url(../images/hot-2.gif)
+}
+.content .mod-menus .ul-list li.item a {
+    width: 469px
+}
+.duilian {
+    top: 200px;
+    position: absolute;
+    overflow: hidden;
+    display: none;
+    z-index: 10001
+}
+.duilian_left {
+    left: 10px;
+    width: 130px;
+    height: 330px;
+    background: url(../images/xf-left.png) no-repeat
+}
+.duilian_left .block1,
+.duilian_left .block2,
+.duilian_left .duilian_close {
+    position: absolute
+}
+.duilian_left .block1 {
+    width: 130px;
+    height: 35px;
+    top: 95px;
+    left: 5px
+}
+.duilian_left .block2 {
+    width: 130px;
+    height: 35px;
+    top: 185px;
+    left: 5px
+}
+.duilian_left .duilian_close {
+    width: 75px;
+    height: 23px;
+    left: 36px;
+    bottom: 0
+}
+.duilian_right {
+    right: 10px;
+    width: 127px;
+    height: 281px;
+    background: url(../images/xf-right.png) no-repeat;
+    position: absolute
+}
+.duilian_right .block1,
+.duilian_right .block2,
+.duilian_right .block3,
+.duilian_right .duilian_close {
+    position: absolute
+}
+.duilian_right .block1 {
+    width: 100%;
+    height: 75px;
+    top: 120px;
+    left: 0
+}
+.duilian_right .block2 {
+    width: 100%;
+    height: 60px;
+    top: 200px;
+    left: 0
+}
+.duilian_right .block3 {
+    width: 100%;
+    height: 52px;
+    top: 112px;
+    left: 0;
+    background: url(../images/r4.gif)
+}
+.duilian_right .duilian_close {
+    width: 55px;
+    height: 24px;
+    left: 30px;
+    bottom: 0
+}
+.footer {
+    text-align: center;
+    font-size: 12px;
+    padding: 20px 0;
+    color: #776868;
+    line-height: 2
+}
+.footer a {
+    color: #776868
+}
+.footer a:hover {
+    color: red
+}
+.footer .footer-links span {
+    padding: 0 5px
+}
+#floatc{ width:137px; height:400px; background:url("../images/kefuright.png") no-repeat left top; overflow:hidden; cursor:pointer; position:absolute; top:100px; right:10px;z-index:10000; }
+#floatdiv1 { margin:0; height:77px; overflow:hidden; }
+#floatdiv1 a { display:block; width:126px;height:77px;  overflow:hidden; cursor:pointer;}
+#floatdiv2 { margin:0; height:47px; overflow:hidden; }
+#floatdiv2 a { display:block; width:126px;height:47px;  overflow:hidden; cursor:pointer;}
+#floatdiv3 { margin:0; height:66px; overflow:hidden; }
+#floatdiv3 a { display:block; width:126px;height:66px;  overflow:hidden; cursor:pointer;}
+#floatdiv4 { margin:0; height:170px; overflow:hidden; }
+#floatdiv4 a { display:block; width:126px;height:170px;  overflow:hidden; cursor:pointer;}
+#floatclose { margin:0;  height:25px; overflow:hidden; background: none; }
+#floatdown{ width:137px; height:400px;background:url("../images/kefuleft.png") no-repeat top left; overflow:hidden; cursor:pointer; position:absolute; top:100px; left:5px; cursor:pointer; z-index:10000; }
+#floatdd1 { margin:0; height:77px; overflow:hidden;}
+#floatdd1 a { display:block; width:126px;height:77px;  overflow:hidden; cursor:pointer;}
+#floatdd2 { margin:0; height:114px; overflow:hidden;}
+#floatdd2 a { display:block; width:126px;height:114px;  overflow:hidden; cursor:pointer;}
+#floatdd3 { margin:0; height:164px; overflow:hidden;}
+#floatdd3 a { display:block; width:126px;height:164px;  overflow:hidden; cursor:pointer;}
+#floatdownclose { margin:0;  height:26px; overflow:hidden; background: none;}
+.kuaijie {
+    display: inline-block;
+    width: 80px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    border: 1px solid #00BCD4;
+    border-radius: 4px;
+    margin-left: 10px;
+    color: #2196F3;
+}

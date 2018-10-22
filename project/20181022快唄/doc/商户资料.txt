@@ -1,0 +1,10 @@
+开发文档地址： http://www.kuaibeipay.com/api.html 
+商户后台：https://www.kuaibeipay.com/
+账号:18272309951
+密码:123456
+提现密码:123456 
+技术联系方式QQ：3454306621
+
+custno:18272309951
+uid:26cf73116a5f438597b0990b113e5f24
+token:cb670c3f94b24df7876fe1e024468cce

@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>会员中心</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!--[if lt IE 9]>
+  <script src="Scripts/html5shiv.min.js"></script>
+  <script src="Scripts/respond.min.js"></script>
+  <![endif]-->
+
+    <link rel="stylesheet" href="./js/dialog.css">
+    <link rel="stylesheet" href="./js/style.css">
+    <link rel="stylesheet" href="./js/new.css">
+    <link rel="stylesheet" href="./js/purple.css" class="skincsslittle">
+    <script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="./js/dialog.js"></script>
+
+    <script type="text/javascript" src="./js/iconfont.js"></script>
+    <script type="text/javascript" src="./js/usercommon.js"></script>
+    <script type="text/javascript" src="js/jquery.md5.js"></script>
+    <style type="text/css">
+        .cashbox-l {
+            width: 100%;
+        }
+
+        .main {
+            margin-left: -0px;
+            background: #f1f1f1;
+            height: 562px;
+            min-height: 700px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="warp">
+        <div class="main">
+            <div class="header">
+                <div class="header-title"><span>我的账户</span></div>
+                <div class="header-notice">
+
+                    <marquee scrollamount="5" scrolldelay="150" direction="left" onmouseover="this.stop();" onmouseout="this.start();"> 充值测试  </marquee>
+                </div>
+                <div class="header-info">
+                    <div class="header-userinfo">
+                        <span class="user">欢迎您，t1234567（阿塔）</span>
+                        <span class="sysmoney">系统余额：<em>10.05</em></span>
+                    </div>
+                    <div class="changeskin">
+                        <a href="javascript:void(0)">
+                            <span class="bgpurple" id="currskin"></span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="tabmenu">
+                    <a href="#" class="active">快速充值</a>
+
+                </div>
+                <div class="tabbox" style="max-height: 429px;">
+                    <div class="subtab">
+
+
+                        <a data-url="quick-4" data-type="zhifubao" class="">
+                            <span class="icon-logo">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-zhifubao"></use>
+                                </svg>
+                            </span>
+                            在线存款：支付宝扫码
+                       
+                            <span class="icontj icon-kuai">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-kuai"></use>
+                                </svg>
+                            </span>
+                        </a>
+
+
+                    </div>
+
+                    <div class="subbox" data-url="quick-4" style="display: none;">
+                        <div class="cashbox">
+                            <h2 style="padding-left: 15px; padding-top: 10px">支持【<span style="color: #ff0000;">手机端</span>、<span style="color: #000cff;">电脑端</span>】付款！付款后<font color="red">1~2秒</font>自动到账！
+                            </h2>
+                            <form action="https://pay.kbpayapi.com/api.aspx" method="post" target="_blank">
+
+                                <div class="cashbox-l">
+
+                                    <div class="content">
+                                        <table class="content-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="title">会员账号：</td>
+                                                    <td class="inputtd">
+                                                        <input name="orderuid" id="orderuid" type="text" value="" class="table-input" placeholder="请填写会员帐号">
+                                                    </td>
+                                                    <td align="center" style="color: #e60012;">*必填</td>
+                                                </tr>
+                                               <tr>
+                                                    <td class="title">名称信息：</td>
+                                                    <td>
+                                                        <input name="alipayname" id="alipayname" type="text" value="" class="table-input" placeholder="支付宝绑定的真实姓名">
+                                                    </td>
+                                                    <td align="center" style="color: #e60012;">*必填</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="title">充值金额：</td>
+                                                    <td>
+                                                        <input type="text" name="price" id="price" class="table-input" placeholder="金额范围：10～10000">
+                                                    </td>
+                                                    <td align="center" style="color: #e60012;">*必填</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title" colspan="3" style="text-align: left; padding-left: 30px">注：为了方便快速到账，请尽量不要充值像100，1000这样的整金额，谢谢！</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="othernum">
+                                            <input type="hidden" name="notify_url" value="http://xxxxxxx/notify_url" />
+                                            <input type="hidden" name="return_url" value="http://xxxxxxx/return_url" />
+                                            <input type="hidden" name="custno" value="商户帐号" />
+                                            <input type="hidden" name="orderid" value="商户订单号" />
+                                            <input type="hidden" name="key" value="ccac836413806ee8df4fd8ed0a381098" />
+                                            <input type="hidden" name="istype" value="1">
+                                        </div>
+
+                                        <div class="cashbox-button">
+                                            <a onclick="paysubmit('quick-4')" class="button button-submit" style="cursor: pointer; position: relative;">立即支付</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./js/clipboard.min.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            //会员登录系统充值，可直接带出会员账号。充值时不用再输入
+            $('#orderuid').val("ly123456");
+        });
+        function paysubmit(obj) {
+            if ($('#alipayname').val() == "") {
+                alert("付款方账户名不能为空，以免影响您充值！");
+                return;
+            }
+            var paybank = $(".subbox[data-url='" + obj + "']");
+            $(document).dialog({
+                type: 'confirm',
+                closeBtnShow: true,
+                content: '确认提交？',
+                onClickConfirmBtn: function () {
+                    //---------------------------------------------------------------------------------------------------
+                    //★★★生成key 为了安全 必须在服务器端生成，不要在页面前端生成★★★
+                    //★★★必须在服务器端生成★★★
+                    //★★★istype + notify_url + orderid + orderuid + price.toFixed(2) + return_url + token + uid★★★
+                    //---------------------------------------------------------------------------------------------------
+
+                    //商户订单号(商户平台充值的订单号)-- demo用日期表示
+                    var orderid = getNowFormatDate();
+                    paybank.find("input[name='orderid']").val(orderid);
+
+                    //商户会员号
+                    var orderuid = paybank.find("input[name='orderuid']").val();
+                    //充值金额 2位小数
+                    var price = paybank.find("input[name='price']").val();
+                    var notify_url = paybank.find("input[name='notify_url']").val();
+                    var return_url = paybank.find("input[name='return_url']").val();
+
+                    //★★★生成key 此key必须在服务器端 生成★★★
+                    //★★★商家 uid，token等密匙，不要暴漏在外面  ★★★
+                    //商户 uid
+                    var uid = "商户uid";
+                    //商户 token
+                    var token = "商户token"; 
+                    //★★★生成key 此key必须在服务器端 生成★★★
+                    //★★★计算方法不能让第三方知道，影响资金安全★★★  
+                    var key = 1 + notify_url + orderid + orderuid + parseFloat(price).toFixed(2) + return_url + token + uid;
+
+                    paybank.find("input[name='key']").val($.md5(key).toLocaleLowerCase());
+
+                    paybank.find("form").submit();
+                }
+            });
+
+        }
+
+
+
+        $(function () {
+            var clipboard = new Clipboard(".copy");
+            clipboard.on('success', function (e) {
+                e.clearSelection();
+                $(document).dialog({
+                    type: 'notice',
+                    infoText: '已成功复制收款信息到剪切板！',
+                    autoClose: 1500,
+                    position: 'center'
+                });
+            });
+            clipboard.on('error', function (e) {
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
+            });
+
+
+            $(".subtab a").each(function () {
+                var taburl = $(this).data("url");
+                $(this).click(function () {
+                    $(".subtab a").removeClass('active');
+                    $(this).addClass('active');
+                    $(".subbox").hide();
+                    $(".subbox[data-url='" + taburl + "']").show();
+                    $(".subbox[data-url='" + taburl + "'] .cashtype .cashbox-item:first-child").click();
+                });
+
+                $(".subbox[data-url='" + taburl + "'] .cashtype .cashbox-item").each(function () {
+                    $(this).click(function () {
+                        $(".subbox[data-url='" + taburl + "'] .cashtype .cashbox-item").removeClass('checked');
+                        $(this).addClass('checked');
+                    });
+                });
+
+            });
+            $(".subtab a:first-child").click();
+
+
+        });
+
+
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + month + strDate
+                    + date.getHours() + date.getMinutes()
+                    + date.getSeconds();
+            return currentdate;
+        }
+
+    </script>
+
+</body>
+</html>
