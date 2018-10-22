@@ -144,13 +144,14 @@ $data = array(
 #变更参数设置
 
 $form_url = 'http://pay.longfapay.com:88/api/pay';
-
-if(_is_mobile()){
-  $scan = 'yl';
-  $data['netwayType'] = 'UNION_WAP';
-}else{
-  $scan = 'yl';
-  $data['netwayType'] = 'UNION_WALLET';
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  if(_is_mobile()){
+    $scan = 'yl';
+    $data['netwayType'] = 'UNION_WAP';
+  }else{
+    $scan = 'yl';
+    $data['netwayType'] = 'UNION_WALLET';
+  }
 }
 payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
