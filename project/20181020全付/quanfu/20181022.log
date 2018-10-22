@@ -1,10 +1,5 @@
-2018-10-22 00:02:56 notify
-2018-10-22 00:02:56 {"api_code":"35353837","paysapi_id":"HA22809384165820","order_id":"27066520181022120217","is_type":"alipay","price":"1.00","real_price":"1.00","mark":"pay","code":1,"sign":"17E6F154F80C2F5497833107B0D6B248","messages":{"returnmsg":"获取成功"}}
-2018-10-22 00:02:56 signtext=api_code=35353837&api_code=35353837&code=1&is_type=alipay&mark=pay&order_id=27066520181022120217&paysapi_id=HA22809384165820&price=1.00&real_price=1.00&key=8cf2fa7a80ab0b588156d692314e4b30
-2018-10-22 00:02:56 mysign=6145A4BA98610BDC2D35C0A6CBD80F44
-2018-10-22 00:02:56 签名不正确！
-2018-10-22 00:02:56 notify
-2018-10-22 00:02:56 {"api_code":"35353837","paysapi_id":"HA22809384165820","order_id":"27066520181022120217","is_type":"alipay","price":"1.00","real_price":"1.00","mark":"pay","code":1,"sign":"17E6F154F80C2F5497833107B0D6B248"}
-2018-10-22 00:02:56 signtext=api_code=35353837&api_code=35353837&code=1&is_type=alipay&mark=pay&order_id=27066520181022120217&paysapi_id=HA22809384165820&price=1.00&real_price=1.00&key=8cf2fa7a80ab0b588156d692314e4b30
-2018-10-22 00:02:56 mysign=6145A4BA98610BDC2D35C0A6CBD80F44
-2018-10-22 00:02:56 签名不正确！
+2018-10-22 02:31:06 notify
+2018-10-22 02:31:06 {"api_code":"35353837","paysapi_id":"HA22898362454749","order_id":"50389420181022143035","is_type":"alipay","price":"1.00","real_price":"1.00","mark":"pay","code":1,"sign":"99A7FB75273AFD18B5C36C0A99CA23C3","messages":{"returnmsg":"获取成功"}}
+2018-10-22 02:31:06 signtext=api_code=35353837&code=1&is_type=alipay&mark=pay&order_id=50389420181022143035&paysapi_id=HA22898362454749&price=1.00&real_price=1.00&key=8cf2fa7a80ab0b588156d692314e4b30
+2018-10-22 02:31:06 mysign=99A7FB75273AFD18B5C36C0A99CA23C3
+2018-10-22 02:31:06 SUCCESSat 1
