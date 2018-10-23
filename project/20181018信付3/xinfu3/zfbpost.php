@@ -130,10 +130,8 @@ foreach ($data as $arr_key => $arr_val) {
 }
 $signtext = substr($signtext, 0, -1);
 $data['signature'] = hash_hmac("sha1",$signtext,$pay_mkey);
-echo http_build_query($data);
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
-exit;
 $row = json_decode($res, 1);
 #跳转
 if ($row['code'] != '1') {
