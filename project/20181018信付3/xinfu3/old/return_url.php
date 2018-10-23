@@ -1,6 +1,6 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 #接收资料
@@ -23,7 +23,7 @@ if(!empty($data)){
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -32,7 +32,7 @@ if(!empty($data)){
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
