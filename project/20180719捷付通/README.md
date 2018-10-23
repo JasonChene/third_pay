@@ -42,3 +42,16 @@
 档案位置：php@60.245.62.221\jiefutong2
 
 备注：不同网关的捷付通,http://www.8jft.com/Pay
+
+20181023  
+第三方名称：捷付通2  
+档案位置：php@60.245.62.221\jiefutong2  
+
+修改档案：notify_url,return_url,zfbpost  
+
+测试到账：支付宝扫码  
+
+备注：  
+网关http://www.8jft.com/Pay改为http://klf08.com/Pay  
+修正notify_url,return_url数据库的连接方式  
+支付宝限制区域  
