@@ -97,19 +97,17 @@ $form_url = 'http://api.hongyaa.cn/chargebank.aspx';
 $scan = '';
 $payType = '';
 $bankname = '';
-if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+//if (strstr($_REQUEST['pay_type'], "银联钱包")) {
   $scan = 'yl';
   $data['type'] = '996';
-}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
+/*}elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
   $scan = 'ylkj';
   $data['type'] = '2028';
-  /*if (_is_mobile()) {
-    $data['type'] = '2088';
-  }*/
 }else {
   $scan = 'wy';
-  $data['type'] = $_REQUEST['bank_code'];
+  $data['type'] = "1020";
 }
+*/
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

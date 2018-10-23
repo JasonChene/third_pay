@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 #function
@@ -66,7 +66,7 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -97,11 +97,11 @@ $form_url = 'http://api.hongyaa.cn/chargebank.aspx';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'wx';
-$data['type'] = '1004';
-/*if (_is_mobile()) {
-  $data['type'] = '1005';  
-}*/
+$scan = 'zfb';
+$data['type'] = '992';
+if (_is_mobile()) {
+  $data['type'] = '2098';
+}
 
 payType_bankname($scan, $pay_type);
 
