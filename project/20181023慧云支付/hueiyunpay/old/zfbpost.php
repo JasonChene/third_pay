@@ -1,26 +1,14 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.config.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-
-#function
-function curl_post($url, $data)
-{ #POST访问
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $tmpInfo = curl_exec($ch);
-  if (curl_errno($ch)) {
-    return curl_error($ch);
-  }
-  return $tmpInfo;
+#预设时间在上海
+date_default_timezone_set('PRC');
+if (function_exists("date_default_timezone_set")) {
+  date_default_timezone_set("Asia/Shanghai");
 }
+
 function payType_bankname($scan, $pay_type)
 {
   global $payType, $bankname;
@@ -53,6 +41,25 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
+
+
+#function
+function curl_post($url, $data)
+{ #POST访问
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, false);//设置头文件的信息作为数据流输出
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $tmpInfo = curl_exec($ch);
+  if (curl_errno($ch)) {
+    return curl_error($ch);
+  }
+  return $tmpInfo;
+}
 function QRcodeUrl($code)
 {
   if (strstr($code, "&")) {
@@ -66,10 +73,11 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
+// $stmt = $mydata1_db->prepare($sql);
 $stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
-$pay_mid = $row['mer_id'];//appid
+$pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
@@ -79,36 +87,31 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
+$form_url = 'http://www.247d.cn/apisubmit';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+
 #第三方参数设置
 $data = array(
-  "pay_fs" => "",
-  "pay_MerchantNo" => $pay_mid, 
-  "pay_orderNo" => $order_no,
-  "pay_Amount" => $mymoney,
-  "pay_NotifyUrl" => $merchant_url,
-  "pay_ewm" => "No",
-  "tranType" => "2",
-  "pay_ip" => getClientIp(),
-  "pay_returnUrl" => $return_url,
+  "version" => "1.0",
+  "customerid" => $pay_mid,
+  "sdorderno" => $order_no,
+  "total_fee" => $mymoney,
+  "notifyurl" => $merchant_url,
+  "returnurl" => $return_url,
+  "paytype" => "",
+  "get_code" => "1",
   "sign" => "",
 );
-
 #变更参数设置
-$form_url = 'http://api.qdd99.cn:8091/pay1.0/';
-$scan = '';
-$payType = '';
-$bankname = '';
 $scan = 'zfb';
-$data['pay_fs'] = 'alipay_h5';
+$data['paytype'] = 'alipay';
 if (_is_mobile()) {
-  $data['pay_fs'] = 'alipay_h5';  
+  $data['get_code'] = '0';
 }
 
 payType_bankname($scan, $pay_type);
-
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -119,25 +122,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = $data['pay_fs'].$pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_NotifyUrl'].$data['pay_ewm'].$pay_mkey;
+$signtext = "version=".$data['version']."&customerid=".$data['customerid']."&total_fee=".$data['total_fee']."&sdorderno=".$data['sdorderno']."&notifyurl=".$data['notifyurl']."&returnurl=".$data['returnurl']."&".$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
 
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
-#跳转
-if ($row['pay_Status'] != '100') {
-	echo '错误代码:' . $row['pay_Status'] . "<br>";
-	echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
-	exit;
-}else{
-	if (_is_mobile()) {
-		$jumpurl = $row['pay_Code'];
-	}else {
-		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
-	}
-}
+$form_data = $data;
+$jumpurl = $form_url;
+// #跳转
+// if ($row['code'] != '1') {
+//   echo $res;
+//   exit;
+// }else {
+//     $jumpurl = $row['code_info'];
+// }
+#跳轉方法
+
 ?>
 <html>
   <head>

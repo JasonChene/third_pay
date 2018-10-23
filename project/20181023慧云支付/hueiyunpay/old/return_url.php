@@ -1,26 +1,25 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.config.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-
 // write_log("return");
 
-$data = array();
 #接收资料
-#input方法
-$input_data=file_get_contents("php://input");
-// write_log($input_data);
-
-$data=json_decode($json,1);//json回传资料
+#post方法
+$data = array();
+foreach ($_REQUEST as $key => $value) {
+	$data[$key] = $value;
+	// write_log($key . "=" . $value);
+}
 
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['pay_OrderNo']; //订单号
-	$mymoney = number_format($data['pay_Amount'], 2, '.', ''); //订单金额
-	$success_msg = $data['pay_Status'];//成功讯息
-	$success_code = "100";//文档上的成功讯息
+	$order_no = $data['sdorderno']; //订单号
+	$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
+	$success_msg = $data['status'];//成功讯息
+	$success_code = "1";//文档上的成功讯息
 	$sign = $data['sign'];//签名
 	$echo_msg = "success";//回调讯息
 
@@ -45,13 +44,13 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		// write_log("非法提交参数");
+		// write_log('非法提交参数');
 		exit;
 	}
 
-	$signtext = $pay_account.$data['pay_OrderNo'].$data['pay_Amount'].$pay_mkey;
-	$mysign = md5($signtext);
+	$signtext="customerid=".$data['customerid']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&sdorderno=".$data['sdorderno']."&total_fee=".$data['total_fee']."&paytype=".$data['paytype']."&".$pay_mkey;
 	// write_log("signtext=".$signtext);
+	$mysign = (md5($signtext));//签名
 	// write_log("mysign=".$mysign);
 
 
@@ -70,7 +69,7 @@ if(!empty($data)){
 			} else {
 				$message = ("支付失败");
 			}
-		// }else{
+		}else{
 			$message = ('签名不正确！');
 		}
 	}else{
@@ -124,7 +123,7 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">备注：</td>
+			<td style="width: 120px; text-align: right;">备注</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>
