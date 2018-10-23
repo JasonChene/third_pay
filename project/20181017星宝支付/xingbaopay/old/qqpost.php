@@ -109,6 +109,7 @@ $data = array(
 $form_url = 'http://gateway.xingbao123.com';//请求地址
 $scan = 'qq';
 $data['paytype'] = '3';
+$data['type'] = 'json';//返回类型
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -125,39 +126,25 @@ if ($result_insert == -1) {
 $signtext = floatval($data['money']) . trim($data['record']) . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
+$data_str = http_build_query($data);
 
-//打印
-echo '<pre>';
-echo ('<br> data = <br>');
-var_dump($data);
-echo ('<br> signtext = <br>');
-echo ($signtext);
-echo ('<br><br> row = <br>');
-var_dump($row);
-echo '</pre>';
+#curl获取响应值
+$res = curl_post($form_url, $data_str);
+$tran = mb_convert_encoding("$res", "UTF-8");
+$row = json_decode($tran, 1);
 
-exit;
-
-$jumpurl = $form_url;
+#跳转
+if ($row['code'] != '200') {
+	echo '状态代码:' . $row['code'] . "\n";
+	echo '订单状态:' . $row['msg'] . "\n";
+	exit;
+} else {
+	$qrcodeUrl = $row['data']['image'];
+	$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+}
 
 #跳轉方法
+echo '正在为您跳转中，请稍候......';
+header('Location:' . $jumpurl);
+exit();
 ?>
-<html>
-  <head>
-    <title>跳转......</title>
-    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
-     <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-		<?php 
-} ?>
-   </form>
-    <script language="javascript">
-      document.getElementById("frm1").submit();
-    </script>
-  </body>
-</html>
-
