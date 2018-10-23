@@ -1,29 +1,33 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.php");
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
-#接收资料
+write_log("reutrn");
+
 $data = array();
-$input_data=file_get_contents("php://input");
-// write_log($input_data);
-$data=json_decode($input_data,1);//json回传资料
+#接收资料
+#request方法
+foreach ($_REQUEST as $key => $value) {
+	$data[$key] = $value;
+	write_log($key."=".$value);
+}
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['out_trade_no']; //订单号
-	$mymoney = number_format($data['total_amount'], 2, '.', ''); //订单金额
-	$success_msg = $data['trade_status'];//成功讯息
-	$success_code = "TRADE_SUCCESS";//文档上的成功讯息
-	$sign = $data['signature'];//签名
+	$order_no = $data['outTradeNo']; //订单号
+	$mymoney = number_format($data['totalFee']/100, 2, '.', ''); //订单金额
+	$success_msg = $data['status'];//成功讯息
+	$success_code = "paid";//文档上的成功讯息
+	$sign = $data['sign'];//签名
 	$echo_msg = "SUCCESS";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -32,7 +36,7 @@ if(!empty($data)){
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
@@ -40,22 +44,23 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		// write_log("非法提交参数");
+		write_log("非法提交参数");
 		exit;
 	}
+	#签名排列，可自行组字串或使用http_build_query($array)
 	ksort($data);
-	$noarr = array('signature');
+	$noarr = array('sign');
 	$signtext = '';
 	foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-		$signtext .= $arr_key . '=' . urlencode($arr_val) . '&';
+		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+			$signtext .= $arr_key . '=' . $arr_val . '&';
+		}
 	}
-	}
-	$signtext = substr($signtext, 0, -1);
-	$mysign = hash_hmac("sha1",$signtext,$pay_mkey);
 
-	// write_log("signtext=".$signtext);
-	// write_log("mysign=".$mysign);
+	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+	$mysign = strtoupper(md5($signtext));
+	write_log("signtext=".$signtext);
+	write_log("mysign=".$mysign);
 
 
 	#到账判断
