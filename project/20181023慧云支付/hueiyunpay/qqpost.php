@@ -84,24 +84,28 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "parter" => $pay_mid, 
-  "type" => "",
-  "value" => $mymoney,
-  "orderid" => $order_no,
-  "callbackurl" => $merchant_url,
+  "pay_fs" => "",
+  "pay_MerchantNo" => $pay_mid, 
+  "pay_orderNo" => $order_no,
+  "pay_Amount" => $mymoney,
+  "pay_NotifyUrl" => $merchant_url,
+  "pay_ewm" => "No",
+  "tranType" => "2",
+  "pay_ip" => getClientIp(),
+  "pay_returnUrl" => $return_url,
   "sign" => "",
 );
 
 #变更参数设置
-$form_url = 'http://api.hongyaa.cn/chargebank.aspx';
+$form_url = 'http://api.qdd99.cn:8091/pay1.0/';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'wx';
-$data['type'] = '1004';
-/*if (_is_mobile()) {
-  $data['type'] = '1005';  
-}*/
+$scan = 'qq';
+$data['pay_fs'] = 'qq';
+if (_is_mobile()) {
+  $data['pay_fs'] = 'qq_h5';  
+}
 
 payType_bankname($scan, $pay_type);
 
@@ -115,21 +119,25 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
-}
-
-$signtext = substr($signtext, 0, -1) . $pay_mkey;
+$signtext = $data['pay_fs'].$pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_NotifyUrl'].$data['pay_ewm'].$pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
 
-#跳轉方法
-$form_data = $data;
-$jumpurl = $form_url;
+#curl获取响应值
+$res = curl_post($form_url, http_build_query($data));
+$row = json_decode($res, 1);
+#跳转
+if ($row['pay_Status'] != '100') {
+	echo '错误代码:' . $row['pay_Status'] . "<br>";
+	echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
+	exit;
+}else{
+	if (_is_mobile()) {
+		$jumpurl = $row['pay_Code'];
+	}else {
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
+	}
+}
 ?>
 <html>
   <head>
@@ -137,7 +145,7 @@ $jumpurl = $form_url;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="get" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {

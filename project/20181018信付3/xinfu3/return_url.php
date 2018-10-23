@@ -3,6 +3,7 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
+//write_log("return");
 #接收资料
 $data = array();
 $input_data=file_get_contents("php://input");

@@ -1,32 +1,32 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
 // write_log("notify");
 
-
-#接收资料
 $data = array();
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	// write_log($key."=".$value);
-}
+#接收资料
+#input方法
+$input_data=file_get_contents("php://input");
+// write_log($input_data);
+
+$data=json_decode($input_data,1);//json回传资料
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['ovalue'], 2, '.', ''); //订单金额
-$success_msg = $data['opstate'];//成功讯息
-$success_code = "0";//文档上的成功讯息
-$sign = mb_convert_encoding($data['sign'], "UTF-8", "GB2312");//签名
-$echo_msg = "opstate=0";//回调讯息
+$order_no = $data['pay_OrderNo']; //订单号
+$mymoney = number_format($data['pay_Amount'], 2, '.', ''); //订单金额
+$success_msg = $data['pay_Status'];//成功讯息
+$success_code = "100";//文档上的成功讯息
+$sign = $data['sign'];//签名
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -35,7 +35,7 @@ $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -47,13 +47,9 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-#验签方式
-$signtext = "orderid=".$data['orderid'];
-$signtext .= "&opstate=".$data['opstate'];
-$signtext .= "&ovalue=".$data['ovalue'];
-$signtext .= $pay_mkey;//验签字串
+$signtext = $pay_account.$data['pay_OrderNo'].$data['pay_Amount'].$pay_mkey;
+$mysign = md5($signtext);
 // write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
 // write_log("mysign=".$mysign);
 
 #到账判断

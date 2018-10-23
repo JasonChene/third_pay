@@ -100,15 +100,15 @@ $bankname = '';
 if (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
   $scan = 'qq';
   $data['type'] = '2100';
-  if (_is_mobile()) {
+  /*if (_is_mobile()) {
     $data['type'] = '2097';
-  }
+  }*/
 }else {
   $scan = 'wx';
   $data['type'] = '1004';
-  if (_is_mobile()) {
+  /*if (_is_mobile()) {
     $data['type'] = '2099';  
-  }
+  }*/
 }
 payType_bankname($scan, $pay_type);
 
