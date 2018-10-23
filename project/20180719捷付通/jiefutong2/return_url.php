@@ -1,7 +1,7 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
-//include_once("../../../database/mysql.php");//现数据库的连接方式
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 //write_log("return");
 
@@ -24,8 +24,8 @@ $echo_msg = "success";//回调讯息
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -33,8 +33,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
-//$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -55,26 +55,26 @@ $mysign = md5($signtext);
 
 #到账判断
 if ($success_msg == $success_code) {
-	if ( $mysign == $sign) {
-		  $result_insert = update_online_money($order_no, $mymoney);
-		  if ($result_insert == -1) {
-			  $message = ("会员信息不存在，无法入账");
-		  }else if($result_insert == 0){
-			  $message = ("支付成功");
-		  }else if($result_insert == -2){
-			  $message = ("数据库操作失败");
-		  }else if($result_insert == 1){
-			  $message = ("支付成功");
-		  } else {
-			  $message = ("支付失败");
-		  }
-	  }else{
-		  $message = ('签名不正确！');
-	  }
-  }else{
-	  $message = ("交易失败");
-  }
-  ?>
+	if ($mysign == $sign) {
+		$result_insert = update_online_money($order_no, $mymoney);
+		if ($result_insert == -1) {
+			$message = ("会员信息不存在，无法入账");
+		} else if ($result_insert == 0) {
+			$message = ("支付成功");
+		} else if ($result_insert == -2) {
+			$message = ("数据库操作失败");
+		} else if ($result_insert == 1) {
+			$message = ("支付成功");
+		} else {
+			$message = ("支付失败");
+		}
+	} else {
+		$message = ('签名不正确！');
+	}
+} else {
+	$message = ("交易失败");
+}
+?>
   
   <!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
   <!DOCTYPE html>

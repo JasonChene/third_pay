@@ -81,8 +81,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
 $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
-$merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
+$return_url = trim($row['pay_domain']) . trim($row['wx_returnUrl']);//return跳转地址
+$merchant_url = trim($row['pay_domain']) . trim($row['wx_synUrl']);//notify回传地址
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;

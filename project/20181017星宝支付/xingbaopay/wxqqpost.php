@@ -109,9 +109,11 @@ $form_url = 'http://gateway.xingbao123.com';//请求地址
 if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
 	$scan = 'qq';
 	$data['paytype'] = '3';
+	$data['type'] = 'json';//返回类型
+	$data['record'] = substr(time() . rand(1000, 9999), -12);
 } else {
-	$scan = 'zfb';
-	$data['paytype'] = '1';
+	$scan = 'wx';
+	$data['paytype'] = '2';
 }
 payType_bankname($scan, $pay_type);
 
@@ -129,20 +131,29 @@ if ($result_insert == -1) {
 $signtext = floatval($data['money']) . trim($data['record']) . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
+$data_str = http_build_query($data);
 
-// //打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-
-// exit;
-
-$jumpurl = $form_url;
+#curl获取响应值
+if ($scan == 'qq') {
+	$res = curl_post($form_url, $data_str);
+	$tran = mb_convert_encoding("$res", "UTF-8");
+	$row = json_decode($tran, 1);
+	
+#跳转
+	if ($row['code'] != '200') {
+		echo '状态代码:' . $row['code'] . "\n";
+		echo '订单状态:' . $row['msg'] . "\n";
+		exit;
+	} else {
+		$qrcodeUrl = $row['data']['image'];
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+		echo '正在为您跳转中，请稍候......';
+		header('Location:' . $jumpurl);
+		exit();
+	}
+} else {
+	$jumpurl = $form_url;
+}
 
 #跳轉方法
 ?>

@@ -54,7 +54,7 @@ $data = array(
   'pay_rand' => createNoncestr(8)
 );
 #变更参数设置
-$form_url = 'https://ctn.open.dabaizf.net/pay/receiptapi/open.html';//提交地址
+$form_url = 'http://machpay.rangen.cn/pay/receiptapi/open.html';//提交地址
 $scan = 'qq';
 $bankname = $pay_type . "->QQ钱包在线充值";
 $payType = $pay_type . "_qq";

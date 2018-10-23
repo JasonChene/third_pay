@@ -3,10 +3,11 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
+//write_log("return");
 #接收资料
 $data = array();
 $input_data=file_get_contents("php://input");
-write_log($input_data);
+// write_log($input_data);
 $data=json_decode($input_data,1);//json回传资料
 $manyshow = 0;
 if(!empty($data)){
@@ -40,7 +41,7 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log("非法提交参数");
+		// write_log("非法提交参数");
 		exit;
 	}
 	ksort($data);
@@ -54,8 +55,8 @@ if(!empty($data)){
 	$signtext = substr($signtext, 0, -1);
 	$mysign = hash_hmac("sha1",$signtext,$pay_mkey);
 
-	write_log("signtext=".$signtext);
-	write_log("mysign=".$mysign);
+	// write_log("signtext=".$signtext);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
