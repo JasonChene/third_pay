@@ -3,22 +3,26 @@
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 
-//write_log("return");
-#接收资料
+// write_log("return");
+
 $data = array();
+#接收资料
+#input方法
 $input_data=file_get_contents("php://input");
 // write_log($input_data);
-$data=json_decode($input_data,1);//json回传资料
+
+$data=json_decode($json,1);//json回传资料
+
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['out_trade_no']; //订单号
-	$mymoney = number_format($data['total_amount'], 2, '.', ''); //订单金额
-	$success_msg = $data['trade_status'];//成功讯息
-	$success_code = "TRADE_SUCCESS";//文档上的成功讯息
-	$sign = $data['signature'];//签名
-	$echo_msg = "SUCCESS";//回调讯息
+	$order_no = $data['pay_OrderNo']; //订单号
+	$mymoney = number_format($data['pay_Amount'], 2, '.', ''); //订单金额
+	$success_msg = $data['pay_Status'];//成功讯息
+	$success_code = "100";//文档上的成功讯息
+	$sign = $data['sign'];//签名
+	$echo_msg = "success";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
@@ -44,17 +48,9 @@ if(!empty($data)){
 		// write_log("非法提交参数");
 		exit;
 	}
-	ksort($data);
-	$noarr = array('signature');
-	$signtext = '';
-	foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-		$signtext .= $arr_key . '=' . urlencode($arr_val) . '&';
-	}
-	}
-	$signtext = substr($signtext, 0, -1);
-	$mysign = hash_hmac("sha1",$signtext,$pay_mkey);
 
+	$signtext = $pay_account.$data['pay_OrderNo'].$data['pay_Amount'].$pay_mkey;
+	$mysign = md5($signtext);
 	// write_log("signtext=".$signtext);
 	// write_log("mysign=".$mysign);
 
@@ -74,7 +70,7 @@ if(!empty($data)){
 			} else {
 				$message = ("支付失败");
 			}
-		}else{
+		// }else{
 			$message = ('签名不正确！');
 		}
 	}else{

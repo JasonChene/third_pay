@@ -99,9 +99,9 @@ $payType = '';
 $bankname = '';
 $scan = 'qq';
 $data['type'] = '2100';
-if (_is_mobile()) {
+/*if (_is_mobile()) {
   $data['type'] = '2097';
-}
+}*/
 
 payType_bankname($scan, $pay_type);
 
