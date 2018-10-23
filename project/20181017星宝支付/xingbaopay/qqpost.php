@@ -90,7 +90,8 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 #固定参数设置
 $top_uid = $_REQUEST['top_uid'];
-$order_no = getOrderNo();
+// $order_no = getOrderNo();
+$order_no = substr(time() . rand(1000, 9999), -12);
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置

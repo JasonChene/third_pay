@@ -95,24 +95,21 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-	"key" => $pay_mkey, //后台显示的通讯key
-	"record" => $order_no, //附加信息，如：用户网站的用户名，订单号， 手机号，等唯一标识
-	"money" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //金额
-	"refer" => $return_url, //支付成功或订单超时自动跳转的地址
-	"paytype" => '', //支付类型
-	"notify_url" => $merchant_url, //异步通知地址,又称回调地址
-	"sign" => '', //数据签名
+	"src_code" => $pay_account, //商户唯一标识
+	"sign" => '', //签名
+	"out_trade_no" => $order_no, //接入方交易订单号
+	"total_fee" => number_format($_REQUEST['MOAmount'] * 100, 0, '.', ''), //订单总金额，单位分
+	"time_start" => date("YmdHis"), //发起交易的时间
+	"goods_name" => 'pay', //商品名称
+	"trade_type" => '', //交易类型
+	"finish_url" => $OOOOO, //支付完成页面的url
+	"mchid" => $pay_mid, //平台商户号
 );
 
 #变更参数设置
-$form_url = 'http://gateway.xingbao123.com';//请求地址
-if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-	$scan = 'qq';
-	$data['paytype'] = '3';
-} else {
-	$scan = 'wx';
-	$data['paytype'] = '2';
-}
+$form_url = 'http://api.xinfuup.com/trade/pay';//提交地址
+$scan = 'yl';
+$data['trade_type'] = '30104';//银联二维码
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -126,11 +123,25 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = floatval($data['money']) . trim($data['record']) . $pay_mkey;
-$sign = md5($signtext);
+ksort($data);
+$noarr = array('sign');//不加入签名的array key值
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
+	}
+}
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$sign = strtoupper(md5($signtext));
 $data['sign'] = $sign;
+$data_str = http_build_query($data);
 
-// //打印
+#curl获取响应值
+$res = curl_post($form_url, $data_str);
+$tran = mb_convert_encoding("$res", "UTF-8");
+$row = json_decode($tran, 1);
+
+//打印
 // echo '<pre>';
 // echo ('<br> data = <br>');
 // var_dump($data);
@@ -142,7 +153,19 @@ $data['sign'] = $sign;
 
 // exit;
 
-$jumpurl = $form_url;
+#跳转
+if ($row['respcd'] != '2') {
+	echo '状态代码:' . $row['respcd'] . "\n";
+	echo '订单状态:' . $row['respmsg'] . "\n";
+	exit;
+} else {
+	$qrcodeUrl = $row['pay_params'];
+	// if (_is_mobile()) {
+	$jumpurl = $qrcodeUrl;
+	// } else {
+	// 	$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+	// }
+}
 
 #跳轉方法
 ?>
@@ -152,13 +175,9 @@ $jumpurl = $form_url;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-  <form method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
-     <p>正在为您跳转中，请稍候......</p>
-       <?php foreach ($data as $arr_key => $arr_value) { ?>
-         <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-		<?php 
-} ?>
-   </form>
+    <form method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
+      <p>正在为您跳转中，请稍候......</p>
+    </form>
     <script language="javascript">
       document.getElementById("frm1").submit();
     </script>
