@@ -108,8 +108,14 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://api.xinfuup.com/trade/pay';//提交地址
-$scan = 'yl';
-$data['trade_type'] = '30104';//银联二维码
+
+if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
+	$scan = 'qq';
+	$data['trade_type'] = '40104';//QQ 钱包扫码
+} else {
+	$scan = 'wx';
+	$data['trade_type'] = '50107';//微信wap
+}
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -141,30 +147,18 @@ $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
 
-//打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-
-// exit;
-
 #跳转
-if ($row['respcd'] != '2') {
+if ($row['respcd'] != '0000') {
 	echo '状态代码:' . $row['respcd'] . "\n";
 	echo '订单状态:' . $row['respmsg'] . "\n";
 	exit;
 } else {
-	$qrcodeUrl = $row['pay_params'];
-	// if (_is_mobile()) {
-	$jumpurl = $qrcodeUrl;
-	// } else {
-	// 	$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
-	// }
+	$qrcodeUrl = $row['data']['pay_params'];
+	if (_is_mobile()) {
+		$jumpurl = $qrcodeUrl;
+	} else {
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+	}
 }
 
 #跳轉方法

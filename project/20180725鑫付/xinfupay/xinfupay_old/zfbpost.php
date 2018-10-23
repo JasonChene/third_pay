@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");//原数据库的连接方式
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -75,8 +75,8 @@ function QRcodeUrl($code)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+$stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
+// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -108,13 +108,10 @@ $data = array(
 
 #变更参数设置
 $form_url = 'http://api.xinfuup.com/trade/pay';//提交地址
-
-if (strstr($pay_type, "QQ钱包") || strstr($pay_type, "qq钱包")) {
-	$scan = 'qq';
-	$data['trade_type'] = '40104';//QQ 钱包扫码
-} else {
-	$scan = 'wx';
-	$data['trade_type'] = '50107';//微信wap
+$scan = 'zfb';
+$data['trade_type'] = '60104';//支付宝扫码
+if (_is_mobile()) {
+	$data['trade_type'] = '60107';//支付宝H5/wap
 }
 payType_bankname($scan, $pay_type);
 
@@ -147,30 +144,18 @@ $res = curl_post($form_url, $data_str);
 $tran = mb_convert_encoding("$res", "UTF-8");
 $row = json_decode($tran, 1);
 
-//打印
-// echo '<pre>';
-// echo ('<br> data = <br>');
-// var_dump($data);
-// echo ('<br> signtext = <br>');
-// echo ($signtext);
-// echo ('<br><br> row = <br>');
-// var_dump($row);
-// echo '</pre>';
-
-// exit;
-
 #跳转
-if ($row['respcd'] != '2') {
+if ($row['respcd'] != '0000') {
 	echo '状态代码:' . $row['respcd'] . "\n";
 	echo '订单状态:' . $row['respmsg'] . "\n";
 	exit;
 } else {
-	$qrcodeUrl = $row['pay_params'];
-	// if (_is_mobile()) {
-	$jumpurl = $qrcodeUrl;
-	// } else {
-	// 	$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
-	// }
+	$qrcodeUrl = $row['data']['pay_params'];
+	if (_is_mobile()) {
+		$jumpurl = $qrcodeUrl;
+	} else {
+		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($qrcodeUrl);
+	}
 }
 
 #跳轉方法
