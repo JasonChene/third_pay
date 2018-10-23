@@ -3,14 +3,14 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-write_log("reutrn");
+// write_log("reutrn");
 
 $data = array();
 #接收资料
 #request方法
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -44,7 +44,7 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log("非法提交参数");
+		// write_log("非法提交参数");
 		exit;
 	}
 	#签名排列，可自行组字串或使用http_build_query($array)
@@ -59,8 +59,8 @@ if(!empty($data)){
 
 	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
 	$mysign = strtoupper(md5($signtext));
-	write_log("signtext=".$signtext);
-	write_log("mysign=".$mysign);
+	// write_log("signtext=".$signtext);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断
