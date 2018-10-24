@@ -15,11 +15,11 @@ $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['sdorderno']; //订单号
-	$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
-	$success_msg = $data['status'];//成功讯息
+	$order_no = $data['edddh']; //订单号
+	$mymoney = number_format($data['edfee'], 2, '.', ''); //订单金额
+	$success_msg = $data['edstatus'];//成功讯息
 	$success_code = "1";//文档上的成功讯息
-	$sign = $data['sign'];//签名
+	$sign = $data['edsign'];//签名
 	$echo_msg = "success";//回调讯息
 
 	#根据订单号读取资料库
@@ -47,11 +47,10 @@ if(!empty($data)){
 	}
 
 	#验签方式
-	$signtext = 'customerid=' . $data['customerid'] . '&status=' . $data['status'] . '&sdpayno=' . $data['sdpayno'] . '&sdorderno=' . $data['sdorderno'] . '&total_fee=' . $data['total_fee'] . '&paytype=' . $data['paytype'] . '&' .  $pay_mkey;
+	$signtext = $data['edstatus'] . $data['edid'] . $data['edddh'] . $data['edfee'] . $pay_mkey;
 	// write_log("signtext=".$signtext);
 	$mysign = md5($signtext);//签名
 	// write_log("mysign=".$mysign);
-
 
 	#到账判断
 	if ($success_msg == $success_code) {

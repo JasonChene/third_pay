@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <title>支付接口 - 易点支付</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+        <meta name="renderer" content="webkit">
+    </head>
+    <body>
+        <form id="Form1" name="Form1" method="post" action="./index.php">
+            商品名称：<input type="text" name="eddesc" value='test'/>
+            金额：<input type="text" name="edfee" value=''/>
+            支付类型：<select type="text" name="edpay">
+                <option value="zfbsm">支付宝扫码</option>
+                <option value="zfbwap">支付宝wap</option>
+            </select>
+            <input type="submit" value="支付"/>
+        </form>
+    </body>
+</html>
