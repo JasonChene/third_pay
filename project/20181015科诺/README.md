@@ -18,6 +18,7 @@
 测试到账：支付宝扫码  
 
 备注：  
+第三方说微信目前维护  
 第三方修改网关  
 1.原官网地址由 http://www.kenuolife.com 调整为 http://pingtai.aifeinews.com  
 2.原接口地址由 http://service.kenuolife.com/service或者https://service.kenuolife.com/service 调整为 https://service.chinaxiangqiu.com/service  
