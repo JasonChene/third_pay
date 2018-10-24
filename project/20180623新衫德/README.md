@@ -27,3 +27,12 @@ cer 档请使用指令 openssl x509 -inform der -in sand.cer -out sand.pem
 20181022
 金额单位错误，应该是商户报备没有填对异步通知地址
 同步通知回来的单位是元
+
+20181024
+第三方名称：新衫德  
+档案位置：php@60.245.31.1/xinshande
+
+修改档案：return_url.php
+
+备注：金额偶尔会变成 1%
+修改同步通知不 updata
