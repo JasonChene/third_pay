@@ -16,7 +16,7 @@ if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
 	$order_no = $data['sdorderno']; //订单号
-	$mymoney = number_format($data['total_fee']/100, 2, '.', ''); //订单金额
+	$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
 	$success_msg = $data['status'];//成功讯息
 	$success_code = "1";//文档上的成功讯息
 	$sign = $data['sign'];//签名
