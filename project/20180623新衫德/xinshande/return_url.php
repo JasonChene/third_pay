@@ -23,7 +23,7 @@ $notify_data_arr = json_decode($notify_data,1);
 
 #设定固定参数
 $order_no = $notify_data_arr['body']['orderCode']; //订单号
-$mymoney = number_format($notify_data_arr['body']['totalAmount']/100, 2, '.', ''); //订单金额
+$mymoney = number_format($notify_data_arr['body']['totalAmount'], 2, '.', ''); //订单金额
 $success_msg = $notify_data_arr['body']['orderStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
@@ -56,18 +56,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 #到账判断
 if ($success_msg == $success_code) {
   if (verify($notify_data, $sign, $pay_account)) {
-		$result_insert = update_online_money($order_no, $mymoney);
-		if ($result_insert == -1) {
-			$message = ("会员信息不存在，无法入账");
-		}else if($result_insert == 0){
 			$message = ("支付成功");
-		}else if($result_insert == -2){
-			$message = ("数据库操作失败");
-		}else if($result_insert == 1){
-			$message = ("支付成功");
-		} else {
-			$message = ("支付失败");
-		}
 	}else{
 		$message = ('签名不正确！');
 	}
@@ -98,12 +87,6 @@ if ($success_msg == $success_code) {
 			<td style="width: 120px; text-align: right;">订单号：</td>
 			<td style="padding-left: 10px;">
 				<label id="lborderno"><?php echo $order_no; ?></label>
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 120px; text-align: right;">充值金额：</td>
-			<td style="padding-left: 10px;">
-				<label id="lbpayamount"><?php echo $mymoney; ?></label>
 			</td>
 		</tr>
 		<tr>
