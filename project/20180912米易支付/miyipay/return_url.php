@@ -38,8 +38,17 @@ $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
+$ipstr = explode('###', $pay_account);
+$ip1 = $ipstr[0];
+$ip2 = $ipstr[1];
+$ip3 = $ipstr[2];
+$ip = $_SERVER['REMOTE_ADDR'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
+	exit;
+}
+if ($ip != $ip1 && $ip != $ip2 && $ip != $ip3) {
+	// write_log('ip=' . $_SERVER['REMOTE_ADDR']);
 	exit;
 }
 
