@@ -1,0 +1,6 @@
+科诺通知
+  为了更好的为客户提供优质服务，平台将进行业务升级，需要商户和技术进行以下参数修改：
+1.原官网地址由 http://www.kenuolife.com 调整为 http://pingtai.aifeinews.com
+2.原接口地址由 http://service.kenuolife.com/service或者https://service.kenuolife.com/service 调整为 https://service.chinaxiangqiu.com/service
+3.需要对接平台添加我们ip(123.56.24.147)为白名单，以免造成调用被错误拦截。
+修改后测试正常后才可以上线使用。

@@ -115,10 +115,10 @@ $getPayInfo_data = array(
 );
 
 #变更参数设置
-$form_url = 'http://service.kenuolife.com/service/order/saveOrder';
-$getPayInfo_form_url = 'http://service.kenuolife.com/service/pcpay/getPayInfo';
+$form_url = 'https://service.chinaxiangqiu.com/service/order/saveOrder';
+$getPayInfo_form_url = 'https://service.chinaxiangqiu.com/service/pcpay/getPayInfo';
 if (_is_mobile()) {
-	$getPayInfo_form_url = 'http://service.kenuolife.com/service/h5pay/getPayInfo';
+	$getPayInfo_form_url = 'https://service.chinaxiangqiu.com/service/h5pay/getPayInfo';
 }
 $scan = 'wx';
 $getPayInfo_data['payType'] = 'wx_pay_pc';
