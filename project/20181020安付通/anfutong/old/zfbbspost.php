@@ -89,14 +89,9 @@ foreach ($data as $arr_key => $arr_value) {
 $res = curl_post($form_url,http_build_query($data),"POST");
 $row = json_decode($res,1);
 #跳转qrcode
+#跳转qrcode
 $url = $row['pay_url'];
-if ($row[''] == '') {
-    $qrurl = QRcodeUrl($url);
-    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-}else{
-  echo "错误码：".$row['']."错误讯息：".$row[''];
-  exit();
-}
+$jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . QRcodeUrl($url);
 ?>
 <html>
   <head>
