@@ -86,7 +86,18 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-
+#curl获取响应值
+$res = curl_post($form_url,http_build_query($data),"POST");
+$row = json_decode($res,1);
+$url = $row['payurl'];
+#跳转qrcode
+if ($row['status'] == '1') {
+    echo $url;
+    exit;
+}else{
+  echo "错误码：".$row['status']."错误讯息：".$row['error'];
+  exit();
+}
 ?>
 <html>
   <head>
