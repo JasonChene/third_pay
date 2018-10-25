@@ -3,14 +3,14 @@
 include_once("../../../database/mysql.config.php");//原数据库的连接方式
 // include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-#//write_log("notify");
+write_log("notify");
 
 #接收资料
 #request方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	//write_log($key . "=" . $value);
+	write_log($key . "=" . $value);
 }
 
 #设定固定参数
@@ -40,9 +40,19 @@ $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
+$ipstr = explode('###', $pay_account);
+$ip1 = $ipstr[0];
+$ip2 = $ipstr[1];
+$ip3 = $ipstr[2];
+$ip = $_SERVER['REMOTE_ADDR'];
+write_log('ip=' . $ip);
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	//write_log("非法提交参数");
+	write_log("非法提交参数");
+	exit;
+}
+if ($ip != $ip1 && $ip != $ip2 && $ip != $ip3) {
+	write_log('回調來源非第三方ip');
 	exit;
 }
 
@@ -56,9 +66,9 @@ foreach ($data as $arr_key => $arr_val) {
 	}
 }
 $signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;//验签字串
-//write_log("signtext=" . $signtext);
+write_log("signtext=" . $signtext);
 $mysign = md5($signtext);//签名
-//write_log("mysign=" . $mysign);
+write_log("mysign=" . $mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -66,28 +76,28 @@ if ($success_msg == $success_code) {
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
-			//write_log("会员信息不存在，无法入账");
+			write_log("会员信息不存在，无法入账");
 			exit;
 		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			//write_log($echo_msg . 'at 0');
+			write_log($echo_msg . 'at 0');
 			exit;
 		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			//write_log("数据库操作失败");
+			write_log("数据库操作失败");
 			exit;
 		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			//write_log($echo_msg . 'at 1');
+			write_log($echo_msg . 'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
-			//write_log("支付失败");
+			write_log("支付失败");
 			exit;
 		}
 	} else {
 		echo ('签名不正确！');
-		//write_log("签名不正确！");
+		write_log("签名不正确！");
 		exit;
 	}
 } else {
