@@ -86,7 +86,28 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-
+#curl获取响应值
+$res = curl_post($form_url,http_build_query($data),"POST");
+$row = json_decode($res,1);
+//打印
+// echo '<pre>';
+// echo ('<br> data = <br>');
+// var_dump($data);
+// echo ('<br> res = <br>');
+// var_dump($res);
+// echo ('<br><br> row = <br>');
+// var_dump($row);
+// echo '</pre>';
+// exit;
+#跳转qrcode
+$url = $row['payurl'];
+if ($row['status'] == '1') {
+    echo $url;
+    exit;
+}else{
+  echo "错误码：".$row['status']."错误讯息：".$row['error'];
+  exit();
+}
 ?>
 <html>
   <head>
@@ -94,10 +115,10 @@ foreach ($data as $arr_key => $arr_value) {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if (isset($data)) {
+          if (isset($form_data)) {
             foreach ($data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />

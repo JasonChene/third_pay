@@ -1,7 +1,7 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-include_once("../../../database/mysql.config.php");
-// include_once("../../../database/mysql.php");//现数据库的连接方式
+// include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 // write_log("notify");
 
@@ -14,18 +14,16 @@ foreach ($_POST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['sdorderno']; //订单号
-$mymoney = number_format($data['total_fee']/100, 2, '.', ''); //订单金额
-$success_msg = $data['status'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$order_no = $data['out_trade_no']; //订单号
+$mymoney = number_format($data['total_amount'], 2, '.', ''); //订单金额
 $sign = $data['sign'];//签名
-$echo_msg = "success";//回调讯息
+$echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-$stmt = $mydata1_db->prepare($sql);
-// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -33,8 +31,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
-// $stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -46,7 +44,15 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$signtext = 'customerid=' . $data['customerid'] . '&status=' . $data['status'] . '&sdpayno=' . $data['sdpayno'] . '&sdorderno=' . $data['sdorderno'] . '&total_fee=' . $data['total_fee'] . '&paytype=' . $data['paytype'] . '&' .  $pay_mkey;
+$noarr = array('sign','sign_type');//不加入签名的array key值
+ksort($data);
+$signtext = "";
+foreach ($data as $arr_key => $arr_val) {
+	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val ===0 || $arr_val ==='0')) {
+		$signtext .= $arr_key . '=' . $arr_val . '&';
+	}
+}
+$signtext = substr($signtext, 0,-1) . '&key=' . $pay_mkey;//验签字串
 // write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
 // write_log("mysign=".$mysign);
