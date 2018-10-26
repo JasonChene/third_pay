@@ -74,7 +74,6 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
-"pay_ip" => $client_ip,
 );
 #变更参数设定
 $payType = $pay_type."_zfb";
