@@ -128,20 +128,6 @@ $data['sign'] = $sign;
 $data_str = http_build_query($data);
 $jumpurl = $form_url;
 
-// #curl获取响应值
-// $res = curl_post($form_url, $data_str);
-// $tran = mb_convert_encoding("$res", "UTF-8");
-// $row = json_decode($tran, 1);
-
-// #跳转
-// if ($row['code'] != '200') {
-// 	echo '状态代码:' . $row['code'] . "\n";
-// 	echo '订单状态:' . $row['msg'] . "\n";
-// 	exit;
-// } else {
-// 	$jumpurl = $row['data']['image'];
-// }
-
 #跳轉方法
 echo '正在为您跳转中，请稍候......';
 header('Location:' . $jumpurl . '?' . $data_str);
