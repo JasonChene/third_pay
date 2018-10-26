@@ -98,7 +98,8 @@ $res = curl_post($form_url,http_build_query($data),"POST");
 $row = json_decode($res,1);
 #跳转qrcode
 $url = $row['pay_url'];
-$jumpurl = $url;
+header("Location: " . $url);
+exit;
 ?>
 <html>
   <head>

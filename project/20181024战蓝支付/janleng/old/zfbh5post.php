@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 安付通
+#第三方名稱 : 战蓝支付
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
@@ -19,8 +19,8 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
-$return_url = $row['pay_domain'] . $row['wx_returnUrl'];//同步
-$merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//异步
+$return_url = trim($row['pay_domain'] . $row['wx_returnUrl']);//同步
+$merchant_url = trim($row['pay_domain'] . $row['wx_synUrl']);//异步
 if ($pay_mid == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
@@ -28,40 +28,42 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'https://api.727pay.com/gateway';
+$form_url = 'http://47.244.39.25:7071/pay/cnp/gateway';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
 $client_ip = getClientIp();
 $pr_key = $pay_mkey;//私钥
 $pu_key = $pay_account;//公钥
-$order_time = date("YmdHis");
+$order_time = date("Y-m-d H:i:s");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
-$content = array(
-    "merchant_no" => $pay_mid,//商户ID
-    "out_trade_no" => $order_no, //商户订单号
-    "order_name" => 'ordername', //商品描述
-    "total_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //总金额
-    "ip" => getClientIp(), //用户端ip
-    "notify_url" => $merchant_url, //异步回调地址
-    "return_url" => $return_url //同步回调地址
-);
 $data = array(
-"app_id" => $pay_account,
-"method" => 'alipay.h5_pay',
-"sign_type" => 'MD5',
-"version" => '1.0',
-"content" => json_encode($content),
+"merchant_no" => $pay_mid,
+"order_no" => $order_no,
+"amount" => $MOAmount,
+"notify_url" => $notify_url,
+"currency" => '156',
+"pay_code" => '20000',
+"pay_ip" => $client_ip,
+"request_time" => $order_time,
+"product_name" => 'goods',
+"return_url" => $return_url,
 "sign" => array(
 "str_arr" => array(
-"app_id" => $pay_account,
-"content" => json_encode($content),
-"method" => "alipay.h5_pay",
-"version" => "1.0",
+"amount" => $MOAmount,
+"currency" => "156",
+"merchant_no" => $pay_mid,
+"notify_url" => $notify_url,
+"order_no" => $order_no,
+"pay_code" => "20000",
+"pay_ip" => $client_ip,
+"product_name" => "goods",
+"request_time" => $order_time,
+"return_url" => $return_url,
 ),
 "mid_conn" => "=",
 "last_conn" => "&",
@@ -72,6 +74,7 @@ $data = array(
 "key" => $pr_key,
 "havekey" => "1",
 ),
+"pay_ip" => $client_ip,
 );
 #变更参数设定
 $payType = $pay_type."_zfb";
@@ -97,9 +100,13 @@ foreach ($data as $arr_key => $arr_value) {
 $res = curl_post($form_url,http_build_query($data),"POST");
 $row = json_decode($res,1);
 #跳转qrcode
-$url = $row['pay_url'];
-header("Location: " . $url);
-exit;
+$url = $row['data'];
+if ($row['resp_code'] == '0000') {
+    $jumpurl = $url;
+}else{
+  echo "错误码：".$row['resp_code']."错误讯息：".$row['resp_msg'];
+  exit();
+}
 ?>
 <html>
   <head>
