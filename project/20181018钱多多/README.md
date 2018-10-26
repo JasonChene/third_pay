@@ -9,3 +9,12 @@
 
 现有渠道：支付宝扫码,支付宝手机,网银,银联快捷
 测试到账：支付宝扫码,网银
+
+20181026  
+修改档案：post,qqpost,wxpost,wxqqjdpost,zfbpost,return_url  
+
+测试到帐：支付宝扫码  
+
+备注：  
+第三方修改网关  
+修正return_url判断  

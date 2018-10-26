@@ -85,7 +85,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
   "pay_fs" => "",
-  "pay_MerchantNo" => $pay_mid, 
+  "pay_MerchantNo" => $pay_mid,
   "pay_orderNo" => $order_no,
   "pay_Amount" => $mymoney,
   "pay_NotifyUrl" => $merchant_url,
@@ -97,14 +97,14 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://api.qdd99.cn:8091/pay1.0/';
+$form_url = 'http://43.225.158.205:2501/pay1.0/';
 $scan = '';
 $payType = '';
 $bankname = '';
 $scan = 'zfb';
 $data['pay_fs'] = 'alipay_h5';
 if (_is_mobile()) {
-  $data['pay_fs'] = 'alipay_h5';  
+  $data['pay_fs'] = 'alipay_h5';
 }
 
 payType_bankname($scan, $pay_type);
@@ -119,7 +119,7 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$signtext = $data['pay_fs'].$pay_account.$data['pay_orderNo'].$data['pay_Amount'].$data['pay_NotifyUrl'].$data['pay_ewm'].$pay_mkey;
+$signtext = $data['pay_fs'] . $pay_account . $data['pay_orderNo'] . $data['pay_Amount'] . $data['pay_NotifyUrl'] . $data['pay_ewm'] . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
 
@@ -128,15 +128,15 @@ $res = curl_post($form_url, http_build_query($data));
 $row = json_decode($res, 1);
 #跳转
 if ($row['pay_Status'] != '100') {
-	echo '错误代码:' . $row['pay_Status'] . "<br>";
-	echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
-	exit;
-}else{
-	if (_is_mobile()) {
-		$jumpurl = $row['pay_Code'];
-	}else {
-		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
-	}
+  echo '错误代码:' . $row['pay_Status'] . "<br>";
+  echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
+  exit;
+} else {
+  if (_is_mobile()) {
+    $jumpurl = $row['pay_Code'];
+  } else {
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
+  }
 }
 ?>
 <html>
