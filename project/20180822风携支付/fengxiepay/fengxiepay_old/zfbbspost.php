@@ -56,12 +56,12 @@ $data = array(
       "fx_notify_url" => $notify_url,
     ),
     "mid_conn" => "",
-    "last_conn" => "",
+    "last_conn" => "|",
     "encrypt" => array(
       "0" => "MD5",
       "1" => "MD5",
     ),
-    "key_str" => "",
+    "key_str" => "|",
     "key" => $pr_key,
     "havekey" => "",
   ),
@@ -86,6 +86,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
+$form_data = $data;
+$jumpurl = $form_url;
 
 ?>
 <html>
@@ -94,11 +96,11 @@ foreach ($data as $arr_key => $arr_value) {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
           if (isset($data)) {
-            foreach ($data as $arr_key => $arr_value) {
+            foreach ($form_data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
           <?php 

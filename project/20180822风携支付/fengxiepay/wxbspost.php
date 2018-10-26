@@ -56,12 +56,12 @@ $data = array(
       "fx_notify_url" => $notify_url,
     ),
     "mid_conn" => "",
-    "last_conn" => "",
+    "last_conn" => "|",
     "encrypt" => array(
       "0" => "MD5",
       "1" => "MD5",
     ),
-    "key_str" => "",
+    "key_str" => "|",
     "key" => $pr_key,
     "havekey" => "",
   ),
@@ -86,18 +86,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-#curl获取响应值
-$res = curl_post($form_url,http_build_query($data),"POST");
-$row = json_decode($res,1);
-$url = $row['payurl'];
-#跳转qrcode
-if ($row['status'] == '1') {
-    echo $url;
-    exit;
-}else{
-  echo "错误码：".$row['status']."错误讯息：".$row['error'];
-  exit();
-}
+$form_data = $data;
+$jumpurl = $form_url;
 ?>
 <html>
   <head>
@@ -105,10 +95,10 @@ if ($row['status'] == '1') {
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $form_url ?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if (isset($data)) {
+          if (isset($form_data)) {
             foreach ($data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
