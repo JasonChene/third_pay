@@ -15,8 +15,10 @@ $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['out_trade_no']; //订单号
-	$mymoney = number_format($data['total_amount'], 2, '.', ''); //订单金额
+	$order_no = $data['order_no']; //订单号
+	$mymoney = number_format($data['pay_amount'], 2, '.', ''); //订单金额
+	$success_msg = $data['ord_status'];//成功讯息
+	$success_code = "SUCCESS";//文档上的成功讯息
 	$sign = $data['sign'];//签名
 	$echo_msg = "SUCCESS";//回调讯息
 
@@ -45,7 +47,7 @@ if(!empty($data)){
 	}
 
 	#验签方式
-	$noarr = array('sign','sign_type');//不加入签名的array key值
+	$noarr = array('sign');//不加入签名的array key值
 	ksort($data);
 	$signtext = "";
 	foreach ($data as $arr_key => $arr_val) {

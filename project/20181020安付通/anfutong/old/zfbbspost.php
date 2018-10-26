@@ -41,18 +41,26 @@ $order_time = date("YmdHis");
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
+$content = array(
+    "merchant_no" => $pay_mid,//商户ID
+    "out_trade_no" => $order_no, //商户订单号
+    "order_name" => 'ordername', //商品描述
+    "total_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //总金额
+    "ip" => getClientIp(), //用户端ip
+    "notify_url" => $merchant_url, //异步回调地址
+    "return_url" => $return_url //同步回调地址
+);
 $data = array(
-"app_id" => $pay_mid,
+"app_id" => $pay_account,
 "method" => 'alipay.h5_pay',
 "sign_type" => 'MD5',
 "version" => '1.0',
-"content" => '',
+"content" => json_encode($content),
 "sign" => array(
 "str_arr" => array(
-"app_id" => $pay_mid,
-"content" => "",
+"app_id" => $pay_account,
+"content" => json_encode($content),
 "method" => "alipay.h5_pay",
-"sign_type" => "MD5",
 "version" => "1.0",
 ),
 "mid_conn" => "=",
