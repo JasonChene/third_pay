@@ -1,0 +1,7 @@
+后台登录网址http://mcha.369li.com/agent_Index_index.html
+登录名qaz1539   密码：123456
+
+API对接参数：
+商户号：10154
+网关地址：http://mcha.369li.com/Pay_Index.html
+APIKEY: 6ov4bfbuji5qgvprwzgcc1etgflisqvj
