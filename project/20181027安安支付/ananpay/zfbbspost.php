@@ -29,7 +29,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://pay.mzfpay.vip/Gateway';
+$form_url = 'http://pay.ymfpay.vip/Gateway';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -93,18 +93,8 @@ foreach ($data as $arr_key => $arr_value) {
     $data[$arr_key] = sign_text($arr_value);
   }
 }
-#curl获取响应值
-$res = curl_post($form_url, http_build_query($data), "POST");
-$row = json_decode($res, 1);
-#跳转qrcode
-$url = $row['code_url'];
-if ($row['recode'] == '00') {
-  $qrurl = QRcodeUrl($url);
-  $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
-} else {
-  echo "错误码：" . $row['recode'] . "错误讯息：" . $row['Error_msg'];
-  exit();
-}
+$form_data = $data;
+$jumpurl = $form_url;
 ?>
 <html>
   <head>
