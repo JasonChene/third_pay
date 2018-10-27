@@ -109,7 +109,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$form_url = 'http://114.116.71.237/pay/unifiedorder';//返回json请求URL
 $scan = 'qq';
 $data['payType'] = 'H5-qqWallet';
 payType_bankname($scan, $pay_type);
