@@ -33,3 +33,4 @@
 档案位置：php@60.245.62.221\fengxiepay
 修改档案：qqbspost,qqh5post,zfbbspost,zfbh5post,wxbspost,wxh5post,notify_url
 备注：文档参数,验签字串修改
+     目前只有支付宝通道可以使用,其余通道正在维护中会报错
