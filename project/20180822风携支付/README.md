@@ -27,3 +27,9 @@
 档案位置：php@60.245.62.221\fengxiepay
 修改档案：qqbspost,qqh5post,zfbbspost,zfbh5post,wxbspost,wxh5post
 备注：修改网关地址
+
+20181028
+第三方名称：风携支付  
+档案位置：php@60.245.62.221\fengxiepay
+修改档案：qqbspost,qqh5post,zfbbspost,zfbh5post,wxbspost,wxh5post,notify_url
+备注：文档参数,验签字串修改

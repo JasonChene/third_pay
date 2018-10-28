@@ -99,8 +99,8 @@ $jumpurl = $form_url;
       <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if (isset($data)) {
-            foreach ($form_data as $arr_key => $arr_value) {
+          if (isset($form_data)) {
+            foreach ($data as $arr_key => $arr_value) {
               ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
           <?php 
