@@ -106,9 +106,11 @@ if (strstr($_REQUEST['pay_type'], "银联钱包")) {
 	$data['pay_fs'] = 'un_e';
 } elseif (strstr($_REQUEST['pay_type'], "银联快捷")) {
 	$scan = 'ylkj';
+	$data['pay_bankName'] = $_REQUEST['bank_code'];
 	$data['pay_fs'] = 'b2c_q';
 } else {
 	$scan = 'wy';
+	$data['pay_bankName'] = $_REQUEST['bank_code'];
 	$data['pay_fs'] = 'b2c';
 }
 payType_bankname($scan, $pay_type);
@@ -130,6 +132,7 @@ $data['sign'] = $sign;
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['pay_Status'] != '100') {
 	echo '错误代码:' . $row['pay_Status'] . "<br>";

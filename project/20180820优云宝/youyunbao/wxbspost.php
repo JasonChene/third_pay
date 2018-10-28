@@ -87,7 +87,6 @@ foreach ($data as $arr_key => $arr_value) {
 }
 #curl获取响应值
 $res = curl_post($form_url,http_build_query($data),"POST");
-echo $res;exit;
 $res = json_decode($res,1);
 #跳转qrcode
 $url = $res['qrcode'];

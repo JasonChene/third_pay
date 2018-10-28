@@ -1,0 +1,6 @@
+﻿商户号:80061
+登录账号:test001
+登录密码:test0001
+
+文档API地址:http://58.82.232.169:82/api/zh_cn/api.html
+商户后台登录地址:http://58.82.232.169/merchant/login.html

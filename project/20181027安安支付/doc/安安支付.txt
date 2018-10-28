@@ -1,0 +1,11 @@
+http://merchant.ymfpay.vip
+
+商户号1810271
+密钥TDD4567CC4567BB4567ABCD123456789
+商户后台xinxin001
+登录密码xinxin001
+
+
+
+
+这是安安支付的哦

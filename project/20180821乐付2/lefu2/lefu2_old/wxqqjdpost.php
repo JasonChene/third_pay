@@ -109,7 +109,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://114.116.71.237/pay/redirect/unifiedorder';//返回json请求URL
+$form_url = 'http://114.116.71.237/pay/unifiedorder';//返回json请求URL
 if (strstr($pay_type, "京东钱包")) {
   $scan = 'jd';
   $data['payType'] = 'H5-jd';
@@ -118,10 +118,10 @@ if (strstr($pay_type, "京东钱包")) {
   $data['payType'] = 'H5-qqWallet';
 } else {
   $scan = 'wx';
-  $data['payType'] = 'QRCode-wx';
-  if (_is_mobile()) {
-    $data['payType'] = 'H5-wx';
-  }
+  // $data['payType'] = 'QRCode-wx';
+  // if (_is_mobile()) {
+  $data['payType'] = 'H5-wx';
+  // }
 }
 payType_bankname($scan, $pay_type);
 
