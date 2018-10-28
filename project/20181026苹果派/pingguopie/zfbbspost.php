@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 苹果派
-#支付方式 : wx;
+#支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -46,7 +46,7 @@ $data = array(
 "outTradeNo" => $order_no,
 "amount" => $MOAmount,
 "notifyUrl" => $notify_url,
-"payType" => 'QRCode-wx',
+"payType" => 'H5-ali',
 "goodsName" => 'goodsName',
 "subject" => 'subject',
 "outTradeTime" => $order_time,
@@ -62,7 +62,7 @@ $data = array(
 "notifyUrl" => $notify_url,
 "outTradeNo" => $order_no,
 "outTradeTime" => $order_time,
-"payType" => "QRCode-wx",
+"payType" => "H5-ali",
 "subject" => "subject",
 ),
 "mid_conn" => "=",
@@ -77,8 +77,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_wx";
-$bankname = $pay_type."->微信在线充值";
+$payType = $pay_type."_zfb";
+$bankname = $pay_type."->支付宝在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -102,7 +102,12 @@ $row = json_decode($res,1);
 #跳转qrcode
 $url = $row['data']['payUrl'];
 if ($row['success'] == 'true') {
-    $jumpurl = $url;
+    if(_is_mobile()){
+        $jumpurl = $url;
+    }else{
+        $qrurl = QRcodeUrl($url);
+        $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . $qrurl;
+    }
 }else{
   echo "错误码：".$row['success']."错误讯息：".$row['message'];
   exit();
