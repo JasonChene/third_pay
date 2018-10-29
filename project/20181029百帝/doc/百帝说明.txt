@@ -1,0 +1,19 @@
+1.接口文档请访问
+http://pay.zbc555.cn/doc进行查看
+2.商户号等信息请联系客服
+
+
+商户编号：00030001
+子商户编号：00030001000000000001
+代理商后台：http://pay.zbc555.cn/agent.html
+用户名：00030001
+密码：123456
+尽快登陆修改密码。
+我们平台的公钥：
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDD4eufco4/RRACZ1kREFymyadT
+KtzT9B6FZDSKJQ+Z4VE/pCcNklESip/v5KrmWupbqd6jan8gudLuAVduBpUIliaq
+Tjnm0yW5VOvmzRcSkFsiR2L9Q2PgiI0dsSgvF4LTasRk2EKvA6YksPQ5u8sYdAsq
+4upOGd070d1H2B7OqwIDAQAB
+-----END PUBLIC KEY-----
+deskey：42ced13481115cfceefee23f（用来在代付接口中加密卡号和户名，可在商户管理->编辑->状态密钥中查看）
