@@ -7,7 +7,7 @@ include_once("../moneyfunc.php");
 
 function sign ($key_id, $array)
 {
-    $data = md5(number_format($array['amount'],2) . $array['out_trade_no']);
+    $data = md5(sprintf("%.2f", $array['amount']) . $array['out_trade_no']);
     $key[] ="";
     $box[] ="";
     $pwd_length = strlen($key_id);

@@ -1,12 +1,12 @@
 
 INSERT INTO `7k111data1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('慧云支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/hueiyunpay/post.php', '/pay/hueiyunpay/wxpost.php', '/pay/hueiyunpay/zfbpost.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/notify_url.php', '/pay/hueiyunpay/notify_url.php', '/pay/hueiyunpay/notify_url.php', '1', '1', '/pay/hueiyunpay/qqpost.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/notify_url.php');
+ VALUES ('百帝', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/baidi/post.php', '/pay/baidi/wxpost.php', '/pay/baidi/zfbpost.php', '/pay/baidi/return_url.php', '/pay/baidi/return_url.php', '/pay/baidi/return_url.php', '/pay/baidi/notify_url.php', '/pay/baidi/notify_url.php', '/pay/baidi/notify_url.php', '1', '1', '/pay/baidi/qqpost.php', '/pay/baidi/return_url.php', '/pay/baidi/notify_url.php');
 
 INSERT INTO `7k111data1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('慧云支付', '11405', '5ade19363e8b8f9c32853904a021b30231311bc3', NULL, 'http://pay7.5566205.com', 'hueiyunpay', '1', '1', '1', 'hueiyunpay', '1');
+ VALUES ('百帝', '00030001', '123', '00030001000000000001', 'http://pay7.5566205.com', '百帝', '1', '1', '1', 'baidi', '1');
 
 INSERT INTO `testdata1_db`.`pay_list` (pay_name,pay_wyUrl,pay_wxUrl,pay_zfbUrl,is_wx,is_wy,is_zfb,wy_postUrl,wx_postUrl,zfb_postUrl,wy_returnUrl,wx_returnUrl,zfb_returnUrl,wy_synUrl,wx_synUrl,zfb_synUrl,is_direct,is_qq,qq_postUrl,qq_returnUrl,qq_synUrl)
- VALUES ('慧云支付', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/hueiyunpay/post.php', '/pay/hueiyunpay/wxpost.php', '/pay/hueiyunpay/zfbpost.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/notify_url.php', '/pay/hueiyunpay/notify_url.php', '/pay/hueiyunpay/notify_url.php', '1', '1', '/pay/hueiyunpay/qqpost.php', '/pay/hueiyunpay/return_url.php', '/pay/hueiyunpay/notify_url.php');
+ VALUES ('百帝', '/pay/pay.php', '/pay/wxpay.php', '/pay/zfbpay.php', '1', '1', '1', '/pay/baidi/post.php', '/pay/baidi/wxpost.php', '/pay/baidi/zfbpost.php', '/pay/baidi/return_url.php', '/pay/baidi/return_url.php', '/pay/baidi/return_url.php', '/pay/baidi/notify_url.php', '/pay/baidi/notify_url.php', '/pay/baidi/notify_url.php', '1', '1', '/pay/baidi/qqpost.php', '/pay/baidi/return_url.php', '/pay/baidi/notify_url.php');
 
 INSERT INTO `testdata1_db`.`pay_set` (`pay_name`, `mer_id`, `mer_key`, `mer_account`, `pay_domain`, `pay_type`, `is_wy`, `is_wx`, `is_zfb`, `show_name`, `is_qq`)
- VALUES ('慧云支付', '11405', '5ade19363e8b8f9c32853904a021b30231311bc3', NULL, 'http://paytest.7k111.com', 'hueiyunpay', '1', '1', '1', 'hueiyunpay', '1');
+ VALUES ('百帝', '00030001', '123', '00030001000000000001', 'http://paytest.7k111.com', '百帝', '1', '1', '1', 'baidi', '1');
