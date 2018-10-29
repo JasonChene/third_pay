@@ -1,0 +1,27 @@
+商户后台：http://tttt.h5zhifu.com:9333/sbPay.php
+账号：ys0019 密码123456
+对接域名：http://tttt.h5zhifu.com:9333/pay.php?s=order/createorder
+商户号：qcxunjxwpaxvcjrn
+秘钥：jqkhqtdsfupznwslkvxqcljjxhveeljt
+备注：
+1.目前支持支付宝PC二维码展示，手机网页和APP支持唤醒。
+
+2.是否支持订单查询接口认证 ？不支持
+
+3.支付域名需要提交贵方绑定吗？需要
+
+4.服务器回调IP ： 47.52.227.89
+
+5.系统开户后登陆商户后台自行下载javaDemo文档  
+
+6.是否支持带小数点的金额进行支付？  不支持 系统自动分配i小数点
+
+7.是否支持境外支付 *？ 不支持
+
+8.二维码页面是你们生成吗？  是的
+
+9.入款最低金额限制多少？     100
+
+10.请求方式方式是get还是post?  post
+
+联系qq 898917786
