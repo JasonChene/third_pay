@@ -1,0 +1,81 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>接口测试</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    html,body,div,p,span,ul,dl,ol,h1,h2,h3,h4,h5,h6,table,td,tr{padding:0;margin:0}
+    .content{width:400px;margin:100px auto;border:1px solid #ddd}
+    h1{margin-bottom:30px;background-color:#eee;;border-bottom:1px solid #ddd;padding:10px;text-align: center}
+    table{border-collapse:collapse;width:90%;margin:20px auto}
+    table tr td{height:40px;font-size:14px}
+    input,select{width:100%;line-height:25px}
+    button{font-size:16px}
+    </style>
+</head>
+<body>
+<div class="content">
+    <h1>请求支付</h1>
+    <form action="pay.php" method="post" target="_blank">
+        <table>
+            <tr>
+                <td width="120">订单金额：</td>
+                <td>
+                    <select name="money">
+						<option value="1000">10元</option>
+                        <option value="10000">100元</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>商户订单号：</td>
+                <td><input type="text" name="order_num" value="10000" placeholder="输入金额"></td>
+            </tr>
+
+            <tr>
+                <td>回调地址：</td>
+                <td><input type="text" name="notify_url" value="http://127.0.0.1"></td>
+            </tr>
+
+            <tr>
+                <td>返回地址：</td>
+                <td><input type="text" name="return_url" value="http://127.0.0.1"></td>
+            </tr>
+
+            <tr>
+                <td>备注：</td>
+                <td><input type="text" name="remark" value="默认" placeholder="输入备注"></td>
+            </tr>
+
+            <tr>
+                <td>网关类型：</td>
+                <td>
+					<select name="pay_way">
+                        <option value="ZFBH5">支付宝H5</option>
+                        <option value="ZFBWAP">支付宝WAP</option>
+                        <option value="ZFB">支付宝</option>
+                        <option value="QQH5">QQ钱包H5</option>
+                        <option value="QQ">QQ钱包</option>
+                    </select>
+				</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit">提交测试</button></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+
+    var timestamp1 = Date.parse( new Date());
+
+    var order="TEST"+timestamp1+Math.random().toString().slice(-4)
+
+    document.getElementsByName("order_num")[0].value=order;
+
+</script>
+</body>
+</html>

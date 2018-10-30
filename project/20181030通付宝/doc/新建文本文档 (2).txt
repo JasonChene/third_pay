@@ -1,0 +1,11 @@
+登录网址：www.tfb2018.com
+账号：两度寂寞
+密码：123456
+
+API对接参数：
+
+商户号：10056
+
+网关地址：http://www.tfb2018.com/Pay_Index.html
+
+商户APIKEY：mmygl71k73kaj53kgqm59v3re2kv098i

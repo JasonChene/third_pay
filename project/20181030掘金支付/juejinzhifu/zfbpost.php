@@ -48,11 +48,10 @@ function curl_post($url, $data)
 { #POST访问
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, false);//设置头文件的信息作为数据流输出
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $tmpInfo = curl_exec($ch);
@@ -88,25 +87,31 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'http://www.jings.wang/api/pay/getEncryption';
+$form_url = 'https://api.payjuejin.com/api/pay';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
-$params2 = array(
-  "orderid" => $order_no,
-  "orderuid" => $_REQUEST['S_Name'],
-  "paymoney" => $mymoney,
-  "paytype" => "11",
-  "notifyurl" => $merchant_url,
-  "returnurl" => $return_url,
+$data = array(
+  "mer_num" => $pay_mid,
+  "pay_way" => "",
+  "money" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
+  "order_num" => $order_no,
+  "goods_name" => "pay",
+  "notify_url" => $merchant_url,
+  "return_url" => $return_url,
+  "version" => "1.0",
+  "sign" => "",
 );
-
 #变更参数设置
 $scan = 'zfb';
-payType_bankname($scan, $pay_type);
+$data['pay_way'] = 'ZFBH5';
+if (_is_mobile()) {
+  $data['pay_way'] = 'ZFBH5';
+}
 
+payType_bankname($scan, $pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($_REQUEST['S_Name'], $order_no, $mymoney, $bankname, $payType, $top_uid);
 if ($result_insert == -1) {
@@ -116,51 +121,22 @@ if ($result_insert == -1) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
-
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('appid');
+$noarr = array('sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
+    $signtext .= $arr_val . '&';
   }
 }
-$signtext = substr($signtext, 0, -1) . '&appid=' . $pay_mkey;
 
-$data = array(
-  "appid" => $pay_mkey,
-  "params" => $signtext
-);
+$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
+$sign = strtoupper(md5($signtext));
+$data['sign'] = $sign; 
 
-$paramsdata = "";
-$res = curl_post($form_url, http_build_query($data));
-$row = json_decode($res, 1);
+$form_data = $data;
+$jumpurl = $form_url;
 
-if ($row['status'] != 'OK') {
-  echo '错误代码:' . $row['status'] . "<br>";
-  echo '错误讯息:' . $row['msg'] . "<br>";
-  exit;
-} else {
-    $paramsdata = $row['data'];
-}
-$form_url2 = 'http://www.jings.wang/api/pay/getPayJson';
-$data2 = array(
-  "params" => $paramsdata,
-  "appid" => $pay_mkey
-);
-$res2 = curl_post($form_url2, http_build_query($data2));
-$row2 = json_decode($res2, 1);
-if ($row2['status'] != 'OK') {
-  echo '错误代码:' . $row2['status'] . "<br>";
-  echo '错误讯息:' . $row2['msg'] . "<br>";
-  exit;
-} else {
-  if (_is_mobile()) {
-    $jumpurl = $row2['data']['payCode'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . urlencode($row2['data']['payCode']);
-  }
-}
 #跳轉方法
 
 ?>
