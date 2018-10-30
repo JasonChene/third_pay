@@ -107,9 +107,9 @@ if (strstr($_REQUEST['pay_type'], "京东钱包")) {
 } else {
   $scan = 'wx';
   $data['pay_fs'] = 'weixin';
-  if (_is_mobile()) {
-    $data['pay_fs'] = 'weixin_h5';
-  }
+  // if (_is_mobile()) {
+  //   $data['pay_fs'] = 'weixin_h5';
+  // }
 }
 payType_bankname($scan, $pay_type);
 
@@ -130,17 +130,18 @@ $data['sign'] = $sign;
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
 $row = json_decode($res, 1);
+
 #跳转
 if ($row['pay_Status'] != '100') {
   echo '错误代码:' . $row['pay_Status'] . "<br>";
   echo '错误讯息:' . $row['pay_CodeMsg'] . "<br>";
   exit;
 } else {
-  if (_is_mobile()) {
-    $jumpurl = $row['pay_Code'];
-  } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['pay_Code']);
-  }
+  // if (_is_mobile()) {
+  //   $jumpurl = $row['pay_Code'];
+  // } else {
+  $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . urlencode($row['pay_Code']);
+  // }
 }
 ?>
 <html>
