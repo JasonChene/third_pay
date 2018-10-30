@@ -107,7 +107,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'http://www.kanuoyishu.com:9091/business/order/prepareOrder';
+$form_url = 'http://www.kjpmk.cn:9091/business/order/prepareOrder';
 $scan = 'qq';
 $data['tradeType'] = 'qqpay';//QQ
 $data['fromtype'] = 'wap';//支付宝wap
