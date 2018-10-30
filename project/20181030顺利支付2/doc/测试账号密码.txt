@@ -1,0 +1,10 @@
+请求网关地址：http://poly.igepay.com/Pay_Index.html
+
+登录地址：http://poly.igepay.com/
+测试账号：test
+密码：a123456
+支付密码：a123456
+测试商户号：10077
+测是密钥：v480ht6n6t9xwdlfa7s5gh8a2axcjmvx
+
+目前可用银行编号：微信：902；  支付宝：903
