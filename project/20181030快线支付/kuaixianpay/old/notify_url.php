@@ -1,25 +1,26 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
-// include_once("../../../database/mysql.config.php");//原数据库的连接方式
-include_once("../../../database/mysql.php");//现数据库的连接方式
+include_once("../../../database/mysql.config.php");
+// include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-#write_log("notify");
-
+write_log("notify");
 
 #############################################
 #request方法
 write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
-	write_log($key . "=" . $value);
+	// $data[$key] = $value;
+	write_log($key."=".$value);
 }
 #post方法
 write_log('post方法');
 foreach ($_POST as $key => $value) {
-	write_log($key . "=" . $value);
+	// $data[$key] = $value;
+	write_log($key."=".$value);
 }
 #input方法
 write_log('input方法');
-$input_data = file_get_contents("php://input");
+$input_data=file_get_contents("php://input");
 write_log($input_data);
 // $res=json_decode($input_data,1);//json回传资料
 
@@ -37,26 +38,26 @@ write_log($input_data);
 
 
 #接收资料
-#request方法
+#post方法
 $data = array();
-foreach ($_REQUEST as $key => $value) {
+foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
 	write_log($key . "=" . $value);
 }
 
 #设定固定参数
-$order_no = $data['order_no']; //订单号
-$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
+$order_no = $data['sdorderno']; //订单号
+$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
+$success_msg = $data['status'];//成功讯息
 $success_code = "1";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
 $sql = "select operator from k_money where m_order=:m_order";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 
@@ -64,8 +65,8 @@ $row = $stmt->fetch();
 $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
-// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
-$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
+// $stmt = $mydata1_db->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -73,37 +74,22 @@ $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
 if ($pay_mid == "" || $pay_mkey == "") {
 	echo "非法提交参数";
-	write_log("非法提交参数");
 	exit;
 }
 
 #验签方式
-function build_rsa($pay_account, $pay_mkey)
-{
-	$public_pem = chunk_split($pay_account, 64, "\r\n");//转换为pem格式的公钥
-	$public_pem = "-----BEGIN PUBLIC KEY-----\r\n" . $public_pem . "-----END PUBLIC KEY-----\r\n";
-	$private_pem = chunk_split($pay_mkey, 64, "\r\n");//转换为pem格式的私钥
-	$private_pem = "-----BEGIN RSA PRIVATE KEY-----\r\n" . $private_pem . "-----END RSA PRIVATE KEY-----\r\n";
-	$rsa = array(
-		"public_pem" => $public_pem, //公钥
-		"private_pem" => $private_pem, //私钥
-	);
-	return $rsa;
-  // echo build_rsa($pay_account,'')["public_pem"]."\r\n";
-  // echo build_rsa('',$pay_mkey)["private_pem"];
-}
 ksort($data);
-$noarr = array('sign');//不加入签名的array key值
-$signtext = "";
+$noarr = array('sign','paytype');
+$signtext = '';
 foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-		$signtext .= $arr_key . '=' . $arr_val . '&';
-	}
+  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
+  }
 }
-$signtext = substr($signtext, 0, -1);//验签字串
-write_log("signtext=" . $signtext);
-$mysign = md5($signtext);//签名
-write_log("mysign=" . $mysign);
+
+
+$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
+$mysign = md5($signtext);
 
 #到账判断
 if ($success_msg == $success_code) {
@@ -137,6 +123,7 @@ if ($success_msg == $success_code) {
 	}
 } else {
 	echo ("交易失败");
+	write_log("交易失败");
 	exit;
 }
 
