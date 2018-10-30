@@ -118,7 +118,10 @@ $payDataJSON = array(
 #变更参数设置
 $form_url = 'http://58.82.232.169/gateway/payin/pay';//wap提交地址
 $scan = 'zfb';
-$payDataJSON['payType'] = 'ali_h5';//支付宝H5
+$payDataJSON['payType'] = 'ali_scan';//支付宝H5
+if (_is_mobile()) {
+	$payDataJSON['payType'] = 'ali_h5';//支付宝H5
+}
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -189,11 +192,11 @@ if ($http_resp_content_encrypt['retCode'] != 1) {
 	exit;
 } else {
 	$qrcodeUrl = $row['url'];
-	if (_is_mobile()) {
-		$jumpurl = $qrcodeUrl;
-	} else {
-		$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . urlencode($qrcodeUrl);
-	}
+	// if (_is_mobile()) {
+	$jumpurl = $qrcodeUrl;
+	// } else {
+	// 	$jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . urlencode($qrcodeUrl);
+	// }
 }
 
 #跳轉方法
