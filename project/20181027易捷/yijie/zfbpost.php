@@ -182,7 +182,7 @@ if ($http_resp_content_encrypt['retCode'] != 1) {
 	echo '错误讯息:' . $http_resp_content_encrypt['errMsg'] . "<br>";
 	exit;
 } else if ($sign_correct != 1) {
-	echo '错误代码:响应验签错误' . "<br>";
+	echo '错误讯息:响应验签错误' . "<br>";
 	exit;
 } else if (!isset($row['url'])) {
 	echo '错误讯息:无支付url' . "<br>";
