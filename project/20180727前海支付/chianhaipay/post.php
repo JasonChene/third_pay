@@ -110,7 +110,7 @@ $data = array(
 $form_url = 'http://www.kjpmk.cn:9091/business/order/prepareOrder';
 $scan = 'yl';
 $data['tradeType'] = 'unionpay';//银联
-$data['fromtype'] = 'wap';//支付宝wap
+$data['fromtype'] = 'wap';//
 
 payType_bankname($scan,$pay_type);
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)

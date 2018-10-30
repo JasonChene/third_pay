@@ -24,3 +24,10 @@
 
 修改档案：post,qqpost,wxpost,wxqqjdpost,zfbpost
 备注：修改网关http://www.kanuoyishu.com:9091
+
+2018/10/30
+第三方名称：前海支付
+档案位置：php@60.245.62.221/chianhaipay
+
+修改档案：post,qqpost,wxpost,wxqqjdpost,zfbpost
+备注：修改网关http://www.kjpmk.cn:9091
