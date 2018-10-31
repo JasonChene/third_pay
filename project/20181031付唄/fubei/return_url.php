@@ -8,16 +8,16 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	// write_log("return:".$key."=".$value);
+	write_log("return:".$key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
 	$order_no = $data['sdorderno']; //订单号
-	$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
+	$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
 	$success_msg = $data['status'];//成功讯息
-	$success_code = "1";//文档上的成功讯息
+	$success_code = "2";//文档上的成功讯息
 	$sign = $data['sign'];//签名
 	$echo_msg = "success";//回调讯息
 
@@ -43,21 +43,18 @@ if(!empty($data)){
 		exit;
 	}
 
-	#验签方式
-	ksort($data);
-	$noarr = array('sign');
-	$signtext = '';
-	foreach ($data as $arr_key => $arr_val) {
-		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-			$signtext .= $arr_key . '=' . $arr_val . '&';
-		}
-	}
-
-
-	$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
-	// write_log($signtext);
-	$mysign = md5($signtext);
-	// write_log($mysign);
+	#验签方式2
+	$signtext = "";
+	$signtext .= 'customerid=' . $data['customerid'] . '&';
+	$signtext .= 'status=' . $data['status'] . '&';
+	$signtext .= 'sdpayno=' . $data['sdpayno'] . '&';
+	$signtext .= 'sdorderno=' . $data['sdorderno'] . '&';
+	$signtext .= 'total_fee=' . $data['total_fee'] . '&';
+	$signtext .= 'paytype=' . $data['paytype'] . '&';
+	$signtext .= $pay_mkey;
+	write_log("signtext=".$signtext);
+	$mysign = md5($signtext);//签名
+	write_log("mysign=".$mysign);
 
 
 	#到账判断
