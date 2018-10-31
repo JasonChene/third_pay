@@ -110,7 +110,7 @@ if ($result_insert == -1) {
 $data["fxsign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
 
 #curl提交
-$res = curl_post($form_url,$data);
+$res = curl_post($form_url,http_build_query($data));
 $row = json_decode($res,1);
 #跳转
 if ($row['status'] != 1) {
