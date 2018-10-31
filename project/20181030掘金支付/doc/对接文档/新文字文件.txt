@@ -1,7 +1,14 @@
 商户名:C1006EDEV93
 登陆账号: abcai
-客服02 2018/10/29 下午 04:41:19
 密码:123456
 商户测试地址:https://mer.juejinpay.com/login
 C0E6EDE4B74A45AFED218C5A
 掘金支付
+https://api.juejinpay.com/api/pay
+
+
+测试商户号: C100E17869R
+登陆账号: tencent
+密码:123456
+
+736E178625F30059401F1F4A

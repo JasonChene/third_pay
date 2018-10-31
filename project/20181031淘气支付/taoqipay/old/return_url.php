@@ -2,32 +2,30 @@
 <?php
 include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
-// write_log("return");
 
-$data = array();
 #接收资料
-// write_log('REQUEST方法');
+#REQUEST方法
+$data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	// write_log($key . "=" . $value);
+	write_log("return:".$key."=".$value);
 }
-
 $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['mer_order']; //订单号
-	$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
-	$success_msg = $data['status'];//成功讯息
-	$success_code = "2";//文档上的成功讯息
+	$order_no = $data['orderid']; //订单号
+	$mymoney = number_format($data['amount'], 2, '.', ''); //订单金额
+	$success_msg = $data['returncode'];//成功讯息
+	$success_code = "00";//文档上的成功讯息
 	$sign = $data['sign'];//签名
-	$echo_msg = "success";//回调讯息
+	$echo_msg = "OK";//回调讯息
 
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mydata1_db->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -36,7 +34,7 @@ if(!empty($data)){
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mydata1_db->prepare($sql);//现数据库的连接方式
+	$stmt = $mydata1_db->prepare($sql);
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
@@ -44,14 +42,23 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		// write_log('非法提交参数');
+		write_log("非法提交参数");
 		exit;
 	}
 
-	$signtext=$data['pay_order']."&".$data['mer_order']."&".$data['pay_way']."&".$data['amount']."&".$data['actual_amount']."&".$data['goods_name']."&".$data['status']."&".$data['pay_succ_time']."&".$pay_mkey;
-	// write_log("signtext=".$signtext);
-	$mysign = strtoupper(md5($signtext));//签名
-	// write_log("mysign=".$mysign);
+	ksort($data);
+	$noarr = array('sign');
+	$signtext = '';
+	foreach ($data as $arr_key => $arr_val) {
+		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
+			$signtext .= $arr_key . '=' . $arr_val . '&';
+		}
+	}
+
+	$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+	$mysign = strtoupper(md5($signtext));
+	write_log("signtext=".$signtext);
+	write_log("mysign=".$mysign);
 
 
 	#到账判断
@@ -123,7 +130,7 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">备注</td>
+			<td style="width: 120px; text-align: right;">备注：</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>
