@@ -83,7 +83,7 @@ $pay_mkey = $row['mer_key'];//商戶私钥
 $pay_account = $row['mer_account'];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//return跳转地址
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//notify回传地址
-if ($pay_mid == "" || $pay_mkey == "") {
+if ($pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
@@ -118,9 +118,9 @@ if ($result_insert == -1) {
 }
 
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('appid');
+$noarr = array('');
 $signtext = '';
-foreach ($data as $arr_key => $arr_val) {
+foreach ($params2 as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
     $signtext .= $arr_key . '=' . $arr_val . '&';
   }
