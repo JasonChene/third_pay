@@ -53,15 +53,6 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
-function QRcodeUrl($code)
-{
-  if (strstr($code, "&")) {
-    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  } else {
-    $code2 = $code;
-  }
-  return $code2;
-}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -82,29 +73,30 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$form_url = 'http://syb008.com/Pay';
+
 #第三方参数设置
-$data = array(
-  "pay_memberid" => $pay_mid, 
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay"
+$data =array(
+  'fxid' => $pay_mid,
+  'fxddh' => $order_no,
+  'fxdesc' => "pay",
+  'fxfee' => $mymoney,
+  'fxnotifyurl' => $merchant_url,
+  'fxbackurl' => $return_url,
+  'fxpay' => "",
+  'fxsign' => "",
+  'fxip' => getClientIp(),
 );
 
 #变更参数设置
-$form_url = 'http://www.tfb2018.com/Pay_Index.html';
-$scan = '';
-$payType = '';
-$bankname = '';
-$scan = 'zfb';
-$data['pay_bankcode'] = '903';
-if (_is_mobile()) {
-  $data['pay_bankcode'] = '904';  
+if (strstr($_REQUEST['pay_type'], "银联钱包")) {
+  $scan = 'yl';
+  $data['fxpay'] = 'ylsm';
+}else {
+  $scan = 'wy';
+  $data['fxpay'] = 'bank';
 }
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -117,22 +109,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
+$data["fxsign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
+
+#curl提交
+$res = curl_post($form_url,$data);
+$row = json_decode($res,1);
+#跳转
+if ($row['status'] != 1) {
+  echo  '错误代码:' . $row['status']."<br>";
+  echo  '错误讯息:' . $row['error']."<br>";
+  exit;
+}else {
+  $jumpurl = $row['payurl'];
 }
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
-
 #跳轉方法
-$form_data = $data;
-$jumpurl = $form_url;
+
 ?>
 <html>
   <head>
