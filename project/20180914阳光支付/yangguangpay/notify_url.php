@@ -20,10 +20,10 @@ foreach ($_REQUEST as $key => $value) {
 #设定固定参数
 $order_no = $data['orderid']; //订单号
 $mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
+$success_msg = $data['payStatus'];//成功讯息
 $success_code = "1";//文档上的成功讯息
-$sign = $data['key'];//签名
-$echo_msg = "200";//回调讯息
+//$sign = $data['key'];//签名
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
