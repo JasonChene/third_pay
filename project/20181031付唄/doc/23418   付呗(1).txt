@@ -1,0 +1,15 @@
+付呗商户后台
+https://e.51fubei.com/Index/Login/index 
+ 账号：支付中心 
+ 密码：a123456
+
+付呗对接平台：
+对接平台账号：zhifu      密码：a123456
+http://www.pd55.top/login     对接平台后台
+http://www.pd55.top/help/   对接文档
+
+商户号：11364
+秘钥：f6168cd497ce8ed0f43a36a1fd0f485ebef86b16
+
+联系QQ:958854387
+

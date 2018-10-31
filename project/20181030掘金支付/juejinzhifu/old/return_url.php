@@ -4,9 +4,9 @@ include_once("../../../database/mysql.config.php");
 include_once("../moneyfunc.php");
 // write_log("return");
 
-#接收资料
-#post方法
 $data = array();
+#接收资料
+// write_log('REQUEST方法');
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
 	// write_log($key . "=" . $value);
@@ -16,10 +16,10 @@ $manyshow = 0;
 if(!empty($data)){
 	$manyshow = 1;
 	#设定固定参数
-	$order_no = $data['sdorderno']; //订单号
-	$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
+	$order_no = $data['mer_order']; //订单号
+	$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
 	$success_msg = $data['status'];//成功讯息
-	$success_code = "1";//文档上的成功讯息
+	$success_code = "2";//文档上的成功讯息
 	$sign = $data['sign'];//签名
 	$echo_msg = "success";//回调讯息
 
@@ -27,7 +27,7 @@ if(!empty($data)){
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mydata1_db->prepare($sql);
+	$stmt = $mydata1_db->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$row = $stmt->fetch();
 
@@ -36,7 +36,7 @@ if(!empty($data)){
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
 	// $stmt = $mydata1_db->prepare($sql);
-	$stmt = $mydata1_db->prepare($sql);
+	$stmt = $mydata1_db->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
 	$pay_mid = $payInfo['mer_id'];
@@ -48,9 +48,9 @@ if(!empty($data)){
 		exit;
 	}
 
-	$signtext="customerid=".$data['customerid']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&sdorderno=".$data['sdorderno']."&total_fee=".$data['total_fee']."&paytype=".$data['paytype']."&".$pay_mkey;
+	$signtext=$data['pay_order']."&".$data['mer_order']."&".$data['pay_way']."&".$data['amount']."&".$data['actual_amount']."&".$data['goods_name']."&".$data['status']."&".$data['pay_succ_time']."&".$pay_mkey;
 	// write_log("signtext=".$signtext);
-	$mysign = (md5($signtext));//签名
+	$mysign = strtoupper(md5($signtext));//签名
 	// write_log("mysign=".$mysign);
 
 

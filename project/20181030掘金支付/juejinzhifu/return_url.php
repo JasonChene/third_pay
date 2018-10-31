@@ -2,17 +2,14 @@
 <?php
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
-write_log("return");
+// write_log("return");
 
-#接收资料
-write_log('input方法');
-$input_data=file_get_contents("php://input");
-write_log($input_data);
-write_log('REQUEST方法');
 $data = array();
+#接收资料
+// write_log('REQUEST方法');
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	// write_log($key . "=" . $value);
 }
 
 $manyshow = 0;
@@ -47,14 +44,14 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log('非法提交参数');
+		// write_log('非法提交参数');
 		exit;
 	}
 
-	$signtext=$data['pay_order']."&".$data['mer_orde']."&".$data['pay_way']."&".$data['amount']."&".$data['actual_amount']."&".$data['goods_name']."&".$data['status']."&".$data['pay_succ_time']."&".$pay_mkey;
-	write_log("signtext=".$signtext);
+	$signtext=$data['pay_order']."&".$data['mer_order']."&".$data['pay_way']."&".$data['amount']."&".$data['actual_amount']."&".$data['goods_name']."&".$data['status']."&".$data['pay_succ_time']."&".$pay_mkey;
+	// write_log("signtext=".$signtext);
 	$mysign = strtoupper(md5($signtext));//签名
-	write_log("mysign=".$mysign);
+	// write_log("mysign=".$mysign);
 
 
 	#到账判断

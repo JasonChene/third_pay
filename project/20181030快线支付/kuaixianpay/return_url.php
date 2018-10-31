@@ -8,7 +8,7 @@ include_once("../moneyfunc.php");
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
+	// write_log("return:".$key."=".$value);
 }
 $manyshow = 0;
 if(!empty($data)){
@@ -45,13 +45,19 @@ if(!empty($data)){
 
 	#验签方式
 	ksort($data);
-	$noarr = array('sign','paytype');
+	$noarr = array('sign');
 	$signtext = '';
 	foreach ($data as $arr_key => $arr_val) {
 		if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
 			$signtext .= $arr_key . '=' . $arr_val . '&';
 		}
 	}
+
+
+	$signtext = substr($signtext, 0, -1) . '&' . $pay_mkey;
+	// write_log($signtext);
+	$mysign = md5($signtext);
+	// write_log($mysign);
 
 
 	#到账判断

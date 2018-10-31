@@ -6,18 +6,17 @@ include_once("../moneyfunc.php");
 // write_log("notify");
 
 #接收资料
-#post方法
-$data = array();
-foreach ($_POST as $key => $value) {
+$data =array();
+// write_log('REQUEST方法');
+foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
 	// write_log($key . "=" . $value);
 }
-
 #设定固定参数
-$order_no = $data['sdorderno']; //订单号
-$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
+$order_no = $data['mer_order']; //订单号
+$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
 $success_msg = $data['status'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$success_code = "2";//文档上的成功讯息
 $sign = $data['sign'];//签名
 $echo_msg = "success";//回调讯息
 
@@ -34,7 +33,7 @@ $pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 $params = array(':pay_type' => $pay_type);
 $sql = "select * from pay_set where pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mydata1_db->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
@@ -46,9 +45,9 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-$signtext="customerid=".$data['customerid']."&status=".$data['status']."&sdpayno=".$data['sdpayno']."&sdorderno=".$data['sdorderno']."&total_fee=".$data['total_fee']."&paytype=".$data['paytype']."&".$pay_mkey;
+$signtext=$data['pay_order']."&".$data['mer_order']."&".$data['pay_way']."&".$data['amount']."&".$data['actual_amount']."&".$data['goods_name']."&".$data['status']."&".$data['pay_succ_time']."&".$pay_mkey;
 // write_log("signtext=".$signtext);
-$mysign = (md5($signtext));//签名
+$mysign = strtoupper(md5($signtext));//签名
 // write_log("mysign=".$mysign);
 
 

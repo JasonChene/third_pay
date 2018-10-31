@@ -87,7 +87,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
   exit;
 }
 #固定参数设置
-$form_url = 'https://api.payjuejin.com/api/pay';
+$form_url = 'https://api.juejinpay.com/api/pay';
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
@@ -96,7 +96,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $data = array(
   "mer_num" => $pay_mid,
   "pay_way" => "",
-  "money" => number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
+  "money" => number_format($_REQUEST['MOAmount']*100, 0, '.', ''),
   "order_num" => $order_no,
   "goods_name" => "pay",
   "notify_url" => $merchant_url,
