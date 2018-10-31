@@ -3,9 +3,9 @@
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-#write_log("notify");
+write_log("notify");
 
-/*#############################################
+#############################################
 #request方法
 write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
@@ -34,7 +34,7 @@ write_log($input_data);
 // 	$data[$key] = $value;
 // 	write_log($key."=".$value);
 // }
-###########################################*/
+###########################################
 
 
 #接收资料
@@ -46,12 +46,12 @@ foreach ($_POST as $key => $value) {
 }
 
 #设定固定参数
-$order_no = $data['order_no']; //订单号
-$mymoney = number_format($data['pay_amoumt'], 2, '.', ''); //订单金额
-$success_msg = $data['is_success'];//成功讯息
-$success_code = "1";//文档上的成功讯息
+$order_no = $data['sdorderno']; //订单号
+$mymoney = number_format($data['total_fee'], 2, '.', ''); //订单金额
+$success_msg = $data['status'];//成功讯息
+$success_code = "2";//文档上的成功讯息
 $sign = $data['sign'];//签名
-$echo_msg = "";//回调讯息
+$echo_msg = "success";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -77,28 +77,20 @@ if ($pay_mid == "" || $pay_mkey == "") {
 	exit;
 }
 
-#验签方式
-$noarr = array('sign');//不加入签名的array key值
-ksort($data);
-$signtext = "";
-foreach ($data as $arr_key => $arr_val) {
-	if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-		$signtext .= $arr_key . '=' . $arr_val . '&';
-	}
-}
-$signtext = substr($signtext, 0, -1);//验签字串
-//write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
+
 
 #验签方式2
 $signtext = "";
-$signtext .= 'order_no=' . $data['order_no'] . '&';
-$signtext .= 'pay_amoumt=' . $data['pay_amoumt'] . '&';
-$signtext .= 'is_success=' . $data['is_success'];
-//write_log("signtext=".$signtext);
+$signtext .= 'customerid=' . $data['customerid'] . '&';
+$signtext .= 'status=' . $data['status'] . '&';
+$signtext .= 'sdpayno=' . $data['sdpayno'] . '&';
+$signtext .= 'sdorderno=' . $data['sdorderno'] . '&';
+$signtext .= 'total_fee=' . $data['total_fee'] . '&';
+$signtext .= 'paytype=' . $data['paytype'] . '&';
+$signtext .= $pay_mkey;
+write_log("signtext=".$signtext);
 $mysign = md5($signtext);//签名
-//write_log("mysign=".$mysign);
+write_log("mysign=".$mysign);
 
 #到账判断
 if ($success_msg == $success_code) {
