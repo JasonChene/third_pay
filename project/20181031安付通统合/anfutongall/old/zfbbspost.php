@@ -19,9 +19,11 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
+$mid = explode('###',$pay_account);
+$pay_account = $mid[0];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//同步
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//异步
-if ($pay_mid == "" || $pay_mkey == "") {
+if ($pay_account == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
@@ -42,7 +44,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $content = array(
-    "merchant_no" => $pay_mid,//商户ID
+    "merchant_no" => $pay_account,//商户ID
     "out_trade_no" => $order_no, //商户订单号
     "order_name" => 'ordername', //商品描述
     "body" => 'body',
@@ -52,14 +54,14 @@ $content = array(
     "success_url" => $return_url
 );
 $data = array(
-"app_id" => $pay_account,
+"app_id" => $pay_mid,
 "method" => 'alipay.wap_pay',
 "sign_type" => 'MD5',
 "version" => '1.0',
 "content" => json_encode($content),
 "sign" => array(
 "str_arr" => array(
-"app_id" => $pay_account,
+"app_id" => $pay_mid,
 "content" => json_encode($content),
 "method" => "alipay.wap_pay",
 "version" => "1.0",

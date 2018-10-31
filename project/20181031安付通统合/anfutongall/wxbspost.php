@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-#第三方名稱 : 安付通
-#支付方式 : zfb;
+#第三方名稱 : 安付通TF
+#支付方式 : wx;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -19,9 +19,11 @@ $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
+$mid = explode('###',$pay_account);
+$pay_account = $mid[2];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//同步
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//异步
-if ($pay_mid == "" || $pay_mkey == "") {
+if ($pay_account == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
@@ -42,26 +44,26 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $content = array(
-    "merchant_no" => $pay_mid,//商户ID
+    "merchant_no" => $pay_account,//商户ID
     "out_trade_no" => $order_no, //商户订单号
     "order_name" => 'ordername', //商品描述
     "body" => 'body',
     "total_amount" => number_format($_REQUEST['MOAmount'], 2, '.', ''), //总金额
+    "ip" => $client_ip,
     "notify_url" => $merchant_url, //异步回调地址
-    "return_url" => $return_url, //同步回调地址
-    "success_url" => $return_url
+    "return_url" => $return_url
 );
 $data = array(
-"app_id" => $pay_account,
-"method" => 'alipay.wap_pay',
+"app_id" => $pay_mid,
+"method" => 'weixin.pay',
 "sign_type" => 'MD5',
 "version" => '1.0',
 "content" => json_encode($content),
 "sign" => array(
 "str_arr" => array(
-"app_id" => $pay_account,
+"app_id" => $pay_mid,
 "content" => json_encode($content),
-"method" => "alipay.wap_pay",
+"method" => "weixin.pay",
 "version" => "1.0",
 ),
 "mid_conn" => "=",
@@ -75,8 +77,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_zfb";
-$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_wx";
+$bankname = $pay_type."->微信在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
@@ -103,8 +105,8 @@ if ($row['error_code'] != '0') {
     echo '错误讯息:' . $row['error_msg'] . "<br>";
     exit;
 } else {
-    $url = $row['pay_url'];
-    $jumpurl = '../qrcode/qrcode.php?type=zfb&code=' . QRcodeUrl($url);
+    $url = $row['qr_code'];
+    $jumpurl = '../qrcode/qrcode.php?type=wx&code=' . urlencode($url);
 }
 ?>
 <html>

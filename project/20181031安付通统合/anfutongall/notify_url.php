@@ -38,7 +38,7 @@ $payInfo = $stmt->fetch();
 $pay_mid = $payInfo['mer_id'];
 $pay_mkey = $payInfo['mer_key'];
 $pay_account = $payInfo['mer_account'];
-if ($pay_mid == "" || $pay_mkey == "") {
+if ($pay_account == "" || $pay_mkey == "") {
 	echo "非法提交参数";
 	exit;
 }

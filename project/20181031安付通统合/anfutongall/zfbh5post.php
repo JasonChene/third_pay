@@ -4,7 +4,7 @@ header("Content-type:text/html; charset=utf-8");
 #支付方式 : zfb;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 
 
 $S_Name = $_REQUEST['S_Name'];
@@ -13,15 +13,17 @@ $pay_type =$_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];
 $pay_mkey = $row['mer_key'];
 $pay_account = $row['mer_account'];
+$mid = explode('###',$pay_account);
+$pay_account = $mid[0];
 $return_url = $row['pay_domain'] . $row['wx_returnUrl'];//同步
 $merchant_url = $row['pay_domain'] . $row['wx_synUrl'];//异步
-if ($pay_mid == "" || $pay_mkey == "") {
+if ($pay_account == "" || $pay_mkey == "") {
   echo "非法提交参数";
   exit;
 }
@@ -42,7 +44,7 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 $MOAmount = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方传值参数设置
 $content = array(
-    "merchant_no" => $pay_mid,//商户ID
+    "merchant_no" => $pay_account,//商户ID
     "out_trade_no" => $order_no, //商户订单号
     "order_name" => 'ordername', //商品描述
     "body" => 'body',
@@ -52,14 +54,14 @@ $content = array(
     "success_url" => $return_url
 );
 $data = array(
-"app_id" => $pay_account,
+"app_id" => $pay_mid,
 "method" => 'alipay.wap_pay',
 "sign_type" => 'MD5',
 "version" => '1.0',
 "content" => json_encode($content),
 "sign" => array(
 "str_arr" => array(
-"app_id" => $pay_account,
+"app_id" => $pay_mid,
 "content" => json_encode($content),
 "method" => "alipay.wap_pay",
 "version" => "1.0",
