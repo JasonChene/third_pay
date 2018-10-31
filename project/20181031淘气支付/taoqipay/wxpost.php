@@ -87,7 +87,7 @@ $data = array(
 );
 
 #变更参数设置
-$form_url = 'https://www.taoqipay.com/api/pay';
+$form_url = 'http://www.taoqipay.com/api/pay';
 $payType = '';
 $bankname = '';
 $scan = 'wx';
