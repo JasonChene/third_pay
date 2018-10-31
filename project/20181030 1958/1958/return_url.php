@@ -1,24 +1,3 @@
-<? header("content-Type: text/html; charset=UTF-8"); ?>
-<?php
-include_once("../../../database/mysql.php");
-include_once("../moneyfunc.php");
-
-#接收资料
-#REQUEST方法
-$data = array();
-foreach ($_REQUEST as $key => $value) {
-	$data[$key] = $value;
-	write_log("return:".$key."=".$value);
-}
-$manyshow = 0;
-$message = "支付成功";
-if(!empty($data)){
-	$manyshow = 1;
-	#设定固定参数
-	$order_no = $data['shop_order_no']; //订单号
-}
-?>
-
 <!-- Html顯示充值資訊 須改變訂單echo變數名稱-->
 <!DOCTYPE html>
 
@@ -37,26 +16,14 @@ if(!empty($data)){
     <tr>
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
-		<?php 
-			if($manyshow == 1){
-		?>
-		<tr>
-			<td style="width: 120px; text-align: right;">订单号：</td>
-			<td style="padding-left: 10px;">
-				<label id="lborderno"><?php echo $order_no; ?></label>
-			</td>
-		</tr>
-		<?php
-			}
-		?>
 		<tr>
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
-				<label id="lbmessage"><?php echo $message; ?></label>
+				<label id="lbmessage"><?php echo 支付成功; ?></label>
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 120px; text-align: right;">备注：</td>
+			<td style="width: 120px; text-align: right;">备注</td>
 			<td style="padding-left: 10px;">
 				<label id="lbmessage">该页面仅作为通知用，若与支付平台不相符时，则以支付平台结果为准</label>
 			</td>
