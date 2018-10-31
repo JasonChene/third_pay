@@ -53,15 +53,7 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
-function QRcodeUrl($code)
-{
-  if (strstr($code, "&")) {
-    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  } else {
-    $code2 = $code;
-  }
-  return $code2;
-}
+
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
@@ -84,32 +76,21 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid, 
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay"
+  "app_id" => $pay_mid, 
+  "price" => $mymoney,
+  "payment_type" => "1",
+  "notify_url" => $merchant_url,
+  "return_url" => $return_url,
+  "shop_order_no" => $order_no,
+  "shop_uid" => $_REQUEST['S_Name'],
+  "sign" => ""
 );
 
 #变更参数设置
-$form_url = 'http://www.tfb2018.com/Pay_Index.html';
-$scan = '';
+$form_url = 'https://www.taoqipay.com/api/pay';
 $payType = '';
 $bankname = '';
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}else{
-  $scan = 'wx';
-  $data['pay_bankcode'] = '902';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '901';  
-  }  
-}
+$scan = 'wx';
 
 payType_bankname($scan, $pay_type);
 
@@ -124,7 +105,7 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
+$noarr = array('sign');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -132,9 +113,9 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
+$signtext = substr($signtext, 0, -1) . '&app_key=' . $pay_mkey;
+$sign = md5($signtext);
+$data['sign'] = $sign;
 
 #跳轉方法
 $form_data = $data;
