@@ -1,0 +1,10 @@
+15010503659   农夫
+登录密码 123456
+诚信通商户登录网址 https://www.longlong888.com/
+
+
+商家密钥（sign_key）：
+ehWYe7WKLt3ffpMq
+
+商家标识（shop_id）：
+e613d44ee26f69d3fab6c44ab56af5d4
