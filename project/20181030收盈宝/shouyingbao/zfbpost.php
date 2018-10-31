@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
 #function
@@ -53,20 +53,11 @@ function payType_bankname($scan, $pay_type)
     exit;
   }
 }
-function QRcodeUrl($code)
-{
-  if (strstr($code, "&")) {
-    $code2 = str_replace("&", "aabbcc", $code);//有&换成aabbcc
-  } else {
-    $code2 = $code;
-  }
-  return $code2;
-}
 #获取第三方资料(非必要不更动)
 $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink('read1')->prepare($sql);
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//appid
@@ -82,40 +73,28 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
+$form_url = 'http://syb008.com/Pay';
+
 #第三方参数设置
-$data = array(
-	"pay_memberid" => $pay_mid, 
-	"pay_orderid" => $order_no,
-	"pay_applydate" => date("Y-m-d H:i:s"),
-	"pay_bankcode" => "",
-	"pay_notifyurl" => $merchant_url,
-	"pay_callbackurl" => $return_url,
-	"pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay"
+$data =array(
+  'fxid' => $pay_mid,
+  'fxddh' => $order_no,
+  'fxdesc' => "pay",
+  'fxfee' => $mymoney,
+  'fxnotifyurl' => $merchant_url,
+  'fxbackurl' => $return_url,
+  'fxpay' => "",
+  'fxsign' => "",
+  'fxip' => getClientIp(),
 );
 
 #变更参数设置
-$form_url = 'http://www.tfb2018.com/Pay_Index.html';
-$scan = '';
-$payType = '';
-$bankname = '';
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}elseif (strstr($_REQUEST['pay_type'], "QQ钱包") || strstr($_REQUEST['pay_type'], "qq钱包")) {
-  $scan = 'qq';
-  $data['pay_bankcode'] = '908';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '905';  
-  }
-}else {
-  $scan = 'wx';
-  $data['pay_bankcode'] = '902';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '901';  
-  }
+$scan = 'zfb';
+$data['fxpay'] = 'zfbsm';
+if(_is_mobile()){
+  $data['fxpay'] = 'zfbwap';
 }
+
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -128,22 +107,21 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
-$signtext = '';
-foreach ($data as $arr_key => $arr_val) {
-  if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
-  }
+$data["fxsign"] = md5($data["fxid"] . $data["fxddh"] . $data["fxfee"] . $data["fxnotifyurl"] . $pay_mkey);
+
+#curl提交
+$res = curl_post($form_url,http_build_query($data));
+$row = json_decode($res,1);
+#跳转
+if ($row['status'] != 1) {
+  echo  '错误代码:' . $row['status']."<br>";
+  echo  '错误讯息:' . $row['error']."<br>";
+  exit;
+}else {
+  $jumpurl = $row['payurl'];
 }
-
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
-
 #跳轉方法
-$form_data = $data;
-$jumpurl = $form_url;
+
 ?>
 <html>
   <head>
