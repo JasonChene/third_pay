@@ -3,14 +3,14 @@
 include_once("../../../database/mysql.php");
 include_once("../moneyfunc.php");
 
-write_log("return");
+// write_log("return");
 
 #接收资料
 #REQUEST方法
 $data = array();
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
 $message = "支付成功";
 $manyshow = 0;

@@ -84,32 +84,22 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "pay_memberid" => $pay_mid, 
-  "pay_orderid" => $order_no,
-  "pay_applydate" => date("Y-m-d H:i:s"),
-  "pay_bankcode" => "",
-  "pay_notifyurl" => $merchant_url,
-  "pay_callbackurl" => $return_url,
-  "pay_amount" => $mymoney,
-  "pay_md5sign" => "",
-  "pay_productname" => "pay"
+  "uid" => $pay_mid, 
+  "price" => $mymoney,
+  "istype" => "2",
+  "notify_url" => $merchant_url,
+  "return_url" => $return_url,
+  "orderid" => $order_no,
+  "orderuid" => $_REQUEST['S_Name'],
+  "token" => $pay_mkey
 );
 
 #变更参数设置
-$form_url = 'http://www.tfb2018.com/Pay_Index.html';
+$form_url = 'https://www.yaxiyazf.com/pay';
 $scan = '';
 $payType = '';
 $bankname = '';
-if (strstr($_REQUEST['pay_type'], "京东钱包")) {
-  $scan = 'jd';
-  $data['pay_bankcode'] = '910';
-}else{
-  $scan = 'wx';
-  $data['pay_bankcode'] = '902';
-  if (_is_mobile()) {
-    $data['pay_bankcode'] = '901';  
-  }  
-}
+$scan = 'wx';
 
 payType_bankname($scan, $pay_type);
 
@@ -124,17 +114,16 @@ if ($result_insert == -1) {
 }
 #签名排列，可自行组字串或使用http_build_query($array)
 ksort($data);
-$noarr = array('pay_md5sign','pay_productname');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
-    $signtext .= $arr_key . '=' . $arr_val . '&';
+    $signtext .= $arr_val;
   }
 }
 
-$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
-$sign = strtoupper(md5($signtext));
-$data['pay_md5sign'] = $sign;
+unset($data['token']);
+$sign = md5($signtext);
+$data['key'] = $sign;
 
 #跳轉方法
 $form_data = $data;
