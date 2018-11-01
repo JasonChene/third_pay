@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 #第三方名稱 : 付唄
-#支付方式 : zfb;
+#支付方式 : wx;
 include_once("./addsign.php");
 include_once("../moneyfunc.php");
 include_once("../../../database/mysql.php");
@@ -48,7 +48,8 @@ $data = array(
 "notifyurl" => $notify_url,
 "version" => '1.0',
 "returnurl" => $return_url,
-"paytype" => 'alipay',
+"paytype" => 'bank',
+"bankcode" => $bank_code,
 "get_code" => '0',
 "sign" => array(
 "str_arr" => array(
@@ -70,8 +71,8 @@ $data = array(
 ),
 );
 #变更参数设定
-$payType = $pay_type."_zfb";
-$bankname = $pay_type."->支付宝在线充值";
+$payType = $pay_type."_wy";
+$bankname = $pay_type."->网银在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
 $result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
 if ($result_insert == -1){
