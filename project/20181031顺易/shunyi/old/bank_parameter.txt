@@ -1,0 +1,15 @@
+﻿INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','平安银行','307');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','浦发银行','310');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','邮政储蓄银行','403');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','工商银行','102');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','华夏银行','304');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','广发银行','306');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','交通银行','301');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','民生银行','305');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','招商银行','308');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','中信银行','302');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','兴业银行','309');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','光大银行','303');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','建设银行','105');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','中国银行','104');
+INSERT INTO `bank_code`(pay_name,bank_name,bank_code) VALUES ('顺易','农业银行','103');

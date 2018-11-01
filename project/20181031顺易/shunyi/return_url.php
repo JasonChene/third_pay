@@ -1,18 +1,19 @@
 <? header("content-Type: text/html; charset=UTF-8"); ?>
 <?php
+// include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-// write_log("return");
+write_log("return");
 
 #接收资料
 #接收资料
 $data = array();
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	// write_log($key . "=" . $value);
+	write_log($key . "=" . $value);
 }
 $manyshow = 0;
-if(!empty($data)){
+if (!empty($data)) {
 	$manyshow = 1;
 	#设定固定参数
 	$order_no = $data['orderNo']; //订单号
@@ -25,6 +26,7 @@ if(!empty($data)){
 	#根据订单号读取资料库
 	$params = array(':m_order' => $order_no);
 	$sql = "select operator from k_money where m_order=:m_order";
+	// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$row = $stmt->fetch();
@@ -33,6 +35,7 @@ if(!empty($data)){
 	$pay_type = substr($row['operator'], 0, strripos($row['operator'], "_"));
 	$params = array(':pay_type' => $pay_type);
 	$sql = "select * from pay_set where pay_type=:pay_type";
+	// $stmt = $mydata1_db->prepare($sql);//原数据库的连接方式
 	$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 	$stmt->execute($params);
 	$payInfo = $stmt->fetch();
@@ -41,39 +44,39 @@ if(!empty($data)){
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		// write_log("非法提交参数");
+		write_log("非法提交参数");
 		exit;
 	}
 
 	#验签方式
-	$signtext = "orderNo=".$data['orderNo']."&payAmt=".$data['payAmt']."&retCode=".$data['retCode']."&transNo=".$data['transNo'].
-	"&userId=".$data['userId']."&key=".$pay_mkey;
-	// write_log("signtext=" . $signtext);
+	$signtext = "orderNo=" . $data['orderNo'] . "&payAmt=" . $data['payAmt'] . "&retCode=" . $data['retCode'] . "&transNo=" . $data['transNo'] .
+		"&userId=" . $data['userId'] . "&key=" . $pay_mkey;
+	write_log("signtext=" . $signtext);
 	$mysign = md5($signtext);
-	// write_log("mysign=" . $mysign);
+	write_log("mysign=" . $mysign);
 
 	#到账判断
 	if ($success_msg == $success_code) {
-	if ( $mysign == $sign) {
+		if ($mysign == $sign) {
 			$result_insert = update_online_money($order_no, $mymoney);
 			if ($result_insert == -1) {
 				$message = ("会员信息不存在，无法入账");
-			}else if($result_insert == 0){
+			} else if ($result_insert == 0) {
 				$message = ("支付成功");
-			}else if($result_insert == -2){
+			} else if ($result_insert == -2) {
 				$message = ("数据库操作失败");
-			}else if($result_insert == 1){
+			} else if ($result_insert == 1) {
 				$message = ("支付成功");
 			} else {
 				$message = ("支付失败");
 			}
-		}else{
+		} else {
 			$message = ('签名不正确！');
 		}
-	}else{
+	} else {
 		$message = ("交易失败");
 	}
-}else{
+} else {
 	$message = ("支付成功");
 }
 ?>
@@ -97,7 +100,7 @@ if(!empty($data)){
 			<td colspan="2" class="tips">处理结果</td>
 		</tr>
 		<?php 
-			if($manyshow == 1){
+	if ($manyshow == 1) {
 		?>
 		<tr>
 			<td style="width: 120px; text-align: right;">订单号：</td>
@@ -112,8 +115,9 @@ if(!empty($data)){
 			</td>
 		</tr>
 		<?php
-			}
-		?>
+
+}
+?>
 		<tr>
 			<td style="width: 120px; text-align: right;">处理结果：</td>
 			<td style="padding-left: 10px;">
