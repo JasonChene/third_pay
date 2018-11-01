@@ -3,14 +3,14 @@
 // include_once("../../../database/mysql.config.php");//原数据库的连接方式
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("return");
+//write_log("return");
 
 #接收资料
 #接收资料
 $data = array();
 foreach ($_POST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key . "=" . $value);
+	//write_log($key . "=" . $value);
 }
 $manyshow = 0;
 if (!empty($data)) {
@@ -44,16 +44,16 @@ if (!empty($data)) {
 	$pay_account = $payInfo['mer_account'];
 	if ($pay_mid == "" || $pay_mkey == "") {
 		echo "非法提交参数";
-		write_log("非法提交参数");
+		//write_log("非法提交参数");
 		exit;
 	}
 
 	#验签方式
 	$signtext = "orderNo=" . $data['orderNo'] . "&payAmt=" . $data['payAmt'] . "&retCode=" . $data['retCode'] . "&transNo=" . $data['transNo'] .
 		"&userId=" . $data['userId'] . "&key=" . $pay_mkey;
-	write_log("signtext=" . $signtext);
+	//write_log("signtext=" . $signtext);
 	$mysign = md5($signtext);
-	write_log("mysign=" . $mysign);
+	//write_log("mysign=" . $mysign);
 
 	#到账判断
 	if ($success_msg == $success_code) {
