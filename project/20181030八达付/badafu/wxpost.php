@@ -88,21 +88,33 @@ $data = array(
   "method" => "pay",
   "partner" => $pay_mid,
   "requesttype" => "pro",
-  "banktype" => "WECHAT",
+  "banktype" => "",
   "paymoney" => number_format($_REQUEST['MOAmount'], 0, '.', ''),
   "ordernumber" => $order_no,
-  "timestamp" => time(),
+  "timestamp" => (int)(microtime(true)*1000),
   "callbackurl" => $merchant_url,
   "memberId" => $_REQUEST['S_Name'],
   "sign" => ""
 );
 
 #变更参数设置
-$form_url = 'http://payOctopus.com/octPay/online/pay';
+$form_url = 'http://w767vbtp.xtzj500n2.com/octPay/online/pay';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'wx';
+if (strstr($_REQUEST['pay_type'], "京东钱包")) {
+  $scan = 'jd';
+  $data['banktype'] = "JD";
+  if (_is_mobile()) {
+    $data['banktype'] = "JDWAP";
+  }
+}else{
+  $scan = 'wx';
+  $data['banktype'] = "WEIXIN";
+  if (_is_mobile()) {
+    $data['banktype'] = "WEIXINWAP";
+  }
+}
 
 payType_bankname($scan, $pay_type);
 

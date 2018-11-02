@@ -84,31 +84,27 @@ $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $data = array(
-  "version" => "3.0", 
-  "method" => "pay",
-  "partner" => $pay_mid,
-  "requesttype" => "pro",
-  "banktype" => "",
-  "paymoney" => number_format($_REQUEST['MOAmount'], 0, '.', ''),
-  "ordernumber" => $order_no,
-  "timestamp" => (int)(microtime(true)*1000),
-  "callbackurl" => $merchant_url,
-  "memberId" => $_REQUEST['S_Name'],
-  "sign" => ""
+  "pay_memberid" => $pay_mid, 
+  "pay_orderid" => $order_no,
+  "pay_applydate" => date("Y-m-d H:i:s"),
+  "pay_bankcode" => "",
+  "pay_notifyurl" => $merchant_url,
+  "pay_callbackurl" => $return_url,
+  "pay_amount" => $mymoney,
+  "pay_md5sign" => "",
+  "pay_productname" => "pay"
 );
 
 #变更参数设置
-$form_url = 'http://w767vbtp.xtzj500n2.com/octPay/online/pay';
+$form_url = 'http://www.tfb2018.com/Pay_Index.html';
 $scan = '';
 $payType = '';
 $bankname = '';
-$scan = 'zfb';
-$data['banktype'] = "ALIPAY";
+$scan = 'qq';
+$data['pay_bankcode'] = '908';
 if (_is_mobile()) {
-    $data['banktype'] = "ALIPAYWAP";
+  $data['pay_bankcode'] = '905';  
 }
-
-
 payType_bankname($scan, $pay_type);
 
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
@@ -121,7 +117,8 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$noarr = array('sign','requesttype','memberId');
+ksort($data);
+$noarr = array('pay_md5sign','pay_productname');
 $signtext = '';
 foreach ($data as $arr_key => $arr_val) {
   if (!in_array($arr_key, $noarr) && (!empty($arr_val) || $arr_val === 0 || $arr_val === '0')) {
@@ -129,11 +126,10 @@ foreach ($data as $arr_key => $arr_val) {
   }
 }
 
-$signtext = substr($signtext, 0, -1) . $pay_mkey;
-$sign = md5($signtext);
-$data['sign'] = $sign;
-echo "<pre>";
-var_dump($data);
+$signtext = substr($signtext, 0, -1) . '&key=' . $pay_mkey;
+$sign = strtoupper(md5($signtext));
+$data['pay_md5sign'] = $sign;
+
 #跳轉方法
 $form_data = $data;
 $jumpurl = $form_url;
@@ -144,7 +140,7 @@ $jumpurl = $form_url;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_blank">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {
