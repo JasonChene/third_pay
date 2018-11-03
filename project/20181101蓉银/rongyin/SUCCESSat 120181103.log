@@ -1,0 +1,14 @@
+2018-11-03 01:56:32 notify
+2018-11-03 01:56:32 input方法
+2018-11-03 01:56:32 {"shopCode":"wm00001006","outOrderNo":"13821220181103015559","goodsClauses":"goods","tradeAmount":"10.00","code":"0","nonStr":"ZXMigHepkqHWpL64","msg":"SUCCESS","sign":"f8d39da8f456cc181f3dcd3549429833"}
+2018-11-03 01:56:32 shopCode=wm00001006
+2018-11-03 01:56:32 outOrderNo=13821220181103015559
+2018-11-03 01:56:32 goodsClauses=goods
+2018-11-03 01:56:32 tradeAmount=10.00
+2018-11-03 01:56:32 code=0
+2018-11-03 01:56:32 nonStr=ZXMigHepkqHWpL64
+2018-11-03 01:56:32 msg=SUCCESS
+2018-11-03 01:56:32 sign=f8d39da8f456cc181f3dcd3549429833
+2018-11-03 01:56:32 signtext=code=0&goodsClauses=goods&msg=SUCCESS&nonStr=ZXMigHepkqHWpL64&outOrderNo=13821220181103015559&shopCode=wm00001006&tradeAmount=10.00&key=scrULRR9FcjxbBCFiMpCLJPmAWWywYTm
+2018-11-03 01:56:32 mysign=f8d39da8f456cc181f3dcd3549429833
+2018-11-03 01:56:32 SUCCESSat 1

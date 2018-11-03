@@ -1,0 +1,14 @@
+2018-11-03 02:54:05 notify
+2018-11-03 02:54:05 input方法
+2018-11-03 02:54:05 {"shopCode":"ry00000416","outOrderNo":"79443320181103024923","goodsClauses":"goods","tradeAmount":"10.00","code":"0","nonStr":"OCnNKlutIZ2QchVm","msg":"SUCCESS","sign":"989f4993c531921e1de712bf01a77a0b"}
+2018-11-03 02:54:05 shopCode=ry00000416
+2018-11-03 02:54:05 outOrderNo=79443320181103024923
+2018-11-03 02:54:05 goodsClauses=goods
+2018-11-03 02:54:05 tradeAmount=10.00
+2018-11-03 02:54:05 code=0
+2018-11-03 02:54:05 nonStr=OCnNKlutIZ2QchVm
+2018-11-03 02:54:05 msg=SUCCESS
+2018-11-03 02:54:05 sign=989f4993c531921e1de712bf01a77a0b
+2018-11-03 02:54:05 signtext=code=0&goodsClauses=goods&msg=SUCCESS&nonStr=OCnNKlutIZ2QchVm&outOrderNo=79443320181103024923&shopCode=ry00000416&tradeAmount=10.00&key=Hz0fWcmf1UsCiZMeoUf625HLIVngJNfO
+2018-11-03 02:54:05 mysign=989f4993c531921e1de712bf01a77a0b
+2018-11-03 02:54:05 SUCCESSat 1
