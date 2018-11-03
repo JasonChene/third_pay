@@ -91,7 +91,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 $top_uid = $_REQUEST['top_uid'];
 $order_no = getOrderNo();
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$form_url = "http://syp.txq668.com/orderpay.do";
+$form_url = "http://syp.jycsc888.com/orderpay.do";
 #第三方参数设置
 $data = array(
   "userId" => $pay_mid,
@@ -151,7 +151,9 @@ if ($row['retCode'] != '0') {
       echo $row['payUrl'];
       exit;
     } else {
-      $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+      echo '正在为您跳转中，请稍候......';
+      header('Location:' . $row['payUrl']);
+      exit();
     }
   } else {
     echo ('签名不正确！');
