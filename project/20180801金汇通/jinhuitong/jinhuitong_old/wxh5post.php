@@ -9,7 +9,7 @@ include_once("../../../database/mysql.config.php");
 
 $S_Name = $_REQUEST['S_Name'];
 $top_uid = $_REQUEST['top_uid'];
-$pay_type =$_REQUEST['pay_type'];
+$pay_type = $_REQUEST['pay_type'];
 #获取第三方资料(非必要不更动)
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
@@ -28,7 +28,7 @@ if ($pay_mid == "" || $pay_mkey == "") {
 
 
 #固定参数设置
-$form_url = 'http://www.865805.com/api/payment/createH5Order';
+$form_url = 'http://www.605537.com/api/payment/createH5Order';
 $bank_code = $_REQUEST['bank_code'];
 $order_no = getOrderNo();
 $notify_url = $merchant_url;
@@ -39,56 +39,56 @@ $order_time = date("YmdHis");
 
 
 $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
-$MOAmount = number_format($_REQUEST['MOAmount']*100, 0, '.', '');
+$MOAmount = number_format($_REQUEST['MOAmount'] * 100, 0, '.', '');
 #第三方传值参数设置
 $data = array(
-"merchantNo" => $pay_mid,
-"tradeNo" => $order_no,
-"amount" => $MOAmount,
-"notifyUrl" => $notify_url,
-"operationCode" => 'order.createOrder',
-"version" => '1.0',
-"date" => time(),
-"subject" => 'pay',
-"body" => 'pay',
-"paymentType" => 'WEIXIN_H5',
-"frontUrl" => $return_url,
-"spbillCreateIp" => $client_ip,
-"sign" => array(
-"str_arr" => array(
-"amount" => $MOAmount,
-"body" => "pay",
-"date" => time(),
-"frontUrl" => $return_url,
-"merchantNo" => $pay_mid,
-"notifyUrl" => $notify_url,
-"operationCode" => "order.createOrder",
-"paymentType" => "WEIXIN_H5",
-"spbillCreateIp" => $client_ip,
-"subject" => "pay",
-"tradeNo" => $order_no,
-"version" => "1.0",
-),
-"mid_conn" => "=",
-"last_conn" => "&",
-"encrypt" => array(
-"0" => "MD5",
-"1" => "upper",
-),
-"key_str" => "&appkey=",
-"key" => $pr_key,
-"havekey" => "1",
-),
+  "merchantNo" => $pay_mid,
+  "tradeNo" => $order_no,
+  "amount" => $MOAmount,
+  "notifyUrl" => $notify_url,
+  "operationCode" => 'order.createOrder',
+  "version" => '1.0',
+  "date" => time(),
+  "subject" => 'pay',
+  "body" => 'pay',
+  "paymentType" => 'WEIXIN_H5',
+  "frontUrl" => $return_url,
+  "spbillCreateIp" => $client_ip,
+  "sign" => array(
+    "str_arr" => array(
+      "amount" => $MOAmount,
+      "body" => "pay",
+      "date" => time(),
+      "frontUrl" => $return_url,
+      "merchantNo" => $pay_mid,
+      "notifyUrl" => $notify_url,
+      "operationCode" => "order.createOrder",
+      "paymentType" => "WEIXIN_H5",
+      "spbillCreateIp" => $client_ip,
+      "subject" => "pay",
+      "tradeNo" => $order_no,
+      "version" => "1.0",
+    ),
+    "mid_conn" => "=",
+    "last_conn" => "&",
+    "encrypt" => array(
+      "0" => "MD5",
+      "1" => "upper",
+    ),
+    "key_str" => "&appkey=",
+    "key" => $pr_key,
+    "havekey" => "1",
+  ),
 );
 #变更参数设定
-$payType = $pay_type."_wx";
-$bankname = $pay_type."->微信在线充值";
+$payType = $pay_type . "_wx";
+$bankname = $pay_type . "->微信在线充值";
 #新增至资料库，確認訂單有無重複， function在 moneyfunc.php裡(非必要不更动)
-$result_insert = insert_online_order($S_Name , $order_no , $mymoney,$bankname,$payType,$top_uid);
-if ($result_insert == -1){
+$result_insert = insert_online_order($S_Name, $order_no, $mymoney, $bankname, $payType, $top_uid);
+if ($result_insert == -1) {
   echo "会员信息不存在，无法支付，请重新登录网站进行支付！";
   exit;
-} else if ($result_insert == -2){
+} else if ($result_insert == -2) {
   echo "订单号已存在，请返回支付页面重新支付";
   exit;
 }
@@ -110,14 +110,16 @@ $jumpurl = $form_url;
       <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl?>" target="_self">
+      <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
           <p>正在为您跳转中，请稍候......</p>
           <?php
-          if(isset($form_data)){
-              foreach ($data as $arr_key => $arr_value) {
-          ?>
+          if (isset($form_data)) {
+            foreach ($data as $arr_key => $arr_value) {
+              ?>
               <input type="hidden" name="<?php echo $arr_key; ?>" value="<?php echo $arr_value; ?>" />
-          <?php }} ?>
+          <?php 
+        }
+      } ?>
       </form>
       <script language="javascript">
           document.getElementById("frm1").submit();
