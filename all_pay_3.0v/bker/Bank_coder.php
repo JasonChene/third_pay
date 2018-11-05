@@ -1,10 +1,13 @@
 <html>
 
 <head>
-	<title>Bank_coder_1.1</title>
+	<title>Bank_coder_1.2</title>
 	<!--
+		更新记录
 20180925 Bank_coder_1.0 
-20180927 Bank_coder_1.1 新增功能；滚到目标位置，使用记录log 
+20180927 Bank_coder_1.1 新增功能：滚到目标位置，使用记录log 
+20181105 Bank_coder_1.2 新增功能：增加pdf文档切换（少数不行） 
+                                 增加左右交换按钮 
 	-->
 	<style>
 		body {
@@ -92,9 +95,15 @@
 
 <body id='body'>
 	<div id="main">
-		<div id="part_0" style="text-align:center;">
-			<p style="visibility: hidden;">错误提示区域</p>
-		</div>
+		<table style="width:884px;">
+			<tr>
+				<td>
+					<div id="part_0" style="text-align:center;">
+						<p id='errmsg' style="color: #ffffff; background-color: #d10000; opacity:0;">错误提示区域</p>
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table style="width:884px;">
 			<tr>
 				<td>
@@ -147,13 +156,36 @@
 		<table id="t0">
 			<tr>
 				<td id="td0">
-					银行名称
+					<table>
+						<tr>
+							<td style="width:77px;">
+								银行名称
+							</td>
+							<td>
+								<div>
+									<input class="submit" type="submit" onclick="switch_Bank()" value="⇄" style="width:35px; height:30px;" />
+								</div>
+							</td>
+						</tr>
+					</table>
 				</td>
 				<td id="td1">
-					银行编号
+					<table>
+						<tr>
+							<td style="width:77px;">
+								银行编号
+							</td>
+							<td>
+								<div>
+									<input class="submit" type="submit" onclick="from_pdf()" value="pdf" style="width:35px; height:30px;" />
+								</div>
+							</td>
+						</tr>
+					</table>
 				</td>
 				<td style="width:600x;" id="td2">
 					输出SQL
+				</td>
 				</td>
 			</tr>
 			<tr>
@@ -262,6 +294,7 @@ BRCB
 			<div>
 				<p>说明</p>
 				<p id="p_1"> * 第三方名称必填，资料夹名称为空或不存在时，档案会生成再此路径的bker资料夹中，若档案已存在则会直接覆盖上去</p>
+				<p id="p_6"> * pdf文档，将表全复制到银行名称，银行编号填 所有烂数+换行+银行名称栏位值+换行+银行编号栏位值，再点选 " pdf "</p>
 				<p id="p_2"> * 银行名称和银行编号以换行切割不同银行，且数量必须相等</p>
 				<p id="p_3"> * 点选 " 产生 ↓ " 下方手动选取相同银行，反白可寻找有相同文字的银行，勾选checkbox加入银行或点选 " 空值 ← " 跳过</p>
 				<p id="p_4"> * 点选 " 加入 ↑ " 输出SQL区块为最终结果，确认无误后点选 " 送出 → " 后即生成至ftp资料夹中</p>
@@ -282,10 +315,7 @@ BRCB
 
 	//自动产生完全吻合银行
 	function split() {
-		if (document.getElementById("pay_name").value == '') {
-			document.getElementById("part_0").innerHTML = '<p style="color: #ffffff; background-color: #d10000;">第三方名称不能为空</p>';
-			return false;
-		}
+
 		document.getElementById("ok").style = "visibility: hidden;";
 		document.getElementById("part_1").innerHTML = null;
 		document.getElementById("part_2").innerHTML = null;
@@ -301,8 +331,6 @@ BRCB
 		document.getElementById("part_2").innerHTML = '<table id="t1"></table>';
 		document.getElementById("part_3").innerHTML = '<table id="t2"></table>';
 		document.getElementById("part_4").innerHTML = '<table id="t3"></table>';
-		document.getElementById("nullsubmit").style = "width:294px; height:30px; visibility: visible;";
-		document.getElementById("table_2").style = "display: block;";
 		pay_name = document.getElementById("pay_name").value;
 		document.getElementById("submitSQL").style = "visibility: hidden;";
 
@@ -313,10 +341,25 @@ BRCB
 		document.getElementById('ok').disabled = false;
 		document.getElementById('nullsubmit').disabled = false;
 
-		if (Bank_name.length != Bank_code.length) {
-			document.getElementById("part_0").innerHTML = '<p style="color: #ffffff; background-color: #d10000;">银行名称与银行编号数量必须相同</p>';
+		if (document.getElementById("pay_name").value == '') {
+			document.getElementById("errmsg").innerHTML = ' " 第三方名称 " 不能为空';
+			document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 1s; opacity:1;';
+			setTimeout(function () {
+				document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 2s; opacity:0;';
+			}, 5000);
 			return false;
 		}
+		if (Bank_name.length != Bank_code.length) {
+			document.getElementById("errmsg").innerHTML = '" 银行名称 " 与 " 银行编号 " 数量必须相同';
+			document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 1s; opacity:1;';
+			setTimeout(function () {
+				document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 2s; opacity:0;';
+			}, 5000);
+			return false;
+		}
+
+		document.getElementById("table_2").style = "display: block;";
+		document.getElementById("nullsubmit").style = "width:294px; height:30px; visibility: visible;";
 
 		common_Bank_name.forEach(function (vi, i) {
 			Bank_name.forEach(function (vj, j) {
@@ -333,8 +376,8 @@ BRCB
 			});
 		});
 
-		document.getElementById("td0").innerHTML = '银行名称 (' + Bank_name.length + ')';
-		document.getElementById("td1").innerHTML = '银行编号 (' + Bank_code.length + ')';
+		// document.getElementById("td0").innerHTML = '银行名称 (' + Bank_name.length + ')';
+		// document.getElementById("td1").innerHTML = '银行编号 (' + Bank_code.length + ')';
 
 		common_Bank_name.forEach(function (vi, i) {
 			if (common_Bank_code[i] == null) {
@@ -493,6 +536,55 @@ BRCB
 			}
 		}
 		timer = setInterval(gotoTop, 10);
+	}
+
+	//交换银行名称和银行编号
+	function switch_Bank() {
+		var Bank_name_textarea = document.getElementById("Bank_name_textarea").value;
+		document.getElementById("Bank_name_textarea").value = document.getElementById("Bank_code_textarea").value;
+		document.getElementById("Bank_code_textarea").value = Bank_name_textarea;
+	}
+
+	//
+	function from_pdf() {
+		if (document.getElementById("Bank_name_textarea").value == '' || document.getElementById("Bank_code_textarea").value == '') {
+			document.getElementById("errmsg").innerHTML = '银行名称跟银行编号不能为空';
+			document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 1s; opacity:1;';
+			setTimeout(function () {
+				document.getElementById("errmsg").style = 'color: #ffffff; background-color: #d10000; transition-duration: 2s; opacity:0;';
+			}, 5000);
+			return false;
+		}
+		var Bank_name_textarea = document.getElementById("Bank_name_textarea").value;
+		var Bank_code_textarea = document.getElementById("Bank_code_textarea").value;
+		Bank_name_arr = Array();;
+		Bank_code_arr = Array();;
+		// var j = 0;
+
+		Bank_name_textarea = Bank_name_textarea.replace(/\s/g, "\n");
+
+		var Bank_arr = Bank_name_textarea.split("\n");
+		var pdf_arr = Bank_code_textarea.split("\n");
+
+		Bank_arr.forEach(function (vi, i) {
+			if (i % pdf_arr[0] == pdf_arr[1] - 1) {
+				Bank_name_arr.push(Bank_arr[i]);
+				// Bank_code_arr.push(Bank_arr[i + pdf_arr[2] - pdf_arr[1]]);
+			}
+
+			if (i % pdf_arr[0] == pdf_arr[2] - 1) {
+				Bank_code_arr.push(Bank_arr[i]);
+			}
+
+			// document.getElementById("Bank_name_textarea").value = document.getElementById("Bank_name_textarea").value + Bank_arr[i] + '/';
+
+		});
+		Bank_name_str = Bank_name_arr.join("\n");
+		Bank_code_str = Bank_code_arr.join("\n");
+
+		document.getElementById("Bank_name_textarea").value = Bank_name_str;
+		document.getElementById("Bank_code_textarea").value = Bank_code_str;
+
 	}
 
 	// function getInfo() {
