@@ -1,0 +1,7 @@
+﻿第三方登录地址：http://www.monibaokeji.com/Login.aspx
+登录账号：lijuan168
+登陆密码：12345678
+商户号：666017
+密钥：81EE480FAC9D8B2B42D635608BD2A47F
+
+第三方QQ：3345269909
