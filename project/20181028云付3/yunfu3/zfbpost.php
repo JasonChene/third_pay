@@ -9,38 +9,35 @@ if (function_exists("date_default_timezone_set")) {
   date_default_timezone_set("Asia/Shanghai");
 }
 
-function sign ($key_id, $array)
+function sign($key_id, $array)
 {
-    $data = md5(sprintf("%.2f", $array['amount']) . $array['out_trade_no']);
-    $key[] ="";
-    $box[] ="";
-    $pwd_length = strlen($key_id);
-    $data_length = strlen($data);
-    for ($i = 0; $i < 256; $i++)
-    {
-        $key[$i] = ord($key_id[$i % $pwd_length]);
-        $box[$i] = $i;
-    }
-    for ($j = $i = 0; $i < 256; $i++)
-    {
-        $j = ($j + $box[$i] + $key[$i]) % 256;
-        $tmp = $box[$i];
-        $box[$i] = $box[$j];
-        $box[$j] = $tmp;
-    }
-    for ($a = $j = $i = 0; $i < $data_length; $i++)
-    {
-        $a = ($a + 1) % 256;
-        $j = ($j + $box[$a]) % 256;
-        
-        $tmp = $box[$a];
-        $box[$a] = $box[$j];
-        $box[$j] = $tmp;
-        
-        $k = $box[(($box[$a] + $box[$j]) % 256)];
-        $cipher .= chr(ord($data[$i]) ^ $k);
-    }
-    return md5($cipher);
+  $data = md5(sprintf("%.2f", $array['amount']) . $array['out_trade_no']);
+  $key[] = "";
+  $box[] = "";
+  $pwd_length = strlen($key_id);
+  $data_length = strlen($data);
+  for ($i = 0; $i < 256; $i++) {
+    $key[$i] = ord($key_id[$i % $pwd_length]);
+    $box[$i] = $i;
+  }
+  for ($j = $i = 0; $i < 256; $i++) {
+    $j = ($j + $box[$i] + $key[$i]) % 256;
+    $tmp = $box[$i];
+    $box[$i] = $box[$j];
+    $box[$j] = $tmp;
+  }
+  for ($a = $j = $i = 0; $i < $data_length; $i++) {
+    $a = ($a + 1) % 256;
+    $j = ($j + $box[$a]) % 256;
+
+    $tmp = $box[$a];
+    $box[$a] = $box[$j];
+    $box[$j] = $tmp;
+
+    $k = $box[(($box[$a] + $box[$j]) % 256)];
+    $cipher .= chr(ord($data[$i]) ^ $k);
+  }
+  return md5($cipher);
 }
 function payType_bankname($scan, $pay_type)
 {
@@ -142,7 +139,7 @@ $data = array(
 );
 #变更参数设置
 
-$form_url = 'http://pay.rdnux.cn/gateway/index/checkpoint.do';
+$form_url = 'http://47.244.122.223/gateway/index/checkpoint.do';
 $scan = 'zfb';
 $data['type'] = '2';
 payType_bankname($scan, $pay_type);
@@ -156,7 +153,7 @@ if ($result_insert == -1) {
   exit;
 }
 #签名排列，可自行组字串或使用http_build_query($array)
-$data['sign'] = sign($pay_mkey,$data);
+$data['sign'] = sign($pay_mkey, $data);
 #跳转
 $jumpurl = $form_url;
 $form_data = $data;
