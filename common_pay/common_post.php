@@ -163,7 +163,7 @@ if ($row['respCode'] != '0000') {
   if (_is_mobile()) {
     $jumpurl = $row['payUrl'];
   } else {
-    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . QRcodeUrl($row['payUrl']);
+    $jumpurl = '../qrcode/qrcode.php?type=' . $scan . '&code=' . urlencode($row['payUrl']);
   }
 }
 #跳轉方法
