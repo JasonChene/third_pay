@@ -19,3 +19,10 @@
 修改档案：wxpost,zfbpost,notify_url
 测试到帐：支付宝扫码已测试到帐
 备注：三方修改了加密函式
+
+2018/11/5
+第三方名称：云付3(修改网关地址)
+档案位置：php@60.245.62.221\yunfu3
+
+修改档案：wxpost,zfbpost
+备注：第三方修改网关地址为：http://47.244.122.223/gateway/index/checkpoint.do
