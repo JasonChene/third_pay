@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html; charset=utf-8");
 // include_once("../../../database/mysql.config.php");
-include_once("../../../database/mysql.config.php");
+include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
 #预设时间在上海
 date_default_timezone_set('PRC');
@@ -75,7 +75,7 @@ $pay_type = $_REQUEST['pay_type'];
 $params = array(':pay_type' => $pay_type);
 $sql = "select t.pay_name,t.mer_id,t.mer_key,t.mer_account,t.pay_type,t.pay_domain,t1.wy_returnUrl,t1.wx_returnUrl,t1.zfb_returnUrl,t1.wy_synUrl,t1.wx_synUrl,t1.zfb_synUrl from pay_set t left join pay_list t1 on t1.pay_name=t.pay_name where t.pay_type=:pay_type";
 // $stmt = $mydata1_db->prepare($sql);
-$stmt = $mydata1_db->prepare($sql);
+$stmt = $mysqlLink->sqlLink("read1")->prepare($sql);//现数据库的连接方式
 $stmt->execute($params);
 $row = $stmt->fetch();
 $pay_mid = $row['mer_id'];//商户号
@@ -94,19 +94,20 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "mchNo" => $pay_mid,
-  "channel" => "",
-  "type" => "alipay",
-  "tradeNo" => $order_no,
-  "amount" => (int)number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
-  "keyword" => "pay",
-  "noticeUrl" => $merchant_url,
-  "returnUrl" => $return_url,
-  "sign" => ''
-);
+    "mchNo" => $pay_mid,
+    "channel" => "",
+    "type" => "weixin",
+    "tradeNo" => $order_no,
+    "amount" => (int)number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
+    "keyword" => "pay",
+    "noticeUrl" => $merchant_url,
+    "returnUrl" => $return_url,
+    "sign" => ''
+  );
+
 #变更参数设置
 $form_url = 'http://www.ilucky.wang/order/create';//wap提交地址
-$scan = 'zfb';
+$scan = 'wx';
 
 payType_bankname($scan, $pay_type);
 
@@ -132,7 +133,7 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&secret=' . $pay_mkey;
 $sign = md5($signtext);
-$data['sign'] = $sign;
+$data['sign'] = $sign; 
 
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));

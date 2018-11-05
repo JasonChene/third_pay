@@ -3,27 +3,27 @@
 // include_once("../../../database/mysql.config.php");
 include_once("../../../database/mysql.php");//现数据库的连接方式
 include_once("../moneyfunc.php");
-write_log("notify");
+// write_log("notify");
 
 #############################################
 #request方法
 $data = array();
-write_log('request方法');
+// write_log('request方法');
 foreach ($_REQUEST as $key => $value) {
 	$data[$key] = $value;
-	write_log($key."=".$value);
+	// write_log($key."=".$value);
 }
 
 ###########################################
 
 
 #设定固定参数
-$order_no = $data['orderid']; //订单号
-$mymoney = number_format($data['paymoney'], 2, '.', ''); //订单金额
-$success_msg = $data['payStatus'];//成功讯息
-$success_code = "1";//文档上的成功讯息
-//$sign = $data['key'];//签名
-$echo_msg = "success";//回调讯息
+$order_no = $data['tradeNo']; //订单号
+$mymoney = number_format($data['amount']/100, 2, '.', ''); //订单金额
+$success_msg = $data['state'];//成功讯息
+$success_code = 1;//文档上的成功讯息
+$sign = $data['sign'];//签名
+$echo_msg = "SUCCESS";//回调讯息
 
 #根据订单号读取资料库
 $params = array(':m_order' => $order_no);
@@ -50,15 +50,19 @@ if ($pay_mid == "" || $pay_mkey == "") {
 }
 
 #验签方式
-$signtext = "payid=".$data["payid"];
-$signtext .= "&orderid=".$data["orderid"];
-$signtext .= "&orderuid=".$data["orderuid"];
-$signtext .= "&paymoney=".$data["paymoney"];
-$signtext .= "&realpay=".$data["realpay"];
-$signtext .= "&token=".$pay_mkey;
-write_log("signtext=".$signtext);
-$mysign = md5($signtext);//签名
-write_log("mysign=".$mysign);
+ksort($data);
+$noarr = array('sign');
+$signtext = '';
+foreach ($data as $arr_key => $arr_val) {
+  if (!in_array($arr_key, $noarr)) {
+    $signtext .= $arr_key . '=' . $arr_val . '&';
+  }
+}
+
+$signtext = substr($signtext, 0, -1) . '&secret=' . $pay_mkey;
+$mysign = md5($signtext);
+// write_log("signtext=".$signtext);
+// write_log("mysign=".$mysign);
 
 
 #到账判断
@@ -66,28 +70,28 @@ write_log("mysign=".$mysign);
 		$result_insert = update_online_money($order_no, $mymoney);
 		if ($result_insert == -1) {
 			echo ("会员信息不存在，无法入账");
-			write_log("会员信息不存在，无法入账");
+			// write_log("会员信息不存在，无法入账");
 			exit;
 		} else if ($result_insert == 0) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 0');
+			// write_log($echo_msg . 'at 0');
 			exit;
 		} else if ($result_insert == -2) {
 			echo ("数据库操作失败");
-			write_log("数据库操作失败");
+			// write_log("数据库操作失败");
 			exit;
 		} else if ($result_insert == 1) {
 			echo ($echo_msg);
-			write_log($echo_msg . 'at 1');
+			// write_log($echo_msg . 'at 1');
 			exit;
 		} else {
 			echo ("支付失败");
-			write_log("支付失败");
+			// write_log("支付失败");
 			exit;
 		}
 	} else {
 		echo ('签名不正确！');
-		write_log("签名不正确！");
+		// write_log("签名不正确！");
 		exit;
 	}
 

@@ -1,0 +1,9 @@
+www.ilucky.wang/doc.html
+
+好运付测试商户网址：www.ilucky.wang:8080/sh.html
+测试账号：测试账号1  密码：a123456
+下午 04:39:15
+
+好运付正式商户网址：http://www.ilucky.wang/sh.html 
+
+账号：威尼斯  密码：a123456

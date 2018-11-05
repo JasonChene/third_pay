@@ -94,19 +94,20 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 
 #第三方参数设置
 $data = array(
-  "mchNo" => $pay_mid,
-  "channel" => "",
-  "type" => "alipay",
-  "tradeNo" => $order_no,
-  "amount" => (int)number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
-  "keyword" => "pay",
-  "noticeUrl" => $merchant_url,
-  "returnUrl" => $return_url,
-  "sign" => ''
-);
+    "mchNo" => $pay_mid,
+    "channel" => "",
+    "type" => "weixin",
+    "tradeNo" => $order_no,
+    "amount" => (int)number_format($_REQUEST['MOAmount']*100, 2, '.', ''),
+    "keyword" => "pay",
+    "noticeUrl" => $merchant_url,
+    "returnUrl" => $return_url,
+    "sign" => ''
+  );
+
 #变更参数设置
 $form_url = 'http://www.ilucky.wang/order/create';//wap提交地址
-$scan = 'zfb';
+$scan = 'wx';
 
 payType_bankname($scan, $pay_type);
 
@@ -132,7 +133,7 @@ foreach ($data as $arr_key => $arr_val) {
 
 $signtext = substr($signtext, 0, -1) . '&secret=' . $pay_mkey;
 $sign = md5($signtext);
-$data['sign'] = $sign;
+$data['sign'] = $sign; 
 
 #curl获取响应值
 $res = curl_post($form_url, http_build_query($data));
