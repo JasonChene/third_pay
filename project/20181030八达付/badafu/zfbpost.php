@@ -104,9 +104,9 @@ $payType = '';
 $bankname = '';
 $scan = 'zfb';
 $data['banktype'] = "ALIPAY";
-if (_is_mobile()) {
+/*if (_is_mobile()) {
     $data['banktype'] = "ALIPAYWAP";
-}
+}*/
 
 
 payType_bankname($scan, $pay_type);
@@ -132,8 +132,7 @@ foreach ($data as $arr_key => $arr_val) {
 $signtext = substr($signtext, 0, -1) . $pay_mkey;
 $sign = md5($signtext);
 $data['sign'] = $sign;
-echo "<pre>";
-var_dump($data);
+
 #跳轉方法
 $form_data = $data;
 $jumpurl = $form_url;
@@ -144,7 +143,7 @@ $jumpurl = $form_url;
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_blank">
+    <form name="dinpayForm" method="post" id="frm1" action="<?php echo $jumpurl ?>" target="_self">
       <p>正在为您跳转中，请稍候......</p>
       <?php
       if (isset($form_data)) {
