@@ -96,11 +96,16 @@ $mymoney = number_format($_REQUEST['MOAmount'], 2, '.', '');
 #第三方参数设置
 $params2 = array(
   "orderid" => $order_no,
-  "orderuid" => $_REQUEST['S_Name'],
+  "ordername" => "pay",
   "paymoney" => $mymoney,
+  "orderuid" => $_REQUEST['S_Name'],
   "paytype" => "11",
   "notifyurl" => $merchant_url,
   "returnurl" => $return_url,
+  "orderinfo" => "pay",
+  "isSign" => "Y",
+  "signType" => "MD5",
+  "payCodeType" => "payCode"
 );
 
 #变更参数设置
@@ -146,9 +151,11 @@ if ($row['status'] != 'OK') {
 $form_url2 = 'http://www.jings.wang/api/pay/getPayJson';
 $data2 = array(
   "params" => $paramsdata,
-  "appid" => $pay_mkey
+  "appid" => $pay_mkey,
+  "isEncryption" => "Y"
 );
 $res2 = curl_post($form_url2, http_build_query($data2));
+echo $res2;exit;
 $row2 = json_decode($res2, 1);
 if ($row2['status'] != 'OK') {
   echo '错误代码:' . $row2['status'] . "<br>";
